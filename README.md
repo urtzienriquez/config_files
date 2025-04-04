@@ -4,6 +4,10 @@ To restore **gnome setting** and all extensions
 
 `dconf load /org/gnome/ < gnome_backup`
 
+dotfiles go in `/home/"user"`
+
+Ghostty config file goes in `/home/"user"/.config/ghostty/`
+
 # Installed programs
 * Ghostty (*S*)
 * Zotero (*S*)
