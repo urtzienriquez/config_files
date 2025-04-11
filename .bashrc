@@ -186,6 +186,11 @@ __set_bash_prompt()
 PROMPT_COMMAND=__set_bash_prompt
 
 
+# export path for neovim
+export PATH="$PATH:/opt/nvim/bin"
+
+
+
 # >>> juliaup initialize >>>
 
 # !! Contents within this block are managed by juliaup !!
