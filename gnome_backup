@@ -6,7 +6,7 @@ window-position=[26, 23]
 window-size=[640, 852]
 
 [control-center]
-last-panel='wifi'
+last-panel='user-accounts'
 window-state=(1279, 868, false)
 
 [desktop/app-folders]
@@ -38,18 +38,22 @@ categories=['X-SuSE-YaST']
 name='suse-yast.directory'
 translate=true
 
+[desktop/applications/terminal]
+exec='ghostty'
+
 [desktop/background]
+color-shading-type='solid'
 picture-options='zoom'
-picture-uri='file:///usr/share/desktop-base/emerald-theme/wallpaper/gnome-background.xml'
-picture-uri-dark='file:///usr/share/desktop-base/emerald-theme/wallpaper/gnome-background.xml'
-primary-color='#ffffff'
-secondary-color='#000000'
+picture-uri='file:///home/urtzi/.local/share/backgrounds/2025-04-10-23-30-45-2HecF3z-tux-wallpaper.jpg'
+picture-uri-dark='file:///home/urtzi/.local/share/backgrounds/2025-04-10-23-30-45-2HecF3z-tux-wallpaper.jpg'
+primary-color='#000000000000'
+secondary-color='#000000000000'
 
 [desktop/input-sources]
 sources=[('xkb', 'es')]
 
 [desktop/interface]
-color-scheme='default'
+color-scheme='prefer-dark'
 enable-animations=true
 enable-hot-corners=false
 font-antialiasing='grayscale'
@@ -112,10 +116,11 @@ old-files-age=uint32 30
 recent-files-max-age=-1
 
 [desktop/screensaver]
+color-shading-type='solid'
 picture-options='zoom'
-picture-uri='file:///usr/share/desktop-base/emerald-theme/wallpaper/gnome-background.xml'
-primary-color='#ffffff'
-secondary-color='#000000'
+picture-uri='file:///home/urtzi/.local/share/backgrounds/2025-04-10-23-30-45-2HecF3z-tux-wallpaper.jpg'
+primary-color='#000000000000'
+secondary-color='#000000000000'
 
 [desktop/session]
 idle-delay=uint32 300
@@ -137,10 +142,10 @@ unmaximize=@as []
 
 [desktop/wm/preferences]
 num-workspaces=6
-workspace-names=@as []
+workspace-names=['1', '2']
 
 [evince/default]
-window-ratio=(1.8999590106102042, 1.0293548830101007)
+window-ratio=(1.8992887113309442, 1.0298260381593709)
 
 [evolution-data-server]
 migrated=true
@@ -283,16 +288,16 @@ panel-in-overview=true
 ripple-box=true
 search=true
 show-apps-button=true
-startup-status=1
+startup-status=0
 theme=false
 window-demands-attention-focus=false
 window-picker-icon=true
 window-preview-caption=true
 window-preview-close-button=true
-workspace=true
+workspace=false
 workspace-background-corner-size=0
-workspace-popup=true
-workspaces-in-app-grid=true
+workspace-popup=false
+workspaces-in-app-grid=false
 
 [shell/extensions/search-light]
 blur-background=false
@@ -337,14 +342,19 @@ window-border-width=uint32 2
 locations=@av []
 
 [software]
-check-timestamp=int64 1743755149
+check-timestamp=int64 1744363652
 first-run=false
-update-notification-timestamp=int64 1742726752
+update-notification-timestamp=int64 1744274385
+
+[terminal/legacy]
+mnemonics-enabled=true
+theme-variant='dark'
 
 [terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
-background-color='rgb(46,52,54)'
-font='Hack 11'
+background-color='rgb(26,27,38)'
+bold-is-bright=false
+font='JetBrainsMono Nerd Font Mono 12'
 foreground-color='rgb(211,215,207)'
-palette=['rgb(23,20,33)', 'rgb(192,28,40)', 'rgb(38,162,105)', 'rgb(162,115,76)', 'rgb(18,72,139)', 'rgb(163,71,186)', 'rgb(42,161,179)', 'rgb(208,207,204)', 'rgb(94,92,100)', 'rgb(246,97,81)', 'rgb(51,209,122)', 'rgb(233,173,12)', 'rgb(42,123,222)', 'rgb(192,97,203)', 'rgb(51,199,222)', 'rgb(255,255,255)']
+palette=['rgb(46,52,54)', 'rgb(204,0,0)', 'rgb(158,206,106)', 'rgb(196,160,0)', 'rgb(122,162,247)', 'rgb(187,154,247)', 'rgb(6,152,154)', 'rgb(211,215,207)', 'rgb(85,87,83)', 'rgb(239,41,41)', 'rgb(138,226,52)', 'rgb(252,233,79)', 'rgb(114,159,207)', 'rgb(173,127,168)', 'rgb(52,226,226)', 'rgb(238,238,236)']
 use-system-font=false
-use-theme-colors=true
+use-theme-colors=false
