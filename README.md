@@ -8,7 +8,7 @@ To restore **gnome setting** and all extensions
 
 **ghostty** config file goes in `/home/"user"/.config/ghostty/`
 
-For **Neovim**, install the latest release and put the files in [neovim_config](https://www.youtube.com/watch?v=t1TUdZiUfQ0)) in `/home/"user"/.config/nvim`.
+For **Neovim**, install the latest release and put the files in [neovim_config](https://github.com/urtzienriquez/neovim_config) in `/home/"user"/.config/nvim`.
 
 For **Vim pluggins** need to install vim-plug. For that run:
 
@@ -19,7 +19,7 @@ For **Vim pluggins** need to install vim-plug. For that run:
 * Zotero (*S*)
 * Zen browser (*S*)
 * QbitTorrent
-* Neovim (config files in [neovim_config](https://www.youtube.com/watch?v=t1TUdZiUfQ0))
+* Neovim (config files in [neovim_config](https://github.com/urtzienriquez/neovim_config))
 * Vim
 * Julia
 * Juliaup
