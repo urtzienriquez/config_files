@@ -28,4 +28,4 @@ alias nv='nvim2'
 
 # julia connected to server to use in neovim
 alias jl='julia -i /home/urtzi/.julia_scripts/nvjulia.jl'
-alias jl15='julia +1.8 -i /home/urtzi/.julia_scripts/nvjulia.jl'
+alias jl18='julia +1.8 -i /home/urtzi/.julia_scripts/nvjulia.jl'
