@@ -24,6 +24,7 @@ For **Vim pluggins** need to install vim-plug. For that run:
 * Julia
 * Juliaup
 * R
+* RStudio
 * Gimp
 * Inkscap
 
