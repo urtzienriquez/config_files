@@ -6,7 +6,7 @@ window-position=[26, 23]
 window-size=[640, 852]
 
 [control-center]
-last-panel='wifi'
+last-panel='universal-access'
 window-state=(1279, 868, false)
 
 [desktop/app-folders]
@@ -254,7 +254,7 @@ locations=['file:///home/urtzi/Music']
 
 [settings-daemon/plugins/media-keys]
 control-center=['<Shift><Super>s']
-custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5/']
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom6/']
 
 [settings-daemon/plugins/media-keys/custom-keybindings/custom0]
 binding='<Super>Return'
@@ -286,11 +286,16 @@ binding='<Super>r'
 command='rstudio'
 name='RStudio'
 
+[settings-daemon/plugins/media-keys/custom-keybindings/custom6]
+binding='<Super>j'
+command='jupyter-lab'
+name='jupyter-lab'
+
 [shell]
 app-picker-layout=@aa{sv} []
 disable-user-extensions=false
-disabled-extensions=@as []
-enabled-extensions=['tilingshell@ferrarodomenico.com', 'space-bar@luchrioh', 'switcher@landau.fi', 'search-light@icedman.github.com', 'just-perfection-desktop@just-perfection', 'blur-my-shell@aunetx', 'undecorate@tabdeveloper.com', 'undecorate@sun.wxg@gmail.com']
+disabled-extensions=['just-perfection-desktop@just-perfection']
+enabled-extensions=['tilingshell@ferrarodomenico.com', 'space-bar@luchrioh', 'switcher@landau.fi', 'search-light@icedman.github.com', 'blur-my-shell@aunetx', 'undecorate@tabdeveloper.com', 'undecorate@sun.wxg@gmail.com']
 favorite-apps=@as []
 last-selected-power-profile='power-saver'
 welcome-dialog-last-shown-version='43.9'
@@ -310,11 +315,13 @@ app-menu-label=true
 background-menu=true
 controls-manager-spacing-size=0
 dash=true
-dash-icon-size=0
+dash-icon-size=48
 double-super-to-appgrid=true
 osd=true
 panel=true
+panel-icon-size=0
 panel-in-overview=true
+panel-size=0
 ripple-box=true
 search=true
 show-apps-button=true
