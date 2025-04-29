@@ -6,7 +6,7 @@ window-position=[26, 23]
 window-size=[640, 852]
 
 [control-center]
-last-panel='user-accounts'
+last-panel='wifi'
 window-state=(1279, 868, false)
 
 [desktop/app-folders]
@@ -63,7 +63,7 @@ icon-theme='Adwaita'
 toolkit-accessibility=false
 
 [desktop/notifications]
-application-children=['gnome-power-panel', 'org-gnome-software', 'zoom', 'org-gnome-extensions-desktop', 'org-gnome-nautilus', 'gnome-network-panel', 'org-gnome-texteditor', 'libreoffice-writer', 'gimp', 'github-desktop', 'org-qbittorrent-qbittorrent', 'org-gnome-boxes', 'zen']
+application-children=['gnome-power-panel', 'org-gnome-software', 'zoom', 'org-gnome-extensions-desktop', 'org-gnome-nautilus', 'gnome-network-panel', 'org-gnome-texteditor', 'libreoffice-writer', 'gimp', 'github-desktop', 'org-qbittorrent-qbittorrent', 'org-gnome-boxes', 'zen', 'rstudio']
 
 [desktop/notifications/application/gimp]
 application-id='gimp.desktop'
@@ -97,6 +97,9 @@ application-id='org.gnome.TextEditor.desktop'
 
 [desktop/notifications/application/org-qbittorrent-qbittorrent]
 application-id='org.qbittorrent.qBittorrent.desktop'
+
+[desktop/notifications/application/rstudio]
+application-id='rstudio.desktop'
 
 [desktop/notifications/application/zen]
 application-id='zen.desktop'
@@ -145,7 +148,7 @@ num-workspaces=6
 workspace-names=['1', '2']
 
 [evince/default]
-window-ratio=(1.8992887113309442, 1.0298260381593709)
+window-ratio=(1.8999590074184762, 1.0293548972760571)
 
 [evolution-data-server]
 migrated=true
@@ -191,11 +194,11 @@ maximized=false
 network-total-in-bits=false
 show-dependencies=false
 show-whose-processes='user'
-window-state=(700, 500, 26, 23)
+window-state=(1065, 860, 26, 23)
 
 [gnome-system-monitor/disktreenew]
 col-6-visible=true
-col-6-width=290
+col-6-width=0
 
 [libgnomekbd/preview]
 height=519
@@ -227,9 +230,31 @@ maximized=false
 [portal/filechooser/org.chromium.Chromium]
 last-folder-path='/home/urtzi/Downloads'
 
+[rhythmbox]
+position=(26, 23)
+
+[rhythmbox/player]
+volume=1.0
+
+[rhythmbox/plugins]
+active-plugins=['mpris', 'generic-player', 'power-manager', 'audiocd', 'audioscrobbler', 'iradio', 'cd-recorder', 'ipod', 'dbus-media-server', 'mtpdevice', 'android', 'notification', 'rb', 'artsearch']
+seen-plugins=['pythonconsole', 'rblirc', 'audioscrobbler', 'grilo', 'cd-recorder', 'fmradio', 'ipod', 'dbus-media-server', 'mtpdevice', 'notification', 'rb', 'im-status', 'webremote', 'listenbrainz', 'replaygain', 'lyrics', 'artsearch', 'magnatune', 'daap']
+
+[rhythmbox/plugins/audioscrobbler/Last.fm]
+scrobbling-enabled=true
+
+[rhythmbox/plugins/audioscrobbler/Libre.fm]
+scrobbling-enabled=true
+
+[rhythmbox/plugins/iradio]
+initial-stations-loaded=true
+
+[rhythmbox/rhythmdb]
+locations=['file:///home/urtzi/Music']
+
 [settings-daemon/plugins/media-keys]
 control-center=['<Shift><Super>s']
-custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/']
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5/']
 
 [settings-daemon/plugins/media-keys/custom-keybindings/custom0]
 binding='<Super>Return'
@@ -242,9 +267,9 @@ command='zen'
 name='browser'
 
 [settings-daemon/plugins/media-keys/custom-keybindings/custom2]
-binding='<Super>c'
-command='codium'
-name='vscodium'
+binding='<Super>e'
+command='ghostty -e "bash -c /opt/nvim/bin/nvim2;bash"'
+name='neovim'
 
 [settings-daemon/plugins/media-keys/custom-keybindings/custom3]
 binding='<Super>f'
@@ -256,11 +281,16 @@ binding='<Super>z'
 command='zotero'
 name='zotero'
 
+[settings-daemon/plugins/media-keys/custom-keybindings/custom5]
+binding='<Super>r'
+command='rstudio'
+name='RStudio'
+
 [shell]
 app-picker-layout=@aa{sv} []
 disable-user-extensions=false
 disabled-extensions=@as []
-enabled-extensions=['tilingshell@ferrarodomenico.com', 'space-bar@luchrioh', 'switcher@landau.fi', 'search-light@icedman.github.com', 'just-perfection-desktop@just-perfection', 'blur-my-shell@aunetx']
+enabled-extensions=['tilingshell@ferrarodomenico.com', 'space-bar@luchrioh', 'switcher@landau.fi', 'search-light@icedman.github.com', 'just-perfection-desktop@just-perfection', 'blur-my-shell@aunetx', 'undecorate@tabdeveloper.com', 'undecorate@sun.wxg@gmail.com']
 favorite-apps=@as []
 last-selected-power-profile='power-saver'
 welcome-dialog-last-shown-version='43.9'
@@ -308,7 +338,7 @@ border-radius=7.0
 border-thickness=1
 entry-font-size=0
 font-size=0
-monitor-count=2
+monitor-count=1
 scale-height=0.0
 scale-width=0.20000000000000001
 shortcut-search=['<Control>space']
@@ -330,27 +360,31 @@ focus-window-right=['<Alt>Right']
 focus-window-up=['<Alt>Up']
 inner-gaps=uint32 4
 last-version-name-installed='16.3'
-layouts-json='[{"id":"Layout 1","tiles":[{"x":0,"y":0,"width":0.22,"height":0.5,"groups":[1,2]},{"x":0,"y":0.5,"width":0.22,"height":0.5,"groups":[1,2]},{"x":0.22,"y":0,"width":0.56,"height":1,"groups":[2,3]},{"x":0.78,"y":0,"width":0.22,"height":0.5,"groups":[3,4]},{"x":0.78,"y":0.5,"width":0.22,"height":0.5,"groups":[3,4]}]},{"id":"Layout 2","tiles":[{"x":0,"y":0,"width":0.22,"height":1,"groups":[1]},{"x":0.22,"y":0,"width":0.56,"height":1,"groups":[1,2]},{"x":0.78,"y":0,"width":0.22,"height":1,"groups":[2]}]},{"id":"Layout 3","tiles":[{"x":0,"y":0,"width":0.33,"height":1,"groups":[1]},{"x":0.33,"y":0,"width":0.67,"height":1,"groups":[1]}]},{"id":"Layout 4","tiles":[{"x":0,"y":0,"width":0.67,"height":1,"groups":[1]},{"x":0.67,"y":0,"width":0.33,"height":1,"groups":[1]}]},{"id":"2399800","tiles":[{"x":0,"y":0,"width":0.626875,"height":1,"groups":[1]},{"x":0.626875,"y":0,"width":0.3731249999999998,"height":0.5,"groups":[2,1]},{"x":0.626875,"y":0.5,"width":0.3731249999999998,"height":0.49999999999999994,"groups":[2,1]}]}]'
+layouts-json='[{"id":"Layout 1","tiles":[{"x":0,"y":0,"width":0.22,"height":0.5,"groups":[1,2]},{"x":0,"y":0.5,"width":0.22,"height":0.5,"groups":[1,2]},{"x":0.22,"y":0,"width":0.56,"height":1,"groups":[2,3]},{"x":0.78,"y":0,"width":0.22,"height":0.5,"groups":[3,4]},{"x":0.78,"y":0.5,"width":0.22,"height":0.5,"groups":[3,4]}]},{"id":"Layout 2","tiles":[{"x":0,"y":0,"width":0.22,"height":1,"groups":[1]},{"x":0.22,"y":0,"width":0.56,"height":1,"groups":[1,2]},{"x":0.78,"y":0,"width":0.22,"height":1,"groups":[2]}]},{"id":"Layout 3","tiles":[{"x":0,"y":0,"width":0.33,"height":1,"groups":[1]},{"x":0.33,"y":0,"width":0.67,"height":1,"groups":[1]}]},{"id":"Layout 4","tiles":[{"x":0,"y":0,"width":0.67,"height":1,"groups":[1]},{"x":0.67,"y":0,"width":0.33,"height":1,"groups":[1]}]},{"id":"2399800","tiles":[{"x":0,"y":0,"width":0.626875,"height":1,"groups":[1]},{"x":0.626875,"y":0,"width":0.3731249999999998,"height":0.5,"groups":[2,1]},{"x":0.626875,"y":0.5,"width":0.3731249999999998,"height":0.49999999999999994,"groups":[2,1]}]},{"id":"25422331","tiles":[{"x":0,"y":0,"width":0.5,"height":1,"groups":[1]},{"x":0.5,"y":0,"width":0.5000000000000002,"height":1,"groups":[1]}]}]'
 outer-gaps=uint32 4
 overridden-settings="{\"org.gnome.mutter.keybindings\":{\"toggle-tiled-right\":\"['<Super>Right']\",\"toggle-tiled-left\":\"['<Super>Left']\"},\"org.gnome.desktop.wm.keybindings\":{\"maximize\":\"['<Super>Up']\",\"unmaximize\":\"['<Super>Down', '<Alt>F5']\"},\"org.gnome.mutter\":{\"edge-tiling\":\"true\"}}"
-selected-layouts=[['Layout 4', 'Layout 4'], ['Layout 4', 'Layout 1'], ['Layout 1', 'Layout 1'], ['Layout 1', 'Layout 1'], ['Layout 1', 'Layout 1'], ['Layout 1', 'Layout 1']]
+selected-layouts=[['25422331'], ['25422331'], ['25422331'], ['Layout 1'], ['Layout 1'], ['Layout 1']]
 untile-window=['<Super>u']
 window-border-color='rgb(38,162,105)'
 window-border-width=uint32 2
+
+[shell/keybindings]
+focus-active-notification=@as []
 
 [shell/world-clocks]
 locations=@av []
 
 [software]
-check-timestamp=int64 1744363652
+check-timestamp=int64 1745913260
 first-run=false
-update-notification-timestamp=int64 1744274385
+update-notification-timestamp=int64 1745826697
 
 [terminal/legacy]
 mnemonics-enabled=true
 theme-variant='dark'
 
 [terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
+audible-bell=false
 background-color='rgb(26,27,38)'
 bold-is-bright=false
 font='JetBrainsMono Nerd Font Mono 12'
