@@ -1,0 +1,63 @@
+-- escape as jj or jk
+vim.keymap.set("i", "jj", "<Esc>", { desc = "Esc using jj" })
+vim.keymap.set("i", "jk", "<Esc>", { desc = "Esc using jk" })
+
+-- open neo-tree navigation trees
+vim.keymap.set(
+	"n",
+	"<leader><tab>",
+	":Neotree reveal filesystem left toggle<CR>",
+	{ desc = "neo-tree reveal filesystem [t]ree" }
+)
+
+-- connect to opened julia session in another terminal (only available when filetype = julia)
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "julia", "markdown" },
+	callback = function()
+		vim.keymap.set(
+			"n",
+			"<localleader>jf",
+			"<cmd>JuliaREPLConnect 2345<CR>",
+			{ desc = "Connect [j]ulia [f]ile to server running in opened terminal" }
+		)
+	end,
+})
+
+-- keymaps for fuzzy finding with telescope
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope [f]ind [f]iles" })
+vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope [f]ind with [g]rep inside the file" })
+vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope [f]ind [b]uffers" })
+vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope [f]ind [h]elp tags" })
+vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "[f]ind [k]eymaps" })
+vim.keymap.set("n", "<leader>fs", builtin.builtin, { desc = "[f]ind [s]elect Telescope" })
+vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "[f]ind current [w]ord" })
+vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "[f]ind [d]iagnostics" })
+vim.keymap.set("n", "<leader>fr", builtin.resume, { desc = "[f]ind [r]esume" })
+vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = '[f]ind Recent Files ("." for repeat)' })
+
+-- keymap to open the floating terminal
+vim.keymap.set("n", "<localleader>t", ":Floaterminal<CR>", { desc = "Open a floating [t]erminal" })
+
+-- exiting the terminal
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
+-- resize windows
+vim.keymap.set("n", "<C-Left>", ":vertical resize +2<CR>", { desc = "Resize vertically split window" })
+vim.keymap.set("n", "<C-Right>", ":vertical resize -2<CR>", { desc = "Resize vertically split window" })
+vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Resize horizontally split window" })
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Resize horizontally split window" })
+
+-- change folding method
+vim.keymap.set(
+	"n",
+	"<leader>mm",
+	":set foldmethod=manual <bar> set foldcolumn=0<CR>",
+	{ desc = "folding method to manual" }
+)
+vim.keymap.set(
+	"n",
+	"<leader>mi",
+	":set foldmethod=indent <bar> set foldcolumn=9<CR>",
+	{ desc = "folding method to indent" }
+)
