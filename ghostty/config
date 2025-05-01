@@ -2,6 +2,10 @@
 # Run `ghostty +show-config --default --docs` to view a list of
 # all available config options and their default values.
 
+font-family = HackNerdFont Regular
+font-family-bold = HackNerdFont Bold
+font-family-italic = HackNerdFont Italic
+font-family-bold-italic = HackNerdFont BoldItalic
 # theme
 theme = tokyonight
 
