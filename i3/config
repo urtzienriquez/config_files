@@ -24,7 +24,8 @@ default_floating_border pixel 1
 for_window [class="^.*"] border pixel 1
 
 # colors for theme
-set $ac #6B9B6C
+# set $ac #6B9B6C
+set $ac #D79922
 set $tx #000000
 
 #border #bg #txt
