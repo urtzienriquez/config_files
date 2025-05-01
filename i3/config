@@ -43,7 +43,7 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id nm-applet
+exec --no-startup-id nm-applet &
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -130,26 +130,26 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1:C-1"
-set $ws2 "2:C-2"
-set $ws3 "3:C-3"
-set $ws4 "4:C-4"
-set $ws5 "5:C-5"
-set $ws6 "6:C-6"
-set $ws7 "7:C-7"
-set $ws8 "8:C-8"
-set $ws9 "9:C-9"
-set $ws10 "10:C-10"
-set $ws11 "11:A-1"
-set $ws12 "12:A-2"
-set $ws13 "13:A-3"
-set $ws14 "14:A-4"
-set $ws15 "15:A-5"
-set $ws16 "16:A-6"
-set $ws17 "17:A-7"
-set $ws18 "18:A-8"
-set $ws19 "19:A-9"
-set $ws20 "20:A-10"
+set $ws1 "1: C1"
+set $ws2 "2: C2"
+set $ws3 "3: C3"
+set $ws4 "4: C4"
+set $ws5 "5: C5"
+set $ws6 "6: C6"
+set $ws7 "7: C7"
+set $ws8 "8: C8"
+set $ws9 "9: C9"
+set $ws10 "10: C10"
+set $ws11 "11: A1"
+set $ws12 "12: A2"
+set $ws13 "13: A3"
+set $ws14 "14: A4"
+set $ws15 "15: A5"
+set $ws16 "16: A6"
+set $ws17 "17: A7"
+set $ws18 "18: A8"
+set $ws19 "19: A9"
+set $ws20 "20: A10"
 
 # define in which monitor each workspace is located
 workspace 1 output $fm
@@ -222,7 +222,7 @@ bindsym $mod+$mod1+Shift+Left move workspace to output left
 bindsym $mod+$mod1+Shift+Right move workspace to output right
 
 # define workspaces at startup
-exec --no-startup-id i3-msg workspace $ws11
+exec --no-startup-id i3-msg workspace $ws11 &
 exec --no-startup-id i3-msg workspace $ws1
 
 # reload the configuration file
@@ -257,40 +257,8 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-bar {
-				output eDP-1
-        status_command i3status
-				font pango: HackNerdFont Regular 11
-				position top
-				status_command ~/.config/i3/bumblebee-status/bumblebee-status \
-					-t  gruvbox-powerline \
-					-m  datetime memory brightness pulseout bluetooth nic battery \
-					-p  nic.format="{intf} {state}" datetime.format="%d/%m/%Y %H:%M"
-				colors {
-														#Border	#BG			#text
-					focused_workspace	#6B9B6C #6B9B6C #000000
-				}
-				tray_output none
-				strip_workspace_numbers yes
-}
-bar {
-				output HDMI-1
-				status_command i3status
-				font pango: HackNerdFont Regular 8
-				position top
-				status_command ~/.config/i3/bumblebee-status/bumblebee-status \
-					-t  gruvbox-powerline \
-					-m  datetime \
-					-p  nic.format="{intf} {state}" datetime.format="%d/%m/%Y %H:%M"
-				colors {
-														#Border	#BG			#text
-					focused_workspace	#6B9B6C #6B9B6C #000000
-				}
-				tray_output none
-				strip_workspace_numbers yes
-}
+# Polybar start
+exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # Power management
 # Suspend
