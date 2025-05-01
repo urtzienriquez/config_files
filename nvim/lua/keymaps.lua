@@ -48,6 +48,10 @@ vim.keymap.set("n", "<C-Right>", ":vertical resize -2<CR>", { desc = "Resize ver
 vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Resize horizontally split window" })
 vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Resize horizontally split window" })
 
+-- split windows
+vim.keymap.set("n", "<C-w>v", ":split<CR>", { desc = "Vertically split window as in i3" })
+vim.keymap.set("n", "<C-w>h", ":vs<CR>", { desc = "Horizontally split window as in i3" })
+
 -- change folding method
 vim.keymap.set(
 	"n",
