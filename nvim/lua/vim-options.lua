@@ -11,7 +11,7 @@ vim.cmd("set backspace=indent,eol,start")
 vim.cmd("set tabstop=2")
 vim.cmd("set shiftwidth=2")
 vim.cmd("set softtabstop=2")
-vim.opt.clipboard = "unnamed"
+vim.opt.clipboard = "unnamedplus"
 
 -- code folding, automatic to manual
 vim.opt.foldlevelstart = 99

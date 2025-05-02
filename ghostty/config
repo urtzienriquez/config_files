@@ -20,10 +20,10 @@ keybind = shift+up=scroll_page_lines:-1
 keybind = shift+down=scroll_page_lines:1
 keybind = shift+control+up=scroll_to_top
 keybind = shift+control+down=scroll_to_bottom
-keybind = shift+alt+right=goto_split:right
-keybind = shift+alt+left=goto_split:left
-keybind = shift+alt+down=goto_split:down
-keybind = shift+alt+up=goto_split:up
+# keybind = shift+alt+right=goto_split:right
+# keybind = shift+alt+left=goto_split:left
+# keybind = shift+alt+down=goto_split:down
+# keybind = shift+alt+up=goto_split:up
 
 # padding
 window-padding-balance = true
@@ -32,4 +32,5 @@ window-padding-x = 0
 window-padding-y = 0
 
 # window decoration
-window-decoration = none
+# window-decoration = none
+gtk-titlebar = false

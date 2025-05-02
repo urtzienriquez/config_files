@@ -188,6 +188,9 @@ PROMPT_COMMAND=__set_bash_prompt
 # export path for neovim
 export PATH="$PATH:/opt/nvim/bin"
 
+# export path for rstudio
+export PATH="$PATH:/usr/lib/rstudio"
+
 # >>> juliaup initialize >>>
 
 # !! Contents within this block are managed by juliaup !!
@@ -202,3 +205,6 @@ case ":$PATH:" in
 esac
 
 # <<< juliaup initialize <<<
+
+# Created by `pipx` on 2025-05-02 03:11:06
+export PATH="$PATH:/home/urtzi/.local/bin"

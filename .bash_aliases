@@ -24,7 +24,7 @@ ml() {
 }
 
 # neovim alias
-alias nv='nvim2'
+alias nv='nvim'
 
 # julia connected to server to use in neovim
 alias jl='julia -i /home/urtzi/.julia_scripts/nvjulia.jl'
