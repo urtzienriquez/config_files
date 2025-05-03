@@ -1,6 +1,10 @@
 # laptop setup
 
-**dotfiles** go in `/home/"user"`
+**dotfiles**: create symbolic links in `.config/` using:
+
+```bash
+ln -s ~/path/to/file/or/folder/in/github/repo $HOME/.config/
+```
 
 For **Vim pluggins** need to install vim-plug. For that run:
 
