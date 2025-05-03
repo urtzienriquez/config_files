@@ -77,7 +77,7 @@ bindsym $mod+Shift+r exec /usr/lib/rstudio/rstudio
 bindsym $mod+Shift+w exec libreoffice25.2 --writer
 
 # kill focused window
-bindsym $mod+q kill
+bindsym $mod+Shift+q kill
 
 # start rofi (a program launcher)
 bindcode $mod+40 exec "rofi -modi drun,run -show drun"
