@@ -2,14 +2,14 @@
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Esc using jj" })
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Esc using jk" })
 
--- open neo-tree navigation trees
-vim.keymap.set(
-	"n",
-	"<leader><tab>",
-	":Neotree reveal filesystem left toggle<CR>",
-	{ desc = "neo-tree reveal filesystem [t]ree" }
-)
-
+-- -- open neo-tree navigation trees
+-- vim.keymap.set(
+-- 	"n",
+-- 	"<leader><tab>",
+-- 	":Neotree reveal filesystem left toggle<CR>",
+-- 	{ desc = "neo-tree reveal filesystem [t]ree" }
+-- )
+vim.keymap.set("n", "-", require("oil").open, { desc = "Open parent directory" })
 -- connect to opened julia session in another terminal (only available when filetype = julia)
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "julia", "markdown" },
