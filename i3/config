@@ -66,7 +66,9 @@ tiling_drag modifier titlebar
 
 # start a terminal
 bindsym $mod+Return exec ghostty
+bindsym $mod+$mod1+Return exec gnome-terminal
 # keybindings for applications
+bindsym $mod+Shift+s exec gnome-control-center
 bindsym $mod+Shift+z exec zotero
 bindsym $mod+Shift+b exec zen
 bindsym $mod+Shift+v exec ghostty -e /opt/nvim/bin/nvim

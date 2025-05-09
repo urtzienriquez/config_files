@@ -52,16 +52,6 @@ vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Resize horizontally 
 vim.keymap.set("n", "<C-w>v", ":split<CR>", { desc = "Vertically split window as in i3" })
 vim.keymap.set("n", "<C-w>h", ":vs<CR>", { desc = "Horizontally split window as in i3" })
 
--- change folding method
-vim.keymap.set(
-	"n",
-	"<leader>mm",
-	":set foldmethod=manual <bar> set foldcolumn=0<CR>",
-	{ desc = "folding method to manual" }
-)
-vim.keymap.set(
-	"n",
-	"<leader>mi",
-	":set foldmethod=indent <bar> set foldcolumn=9<CR>",
-	{ desc = "folding method to indent" }
-)
+-- Using ufo provider need remap `zR` and `zM`
+vim.keymap.set("n", "zR", require("ufo").openAllFolds)
+vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
