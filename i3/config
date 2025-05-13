@@ -19,9 +19,9 @@ exec --no-startup-id feh --bg-fill /home/urtzi/Pictures/linux_wallpaper.png
 font pango: HackNerdFont Regular 6
 
 #Hide window title bar
-default_border pixel 1
-default_floating_border pixel 1
-for_window [class="^.*"] border pixel 1
+default_border pixel 3
+default_floating_border pixel 3
+for_window [class="^.*"] border pixel 3
 
 # colors for theme
 # set $ac #6B9B6C
