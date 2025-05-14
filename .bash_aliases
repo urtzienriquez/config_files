@@ -28,3 +28,6 @@ alias nv='nvim'
 # julia connected to server to use in neovim
 alias jl='julia -i /home/urtzi/.julia_scripts/nvjulia.jl'
 alias jl18='julia +1.8 -i /home/urtzi/.julia_scripts/nvjulia.jl'
+
+# qstat alias for metacentrum
+alias qs='ssh meta qstat -u urtzien'
