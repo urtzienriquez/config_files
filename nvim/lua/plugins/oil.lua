@@ -6,7 +6,12 @@ return {
 	lazy = false,
 	opts = {
 		default_file_explorer = true,
-		columns = { "icon" },
+		columns = {
+			"icon",
+			-- "permissions",
+			-- "size",
+			-- "mtime"
+		},
 		keymaps = {
 			["g?"] = { "actions.show_help", mode = "n" },
 			["<CR>"] = "actions.select",
@@ -26,7 +31,7 @@ return {
 			["g\\"] = { "actions.toggle_trash", mode = "n" },
 		},
 		use_default_keymaps = true,
-		view_options = { show_hidden = true },
+		view_options = { show_hidden = false },
 		win_options = {
 			signcolumn = "yes:2",
 		},
