@@ -11,8 +11,7 @@ return {
 			},
 			sections = {
 				lualine_a = { "buffers" },
-				lualine_b = { { "branch", icons = { "󰘬 " } } },
-				-- lualine_b = { "branch" },
+				lualine_b = { { "branch", icon = "󰘬" } },
 				lualine_c = { "diff", "diagnostics" },
 				lualine_x = { "filetype" },
 				lualine_y = { "progress" },
