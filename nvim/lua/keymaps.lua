@@ -2,14 +2,9 @@
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Esc using jj" })
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Esc using jk" })
 
--- -- open neo-tree navigation trees
--- vim.keymap.set(
--- 	"n",
--- 	"<leader><tab>",
--- 	":Neotree reveal filesystem left toggle<CR>",
--- 	{ desc = "neo-tree reveal filesystem [t]ree" }
--- )
+-- open oil
 vim.keymap.set("n", "-", require("oil").open, { desc = "Open parent directory" })
+
 -- connect to opened julia session in another terminal (only available when filetype = julia)
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "julia", "markdown" },
@@ -59,3 +54,18 @@ vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
 -- remap half page up/down to center cursor in the screen
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, desc = "Jump half page down" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, desc = "Jump half page up" })
+
+-- alpha starting page keymap
+vim.keymap.set("n", "<leader>;", ":Alpha<CR>")
+
+-- clear highlights on search when pressing <Esc> in normal mode
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+
+-- Highlight when yanking (copying) text
+vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Highlight when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+})

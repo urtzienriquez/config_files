@@ -33,6 +33,5 @@ return {
 		dashboard.section.footer.val = "Happy coding with Neovim!"
 
 		alpha.setup(dashboard.opts)
-		vim.keymap.set("n", "<leader>;", ":Alpha<CR>")
 	end,
 }
