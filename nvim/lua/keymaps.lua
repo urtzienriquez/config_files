@@ -55,3 +55,7 @@ vim.keymap.set("n", "<C-w>h", ":vs<CR>", { desc = "Horizontally split window as 
 -- Using ufo provider need remap `zR` and `zM`
 vim.keymap.set("n", "zR", require("ufo").openAllFolds)
 vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+
+-- remap half page up/down to center cursor in the screen
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, desc = "Jump half page down" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, desc = "Jump half page up" })
