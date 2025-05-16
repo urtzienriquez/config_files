@@ -11,7 +11,7 @@ return {
 		symbols = { -- customize the symbols that appear in the git status columns
 			index = {
 				["!"] = "", -- ignored
-				["?"] = "?", -- untracked
+				["?"] = "", -- untracked
 				["A"] = "", -- added
 				["C"] = "", -- copied
 				["D"] = "", -- deleted
@@ -23,7 +23,7 @@ return {
 			},
 			working_tree = {
 				["!"] = "", -- ignored
-				["?"] = "?", -- untracked
+				["?"] = "", -- untracked
 				["A"] = "", -- added
 				["C"] = "", -- copied
 				["D"] = "", -- deleted
