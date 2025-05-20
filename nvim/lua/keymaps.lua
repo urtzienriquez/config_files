@@ -31,12 +31,6 @@ vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "[f]ind [d]iagno
 vim.keymap.set("n", "<leader>fr", builtin.resume, { desc = "[f]ind [r]esume" })
 vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = '[f]ind Recent Files ("." for repeat)' })
 
--- keymap to open the floating terminal
-vim.keymap.set("n", "<localleader>t", ":Floaterminal<CR>", { desc = "Open a floating [t]erminal" })
-
--- exiting the terminal
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
 -- resize windows
 vim.keymap.set("n", "<C-Left>", ":vertical resize +2<CR>", { desc = "Resize vertically split window" })
 vim.keymap.set("n", "<C-Right>", ":vertical resize -2<CR>", { desc = "Resize vertically split window" })
