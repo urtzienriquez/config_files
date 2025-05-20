@@ -81,6 +81,13 @@ return {
 			mode = { "n", "v" },
 		},
 		{
+			"<leader>ll",
+			function()
+				Snacks.lazygit.log()
+			end,
+			desc = "Lazygit log",
+		},
+		{
 			"<leader>lg",
 			function()
 				Snacks.lazygit()

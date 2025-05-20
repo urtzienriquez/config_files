@@ -4,6 +4,7 @@ return {
 		event = "VimEnter", -- Sets the loading event to 'VimEnter'
 		opts = {
 			delay = 0,
+			preset = "helix",
 			icons = {
 				mappings = vim.g.have_nerd_font,
 				keys = vim.g.have_nerd_font and {} or {
