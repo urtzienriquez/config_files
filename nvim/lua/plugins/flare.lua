@@ -1,3 +1,0 @@
-return {
-	"stonelasley/flare.nvim",
-}
