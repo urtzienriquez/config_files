@@ -32,10 +32,10 @@ vim.keymap.set("n", "<leader>fr", builtin.resume, { desc = "[f]ind [r]esume" })
 vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = '[f]ind Recent Files ("." for repeat)' })
 
 -- resize windows
-vim.keymap.set("n", "<C-Left>", ":vertical resize +2<CR>", { desc = "Resize vertically split window" })
-vim.keymap.set("n", "<C-Right>", ":vertical resize -2<CR>", { desc = "Resize vertically split window" })
-vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Resize horizontally split window" })
-vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Resize horizontally split window" })
+vim.keymap.set("n", "<C-Left>", ":vertical resize +2<CR>", { silent = true, desc = "Resize vertically split window" })
+vim.keymap.set("n", "<C-Right>", ":vertical resize -2<CR>", { silent = true, desc = "Resize vertically split window" })
+vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { silent = true, desc = "Resize horizontally split window" })
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { silent = true, desc = "Resize horizontally split window" })
 
 -- split windows
 vim.keymap.set("n", "<C-w>v", ":split<CR>", { desc = "Vertically split window as in i3" })
@@ -49,9 +49,6 @@ vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, desc = "Jump half page down" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, desc = "Jump half page up" })
 
--- alpha starting page keymap
-vim.keymap.set("n", "<leader>;", ":Alpha<CR>")
-
 -- clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
@@ -63,3 +60,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		vim.highlight.on_yank()
 	end,
 })
+
+-- Check Spelling toogle
+vim.keymap.set("n", "<leader>s", ":set spell!<CR>", { noremap = true, silent = true, desc = "spelling check toogle" })
