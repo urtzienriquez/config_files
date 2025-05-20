@@ -6,7 +6,7 @@ return {
 				theme = "everforest",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
-				disabled_filetypes = { "alpha" },
+				disabled_filetypes = { "snacks_dashboard" },
 				globalstatus = true,
 			},
 			sections = {
