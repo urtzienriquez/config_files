@@ -4,6 +4,7 @@ vim.g.maplocalleader = "ç"
 
 -- vim options
 vim.g.have_nerd_font = true
+vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.autoindent = true
 vim.opt.scrolloff = 10

@@ -60,6 +60,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		vim.highlight.on_yank()
 	end,
 })
-
--- Check Spelling toogle
-vim.keymap.set("n", "<leader>s", ":set spell!<CR>", { noremap = true, silent = true, desc = "spelling check toogle" })
