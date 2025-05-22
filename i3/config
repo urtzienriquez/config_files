@@ -74,11 +74,14 @@ bindsym $mod+Return exec ghostty
 bindsym $mod+$mod1+Return exec gnome-terminal
 # keybindings for applications
 bindsym $mod+Shift+s exec gnome-control-center
-bindsym $mod+Shift+z exec zotero
-bindsym $mod+Shift+b exec zen
+bindsym $mod+Shift+z exec zotero; workspace $ws6
+bindsym $mod+Shift+b exec zen; workspace $ws5
 bindsym $mod+Shift+v exec ghostty -e /opt/nvim/bin/nvim
 bindsym $mod+Shift+n exec jupyter-lab
 bindsym $mod+Shift+f exec nautilus
+bindsym $mod+Shift+i exec inkscap6; workspace $ws7
+bindsym $mod+Shift+g exec gimp; workspace $ws7
+bindsym $mod+Shift+o exec zoom; workspace $ws8
 # bindsym $mod+Shift+m exec ghostty -e matlab
 bindsym $mod+Shift+w exec libreoffice25.2 --writer
 
@@ -140,32 +143,14 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1:1"
-set $ws2 "2:2"
-set $ws3 "3:3"
-set $ws4 "4:4"
-set $ws5 "5:5"
-set $ws6 "6:6"
-set $ws11 "11:1"
-set $ws12 "12:2"
-set $ws13 "13:3"
-set $ws14 "14:4"
-set $ws15 "15:5"
-set $ws16 "16:6"
-
-# define in which monitor each workspace is located
-workspace 1 output $fm
-workspace 2 output $fm
-workspace 3 output $fm
-workspace 4 output $fm
-workspace 5 output $fm
-workspace 6 output $fm
-workspace 11 output $sm
-workspace 12 output $sm
-workspace 13 output $sm
-workspace 14 output $sm
-workspace 15 output $sm
-workspace 16 output $sm
+set $ws1 "1:work1"
+set $ws2 "2:work2"
+set $ws3 "3:work3"
+set $ws4 "4:work4"
+set $ws5 "5:web"
+set $ws6 "6:zotero"
+set $ws7 "7:graphics"
+set $ws8 "8:zoom"
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -174,12 +159,8 @@ bindsym $mod+3 workspace $ws3
 bindsym $mod+4 workspace $ws4
 bindsym $mod+5 workspace $ws5
 bindsym $mod+6 workspace $ws6
-bindsym $mod1+1 workspace $ws11
-bindsym $mod1+2 workspace $ws12
-bindsym $mod1+3 workspace $ws13
-bindsym $mod1+4 workspace $ws14
-bindsym $mod1+5 workspace $ws15
-bindsym $mod1+6 workspace $ws16
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
 
 # move focused container to workspace and swap to that workspace
 bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1
@@ -188,12 +169,15 @@ bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
 bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
 bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5
 bindsym $mod+Shift+6 move container to workspace $ws6; workspace $ws6
-bindsym $mod1+Shift+1 move container to workspace $ws11; workspace $ws11
-bindsym $mod1+Shift+2 move container to workspace $ws12; workspace $ws12
-bindsym $mod1+Shift+3 move container to workspace $ws13; workspace $ws13
-bindsym $mod1+Shift+4 move container to workspace $ws14; workspace $ws14
-bindsym $mod1+Shift+5 move container to workspace $ws15; workspace $ws15
-bindsym $mod1+Shift+6 move container to workspace $ws16; workspace $ws16
+bindsym $mod+Shift+7 move container to workspace $ws7; workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8; workspace $ws8
+
+# --- Assignment to Workspace -- #
+assign [class="(?i)zen"] $ws5
+assign [class="(?i)zotero"] $ws6
+assign [class="(?i)inkscape"] $ws7
+assign [class="(?i)gimp"] $ws7
+assign [class="(?i)zoom"] $ws8 
 
 # transfare workspace between monitors
 bindsym $mod+$mod1+Shift+Left move workspace to output left
