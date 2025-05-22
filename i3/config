@@ -79,7 +79,6 @@ bindsym $mod+Shift+b exec zen
 bindsym $mod+Shift+v exec ghostty -e /opt/nvim/bin/nvim
 bindsym $mod+Shift+n exec jupyter-lab
 bindsym $mod+Shift+f exec nautilus
-bindsym $mod+Shift+r exec /usr/lib/rstudio/rstudio
 # bindsym $mod+Shift+m exec ghostty -e matlab
 bindsym $mod+Shift+w exec libreoffice25.2 --writer
 
