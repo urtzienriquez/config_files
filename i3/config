@@ -35,7 +35,7 @@ exec --no-startup-id dex --autostart --environment i3
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -t -i /home/urtzi/Pictures/linux_wallpaper_lock.png
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -t -i /home/urtzi/Pictures/linux_wallpaper_lock.png && systemctl suspend 
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -64,16 +64,10 @@ floating_modifier $mod
 # or left-clicking anywhere into the window while holding the floating modifier.
 tiling_drag modifier titlebar
 
-# start a floatting terminal instance
-bindsym $mod+i exec ghostty --x11-instance-name=floatterm
-for_window [instance="floatterm"] floating enable
-for_window [instance="floatterm"] move scratchpad
-for_window [instance="floatterm"] scratchpad show
-# toogle floating terminal
-bindsym $mod+t [instance="floatterm"] scratchpad show; move scratchpad
-
 # Application launchers
 bindsym $mod+Return exec ghostty
+bindsym $mod+Shift+Return exec ghostty --x11-instance-name=floatterm
+for_window [instance="floatterm"] floating enable
 bindsym $mod+$mod1+Return exec gnome-terminal
 bindsym $mod+Shift+s exec gnome-control-center
 bindsym $mod+Shift+v exec ghostty -e /opt/nvim/bin/nvim
@@ -209,7 +203,7 @@ exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # Power management
 # Suspend
-bindsym $mod+$mod1+x exec i3lock -t -i /home/urtzi/Pictures/linux_wallpaper_lock.png && systemctl suspend 
+bindsym $mod+$mod1+l exec i3lock -t -i /home/urtzi/Pictures/linux_wallpaper_lock.png && systemctl suspend 
 # exit i3 (logs you out of your X session)
 bindsym $mod+$mod1+e exec i3-msg exit
 # reboot
