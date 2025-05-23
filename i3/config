@@ -184,7 +184,7 @@ bindsym $mod+$mod1+Shift+Left move workspace to output left
 bindsym $mod+$mod1+Shift+Right move workspace to output right
 
 # define workspaces at startup
-exec --no-startup-id i3-msg workspace $ws11 &
+exec --no-startup-id i3-msg workspace $ws2 &
 exec --no-startup-id i3-msg workspace $ws1
 
 # reload the configuration file
