@@ -64,11 +64,13 @@ floating_modifier $mod
 # or left-clicking anywhere into the window while holding the floating modifier.
 tiling_drag modifier titlebar
 
-# start a floatting terminal at startup that shows/hide
-exec --no-startup-id ghostty --x11-instance-name=floatterm
+# start a floatting terminal instance
+bindsym $mod+i exec ghostty --x11-instance-name=floatterm
 for_window [instance="floatterm"] floating enable
 for_window [instance="floatterm"] move scratchpad
-bindsym $mod+t [instance="floatterm"] scratchpad show; move position center
+for_window [instance="floatterm"] scratchpad show
+# toogle floating terminal
+bindsym $mod+t [instance="floatterm"] scratchpad show; move scratchpad
 
 # Application launchers
 bindsym $mod+Return exec ghostty
