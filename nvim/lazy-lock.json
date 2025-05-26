@@ -33,5 +33,7 @@
   "telescope.nvim": { "branch": "master", "commit": "a0bbec21143c7bc5f8bb02e0005fa0b982edc026" },
   "tokyonight.nvim": { "branch": "main", "commit": "057ef5d260c1931f1dffd0f052c685dcd14100a3" },
   "vim-be-good": { "branch": "master", "commit": "0ae3de14eb8efc6effe7704b5e46495e91931cc5" },
+  "vim-pandoc": { "branch": "master", "commit": "a9896b7f7c09b7804dd9e200e7b96c18ecb5fa0b" },
+  "vim-pandoc-syntax": { "branch": "master", "commit": "ea3fc415784bdcbae7f0093b80070ca4ff9e44c8" },
   "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" }
 }
