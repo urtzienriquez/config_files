@@ -6,18 +6,6 @@ local on_attach = function(client, bufnr)
 	local opts = { buffer = bufnr, silent = true }
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 	vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-	vim.keymap.set("n", "<leader>lrn", vim.lsp.buf.rename, opts)
-	vim.keymap.set("n", "<leader>lrr", vim.lsp.buf.references, opts)
-	vim.keymap.set("n", "<leader>lca", function()
-		vim.lsp.buf.code_action({ apply = true })
-	end, opts)
-	vim.keymap.set("n", "<leader>lqf", function()
-		vim.lsp.buf.code_action({ apply = true })
-	end, opts)
-	vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
-	vim.keymap.set("v", "<leader>lfmt", function()
-		vim.lsp.buf.format({ timeout_ms = 1000000 })
-	end, opts)
 end
 
 -- Setup lspconfig: capabilities is passed to lspconfig.$server.setup
