@@ -22,17 +22,14 @@ vim.o.foldenable = true
 
 -- Autocommands
 local augroup_julia = vim.api.nvim_create_augroup("FileTypeJulia", {})
-vim.api.nvim_create_autocmd(
-    {"FileType"},
-    {
-        group = augroup_julia,
-        pattern = "julia",
-        callback = function(ev)
-            vim.opt_local.textwidth = 92
-            vim.opt_local.colorcolumn = "93"
-        end,
-    }
-)
+vim.api.nvim_create_autocmd({ "FileType" }, {
+	group = augroup_julia,
+	pattern = "julia",
+	callback = function(ev)
+		vim.opt_local.textwidth = 92
+		vim.opt_local.colorcolumn = "93"
+	end,
+})
 
 -- Show diagnostics as virtual text (disabled by default since 0.11)
 vim.diagnostic.config({ virtual_text = true })
@@ -46,5 +43,4 @@ vim.opt.splitright = true
 
 -- Auto-resize splits when terminal window changes size
 -- (e.g. when splitting or zooming with tmux)
-vim.api.nvim_create_autocmd( {"VimResized"}, {pattern = "*", command = "wincmd ="})
-
+vim.api.nvim_create_autocmd({ "VimResized" }, { pattern = "*", command = "wincmd =" })
