@@ -188,9 +188,6 @@ PROMPT_COMMAND=__set_bash_prompt
 # export path for neovim
 export PATH="$PATH:/opt/nvim/bin"
 
-# export path for rstudio
-export PATH="$PATH:/usr/lib/rstudio"
-
 # export path for go
 export PATH=$PATH:/usr/local/go/bin
 
