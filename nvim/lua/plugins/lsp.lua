@@ -3,9 +3,8 @@
 -- Set LSP keymappings in on_attach (i.e. only in buffers with LSP active)
 -- TODO: lspconfig recommend doing this in an LspAttach autocommand instead
 local on_attach = function(client, bufnr)
-	local opts = { buffer = bufnr, silent = true }
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-	vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+	vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, silent = true, desc = "information hover" })
+	vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, silent = true, desc = "go to definition" })
 end
 
 -- Setup lspconfig: capabilities is passed to lspconfig.$server.setup
