@@ -20,9 +20,9 @@ return {
 						color = { fg = "#ff9e64" },
 					},
 				},
-				lualine_x = { "filetype" },
-				lualine_y = { "progress" },
-				lualine_z = { "location" },
+				lualine_x = {},
+				lualine_y = { "filetype" },
+				lualine_z = { "progress", "location" },
 			},
 		})
 	end,
