@@ -2,6 +2,10 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "ç"
 
+-- spelling language
+vim.opt.spelllang = "en_us"
+vim.opt.spell = true
+
 -- Disable arrow keys in normal mode
 vim.api.nvim_set_keymap("n", "<Up>", "<Nop>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<Down>", "<Nop>", { noremap = true, silent = true })
