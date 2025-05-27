@@ -17,16 +17,16 @@ vim.api.nvim_set_keymap("i", "<Right>", "<Nop>", { noremap = true, silent = true
 -- Disable mouse
 vim.opt.mouse = ""
 
--- vim options
+-- misc options
 vim.g.have_nerd_font = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.autoindent = true
--- vim.opt.scrolloff = 10
 vim.cmd("set backspace=indent,eol,start")
 vim.cmd("set tabstop=2")
 vim.cmd("set shiftwidth=2")
 vim.cmd("set softtabstop=2")
+vim.cmd("set ignorecase") -- case insensitive search
 vim.opt.clipboard = "unnamedplus"
 
 -- code folding, automatic to manual

@@ -3,6 +3,9 @@ return {
 		"folke/which-key.nvim",
 		event = "VimEnter", -- Sets the loading event to 'VimEnter'
 		opts = {
+			plugins = {
+				spelling = { enabled = false },
+			},
 			delay = 0,
 			preset = "helix",
 			icons = {
