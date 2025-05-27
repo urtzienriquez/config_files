@@ -67,3 +67,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		vim.highlight.on_yank()
 	end,
 })
+
+-- toggle rendering in render-markdown
+vim.keymap.set("n", "<leader>m", require("render-markdown").toggle, { desc = "render markdown toogle" })

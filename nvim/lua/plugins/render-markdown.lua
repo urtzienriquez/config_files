@@ -5,5 +5,6 @@ return {
 	---@type render.md.UserConfig
 	opts = {
 		file_types = { "markdown", "rmd", "jmd" },
+		render_modes = true,
 	},
 }
