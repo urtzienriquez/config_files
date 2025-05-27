@@ -2,11 +2,12 @@
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Esc using jj" })
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Esc using jk" })
 
--- spell suggestions in normal mode
+-- word suggestions in normal mode
 vim.keymap.set("n", "<C-x><C-s>", "i<C-X><C-S>", { desc = "Spelling suggestion in normal mode" })
 vim.keymap.set("n", "<C-x><C-n>", "i<C-X><C-N>", { desc = "Next word suggestion in normal mode" })
 vim.keymap.set("n", "<C-x><C-p>", "i<C-X><C-P>", { desc = "Previous word suggestion in normal mode" })
 vim.keymap.set("n", "<C-x><C-x>", "i<C-X><C-O>", { desc = "Omni suggestion in normal mode" })
+vim.keymap.set("n", "<C-x><C-k>", "i<C-X><C-K>", { desc = "Dictionary suggestion in normal mode" })
 
 -- open oil
 vim.keymap.set("n", "-", require("oil").open, { desc = "Open parent directory" })
