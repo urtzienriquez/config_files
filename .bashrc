@@ -185,10 +185,10 @@ __set_bash_prompt()
 # need because __git_ps1 will return different text and colors
 PROMPT_COMMAND=__set_bash_prompt
 
-# export path for neovim
+# neovim path export
 export PATH="$PATH:/opt/nvim/bin"
 
-# export path for go
+# go path export
 export PATH=$PATH:/usr/local/go/bin
 
 # >>> juliaup initialize >>>
