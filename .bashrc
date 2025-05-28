@@ -213,3 +213,9 @@ esac
 
 # Created by `pipx` on 2025-05-02 03:11:06
 export PATH="$PATH:/home/urtzi/.local/bin"
+
+# Start a tmux session when opening terminal
+if [ -n "$PS1" ] && [ -z "$TMUX" ]; then
+  # Create session 'main' or attach to 'main' if already exists.
+  tmux new-session
+fi
