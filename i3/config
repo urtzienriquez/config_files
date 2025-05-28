@@ -165,6 +165,12 @@ assign [class="(?i)inkscape"] $ws7
 assign [class="(?i)gimp"] $ws7
 assign [class="(?i)zoom"] $ws8 
 
+# assign workspaces to monitors
+workspace $ws5 output $fm
+workspace $ws6 output $fm
+workspace $ws7 output $fm
+workspace $ws8 output $fm
+
 # transfare workspace between monitors
 bindsym $mod+$mod1+Shift+Left move workspace to output left
 bindsym $mod+$mod1+Shift+Right move workspace to output right

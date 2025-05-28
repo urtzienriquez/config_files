@@ -12,8 +12,8 @@ shell-integration-features = no-cursor
 # cursor-color = 000000
 
 # keybindings
-keybind = shift+control+j=scroll_page_lines:-1
-keybind = shift+control+k=scroll_page_lines:1
+keybind = shift+control+k=scroll_page_lines:-1
+keybind = shift+control+j=scroll_page_lines:1
 keybind = shift+control+h=scroll_to_top
 keybind = shift+control+l=scroll_to_bottom
 # keybind = ctrl+k=jump_to_prompt:1
