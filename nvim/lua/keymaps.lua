@@ -1,6 +1,6 @@
 -- escape as jj or jk
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Esc using jj" })
-vim.keymap.set("i", "jk", "<Esc>", { desc = "Esc using jk" })
+-- vim.keymap.set("i", "jk", "<Esc>", { desc = "Esc using jk" })
 
 -- word suggestions in normal mode
 vim.keymap.set("n", "<C-x><C-s>", "i<C-X><C-S>", { desc = "Spelling suggestion in normal mode" })
