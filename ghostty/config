@@ -18,7 +18,7 @@ keybind = shift+control+h=scroll_to_top
 keybind = shift+control+l=scroll_to_bottom
 # keybind = ctrl+k=jump_to_prompt:1
 # keybind = ctrl+j=jump_to_prompt:-1
-keybind = global:alt+l=text:lazygit
+keybind = global:alt+g=text:lazygit
 
 # padding
 window-padding-balance = true
