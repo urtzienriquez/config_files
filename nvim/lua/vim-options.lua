@@ -32,6 +32,7 @@ vim.cmd("set shiftwidth=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set ignorecase") -- case insensitive search
 vim.opt.clipboard = "unnamedplus"
+vim.o.termguicolors = true
 
 -- code folding, automatic to manual
 vim.o.foldcolumn = "1" -- '0' is not bad
