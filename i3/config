@@ -107,10 +107,10 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation: next to current page
-bindsym $mod1+h split h
+bindsym $mod+$mod1+h split h
 
 # split in vertical orientation: to the bottom of current page
-bindsym $mod1+v split v
+bindsym $mod+$mod1+v split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
