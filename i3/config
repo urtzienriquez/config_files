@@ -70,7 +70,7 @@ bindsym $mod1+Return exec ghostty
 bindsym $mod1+t exec ghostty --x11-instance-name=floatterm
 for_window [instance="floatterm"] floating enable
 bindsym $mod+$mod1+Return exec gnome-terminal
-bindsym $mod1+s exec gnome-control-center
+bindsym $mod1+c exec gnome-control-center
 bindsym $mod1+v exec ghostty -e /opt/nvim/bin/nvim
 bindsym $mod1+n exec jupyter-lab
 bindsym $mod1+f exec nautilus
