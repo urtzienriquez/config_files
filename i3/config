@@ -65,28 +65,28 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # Application launchers
-bindsym $mod+Return exec ghostty
-bindsym $mod+t exec ghostty --x11-instance-name=floatterm
+# with ALT
+bindsym $mod1+Return exec ghostty
+bindsym $mod1+t exec ghostty --x11-instance-name=floatterm
 for_window [instance="floatterm"] floating enable
 bindsym $mod+$mod1+Return exec gnome-terminal
-bindsym $mod+Shift+s exec gnome-control-center
-bindsym $mod+Shift+v exec ghostty -e /opt/nvim/bin/nvim
-bindsym $mod+Shift+n exec jupyter-lab
-bindsym $mod+Shift+f exec nautilus
-bindsym $mod+Shift+w exec libreoffice25.2 --writer
-bindsym $mod+Shift+b exec zen; workspace $ws5
-bindsym $mod+Shift+z exec zotero; workspace $ws6
-bindsym $mod+Shift+i exec inkscape; workspace $ws7
-bindsym $mod+Shift+g exec gimp; workspace $ws7
-bindsym $mod+Shift+o exec zoom; workspace $ws8
+bindsym $mod1+s exec gnome-control-center
+bindsym $mod1+v exec ghostty -e /opt/nvim/bin/nvim
+bindsym $mod1+n exec jupyter-lab
+bindsym $mod1+f exec nautilus
+bindsym $mod1+w exec libreoffice25.2 --writer
+bindsym $mod1+b exec zen; workspace $ws5
+bindsym $mod1+z exec zotero; workspace $ws6
+bindsym $mod1+i exec inkscape; workspace $ws7
+bindsym $mod1+g exec gimp; workspace $ws7
+bindsym $mod1+o exec zoom; workspace $ws8
 # start rofi (a program launcher)
-bindcode $mod+40 exec "rofi -modi drun,run -show drun"
+bindcode $mod1+40 exec "rofi -modi drun,run -show drun"
+# kill focused window
+bindsym $mod1+k kill
 
 # toggle polybar
 bindsym $mod+b exec --no-startup-id polybar-msg cmd toggle 
-
-# kill focused window
-bindsym $mod+Shift+c kill
 
 # change focus
 bindsym $mod+h focus left

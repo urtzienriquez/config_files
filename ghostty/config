@@ -1,7 +1,3 @@
-# This is the configuration file for Ghostty.
-# Run `ghostty +show-config --default --docs` to view a list of
-# all available config options and their default values.
-
 # theme
 theme = tokyonight
 
@@ -9,23 +5,17 @@ theme = tokyonight
 cursor-style = block
 cursor-style-blink = false
 shell-integration-features = no-cursor
-# cursor-color = 000000
 
 # keybindings
 keybind = shift+control+k=scroll_page_lines:-1
 keybind = shift+control+j=scroll_page_lines:1
 keybind = shift+control+h=scroll_to_top
 keybind = shift+control+l=scroll_to_bottom
-# keybind = ctrl+k=jump_to_prompt:1
-# keybind = ctrl+j=jump_to_prompt:-1
-keybind = global:alt+g=text:lazygit
 
 # padding
 window-padding-balance = true
-# window-padding-color = extend
 window-padding-x = 0
 window-padding-y = 0
 
 # window decoration
-# window-decoration = none
 gtk-titlebar = false
