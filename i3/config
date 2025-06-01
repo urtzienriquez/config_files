@@ -1,7 +1,7 @@
 # Set modifier key to Super
 # Mod4 = Super; Mod1 = Alt
-set $mod Mod4
-set $mod1 Mod1
+set $Super Mod4
+set $Alt Mod1
 
 # Set monitor names
 set $fm eDP-1
@@ -55,82 +55,85 @@ bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl -c backlight se
 #interactive screenshot by pressing printscreen
 bindsym Print exec gnome-screenshot -i 
 #crop-area screenshot by pressing Mod + printscreen
-bindsym $mod+Print exec gnome-screenshot -a
+bindsym $Super+Print exec gnome-screenshot -a
 
-# Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
+# Use Mouse+$Super to drag floating windows to their wanted position
+floating_modifier $Super
 
 # move tiling windows via drag & drop by left-clicking into the title bar,
 # or left-clicking anywhere into the window while holding the floating modifier.
 tiling_drag modifier titlebar
 
+# remap cap_lock to esc
+exec_always --no-startup-id setxkbmap -option "caps:escape"
+
 # Application launchers
 # with ALT
-bindsym $mod1+Return exec ghostty
-bindsym $mod1+t exec ghostty --x11-instance-name=floatterm
+bindsym $Alt+Return exec ghostty
+bindsym $Alt+t exec ghostty --x11-instance-name=floatterm
 for_window [instance="floatterm"] floating enable
-bindsym $mod+$mod1+Return exec gnome-terminal
-bindsym $mod1+c exec gnome-control-center
-bindsym $mod1+v exec ghostty -e /opt/nvim/bin/nvim
-bindsym $mod1+n exec jupyter-lab
-bindsym $mod1+f exec nautilus
-bindsym $mod1+w exec libreoffice25.2 --writer
-bindsym $mod1+b exec zen; workspace $ws5
-bindsym $mod1+z exec zotero; workspace $ws6
-bindsym $mod1+i exec inkscape; workspace $ws7
-bindsym $mod1+g exec gimp; workspace $ws7
-bindsym $mod1+o exec zoom; workspace $ws8
+bindsym $Super+$Alt+Return exec gnome-terminal
+bindsym $Alt+s exec gnome-control-center
+bindsym $Alt+v exec ghostty -e /opt/nvim/bin/nvim
+bindsym $Alt+n exec jupyter-lab
+bindsym $Alt+f exec nautilus
+bindsym $Alt+w exec libreoffice25.2 --writer
+bindsym $Alt+b exec zen; workspace $ws5
+bindsym $Alt+z exec zotero; workspace $ws6
+bindsym $Alt+i exec inkscape; workspace $ws7
+bindsym $Alt+g exec gimp; workspace $ws7
+bindsym $Alt+o exec zoom; workspace $ws8
 # start rofi (a program launcher)
-bindcode $mod1+40 exec "rofi -modi drun,run -show drun"
+bindcode $Alt+40 exec "rofi -modi drun,run -show drun"
 # kill focused window
-bindsym $mod1+k kill
+bindsym $Alt+c kill
 
 # toggle polybar
-bindsym $mod+b exec --no-startup-id polybar-msg cmd toggle 
+bindsym $Super+b exec --no-startup-id polybar-msg cmd toggle 
 
 # change focus
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
+bindsym $Super+h focus left
+bindsym $Super+j focus down
+bindsym $Super+k focus up
+bindsym $Super+l focus right
 # alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
+bindsym $Super+Left focus left
+bindsym $Super+Down focus down
+bindsym $Super+Up focus up
+bindsym $Super+Right focus right
 
 # move focused window
-bindsym $mod+Shift+h move left
-bindsym $mod+Shift+j move down
-bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
+bindsym $Super+Shift+h move left
+bindsym $Super+Shift+j move down
+bindsym $Super+Shift+k move up
+bindsym $Super+Shift+l move right
 # alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+bindsym $Super+Shift+Left move left
+bindsym $Super+Shift+Down move down
+bindsym $Super+Shift+Up move up
+bindsym $Super+Shift+Right move right
 
 # split in horizontal orientation: next to current page
-bindsym $mod+$mod1+h split h
+bindsym $Super+$Alt+h split h
 
 # split in vertical orientation: to the bottom of current page
-bindsym $mod+$mod1+v split v
+bindsym $Super+$Alt+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
+bindsym $Super+f fullscreen toggle
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+bindsym $Super+s layout stacking
+bindsym $Super+w layout tabbed
+bindsym $Super+e layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $Super+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+bindsym $Super+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+a focus parent
+bindsym $Super+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 set $ws1 "1:work1"
@@ -143,24 +146,28 @@ set $ws7 "7:graphics"
 set $ws8 "8:zoom"
 
 # switch to workspace
-bindsym $mod+1 workspace $ws1
-bindsym $mod+2 workspace $ws2
-bindsym $mod+3 workspace $ws3
-bindsym $mod+4 workspace $ws4
-bindsym $mod+5 workspace $ws5
-bindsym $mod+6 workspace $ws6
-bindsym $mod+7 workspace $ws7
-bindsym $mod+8 workspace $ws8
+bindsym $Super+1 workspace $ws1
+bindsym $Super+2 workspace $ws2
+bindsym $Super+3 workspace $ws3
+bindsym $Super+4 workspace $ws4
+bindsym $Super+5 workspace $ws5
+bindsym $Super+6 workspace $ws6
+bindsym $Super+7 workspace $ws7
+bindsym $Super+8 workspace $ws8
+
+# switch to next/previous workspace
+bindsym $Super+n workspace next_on_output
+bindsym $Super+p workspace prev_on_output
 
 # move focused container to workspace and swap to that workspace
-bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
-bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5
-bindsym $mod+Shift+6 move container to workspace $ws6; workspace $ws6
-bindsym $mod+Shift+7 move container to workspace $ws7; workspace $ws7
-bindsym $mod+Shift+8 move container to workspace $ws8; workspace $ws8
+bindsym $Super+Shift+1 move container to workspace $ws1; workspace $ws1
+bindsym $Super+Shift+2 move container to workspace $ws2; workspace $ws2
+bindsym $Super+Shift+3 move container to workspace $ws3; workspace $ws3
+bindsym $Super+Shift+4 move container to workspace $ws4; workspace $ws4
+bindsym $Super+Shift+5 move container to workspace $ws5; workspace $ws5
+bindsym $Super+Shift+6 move container to workspace $ws6; workspace $ws6
+bindsym $Super+Shift+7 move container to workspace $ws7; workspace $ws7
+bindsym $Super+Shift+8 move container to workspace $ws8; workspace $ws8
 
 # assignment to workspace
 assign [class="(?i)zen"] $ws5
@@ -176,19 +183,19 @@ workspace $ws7 output $fm
 workspace $ws8 output $fm
 
 # transfare workspace between monitors
-bindsym $mod+$mod1+Shift+Left move workspace to output left
-bindsym $mod+$mod1+Shift+Right move workspace to output right
-bindsym $mod+$mod1+Shift+h move workspace to output left
-bindsym $mod+$mod1+Shift+l move workspace to output right
+bindsym $Super+$Alt+Shift+Left move workspace to output left
+bindsym $Super+$Alt+Shift+Right move workspace to output right
+bindsym $Super+$Alt+Shift+h move workspace to output left
+bindsym $Super+$Alt+Shift+l move workspace to output right
 
 # define workspaces at startup
 exec --no-startup-id i3-msg workspace $ws2 &
 exec --no-startup-id i3-msg workspace $ws1
 
 # reload the configuration file
-bindsym $mod+$mod1+Shift+c reload
+bindsym $Super+$Alt+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+$mod1+Shift+r restart
+bindsym $Super+$Alt+Shift+r restart
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -201,23 +208,23 @@ mode "resize" {
         bindsym Down resize grow height 10 px or 10 ppt
         bindsym Up resize shrink height 10 px or 10 ppt
         bindsym Right resize grow width 10 px or 10 ppt
-        # back to normal: Enter or Escape or $mod+r
+        # back to normal: Enter or Escape or $Super+r
         bindsym Return mode "default"
         bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+        bindsym $Super+r mode "default"
 }
-bindsym $mod+r mode "resize"
+bindsym $Super+r mode "resize"
 
 # Polybar start
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # Power management
 # Suspend
-bindsym $mod+$mod1+l exec i3lock -t -i /home/urtzi/Pictures/linux_wallpaper_lock.png && systemctl suspend 
+bindsym $Super+$Alt+l exec i3lock -t -i /home/urtzi/Pictures/linux_wallpaper_lock.png && systemctl suspend 
 # exit i3 (logs you out of your X session)
-bindsym $mod+$mod1+e exec i3-msg exit
+bindsym $Super+$Alt+e exec i3-msg exit
 # reboot
-bindsym $mod+$mod1+r exec systemctl reboot
+bindsym $Super+$Alt+r exec systemctl reboot
 # shutdown
-bindsym $mod+$mod1+s exec systemctl poweroff
+bindsym $Super+$Alt+s exec systemctl poweroff
 
