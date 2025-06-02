@@ -74,9 +74,8 @@ unmap(';cp');
 unmap(';ap');
 
 // ---- Search Engines -----
-removeSearchAlias('b', 's');
+removeSearchAlias('w', 's');
 removeSearchAlias('g', 's');
-removeSearchAlias('h', 's');
 
 // Theme
 
