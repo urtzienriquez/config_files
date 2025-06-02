@@ -69,7 +69,7 @@ settings.theme = `
 /* Edit these variables for easy theme making */
 :root {
   /* Font */
-  --font: 'Source Code Pro', Ubuntu, sans;
+  --font: Maple Mono Freeze,Input Sans Condensed, Charcoal, sans-serif;
   --font-size: 12;
   --font-weight: bold;
 
@@ -84,11 +84,6 @@ settings.theme = `
   --accent-fg: #A3BE8C;
   --info-fg: #5E81AC;
   --select: #4C566A;
-
-  /* Unused Alternate Colors */
-  /* --orange: #D08770; */
-  /* --red: #BF616A; */
-  /* --yellow: #EBCB8B; */
 
 }
 
@@ -265,8 +260,6 @@ input {
 /* ---------- ACE Editor ---------- */
 #sk_editor {
   background: var(--bg-dark) !important;
-  height: 50% !important;
-  /* Remove this to restore the default editor size */
 }
 
 .ace_dialog-bottom {
@@ -301,13 +294,5 @@ input {
 
 .ace_marker-layer .ace_selection {
   background: var(--select) !important;
-}
-
-.ace_editor,
-.ace_dialog span,
-.ace_dialog input {
-  font-family: var(--font);
-  font-size: var(--font-size);
-  font-weight: var(--font-weight);
 }
 `;
