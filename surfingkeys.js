@@ -210,7 +210,7 @@ input {
 }
 
 .sk_theme kbd .candidates {
-  color: var(--info-fg);
+  color: #ff8000;
 }
 
 .sk_theme span.annotation {
@@ -249,11 +249,12 @@ input {
   background: var(--bg-dark);
   border-color: var(--border);
   box-shadow: none;
-  color: var(--fg);
+  color: var(--main-fg);
+  font-size: var(--font-size);
 }
 
 .sk_theme .feature_name span {
-  color: var(--main-fg);
+  color: var(--fg);
 }
 
 /* ---------- ACE Editor ---------- */
