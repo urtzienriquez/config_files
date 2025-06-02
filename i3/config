@@ -79,6 +79,7 @@ bindsym $Alt+v exec ghostty -e /opt/nvim/bin/nvim
 bindsym $Alt+f exec nautilus
 bindsym $Alt+w exec libreoffice25.2 --writer
 bindsym $Alt+b exec brave-browser; workspace $ws5
+bindsym $Alt+q exec qutebrowser; workspace $ws5
 bindsym $Alt+z exec zotero; workspace $ws6
 bindsym $Alt+i exec inkscape; workspace $ws7
 bindsym $Alt+g exec gimp; workspace $ws7
@@ -171,6 +172,7 @@ bindsym $Super+Shift+8 move container to workspace $ws8; workspace $ws8
 
 # assignment to workspace
 assign [class="(?i)brave-browser"] $ws5
+assign [class="(?i)qutebrowser"] $ws5
 assign [class="(?i)zotero"] $ws6
 assign [class="(?i)inkscape"] $ws7
 assign [class="(?i)gimp"] $ws7
