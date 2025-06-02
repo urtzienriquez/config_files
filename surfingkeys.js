@@ -62,6 +62,21 @@ map('K', 'E');
 
 addSearchAlias('b',  'brave', 'https://search.brave.com/search?q=', 's');
 
+// ---- Unmap -----
+// Proxy Stuff
+unmap('spa');
+unmap('spb');
+unmap('spc');
+unmap('spd');
+unmap('sps');
+unmap('cp');
+unmap(';cp');
+unmap(';ap');
+
+// ---- Search Engines -----
+removeSearchAlias('b', 's');
+removeSearchAlias('g', 's');
+removeSearchAlias('h', 's');
 
 // Theme
 
@@ -70,7 +85,7 @@ settings.theme = `
 :root {
   /* Font */
   --font: Maple Mono Freeze,Input Sans Condensed, Charcoal, sans-serif;
-  --font-size: 14pt;
+  --font-size: 13pt;
 
   /* -------------------- */
   /* --      NORD      -- */
