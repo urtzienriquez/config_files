@@ -70,8 +70,7 @@ settings.theme = `
 :root {
   /* Font */
   --font: Maple Mono Freeze,Input Sans Condensed, Charcoal, sans-serif;
-  --font-size: 12;
-  --font-weight: bold;
+  --font-size: 14pt;
 
   /* -------------------- */
   /* --      NORD      -- */
