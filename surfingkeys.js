@@ -26,7 +26,8 @@ const {
 
 // ---- Settings ----
 Hints.setCharacters('asdfgyuiopqwertnmzxcvb');
-Hints.style('font-size: 12pt;')
+Hints.style('font-size: 12pt; color:#000000; background: none; background-color: #7800ff;')
+Hints.style("div{font-size: 12pt; color:#000000; background: none; background-color: #7800ff;} div.begin{color:#000000;}", "text");
 
 settings.defaultSearchEngine = 'd';
 settings.hintAlign = 'left';
