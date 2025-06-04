@@ -26,19 +26,17 @@ const {
 
 // ---- Settings ----
 Hints.setCharacters('asdfgyuiopqwertnmzxcvb');
-Hints.style('font-size: 12pt; color:#000000; background: none; background-color: #7800ff;')
-Hints.style("div{font-size: 12pt; color:#000000; background: none; background-color: #7800ff;} div.begin{color:#000000;}", "text");
+Hints.style("font-size: 11pt; background: #ffdb4d;")
+Hints.style("div{font-size: 11pt; border: solid 1px #ff9933; background: #ffa64d; color:#000000;} div.begin{color:#000000;}", "text");
 
 settings.defaultSearchEngine = 'd';
 settings.hintAlign = 'left';
-// settings.omnibarPosition = 'bottom';
-// settings.focusFirstCandidate = false;
+settings.omnibarPosition = 'bottom';
+settings.focusFirstCandidate = false;
 settings.focusAfterClosed = 'last';
 settings.scrollStepSize = 200;
 settings.tabsThreshold = 0;
 settings.modeAfterYank = 'Normal';
-
-// ---- Map -----
 
 // regional hints
 map('<Alt-l>', 'L')
@@ -55,16 +53,11 @@ map('b', 'T');
 map('H', 'S');
 map('L', 'D');
 
-// --- Tabs ---
 // Tab Next/Prev
 map('J', 'R');
 map('K', 'E');
 
-
-addSearchAlias('b',  'brave', 'https://search.brave.com/search?q=', 's');
-
-// ---- Unmap -----
-// Proxy Stuff
+// Unmap Proxy Stuff
 unmap('spa');
 unmap('spb');
 unmap('spc');
@@ -74,9 +67,22 @@ unmap('cp');
 unmap(';cp');
 unmap(';ap');
 
-// ---- Search Engines -----
-removeSearchAlias('w', 's');
+// Search Engines
 removeSearchAlias('g', 's');
+removeSearchAlias('d', 's');
+removeSearchAlias('b', 's');
+removeSearchAlias('e', 's');
+removeSearchAlias('w', 's');
+removeSearchAlias('h', 's');
+removeSearchAlias('w', 's');
+removeSearchAlias('y', 's');
+
+addSearchAlias('b',  'brave', 'https://search.brave.com/search?q=', 's');
+addSearchAlias('d',  'duckduckgo', 'https://duckduckgo.com/?q=', 's');
+addSearchAlias('g', 'github', 'https://github.com/search?q=', 's');
+addSearchAlias('r', 'reddit', 'https://libreddit.spike.codes/r/', 's');
+addSearchAlias('w', 'wikipedia', 'https://en.wikipedia.org/wiki/Special:Search/', 's');
+addSearchAlias('y', 'youtube', 'https://www.youtube.com/results?search_query=', 's');
 
 // Theme
 
@@ -85,19 +91,19 @@ settings.theme = `
 :root {
   /* Font */
   --font: Maple Mono Freeze,Input Sans Condensed, Charcoal, sans-serif;
-  --font-size: 13pt;
+  --font-size: 11pt;
 
   /* -------------------- */
-  /* --      NORD      -- */
+  /* -- Tomorrow Night -- */
   /* -------------------- */
-  --fg: #E5E9F0;
-  --bg: #3B4252;
-  --bg-dark: #2E3440;
-  --border: #4C566A;
-  --main-fg: #88C0D0;
-  --accent-fg: #A3BE8C;
-  --info-fg: #5E81AC;
-  --select: #4C566A;
+  --fg: #C5C8C6;
+  --bg: #282A2E;
+  --bg-dark: #1D1F21;
+  --border: #373b41;
+  --main-fg: #81A2BE;
+  --accent-fg: #52C196;
+  --info-fg: #AC7BBA;
+  --select: #585858;
 
 }
 
