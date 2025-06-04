@@ -37,16 +37,31 @@ local servers = {
 				new_config.cmd[1] = julia
 			end
 		end,
-		-- This just adds dirname(fname) as a fallback (see nvim-lspconfig#1768).
 		root_dir = function(fname)
 			local util = require("lspconfig.util")
 			return util.root_pattern("Project.toml")(fname) or util.find_git_ancestor(fname) or util.path.dirname(fname)
 		end,
 		on_attach = function(client, bufnr)
 			on_attach(client, bufnr)
-			-- Disable automatic formatexpr since the LS.jl formatter isn't so nice.
 			vim.bo[bufnr].formatexpr = ""
 		end,
+	}),
+	-- FORTRAN LSP (fortls)
+	fortls = vim.tbl_extend("force", default_opts, {
+		root_dir = vim.fn.expand("~/.local/share/nvim/mason/packages/fortls"),
+		cmd = {
+			"fortls",
+			"--lowercase_intrinsics",
+			"--notify_init",
+			"--hover_signature",
+			"--hover_language=fortran",
+			"--use_signature_help",
+			"--symbol_skip_mem",
+			"--autocomplete_no_prefix",
+			"--autocomplete_name_only",
+			"--variable_hover",
+			"--debug_log",
+		},
 	}),
 }
 

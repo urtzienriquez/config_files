@@ -20,9 +20,8 @@ return {
 			"yaml",
 			"r",
 			"julia",
-			"fortran",
 		},
-		auto_install = true,
+		auto_install = false,
 		highlight = {
 			enable = true,
 			disable = { "fortran" },
