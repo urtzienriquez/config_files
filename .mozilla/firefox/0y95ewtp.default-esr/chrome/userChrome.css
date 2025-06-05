@@ -1,0 +1,14 @@
+@namespace url(http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul);
+
+#navigator-toolbox {
+    height: 5px !important;
+    min-height: 0px !important;
+    overflow: hidden !important;
+}
+
+#navigator-toolbox:hover,
+#navigator-toolbox:focus-within,
+#navigator-toolbox:active {
+    height: auto !important;
+    overflow: visible !important;
+}
