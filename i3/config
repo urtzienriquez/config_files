@@ -87,7 +87,7 @@ bindsym $Alt+g exec gimp; workspace $ws7
 bindsym $Alt+o exec zoom; workspace $ws8
 bindsym $Alt+y exec freetube; workspace $ws9
 # start rofi (a program launcher)
-bindcode $Alt+40 exec "rofi -modi drun,run -show drun"
+bindsym $Alt+r exec "rofi -modi drun,run -show drun"
 # kill focused window
 bindsym $Alt+k kill
 
