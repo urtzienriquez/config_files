@@ -68,14 +68,9 @@ xterm*|rxvt*)
     ;;
 esac
 
-# enable color support of ls
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-fi
-
 # Alias definitions.
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+if [ -f "$HOME/.bash_aliases" ]; then
+    . "$HOME/.bash_aliases"
 fi
 
 # enable programmable completion features (you don't need to enable
@@ -101,36 +96,27 @@ export GIT_PS1_SHOWUPSTREAM="verbose"     # 'u='=no difference, 'u+1'=ahead by 1
 export GIT_PS1_STATESEPARATOR=''          # No space between branch and index status
 export GIT_PS1_DESCRIBE_STYLE="describe"  # detached HEAD style:
 
-# Check if we support colours
 __colour_enabled() {
     local -i colors=$(tput colors 2>/dev/null)
     [[ $? -eq 0 ]] && [[ $colors -gt 2 ]]
 }
 unset __colourise_prompt && __colour_enabled && __colourise_prompt=1
 
-__set_bash_prompt()
-{
-    local exit="$?" # Save the exit status of the last command
+__set_bash_prompt() {
+    local exit="$?"
 
-    # PS1 is made from $PreGitPS1 + <git-status> + $PostGitPS1
     local PreGitPS1="${debian_chroot:+($debian_chroot)}"
     local PostGitPS1=""
 
     if [[ $__colourise_prompt ]]; then
         export GIT_PS1_SHOWCOLORHINTS=1
 
-        # Wrap the colour codes between \[ and \], so that
-        # bash counts the correct number of characters for line wrapping:
-        local Red='\[\e[0;31m\]'; local BRed='\[\e[1;31m\]'
-        local Gre='\[\e[0;32m\]'; local BGre='\[\e[1;32m\]'
-        local Yel='\[\e[0;33m\]'; local BYel='\[\e[1;33m\]'
-        local Blu='\[\e[0;34m\]'; local BBlu='\[\e[1;34m\]'
-        local Mag='\[\e[0;35m\]'; local BMag='\[\e[1;35m\]'
-        local Cya='\[\e[0;36m\]'; local BCya='\[\e[1;36m\]'
-        local Whi='\[\e[0;37m\]'; local BWhi='\[\e[1;37m\]'
-        local None='\[\e[0m\]' # Return to default colour
+        local Red='\[\e[0;31m\]'
+        local BRed='\[\e[1;31m\]'
+        local BGre='\[\e[1;32m\]'
+        local BMag='\[\e[1;35m\]'
+        local None='\[\e[0m\]'
 
-        # No username and bright colour if root
         if [[ ${EUID} == 0 ]]; then
             PreGitPS1+="$BRed\h "
         else
@@ -138,40 +124,31 @@ __set_bash_prompt()
         fi
 
         PreGitPS1+="$BMag\w$None"
-    else # No colour
-        # Sets prompt like: ravi@boxy:~/prj/sample_app
+    else
         unset GIT_PS1_SHOWCOLORHINTS
         PreGitPS1="${debian_chroot:+($debian_chroot)}\u@\h:\w"
     fi
 
-    # Now build the part after git's status
-
-    # Highlight non-standard exit codes
     if [[ $exit != 0 ]]; then
-        PostGitPS1="$Red[$exit]"
+			PostGitPS1="$Red($exit)"
     fi
 
-    # Change colour of prompt if root
     if [[ ${EUID} == 0 ]]; then
         PostGitPS1+="$BRed"'\$ '"$None"
     else
         PostGitPS1+="$None"'\$ '"$None"
     fi
 
-    # Set PS1 from $PreGitPS1 + <git-status> + $PostGitPS1
     __git_ps1 "$PreGitPS1" "$PostGitPS1" '(%s)'
-
 }
 
-# This tells bash to reinterpret PS1 after every command, which we
-# need because __git_ps1 will return different text and colors
 PROMPT_COMMAND=__set_bash_prompt
 
 # neovim path export
-export PATH="$PATH:/opt/nvim/bin"
+export PATH="/opt/nvim/bin:$PATH"
 
 # go path export
-export PATH="$PATH:/usr/local/go/bin"
+export PATH="/usr/local/go/bin:$PATH"
 
 # >>> juliaup initialize >>>
 
@@ -187,6 +164,3 @@ case ":$PATH:" in
 esac
 
 # <<< juliaup initialize <<<
-
-# Created by `pipx` on 2025-05-02 03:11:06
-export PATH="$PATH:/home/urtzi/.local/bin"
