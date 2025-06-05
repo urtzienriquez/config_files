@@ -78,13 +78,14 @@ bindsym $Alt+v exec ghostty -e /opt/nvim/bin/nvim
 # bindsym $Alt+n exec jupyter-lab
 bindsym $Alt+f exec nautilus
 bindsym $Alt+w exec libreoffice25.2 --writer
-bindsym $Alt+b exec firefox-esr; workspace $ws5
+bindsym $Alt+b exec librewolf; workspace $ws5
 # bindsym $Alt+b exec brave-browser; workspace $ws5
 # bindsym $Alt+q exec qutebrowser; workspace $ws5
 bindsym $Alt+z exec zotero; workspace $ws6
 bindsym $Alt+i exec inkscape; workspace $ws7
 bindsym $Alt+g exec gimp; workspace $ws7
 bindsym $Alt+o exec zoom; workspace $ws8
+bindsym $Alt+y exec freetube; workspace $ws9
 # start rofi (a program launcher)
 bindcode $Alt+40 exec "rofi -modi drun,run -show drun"
 # kill focused window
@@ -146,6 +147,7 @@ set $ws5 "5:web"
 set $ws6 "6:zotero"
 set $ws7 "7:graphics"
 set $ws8 "8:zoom"
+set $ws9 "9:freetube"
 
 # switch to workspace
 bindsym $Super+1 workspace $ws1
@@ -156,6 +158,7 @@ bindsym $Super+5 workspace $ws5
 bindsym $Super+6 workspace $ws6
 bindsym $Super+7 workspace $ws7
 bindsym $Super+8 workspace $ws8
+bindsym $Super+9 workspace $ws9
 
 # switch to next/previous workspace
 bindsym $Super+n workspace next_on_output
@@ -170,21 +173,24 @@ bindsym $Super+Shift+5 move container to workspace $ws5; workspace $ws5
 bindsym $Super+Shift+6 move container to workspace $ws6; workspace $ws6
 bindsym $Super+Shift+7 move container to workspace $ws7; workspace $ws7
 bindsym $Super+Shift+8 move container to workspace $ws8; workspace $ws8
+bindsym $Super+Shift+9 move container to workspace $ws9; workspace $ws9
 
 # assignment to workspace
-assign [class="(?i)firefox-esr"] $ws5
+assign [class="(?i)librewolf"] $ws5
 # assign [class="(?i)brave-browser"] $ws5
 # assign [class="(?i)qutebrowser"] $ws5
 assign [class="(?i)zotero"] $ws6
 assign [class="(?i)inkscape"] $ws7
 assign [class="(?i)gimp"] $ws7
 assign [class="(?i)zoom"] $ws8 
+assign [class="(?i)librewolf"] $ws9 
 
 # assign workspaces to monitors
 workspace $ws5 output $fm
 workspace $ws6 output $fm
 workspace $ws7 output $fm
 workspace $ws8 output $fm
+workspace $ws9 output $fm
 
 # transfare workspace between monitors
 bindsym $Super+$Alt+Shift+Left move workspace to output left
