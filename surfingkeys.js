@@ -32,18 +32,15 @@ Hints.style("div{font-size: 11pt; border: solid 1px #ff9933; background: #ffa64d
 settings.defaultSearchEngine = 'd';
 settings.hintAlign = 'left';
 settings.omnibarPosition = 'bottom';
-settings.focusFirstCandidate = false;
+settings.focusFirstCandidate = true;
 settings.focusAfterClosed = 'last';
 settings.scrollStepSize = 200;
 settings.tabsThreshold = 0;
 settings.modeAfterYank = 'Normal';
 
-// regional hints
-map('<Alt-l>', 'L')
-
 // save and Choose a bookmark
 map('am', 'ab');
-unmap('ab')
+unmap('ab');
 map('m', 'b');
 
 // Choose a buffer/tab
