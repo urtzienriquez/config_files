@@ -4,6 +4,10 @@ case $- in
       *) return;;
 esac
 
+# vim bindings
+set -o vi
+export EDITOR=nvim
+
 # symlinks autocompleted with a '/'
 bind 'set mark-symlinked-directories on'
 
