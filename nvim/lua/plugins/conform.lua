@@ -8,9 +8,16 @@ return {
 			formatters_by_ft = {
 				yaml = { "prettier" },
 				markdown = { "prettier" },
+				javascript = { "prettier" },
+				typescript = { "prettier" },
 				lua = { "stylua" },
 				python = { "black" },
 				fortran = { "fprettify" },
+			},
+			formatters = {
+				prettier = {
+					prepend_args = { "--single-quote" },
+				},
 			},
 			format_on_save = {
 				lsp_fallback = true,
