@@ -23,6 +23,12 @@ local servers = {
 	r_language_server = default_opts,
 	-- python LSP
 	pyright = default_opts,
+	-- javascript LSP (ts_ls)
+	ts_ls = vim.tbl_extend("force", default_opts, {
+		root_dir = function()
+			return vim.loop.cwd()
+		end, -- run lsp for javascript in any directory
+	}),
 	-- Julia LSP (LanguageServer.jl)
 	julials = vim.tbl_extend("force", default_opts, {
 		on_new_config = function(new_config, _)
