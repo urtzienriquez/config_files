@@ -26,6 +26,7 @@ vim.g.have_nerd_font = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.autoindent = true
+vim.opt.scrolloff = 5
 vim.cmd("set backspace=indent,eol,start")
 vim.cmd("set tabstop=2")
 vim.cmd("set shiftwidth=2")

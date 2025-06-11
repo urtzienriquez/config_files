@@ -25,6 +25,9 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- escape terminal mode with two esc
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
 -- keymaps for fuzzy finding with telescope
 local builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope [f]ind [f]iles" })
