@@ -3,9 +3,28 @@ return {
 	priority = 1000,
 	lazy = false,
 	opts = {
-		picker = { enabled = true },
+		picker = {
+			enabled = true,
+			layout = {
+				cycle = true,
+				preset = function()
+					return vim.o.columns >= 120 and "ivy" or "vertical"
+				end,
+			},
+			matcher = { frecency = true },
+			win = {
+				-- input window
+				input = {
+					keys = {
+						["<c-h>"] = { "toggle_hidden", mode = { "i", "n" } },
+						["<c-i>"] = { "toggle_ignored", mode = { "i", "n" } },
+					},
+				},
+			},
+		},
 		lazygit = { enabled = true },
 		bigfile = { enabled = true },
+		image = { enabled = true },
 		dashboard = {
 			enabled = true,
 			sections = {

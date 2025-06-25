@@ -39,7 +39,9 @@ vim.keymap.set("n", "<leader>ff", function()
 	Snacks.picker.files()
 end, { desc = "picker [f]ind [f]iles" })
 vim.keymap.set("n", "<leader>fb", function()
-	Snacks.picker.buffers()
+	Snacks.picker.buffers({
+		win = { input = { keys = { ["d"] = "bufdelete" } } },
+	})
 end, { desc = "picker [f]ind [b]uffers" })
 vim.keymap.set("n", "<leader>fg", function()
 	Snacks.picker.grep()
