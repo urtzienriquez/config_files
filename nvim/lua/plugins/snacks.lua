@@ -3,6 +3,7 @@ return {
 	priority = 1000,
 	lazy = false,
 	opts = {
+		picker = { enabled = true },
 		lazygit = { enabled = true },
 		bigfile = { enabled = true },
 		dashboard = {

@@ -11,9 +11,6 @@ set $sm HDMI-1
 exec --no-startup-id xrandr --output eDP-1 --primary
 exec --no-startup-id xrandr --output eDP-1 --auto --right-of HDMI-1
 
-# set wallpaper
-exec --no-startup-id feh --bg-fill /home/urtzi/Pictures/linux_wallpaper.png
-
 # Font for window titles. Will also be used by the bar unless a different font
 font pango: HackNerdFont Regular 6
 
@@ -33,9 +30,9 @@ client.focused $ac $ac $tx
 # Start XDG autostart .desktop files using dex. See also
 exec --no-startup-id dex --autostart --environment i3
 
-# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
-# screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -t -i /home/urtzi/Pictures/linux_wallpaper_lock.png && systemctl suspend 
+# xss-lock grabs a logind suspend inhibit lock and will lock the screen before suspend.
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -t -i /home/urtzi/Pictures/linux_wallpaper_lock.png && systemctl suspend 
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen	-l dim
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -227,9 +224,12 @@ bindsym $Super+r mode "resize"
 # Polybar start
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
+# set wallpaper
+exec_always --no-startup-id betterlockscreen -w
+
 # Power management
 # Suspend
-bindsym $Super+$Alt+l exec i3lock -t -i /home/urtzi/Pictures/linux_wallpaper_lock.png && systemctl suspend 
+bindsym $Super+$Alt+l exec betterlockscreen -l -s dim
 # exit i3 (logs you out of your X session)
 bindsym $Super+$Alt+e exec i3-msg exit
 # reboot
