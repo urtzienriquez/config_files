@@ -2,9 +2,6 @@
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Esc using jj" })
 -- vim.keymap.set("i", "jk", "<Esc>", { desc = "Esc using jk" })
 
--- save with zz in normal mode
-vim.keymap.set("n", "zz", ":w<CR>", { desc = "Save using zz" })
-
 -- word suggestions in normal mode
 vim.keymap.set("n", "<C-x><C-s>", "i<C-X><C-S>", { desc = "Spelling suggestion in normal mode" })
 vim.keymap.set("n", "<C-x><C-n>", "i<C-X><C-N>", { desc = "Next word suggestion in normal mode" })

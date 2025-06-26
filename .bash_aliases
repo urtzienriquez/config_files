@@ -31,3 +31,6 @@ alias jl18='julia +1.8 -i /home/urtzi/.julia_scripts/nvjulia.jl'
 
 # qstat alias for metacentrum
 alias qs='ssh meta qstat -u urtzien'
+
+# image viewer
+alias iv='imv-x11'
