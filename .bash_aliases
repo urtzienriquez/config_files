@@ -34,3 +34,6 @@ alias qs='ssh meta qstat -u urtzien'
 
 # image viewer
 alias iv='imv-x11'
+
+# lf with preview
+alias lf='lf-ueberzug'

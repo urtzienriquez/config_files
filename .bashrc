@@ -153,6 +153,7 @@ export PATH="/opt/nvim/bin:$PATH"
 
 # go path export
 export PATH="/usr/local/go/bin:$PATH"
+export PATH="$(go env GOPATH)/bin:$PATH"
 
 # >>> juliaup initialize >>>
 

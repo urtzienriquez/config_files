@@ -75,6 +75,7 @@ for_window [instance="floatterm"] floating enable
 bindsym $Super+$Alt+Return exec gnome-terminal
 bindsym $Alt+c exec gnome-control-center
 bindsym $Alt+v exec ghostty -e /opt/nvim/bin/nvim
+bindsym $Alt+l exec ghostty -e lf-ueberzug
 bindsym $Alt+n exec jupyter-lab
 bindsym $Alt+f exec nautilus
 bindsym $Alt+w exec libreoffice25.2 --writer
