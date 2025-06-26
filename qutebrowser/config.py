@@ -79,6 +79,13 @@ config.bind("k", "scroll up", "passthrough")
 # toggle light/dark mode
 config.bind("td", "config-cycle colors.webpage.darkmode.enabled")
 
+# autofill passwords with pass
+# (not possible in prompts, e.g. for proxy, for now)
+config.bind("zl", "spawn --userscript qute-pass --dmenu-invocation dmenu")
+# config.bind(
+#     "<Ctrl-p>", "spawn --userscript qute-pass --dmenu-invocation dmenu", mode="prompt"
+# )
+
 # search engines
 config.set(
     "url.searchengines",
