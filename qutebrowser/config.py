@@ -41,10 +41,6 @@ config.set(
     "file:///home/urtzi/.local/share/qutebrowser/userscripts/*",
 )
 
-# Proxy to use
-config.bind("pi", "set content.proxy http://proxy.ivb.cz:3128/")
-config.bind("ps", "set content.proxy system")
-
 # open neovim from qutebrowser
 c.editor.command = ["ghostty", "-e", "/opt/nvim/bin/nvim", "-f", "{}"]
 
@@ -57,6 +53,32 @@ config.bind("<Ctrl-d>", "fake-key <Ctrl-Backspace>", "insert")
 config.bind("<Ctrl-u>", "fake-key <Shift-Home><Delete>", "insert")
 config.bind("<Ctrl-k>", "fake-key <Shift-End><Delete>", "insert")
 
+# navigate completion widget with ctrl-n / ctrl-p
+config.bind("<Ctrl-n>", "completion-item-focus next", "command")
+config.bind("<Ctrl-p>", "completion-item-focus prev", "command")
+
+# navigate completion in serarch bars (insert mode) with ctrl-n / ctrl-p
+config.bind("<Ctrl-n>", "fake-key <Down>", "insert")
+config.bind("<Ctrl-p>", "fake-key <Up>", "insert")
+
+# navigate with j and k in passthrough mode (e.g. for protonmail)
+config.bind("j", "scroll down", "passthrough")
+config.bind("k", "scroll up", "passthrough")
+
+# autofill passwords with pass
+# (not possible in prompts, e.g. for proxy, for now)
+config.bind("zl", "spawn --userscript qute-pass --dmenu-invocation dmenu")
+# config.bind(
+#     "<Ctrl-p>", "spawn --userscript qute-pass --dmenu-invocation dmenu", mode="prompt"
+# )
+
+# Proxy to use
+config.bind("pi", "set content.proxy http://proxy.ivb.cz:3128/")
+config.bind("ps", "set content.proxy system")
+
+# download images with hints
+config.bind(";p", "hint images download")
+
 # hide/show tabs and status bar
 config.bind("xb", "config-cycle statusbar.show always in-mode")
 config.bind("xt", "config-cycle tabs.show always switching")
@@ -65,26 +87,8 @@ config.bind(
     "config-cycle statusbar.show always in-mode;; config-cycle tabs.show always switching",
 )
 
-# download images with hints
-config.bind(";p", "hint images download")
-
-# navigate completion widget with ctrl-n / ctrl-p
-config.bind("<Ctrl-n>", "completion-item-focus next", "command")
-config.bind("<Ctrl-p>", "completion-item-focus prev", "command")
-
-# navigate with j and k in passthrough mode (e.g. for protonmail)
-config.bind("j", "scroll down", "passthrough")
-config.bind("k", "scroll up", "passthrough")
-
 # toggle light/dark mode
 config.bind("td", "config-cycle colors.webpage.darkmode.enabled")
-
-# autofill passwords with pass
-# (not possible in prompts, e.g. for proxy, for now)
-config.bind("zl", "spawn --userscript qute-pass --dmenu-invocation dmenu")
-# config.bind(
-#     "<Ctrl-p>", "spawn --userscript qute-pass --dmenu-invocation dmenu", mode="prompt"
-# )
 
 # search engines
 config.set(
