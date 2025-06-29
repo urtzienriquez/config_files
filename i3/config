@@ -182,7 +182,7 @@ assign [class="(?i)zotero"] $ws6
 assign [class="(?i)inkscape"] $ws7
 assign [class="(?i)gimp"] $ws7
 assign [class="(?i)zoom"] $ws8 
-assign [class="(?i)librewolf"] $ws9 
+assign [class="(?i)freetube"] $ws9 
 
 # assign workspaces to monitors
 workspace $ws5 output $fm
