@@ -24,3 +24,10 @@ config.set("colors.webpage.preferred_color_scheme", "dark")
 # disable scrollbar
 config.set("scrolling.bar", "never")
 config.set("completion.scrollbar.width", 0)
+
+# vertical tabs
+config.set("tabs.position", "left")
+
+# hidden tabs and statusbar by default
+config.set("statusbar.show", "in-mode")
+config.set("tabs.show", "switching")
