@@ -41,16 +41,16 @@ config.set(
     "file:///home/urtzi/.local/share/qutebrowser/userscripts/*",
 )
 
-# # use lf as file picker
-# config.set("fileselect.handler", "external")
-# config.set(
-#     "fileselect.single_file.command",
-#     ["gnome-terminal", "--", "lf-ueberzug", "-selection-path", "{}"],
-# )
-# config.set(
-#     "fileselect.multiple_files.command",
-#     ["gnome-terminal", "--", "lf-ueberzug", "-selection-path", "{}"],
-# )
+# use lf as file picker
+config.set("fileselect.handler", "external")
+config.set(
+    "fileselect.single_file.command",
+    ["ghostty", "-e", "ranger", "--choosefile={}"],
+)
+config.set(
+    "fileselect.multiple_files.command",
+    ["ghostty", "-e", "ranger", "--choosefiles={}"],
+)
 
 # open neovim from qutebrowser
 c.editor.command = ["ghostty", "-e", "/opt/nvim/bin/nvim", "-f", "{}"]

@@ -26,7 +26,7 @@ config.set("scrolling.bar", "never")
 config.set("completion.scrollbar.width", 0)
 
 # vertical tabs
-config.set("tabs.position", "left")
+config.set("tabs.position", "top")
 
 # hidden tabs and statusbar by default
 config.set("statusbar.show", "in-mode")
