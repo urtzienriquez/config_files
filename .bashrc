@@ -155,6 +155,8 @@ export PATH="/opt/nvim/bin:$PATH"
 export PATH="/usr/local/go/bin:$PATH"
 export PATH="$(go env GOPATH)/bin:$PATH"
 
+RANGER_LOAD_DEFAULT_RC=FALSE
+
 # >>> juliaup initialize >>>
 
 # !! Contents within this block are managed by juliaup !!
