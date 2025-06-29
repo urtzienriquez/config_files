@@ -36,4 +36,4 @@ alias qs='ssh meta qstat -u urtzien'
 alias iv='imv-x11'
 
 # lf with preview
-alias lf='lf-ueberzug'
+alias rn='ranger'
