@@ -42,5 +42,5 @@ alias rn='ranger'
 alias bt='bat -p --theme="tokyonight_night"'
 
 # fzf with preview
-alias ff="find . -type f | fzf --preview 'bat -p --color=always {}'"
-alias fo="find . -type f | fzf --preview 'bat -p --color=always {}' | xargs -n 1 open"
+alias ff="fzf --preview 'bat -p --color=always {}'"
+alias fo="fzf --preview 'bat -p --color=always {}' | xargs -n 1 open"
