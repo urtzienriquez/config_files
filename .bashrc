@@ -174,4 +174,7 @@ esac
 # fzf 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -l -g "!{node_modules,.git}"'
-
+export FZF_CTRL_T_OPTS="
+		--walker-skip .git,node_modules,target
+    --preview 'bat -p --theme=tokyonight_night --color=always {}'
+    --bind 'ctrl-/:change-preview-window(down|hidden|)'"

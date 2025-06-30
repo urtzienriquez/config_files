@@ -24,6 +24,9 @@ config.set("colors.webpage.preferred_color_scheme", "dark")
 # disable scrollbar
 config.set("scrolling.bar", "never")
 config.set("completion.scrollbar.width", 0)
+c.qt.args = [
+    "enable-features=OverlayScrollbar,OverlayScrollbarFlashAfterAnyScrollUpdate,OverlayScrollbarFlashWhenMouseEnter"
+]
 
 # vertical tabs
 config.set("tabs.position", "top")
