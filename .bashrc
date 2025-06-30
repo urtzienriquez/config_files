@@ -8,10 +8,6 @@ esac
 set -o vi
 export EDITOR=nvim
 
-# fzf 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -l -g "!{node_modules,.git}"'
-
 # open man with bat
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
@@ -179,4 +175,8 @@ case ":$PATH:" in
 esac
 
 # <<< juliaup initialize <<<
+
+# fzf 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -l -g "!{node_modules,.git}"'
 
