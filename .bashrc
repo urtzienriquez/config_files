@@ -119,7 +119,6 @@ __set_bash_prompt() {
     if [[ $__colourise_prompt ]]; then
         export GIT_PS1_SHOWCOLORHINTS=1
 
-        local Red='\[\e[0;31m\]'
         local BRed='\[\e[1;31m\]'
         local BGre='\[\e[1;32m\]'
         local BMag='\[\e[1;35m\]'
@@ -135,10 +134,6 @@ __set_bash_prompt() {
     else
         unset GIT_PS1_SHOWCOLORHINTS
         PreGitPS1="${debian_chroot:+($debian_chroot)}\u@\h:\w"
-    fi
-
-    if [[ $exit != 0 ]]; then
-			PostGitPS1="$Red($exit)"
     fi
 
     if [[ ${EUID} == 0 ]]; then
