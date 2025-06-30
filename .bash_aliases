@@ -37,3 +37,6 @@ alias iv='imv-x11'
 
 # alias for ranger 
 alias rn='ranger'
+
+# alias for bat
+alias bt='bat -p --theme="tokyonight_night"'

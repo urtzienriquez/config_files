@@ -8,6 +8,10 @@ esac
 set -o vi
 export EDITOR=nvim
 
+# open man with bat
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
+
 # symlinks autocompleted with a '/'
 bind 'set mark-symlinked-directories on'
 
