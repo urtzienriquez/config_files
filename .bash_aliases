@@ -42,5 +42,5 @@ alias rn='ranger'
 alias bt='bat -p --theme="tokyonight_night"'
 
 # fzf with preview
-alias fzf="fzf --preview 'bat -p --theme="tokyonight_night" --color=always {}'"
-alias fo="fzf | xargs -n 1 open"
+alias fzf="fzf --preview 'bat -p --theme=tokyonight_night --color=always {}'"
+alias fo="fzf | xargs open"
