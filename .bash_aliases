@@ -43,3 +43,6 @@ alias bt='bat -p --theme="tokyonight_night"'
 # fzf with preview
 alias fzf="fzf --preview 'bat -p --theme=tokyonight_night --color=always {}'"
 alias fo="fzf | xargs open"
+fd() {
+  cd $(find ~ -type d | fzf) || return
+}
