@@ -76,11 +76,6 @@ xterm*|rxvt*)
     ;;
 esac
 
-# Alias definitions.
-if [ -f "$HOME/.bash_aliases" ]; then
-    . "$HOME/.bash_aliases"
-fi
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -172,9 +167,25 @@ esac
 # <<< juliaup initialize <<<
 
 # fzf 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -l -g "!{node_modules,.git}"'
-export FZF_CTRL_T_OPTS="
-		--walker-skip .git,node_modules,target
+export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -l -g "!{node_modules,.git,go}"'
+export FZF_DEFAULT_OPTS="
+		--no-height 
+		--no-reverse
+		--walker-skip .git,node_modules,go,target
     --preview 'bat -p --theme=tokyonight_night --color=always {}'
-    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+    --preview-window '~4,+{2}+4/3,<75(up)'
+    --bind 'ctrl-v:toggle-preview'"
+export FZF_CTRL_T_OPTS="
+		--walker-skip .git,node_modules,go,target
+    --preview 'bat -p --theme=tokyonight_night --color=always {}'
+    --bind 'ctrl-v:toggle-preview'"
+export FZF_CTRL_R_OPTS="--no-preview"
+export FZF_ALT_C_OPTS="--no-preview"
+
+# Alias definitions.
+if [ -f "$HOME/.bash_aliases" ]; then
+    . "$HOME/.bash_aliases"
+fi
+
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
