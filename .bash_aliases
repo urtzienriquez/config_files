@@ -45,9 +45,25 @@ alias cl='calcurse'
 
 # fzf with preview
 alias fzf="fzf --preview 'bat -p --theme=tokyonight_night --color=always {}'"
-alias fo="fzf | xargs open"
+		
+# by default ff searches for files in the current dir
+# optionally I can pass a path ($1) to search within that path
+# or use the fh alias to search in $HOME
+ff() {
+	local ofile
+	ofile=$(find $1 -type f | fzf) || return
+	open "$ofile"
+}
+alias fh="ff ~"
+# by default fd searches for directories in the $HOME dir
+# optionally I can pass a path ($1) to search within that path
 fd() {
 	local to_dir
-  to_dir=$(find ~ -type d | fzf) || return
-	cd $to_dir
+  if [ $# -eq 0 ]
+    then
+    to_dir=$(find $HOME -type d | fzf) || return
+	else
+    to_dir=$(find $1 -type d | fzf) || return
+  fi
+	cd "$to_dir"
 }
