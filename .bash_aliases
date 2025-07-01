@@ -40,9 +40,14 @@ alias rn='ranger'
 # alias for bat
 alias bt='bat -p --theme="tokyonight_night"'
 
+#calcurse
+alias cl='calcurse'
+
 # fzf with preview
 alias fzf="fzf --preview 'bat -p --theme=tokyonight_night --color=always {}'"
 alias fo="fzf | xargs open"
 fd() {
-  cd $(find ~ -type d | fzf) || return
+	local to_dir
+  to_dir=$(find ~ -type d | fzf) || return
+	cd $to_dir
 }

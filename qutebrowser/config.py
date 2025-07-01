@@ -41,6 +41,15 @@ config.set(
     "file:///home/urtzi/.local/share/qutebrowser/userscripts/*",
 )
 
+# don't allow to recycle through tabs
+config.set("tabs.wrap", False)
+
+# use best match for partial command autocompletion
+config.set("completion.use_best_match", True)
+
+# enable notifications
+config.set("content.notifications.enabled", True)
+
 # use lf as file picker
 config.set("fileselect.handler", "external")
 config.set(
@@ -89,6 +98,14 @@ config.bind("ps", "set content.proxy system")
 
 # download images with hints
 config.bind(";p", "hint images download")
+
+# switch mapping of F and ;f so that:
+# F follows a link to a new active tab
+# ;f opens a link in an inactive tab
+config.unbind("F")
+config.unbind(";f")
+config.bind("F", "hint all tab-fg")
+config.bind(";f", "hint all tab")
 
 # hide/show tabs and status bar
 config.bind("xb", "config-cycle statusbar.show always in-mode")

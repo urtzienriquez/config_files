@@ -14,6 +14,8 @@ exec --no-startup-id xrandr --output eDP-1 --auto --right-of HDMI-1
 # set wallpaper
 exec_always --no-startup-id feh --bg-fill /home/urtzi/Pictures/linux-wallpaper.png
 
+# reminders from calcurse on startup
+exec_always /bin/bash -c "sleep 30 && python3 ~/.local/bin/run_ccursereminders.py 30"
 # Font for window titles. Will also be used by the bar unless a different font
 font pango: HackNerdFont Regular 6
 
@@ -75,6 +77,7 @@ for_window [instance="floatterm"] floating enable
 bindsym $Super+$Alt+Return exec gnome-terminal
 bindsym $Alt+s exec gnome-control-center
 bindsym $Alt+v exec ghostty -e /opt/nvim/bin/nvim
+bindsym $Alt+a exec ghostty -e calcurse
 bindsym $Alt+n exec jupyter-lab
 bindsym $Alt+f exec ghostty -e ranger
 bindsym $Alt+w exec libreoffice25.2 --writer
