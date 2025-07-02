@@ -50,7 +50,7 @@ alias cl='calcurse'
 # or use the fh alias to search in $HOME
 ff() {
 	local ofile
-	ofile=$(find $1 \( -path $HOME/node_modules -prune -o -path $HOME/.git -prune -o -path $HOME/go -prune \) -o -type f | fzf) || return
+	ofile=$(find $1 \( -path $1/node_modules -prune -o -path */.git -prune -o -path $HOME/go -prune \) -o -type f | fzf) || return
 	open "$ofile"
 }
 alias fh="ff ~"
@@ -60,14 +60,14 @@ fd() {
 	local to_dir
   if [ $# -eq 0 ]
     then
-    to_dir=$(find $HOME \( -path $HOME/node_modules -prune -o -path $HOME/.git -prune -o -path $HOME/go -prune \) -o -type d | fzf --no-preview) || return
+    to_dir=$(find $HOME \( -path $HOME/node_modules -prune -o -path */.git -prune -o -path $HOME/go -prune \) -o -type d | fzf --no-preview) || return
 	else
-    to_dir=$(find $1 \( -path $HOME/node_modules -prune -o -path $HOME/.git -prune -o -path $HOME/go -prune \) -o -type d | fzf --no-preview) || return
+    to_dir=$(find $1 \( -path $1/node_modules -prune -o -path */.git -prune -o -path $HOME/go -prune \) -o -type d | fzf --no-preview) || return
   fi
 	cd "$to_dir"
 }
-# find (live) grep [function taken and slightly modified from https://junegunn.github.io/fzf/tips/ripgrep-integration/]
-fg() (
+# (find) live grep [function taken and slightly modified from https://junegunn.github.io/fzf/tips/ripgrep-integration/]
+lg() (
   RELOAD='reload:rg -i -g "!{node_modules,.git,go}" --column --color=always {q} || :'
   OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
             nvim {1} +{2}     # No selection. Open the current line in Vim.
