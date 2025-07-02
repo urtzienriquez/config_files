@@ -67,7 +67,17 @@ floating_modifier $Super
 tiling_drag modifier titlebar
 
 # remap cap_lock to esc
-exec_always --no-startup-id setxkbmap -option "caps:escape"
+# exec_always --no-startup-id setxkbmap -option "caps:escape"
+
+# hide mouse after 5 secs of inactivity
+exec_always unclutter
+
+# warpd: navigate without the mouse
+bindsym $Super+f exec warpd --hint
+bindsym $Super+Shift+f exec warpd --hint2
+bindsym $Super+c exec warpd --normal
+bindsym $Super+g exec warpd --grid
+bindsym $Super+s exec warpd --screen
 
 # Application launchers
 # with ALT
@@ -125,9 +135,9 @@ bindsym $Super+$Alt+h split h
 bindsym $Super+$Alt+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $Super+f fullscreen toggle
+# bindsym $Super+f fullscreen toggle
 # change container layout (stacked, tabbed, toggle split)
-bindsym $Super+s layout stacking
+# bindsym $Super+s layout stacking
 bindsym $Super+w layout tabbed
 bindsym $Super+e layout toggle split
 
