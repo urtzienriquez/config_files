@@ -36,7 +36,7 @@ client.focused $ac $ac $tx
 exec --no-startup-id dex --autostart --environment i3
 
 # xss-lock grabs a logind suspend inhibit lock and will lock the screen before suspend.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- swaylock --nofork -t -i /home/urtzi/Pictures/linux-wallpaper-lock.png && systemctl suspend 
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -t -i /home/urtzi/Pictures/linux-wallpaper-lock.png && systemctl suspend 
 # exec --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen	-l dim
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
@@ -194,8 +194,8 @@ bindsym $Super+$Alt+Shift+h move workspace to output left
 bindsym $Super+$Alt+Shift+l move workspace to output right
 
 # define workspaces at startup
-exec --no-startup-id swaymsg workspace $ws2 &
-exec --no-startup-id swaymsg workspace $ws1
+exec --no-startup-id i3-msg workspace $ws2 &
+exec --no-startup-id i3-msg workspace $ws1
 
 # reload the configuration file
 bindsym $Super+Control+c reload
@@ -225,9 +225,9 @@ exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # Power management
 # Suspend
-bindsym $Super+Control+Shift+l exec swaylock -t -i /home/urtzi/Pictures/linux-wallpaper-lock.png && systemctl suspend 
+bindsym $Super+Control+Shift+l exec i3lock -t -i /home/urtzi/Pictures/linux-wallpaper-lock.png && systemctl suspend 
 # exit i3 (logs you out of your X session)
-bindsym $Super+Control+Shift+e exec swaymsg exit
+bindsym $Super+Control+Shift+e exec i3-msg exit
 # reboot
 bindsym $Super+Control+Shift+r exec systemctl reboot
 # shutdown

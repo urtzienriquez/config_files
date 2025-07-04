@@ -1,9 +1,10 @@
-from libqtile import bar, layout, qtile, widget
+from libqtile import layout, qtile
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
+from libqtile.dgroups import simple_key_binder
+from libqtile import hook
 import subprocess
 import os
-from libqtile import hook
 
 mod = "mod4"
 alt = "mod1"
@@ -69,9 +70,14 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     # session management
-    Key([mod, "control"], "q", lazy.shutdown(), desc="Logout Qtile"),
-    Key([mod, alt, "shift"], "r", lazy.spawn("systemctl reboot"), desc="Reboot"),
-    Key([mod, alt, "shift"], "s", lazy.spawn("systemctl poweroff"), desc="Shutdown"),
+    Key([mod, "control", "shift"], "e", lazy.shutdown(), desc="Logout Qtile"),
+    Key([mod, "control", "shift"], "r", lazy.spawn("systemctl reboot"), desc="Reboot"),
+    Key(
+        [mod, "control", "shift"],
+        "s",
+        lazy.spawn("systemctl poweroff"),
+        desc="Shutdown",
+    ),
     # volume
     Key([], "XF86AudioLowerVolume", lazy.spawn("amixer sset Master 5%-")),
     Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer sset Master 5%+")),
@@ -124,90 +130,74 @@ for vt in range(1, 8):
         )
     )
 
-## Figuring out groups
+groups = [
+    Group(
+        name="work1",
+        layout="MonadTall",
+    ),
+    Group(
+        name="work2",
+        layout="MonadTall",
+    ),
+    Group(
+        name="work3",
+        layout="MonadTall",
+    ),
+    Group(
+        name="work4",
+        layout="MonadTall",
+    ),
+    Group(
+        name="web",
+        layout="max",
+        matches=[Match(wm_class=["qutebrowser"])],
+    ),
+    Group(
+        name="youtube",
+        layout="max",
+        matches=[Match(title=["youtube"])],
+    ),
+    Group(
+        name="zotero",
+        layout="max",
+        matches=[Match(wm_class=["Zotero"])],
+    ),
+    Group(
+        name="graphics",
+        layout="MonadTall",
+        matches=[Match(wm_class=["Inkscape", "Gimp"])],
+    ),
+    Group(
+        name="zoom",
+        layout="max",
+        matches=[Match(wm_class=["Zoom"])],
+    ),
+]
 
-groups = [Group(i) for i in "123456789"]
+# Allow MODKEY+[0 through 9] to bind to groups, see https://docs.qtile.org/en/stable/manual/config/groups.html
+# MOD4 + index Number : Switch to Group[index]
+# MOD4 + shift + index Number : Send active window to another Group
+dgroups_key_binder = simple_key_binder(mod)
 
-# groups = [
-#     Group("a"),
-#     Group("b"),
-#     Group("c", matches=[Match(wm_class=["qutebrowser"])]),
-# ]
 
-# groups = [
-#     Group("Web", matches=[Match(wm_class=["qutebrowser"])]),
-#     Group("Code"),
-#     Group("Notes"),
-#     Group("Music"),
-#     Group("Social"),
-# ]
-#
-# keypad = {
-#     1: "KP_End",
-#     2: "KP_Down",
-#     3: "KP_Next",
-#     4: "KP_Left",
-#     5: "KP_Begin",
-# }
-#
-# for index, group in enumerate(groups, start=1):
-#     _keys = [str(index), keypad[index]]
-#     for key in _keys:
-#         keys.extend(
-#             [
-#                 Key(
-#                     [mod],
-#                     key,
-#                     lazy.group[group.name].toscreen(),
-#                     desc=f"Switch to group {index}",
-#                 ),
-#                 Key(
-#                     [mod, "control"],
-#                     key,
-#                     lazy.window.togroup(group.name),
-#                     desc=f"Move focused window to group {index}",
-#                 ),
-#                 Key(
-#                     [mod, "shift"],
-#                     key,
-#                     lazy.window.togroup(group.name, switch_group=True),
-#                     desc=f"Move focused window and switch to group {index}.",
-#                 ),
-#             ]
-#         )
+def init_layout_theme():
+    return {
+        "border_focus": "#d79922",
+        "border_normal": "#000000",
+        "border_width": 3,
+    }
 
-for i in groups:
-    keys.extend(
-        [
-            # mod + group number = switch to group
-            Key(
-                [mod],
-                i.name,
-                lazy.group[i.name].toscreen(),
-                desc=f"Switch to group {i.name}",
-            ),
-            # mod + shift + group number = switch to & move focused window to group
-            Key(
-                [mod, "shift"],
-                i.name,
-                lazy.window.togroup(i.name, switch_group=True),
-                desc=f"Switch to & move focused window to group {i.name}",
-            ),
-            # Or, use below if you prefer not to switch to that group.
-            # # mod + shift + group number = move focused window to group
-            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-            #     desc="move focused window to group {}".format(i.name)),
-        ]
-    )
+
+layout_theme = init_layout_theme()
+
 
 layouts = [
-    layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
-    layout.Max(),
-    # Try more layouts by unleashing below layouts.
+    layout.MonadTall(**layout_theme),
+    # layout.Columns(**layout_theme),
+    layout.Max(**layout_theme),
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
     # layout.Matrix(),
-    # layout.MonadTall(),
     # layout.MonadWide(),
     # layout.RatioTile(),
     # layout.Tile(),
@@ -215,85 +205,6 @@ layouts = [
     # layout.VerticalTile(),
     # layout.Zoomy(),
 ]
-
-widget_defaults = dict(
-    font="sans",
-    fontsize=12,
-    padding=3,
-)
-extension_defaults = widget_defaults.copy()
-
-right_screen = Screen(
-    top=bar.Bar(
-        [
-            widget.CurrentLayout(),
-            widget.GroupBox(),
-            widget.Prompt(),
-            # widget.Sep(linewidth=0, padding=1000),
-            widget.WindowName(),
-            widget.Chord(
-                chords_colors={
-                    "launch": ("#ff0000", "#ffffff"),
-                },
-                name_transform=lambda name: name.upper(),
-            ),
-            # widget.Systray(),
-            widget.Wlan(
-                format="{essid} {percent:2.0%}",
-                interface="wlo1",
-                ethernet_interface="enp4s0",
-                use_ethernet=True,
-            ),
-            widget.Backlight(fmt="Br: {}", backlight_name="intel_backlight"),
-            widget.PulseVolume(fmt="Vol: {}"),
-            widget.Clock(format="%I:%M %p"),
-            widget.Battery(format="Bat: {percent:2.0%}"),
-            widget.QuickExit(),
-        ],
-        24,
-    ),
-    # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
-    # By default we handle these events delayed to already improve performance, however your system might still be struggling
-    # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
-    # x11_drag_polling_rate = 60,
-)
-left_screen = Screen(
-    top=bar.Bar(
-        [
-            widget.CurrentLayout(),
-            widget.GroupBox(),
-            widget.Prompt(),
-            # widget.Sep(linewidth=0, padding=1000),
-            widget.WindowName(),
-            widget.Chord(
-                chords_colors={
-                    "launch": ("#ff0000", "#ffffff"),
-                },
-                name_transform=lambda name: name.upper(),
-            ),
-            # widget.Systray(),
-            widget.Wlan(
-                format="{essid} {percent:2.0%}",
-                interface="wlo1",
-                ethernet_interface="enp4s0",
-                use_ethernet=True,
-            ),
-            widget.Backlight(fmt="Br: {}", backlight_name="intel_backlight"),
-            widget.PulseVolume(fmt="Vol: {}"),
-            widget.Clock(format="%I:%M %p"),
-            widget.Battery(format="Bat: {percent:2.0%}"),
-            widget.QuickExit(),
-        ],
-        24,
-    ),
-    # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
-    # By default we handle these events delayed to already improve performance, however your system might still be struggling
-    # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
-    # x11_drag_polling_rate = 60,
-)
-amt_screens = 2
-screens = [right_screen, left_screen]
-reconfigure_screens = False
 
 # Drag floating layouts.
 mouse = [
@@ -309,7 +220,8 @@ mouse = [
     Click([mod], "Button2", lazy.window.bring_to_front()),
 ]
 
-dgroups_key_binder = None
+screens = [Screen()]
+
 dgroups_app_rules = []  # type: list
 follow_mouse_focus = True
 bring_front_click = False
@@ -376,3 +288,14 @@ def dbus_register():
 def autostart():
     home = os.path.expanduser("~")
     subprocess.call([home + "/.config/qtile/autostart.sh"])
+
+
+@hook.subscribe.client_managed
+def auto_show_screen(window):
+    # check whether group is visible on any screen right now
+    # qtile.groups_map['<somegroup>'].screen is None in case it is currently not shown on any screen
+    visible_groups = [
+        group_name for group_name, group in qtile.groups_map.items() if group.screen
+    ]
+    if window.group.name not in visible_groups:
+        window.group.cmd_toscreen()
