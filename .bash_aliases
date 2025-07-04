@@ -51,7 +51,12 @@ alias cl='calcurse'
 ff() {
 	local ofile
 	ofile=$(find $1 \( -path $1/node_modules -prune -o -path */.git -prune -o -path $HOME/go -prune \) -o -type f | fzf) || return
-	open "$ofile"
+	mime=$(file -b --mime-type "$ofile")
+	if [[ $mime = text/@(plain|x-*) ]] || [[ $mime = application/javascript ]]; then
+		nvim "$ofile"
+  else
+		gio open "$ofile"
+	fi
 }
 alias fh="ff ~"
 # by default fd searches for directories in the $HOME dir

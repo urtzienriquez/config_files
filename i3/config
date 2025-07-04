@@ -69,9 +69,6 @@ tiling_drag modifier titlebar
 # remap cap_lock to esc
 # exec_always --no-startup-id setxkbmap -option "caps:escape"
 
-# hide mouse after 5 secs of inactivity
-exec_always unclutter
-
 # warpd: navigate without the mouse
 bindsym $Super+f exec warpd --hint
 bindsym $Super+Shift+f exec warpd --hint2
@@ -111,22 +108,12 @@ bindsym $Super+h focus left
 bindsym $Super+j focus down
 bindsym $Super+k focus up
 bindsym $Super+l focus right
-# alternatively, you can use the cursor keys:
-bindsym $Super+Left focus left
-bindsym $Super+Down focus down
-bindsym $Super+Up focus up
-bindsym $Super+Right focus right
 
 # move focused window
 bindsym $Super+Shift+h move left
 bindsym $Super+Shift+j move down
 bindsym $Super+Shift+k move up
 bindsym $Super+Shift+l move right
-# alternatively, you can use the cursor keys:
-bindsym $Super+Shift+Left move left
-bindsym $Super+Shift+Down move down
-bindsym $Super+Shift+Up move up
-bindsym $Super+Shift+Right move right
 
 # split in horizontal orientation: next to current page
 bindsym $Super+$Alt+h split h
@@ -204,8 +191,6 @@ workspace $ws8 output $fm
 workspace $ws9 output $fm
 
 # transfare workspace between monitors
-bindsym $Super+$Alt+Shift+Left move workspace to output left
-bindsym $Super+$Alt+Shift+Right move workspace to output right
 bindsym $Super+$Alt+Shift+h move workspace to output left
 bindsym $Super+$Alt+Shift+l move workspace to output right
 
@@ -214,9 +199,9 @@ exec --no-startup-id i3-msg workspace $ws2 &
 exec --no-startup-id i3-msg workspace $ws1
 
 # reload the configuration file
-bindsym $Super+$Alt+Shift+c reload
+bindsym $Super+Control+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $Super+$Alt+Shift+r restart
+bindsym $Super+Control+r restart
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -241,11 +226,10 @@ exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # Power management
 # Suspend
-bindsym $Super+$Alt+l exec i3lock -t -i /home/urtzi/Pictures/linux-wallpaper-lock.png && systemctl suspend 
+bindsym $Super+Control+Shift+l exec i3lock -t -i /home/urtzi/Pictures/linux-wallpaper-lock.png && systemctl suspend 
 # exit i3 (logs you out of your X session)
-bindsym $Super+$Alt+e exec i3-msg exit
+bindsym $Super+Control+Shift+e exec i3-msg exit
 # reboot
-bindsym $Super+$Alt+r exec systemctl reboot
+bindsym $Super+Control+Shift+r exec systemctl reboot
 # shutdown
-bindsym $Super+$Alt+s exec systemctl poweroff
-
+bindsym $Super+Control+Shift+s exec systemctl poweroff
