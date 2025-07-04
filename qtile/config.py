@@ -189,8 +189,8 @@ layout_theme = init_layout_theme()
 
 
 layouts = [
-    layout.MonadTall(**layout_theme),
-    # layout.Columns(**layout_theme),
+    # layout.MonadTall(**layout_theme),
+    layout.Columns(**layout_theme),
     layout.Max(**layout_theme),
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
@@ -220,7 +220,7 @@ mouse = [
 screens = [Screen()]
 
 dgroups_app_rules = []  # type: list
-follow_mouse_focus = True
+follow_mouse_focus = False
 bring_front_click = False
 floats_kept_above = True
 cursor_warp = True
