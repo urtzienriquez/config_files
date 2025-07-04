@@ -5,4 +5,5 @@ feh --bg-scale ~/Pictures/linux-wallpaper.png &
 # pasystray &
 # xcompmgr -c &
 ~/.config/polybar/launch.sh &
+unclutter --iddle 1 &
 autorandr --change

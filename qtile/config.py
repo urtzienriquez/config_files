@@ -68,9 +68,14 @@ keys = [
         desc="Toggle floating on the focused window",
     ),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
-    Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     # session management
     Key([mod, "control", "shift"], "e", lazy.shutdown(), desc="Logout Qtile"),
+    Key(
+        [mod, "control", "shift"],
+        "l",
+        lazy.spawn("betterlockscreen -l"),
+        desc="Lock screen",
+    ),
     Key([mod, "control", "shift"], "r", lazy.spawn("systemctl reboot"), desc="Reboot"),
     Key(
         [mod, "control", "shift"],
@@ -133,43 +138,34 @@ for vt in range(1, 8):
 groups = [
     Group(
         name="work1",
-        layout="MonadTall",
     ),
     Group(
         name="work2",
-        layout="MonadTall",
     ),
     Group(
         name="work3",
-        layout="MonadTall",
     ),
     Group(
         name="work4",
-        layout="MonadTall",
     ),
     Group(
         name="web",
-        layout="max",
         matches=[Match(wm_class=["qutebrowser"])],
     ),
     Group(
         name="youtube",
-        layout="max",
         matches=[Match(title=["youtube"])],
     ),
     Group(
         name="zotero",
-        layout="max",
         matches=[Match(wm_class=["Zotero"])],
     ),
     Group(
         name="graphics",
-        layout="MonadTall",
         matches=[Match(wm_class=["Inkscape", "Gimp"])],
     ),
     Group(
         name="zoom",
-        layout="max",
         matches=[Match(wm_class=["Zoom"])],
     ),
 ]
@@ -184,7 +180,8 @@ def init_layout_theme():
     return {
         "border_focus": "#d79922",
         "border_normal": "#000000",
-        "border_width": 3,
+        "border_width": 2,
+        "margin": 0,
     }
 
 
@@ -226,7 +223,7 @@ dgroups_app_rules = []  # type: list
 follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
-cursor_warp = False
+cursor_warp = True
 floating_layout = layout.Floating(
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
