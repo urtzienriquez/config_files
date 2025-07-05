@@ -156,6 +156,7 @@ groups = [
     Group(
         name="youtube",
         matches=[Match(wm_class=["youtube"])],
+        layout="max",
     ),
     Group(
         name="zotero",
