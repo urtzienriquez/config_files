@@ -1,42 +1,5 @@
+from libqtile.config import Match
 from libqtile import layout
-from libqtile.config import Group, Match
-
-groups = [
-    Group(
-        name="work1",
-    ),
-    Group(
-        name="work2",
-    ),
-    Group(
-        name="work3",
-    ),
-    Group(
-        name="work4",
-    ),
-    Group(
-        name="web",
-        matches=[Match(wm_class=["web"])],
-        layout="max",
-    ),
-    Group(
-        name="youtube",
-        matches=[Match(wm_class=["youtube"])],
-        layout="max",
-    ),
-    Group(
-        name="zotero",
-        matches=[Match(wm_class=["Zotero"])],
-    ),
-    Group(
-        name="graphics",
-        matches=[Match(wm_class=["Inkscape", "Gimp"])],
-    ),
-    Group(
-        name="zoom",
-        matches=[Match(wm_class=["zoom"])],
-    ),
-]
 
 
 def init_layout_theme():

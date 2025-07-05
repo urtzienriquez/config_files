@@ -2,6 +2,8 @@ from libqtile import qtile
 from libqtile.config import Key
 from libqtile.lazy import lazy
 
+from groupsc import groups
+
 mod = "mod4"
 alt = "mod1"
 terminal = "ghostty"
@@ -173,8 +175,6 @@ keys = [
 ]
 
 # Add key bindings to switch VTs in Wayland.
-# We can't check qtile.core.name in default config as it is loaded before qtile is started
-# We therefore defer the check until the key binding is run by using .when(func=...)
 for vt in range(1, 8):
     keys.append(
         Key(
@@ -184,6 +184,37 @@ for vt in range(1, 8):
             desc=f"Switch to VT{vt}",
         )
     )
+
+# key bindings to switch and move between groups
+for i in groups:
+    keys.extend(
+        [
+            # mod + number of group = switch to group
+            Key(
+                [mod],
+                i.name,
+                lazy.group[i.name].toscreen(),
+                desc="Switch to group {}".format(i.name),
+            ),
+            # mod + shift + number of group = move focused window to group
+            Key(
+                [mod, "shift"],
+                i.name,
+                lazy.window.togroup(i.name, switch_group=False),
+                desc="Move focused window to group {}: {}".format(i.name, i.label),
+            ),
+            # mod + control + shift + letter of group = move focused window to group
+            Key(
+                [mod, "control", "shift"],
+                i.name,
+                lazy.window.togroup(i.name, switch_group=True),
+                desc="Move focused window and switch to group {}: {}".format(
+                    i.name, i.label
+                ),
+            ),
+        ]
+    )
+
 
 # Add help key
 launcher = "rofi -i -show run -matching fuzzy"

@@ -1,16 +1,11 @@
 from libqtile.dgroups import simple_key_binder
 
-from keybinds import keys, mod
-from glayouts import groups, layouts, floating_layout
+from keybindsc import keys, mod
+from groupsc import groups
+from layoutsc import layouts, floating_layout
 from mousec import mouse
 from screensc import screens
-from customhooks import dbus_register, autostart, auto_show_screen
-
-# Allow MODKEY+[0 through 9] to bind to groups, see https://docs.qtile.org/en/stable/manual/config/groups.html
-# MOD4 + index Number : Switch to Group[index]
-# MOD4 + shift + index Number : Send active window to another Group
-dgroups_key_binder = simple_key_binder(mod)
-
+from hooksc import dbus_register, autostart, auto_show_screen
 
 dgroups_app_rules = []  # type: list
 follow_mouse_focus = False
