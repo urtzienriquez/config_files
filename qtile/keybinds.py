@@ -93,6 +93,20 @@ keys = [
         desc="Increase volume",
     ),
     Key([], "XF86AudioMute", lazy.spawn("amixer sset Master 1+ toggle"), desc="Mute"),
+    # volume v2
+    Key(
+        [mod, alt],
+        "j",
+        lazy.spawn("amixer sset Master 5%-"),
+        desc="Decrease volume",
+    ),
+    Key(
+        [mod, alt],
+        "k",
+        lazy.spawn("amixer sset Master 5%+"),
+        desc="Increase volume",
+    ),
+    Key([mod, alt], "m", lazy.spawn("amixer sset Master 1+ toggle"), desc="Mute"),
     # Brightness
     Key(
         [],
@@ -183,8 +197,9 @@ for key in keys:
     keys_str += keypress_str + ": " + key.desc + "\n"
 
 help_desc = "Show qtile keys in rofi"
-help_key = "."
-keys_str += f"{mod}-{help_key}: {help_desc}"
+help_mod = "super-control"
+help_key = "y"
+keys_str += f"{help_mod}-{help_key}: {help_desc}"
 
 
 def get_launcher_command(s, prompt, launcher):
@@ -197,7 +212,7 @@ def get_launcher_command(s, prompt, launcher):
 keys.append(
     Key(
         [mod, "control"],
-        "y",
+        help_key,
         lazy.spawn(**get_launcher_command(keys_str, "Qtile keys", launcher)),
         desc="bla",
     )

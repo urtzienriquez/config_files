@@ -1,5 +1,4 @@
 #!/bin/sh
-feh --bg-scale ~/Pictures/linux-wallpaper.png &
 # nm-applet &
 # /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 # pasystray &
@@ -7,3 +6,4 @@ feh --bg-scale ~/Pictures/linux-wallpaper.png &
 ~/.config/polybar/launch.sh &
 unclutter --iddle 1 &
 autorandr --change
+feh --bg-scale ~/Pictures/linux-wallpaper.png
