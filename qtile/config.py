@@ -108,12 +108,12 @@ keys = [
     Key([alt], "f", lazy.spawn("ghostty -e ranger")),
     Key([alt], "w", lazy.spawn("libreoffice25.2 --writer")),
     Key([alt], "b", lazy.spawn("librewolf")),
-    Key([alt], "q", lazy.spawn("qutebrowser")),
+    Key([alt], "q", lazy.spawn("qutebrowser --qt-arg class web --qt-arg name web")),
     Key(
         [alt],
         "y",
         lazy.spawn(
-            "qutebrowser --basedir /home/urtzi/.config/quteyoutube --qt-arg name youtube"
+            "qutebrowser --basedir /home/urtzi/.config/quteyoutube --qt-arg class youtube --qt-arg name youtube"
         ),
     ),
     Key([alt], "z", lazy.spawn("zotero")),
@@ -150,11 +150,12 @@ groups = [
     ),
     Group(
         name="web",
-        matches=[Match(wm_class=["qutebrowser"])],
+        matches=[Match(wm_class=["web"])],
+        layout="max",
     ),
     Group(
         name="youtube",
-        matches=[Match(title=["youtube"])],
+        matches=[Match(wm_class=["youtube"])],
     ),
     Group(
         name="zotero",
@@ -166,7 +167,7 @@ groups = [
     ),
     Group(
         name="zoom",
-        matches=[Match(wm_class=["Zoom"])],
+        matches=[Match(wm_class=["zoom"])],
     ),
 ]
 
