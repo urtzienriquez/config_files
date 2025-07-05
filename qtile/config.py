@@ -84,42 +84,82 @@ keys = [
         desc="Shutdown",
     ),
     # volume
-    Key([], "XF86AudioLowerVolume", lazy.spawn("amixer sset Master 5%-")),
-    Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer sset Master 5%+")),
-    Key([], "XF86AudioMute", lazy.spawn("amixer sset Master 1+ toggle")),
+    Key(
+        [],
+        "XF86AudioLowerVolume",
+        lazy.spawn("amixer sset Master 5%-"),
+        desc="Decrease volume",
+    ),
+    Key(
+        [],
+        "XF86AudioRaiseVolume",
+        lazy.spawn("amixer sset Master 5%+"),
+        desc="Increase volume",
+    ),
+    Key([], "XF86AudioMute", lazy.spawn("amixer sset Master 1+ toggle"), desc="Mute"),
     # Brightness
-    Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl -c backlight set 2%+")),
-    Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl -c backlight set 2%-")),
+    Key(
+        [],
+        "XF86MonBrightnessUp",
+        lazy.spawn("brightnessctl -c backlight set 2%+"),
+        desc="Increase brightness",
+    ),
+    Key(
+        [],
+        "XF86MonBrightnessDown",
+        lazy.spawn("brightnessctl -c backlight set 2%-"),
+        desc="Decrease brightness",
+    ),
     # mouseless pointer
-    Key([mod], "d", lazy.spawn("warpd --hint")),
-    Key([mod, "shift"], "d", lazy.spawn("warpd --hint2")),
-    Key([mod], "c", lazy.spawn("warpd --normal")),
-    Key([mod], "g", lazy.spawn("warpd --grid")),
-    Key([mod], "s", lazy.spawn("warpd --screen")),
+    Key([mod], "d", lazy.spawn("warpd --hint"), desc="Launch pointer hint mode"),
+    Key(
+        [mod, "shift"],
+        "d",
+        lazy.spawn("warpd --hint2"),
+        desc="Launch pointer hint 2step mode",
+    ),
+    Key([mod], "c", lazy.spawn("warpd --normal"), desc="Launch pointer normal mode"),
+    Key([mod], "g", lazy.spawn("warpd --grid"), desc="Launch pointer grid mode"),
+    Key([mod], "s", lazy.spawn("warpd --screen"), desc="Launch pointer screen mode"),
     # Launchers
     Key([alt], "k", lazy.window.kill(), desc="Kill focused window"),
-    Key([alt], "r", lazy.spawn("rofi -modi drun,run -show drun")),
+    Key(
+        [alt], "r", lazy.spawn("rofi -i -modi drun,run -show drun"), desc="Launch rofi"
+    ),
     Key([alt], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-    Key([mod, alt], "Return", lazy.spawn("gnome-terminal")),
-    Key([alt], "s", lazy.spawn("gnome-control-center")),
-    Key([alt], "v", lazy.spawn("ghostty -e /opt/nvim/bin/nvim")),
-    Key([alt], "a", lazy.spawn("ghostty -e calcurse")),
-    Key([alt], "n", lazy.spawn("jupyter-lab")),
-    Key([alt], "f", lazy.spawn("ghostty -e ranger")),
-    Key([alt], "w", lazy.spawn("libreoffice25.2 --writer")),
-    Key([alt], "b", lazy.spawn("librewolf")),
-    Key([alt], "q", lazy.spawn("qutebrowser --qt-arg class web --qt-arg name web")),
+    Key(
+        [mod, alt], "Return", lazy.spawn("gnome-terminal"), desc="Launch gnome terminal"
+    ),
+    Key([alt], "s", lazy.spawn("gnome-control-center"), desc="Launch gnome settings"),
+    Key([alt], "v", lazy.spawn("ghostty -e /opt/nvim/bin/nvim"), desc="Launch nvim"),
+    Key([alt], "a", lazy.spawn("ghostty -e calcurse"), desc="Launch calendar"),
+    Key([alt], "n", lazy.spawn("jupyter-lab"), desc="Launch jupyter lab"),
+    Key([alt], "f", lazy.spawn("ghostty -e ranger"), desc="Launch range file manager"),
+    Key(
+        [alt],
+        "w",
+        lazy.spawn("libreoffice25.2 --writer"),
+        desc="Launch libreoffice writer",
+    ),
+    Key([alt], "b", lazy.spawn("librewolf"), desc="Launch librewolf"),
+    Key(
+        [alt],
+        "q",
+        lazy.spawn("qutebrowser --qt-arg class web --qt-arg name web"),
+        desc="Launch qutebrowser",
+    ),
     Key(
         [alt],
         "y",
         lazy.spawn(
             "qutebrowser --basedir /home/urtzi/.config/quteyoutube --qt-arg class youtube --qt-arg name youtube"
         ),
+        desc="Launch qutebrowser for youtube",
     ),
-    Key([alt], "z", lazy.spawn("zotero")),
-    Key([alt], "i", lazy.spawn("inkscape")),
-    Key([alt], "g", lazy.spawn("gimp")),
-    Key([alt], "o", lazy.spawn("zoom")),
+    Key([alt], "z", lazy.spawn("zotero"), desc="Launch zotero"),
+    Key([alt], "i", lazy.spawn("inkscape"), desc="Launch inkscape"),
+    Key([alt], "g", lazy.spawn("gimp"), desc="Launch gimp"),
+    Key([alt], "o", lazy.spawn("zoom"), desc="Launch zoom"),
 ]
 
 # Add key bindings to switch VTs in Wayland.
@@ -134,6 +174,39 @@ for vt in range(1, 8):
             desc=f"Switch to VT{vt}",
         )
     )
+
+# Add help key
+launcher = "rofi -i -show run -matching fuzzy"
+keys_str = ""
+for key in keys:
+    modifs = key.modifiers
+    modifs = [m.replace("mod1", "alt") for m in modifs]
+    modifs = [m.replace("mod4", "super") for m in modifs]
+    keypress = modifs + [key.key]
+    keypress_str = "-".join(keypress)
+    keys_str += keypress_str + ": " + key.desc + "\n"
+
+help_desc = "Show qtile keys in rofi"
+help_key = "."
+keys_str += f"{mod}-{help_key}: {help_desc}"
+
+
+def get_launcher_command(s, prompt, launcher):
+    return {
+        "shell": True,
+        "cmd": f"echo '{s}' | {launcher} -dmenu -p '{prompt}'",
+    }
+
+
+keys.append(
+    Key(
+        [mod, "control"],
+        "y",
+        lazy.spawn(**get_launcher_command(keys_str, "Qtile keys", launcher)),
+        desc="bla",
+    )
+)
+
 
 groups = [
     Group(
