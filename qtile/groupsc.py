@@ -30,9 +30,8 @@ group_layouts = [
     "columns",
     "max",
     "max",
-    "columns",
-    "columns",
-    "columns",
+    "max",
+    "max",
     "columns",
 ]
 group_matches = [
