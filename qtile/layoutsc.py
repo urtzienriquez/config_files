@@ -15,7 +15,7 @@ layout_theme = init_layout_theme()
 
 layouts = [
     # layout.MonadTall(**layout_theme),
-    layout.Columns(**layout_theme),
+    layout.Columns(**layout_theme, insert_position=1),
     layout.Max(**layout_theme),
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),

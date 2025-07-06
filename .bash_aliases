@@ -24,9 +24,14 @@ ml() {
 # neovim alias
 alias nv='nvim'
 
+# python
+alias py='python3'
+
+# julia
+alias jl='julia'
 # julia connected to server to use in neovim
-alias jl='julia -i /home/urtzi/.julia_scripts/nvjulia.jl'
-alias jl18='julia +1.8 -i /home/urtzi/.julia_scripts/nvjulia.jl'
+alias jlc='julia -i /home/urtzi/.julia_scripts/nvjulia.jl'
+alias jlc18='julia +1.8 -i /home/urtzi/.julia_scripts/nvjulia.jl'
 
 # qstat alias for metacentrum
 alias qs='ssh meta qstat -u urtzien'
