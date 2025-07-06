@@ -245,6 +245,6 @@ keys.append(
         [mod, "control"],
         help_key,
         lazy.spawn(**get_launcher_command(keys_str, "Qtile keys", launcher)),
-        desc="bla",
+        desc=help_desc,
     )
 )

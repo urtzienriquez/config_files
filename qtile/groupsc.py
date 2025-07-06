@@ -35,6 +35,7 @@ group_matches = [
     ["Inkscape", "Gimp"],
     ["zoom"],
 ]
+group_exclusive = [False, False, False, False, True, True, False, False, True]
 
 for i in range(len(group_names)):
     groups.append(
@@ -43,5 +44,6 @@ for i in range(len(group_names)):
             layout=group_layouts[i].lower(),
             label=group_labels[i],
             matches=([Match(wm_class=group_matches[i])]),
+            exclusive=group_exclusive[i],
         )
     )
