@@ -1,5 +1,5 @@
 from libqtile import qtile
-from libqtile.config import Key
+from libqtile.config import Key, KeyChord
 from libqtile.lazy import lazy
 
 from groupsc import groups
@@ -61,7 +61,7 @@ keys = [
     ),
     Key(
         [mod],
-        "t",
+        "n",
         lazy.window.toggle_floating(),
         desc="Toggle floating on the focused window",
     ),
@@ -121,6 +121,28 @@ keys = [
         "XF86MonBrightnessDown",
         lazy.spawn("brightnessctl -c backlight set 2%-"),
         desc="Decrease brightness",
+    ),
+    KeyChord(
+        [mod],
+        "t",
+        [
+            Key(
+                [],
+                "d",
+                lazy.spawn(
+                    "sed -i '2 s/night-day$/night/' /home/urtzi/.config/ghostty/config"
+                ),
+                desc="to dark mode",
+            ),
+            Key(
+                [],
+                "l",
+                lazy.spawn(
+                    "sed -i '2 s/night$/night-day/' /home/urtzi/.config/ghostty/config"
+                ),
+                desc="to light mode",
+            ),
+        ],
     ),
     # mouseless pointer
     Key([mod], "d", lazy.spawn("warpd --hint"), desc="Launch pointer hint mode"),

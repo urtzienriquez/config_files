@@ -29,7 +29,7 @@ group_matches = [
     [],
     [],
     [],
-    ["web"],
+    ["web", "librewolf"],
     ["youtube"],
     ["Zotero"],
     ["Inkscape", "Gimp"],
