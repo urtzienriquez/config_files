@@ -20,7 +20,7 @@ group_layouts = [
     "columns",
     "max",
     "max",
-    "max",
+    "treetab",
     "max",
     "columns",
 ]
