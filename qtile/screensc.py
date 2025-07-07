@@ -1,3 +1,3 @@
 from libqtile.config import Screen
 
-screens = [Screen()]
+screens = [Screen(), Screen()]
