@@ -30,7 +30,7 @@ keys = [
         [mod, "shift"],
         "space",
         swap_screens(),
-        desc="Swap screens, don't change focused screen",
+        desc="Swap screens, but keep focus",
     ),
     Key(
         [mod, "shift", "control"],
@@ -287,7 +287,7 @@ keys = [
     # Launchers
     Key(
         [alt],
-        "k",
+        "q",
         lazy.window.kill(),
         desc="Kill focused window",
     ),
@@ -354,7 +354,7 @@ keys = [
     ),
     Key(
         [alt],
-        "q",
+        "j",
         lazy.to_screen(0),
         lazy.spawn("qutebrowser --qt-arg class web --qt-arg name web"),
         desc="Launch qutebrowser",
@@ -446,8 +446,7 @@ for i in groups:
         ]
     )
 
-# Add help key
-launcher = "rofi -i -show run -matching fuzzy"
+# retrieve key information
 keys_str = ""
 for key in keys:
     modifs = key.modifiers
@@ -457,6 +456,8 @@ for key in keys:
     keypress_str = "-".join(keypress)
     keys_str += keypress_str + ": " + key.desc + "\n"
 
+# add helper key
+launcher = "rofi -i -show run -matching fuzzy"
 help_desc = "Show qtile keys in rofi"
 help_mod = "super-control"
 help_key = "y"
