@@ -427,7 +427,7 @@ for i in groups:
                 [mod],
                 i.name,
                 lazy.group[i.name].toscreen(),
-                desc="Switch to group {}".format(i.name),
+                desc="Switch to group {}: {}".format(i.name, i.label),
             ),
             Key(
                 [mod, "shift"],
