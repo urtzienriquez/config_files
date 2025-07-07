@@ -8,17 +8,37 @@ mod = "mod4"
 alt = "mod1"
 terminal = "ghostty"
 
+
+def swap_screens():
+    @lazy.function
+    def __inner(qtile):
+        i = qtile.screens.index(qtile.current_screen)
+        group = qtile.screens[i - 1].group
+        qtile.current_screen.set_group(group)
+
+    return __inner
+
+
 keys = [
-    # A list of available commands that can be bound to keys can be found
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
-    # Switch between monitors
     Key(
         [mod],
         "space",
         lazy.next_screen(),
         desc="Next monitor",
     ),
-    # Switch between windows
+    Key(
+        [mod, "shift"],
+        "space",
+        swap_screens(),
+        desc="Swap screens, don't change focused screen",
+    ),
+    Key(
+        [mod, "shift", "control"],
+        "space",
+        swap_screens(),
+        lazy.next_screen(),
+        desc="Swap screens and change focused screen",
+    ),
     Key(
         [mod],
         "h",
@@ -49,8 +69,6 @@ keys = [
         lazy.layout.next(),
         desc="Move window focus to other window",
     ),
-    # Move windows between left/right columns or move up/down in current stack.
-    # Moving out of range in Columns layout will create new column.
     Key(
         [mod, "shift"],
         "h",
@@ -75,8 +93,6 @@ keys = [
         lazy.layout.shuffle_up(),
         desc="Move window up",
     ),
-    # Grow windows. If current window is on the edge of screen and direction
-    # will be to screen edge - window would shrink.
     Key(
         [mod, "control"],
         "h",
@@ -107,17 +123,12 @@ keys = [
         lazy.layout.normalize(),
         desc="Reset all window sizes",
     ),
-    # Toggle between split and unsplit sides of stack.
-    # Split = all windows displayed
-    # Unsplit = 1 window displayed, like Max layout, but still with
-    # multiple stack panes
     Key(
         [mod, "shift"],
         "Return",
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
-    # Toggle between different layouts as defined below
     Key(
         [mod],
         "Tab",
@@ -186,7 +197,6 @@ keys = [
         lazy.spawn("amixer sset Master 1+ toggle"),
         desc="Mute",
     ),
-    # volume v2
     Key(
         [mod, alt],
         "j",
@@ -218,6 +228,7 @@ keys = [
         lazy.spawn("brightnessctl -c backlight set 2%-"),
         desc="Decrease brightness",
     ),
+    # dark/light mode
     KeyChord(
         [mod],
         "t",
@@ -351,7 +362,6 @@ keys = [
     Key(
         [alt],
         "y",
-        # qtile.focus_screen(0),
         lazy.to_screen(0),
         lazy.spawn(
             "qutebrowser --basedir /home/urtzi/.config/quteyoutube \
@@ -384,38 +394,47 @@ keys = [
         lazy.spawn("zoom"),
         desc="Launch zoom",
     ),
+    Key(
+        [],
+        "Print",
+        lazy.spawn("gnome-screenshot -i"),
+        desc="Launch screenshot with Print key",
+    ),
+    Key(
+        [alt],
+        "p",
+        lazy.spawn("gnome-screenshot -i"),
+        desc="Launch screenshot with keyboard",
+    ),
 ]
 
-# Add key bindings to switch VTs in Wayland.
-for vt in range(1, 8):
-    keys.append(
-        Key(
-            ["control", "mod1"],
-            f"f{vt}",
-            lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland"),
-            desc=f"Switch to VT{vt}",
-        )
-    )
+# # Add key bindings to switch VTs in Wayland.
+# for vt in range(1, 8):
+#     keys.append(
+#         Key(
+#             ["control", "mod1"],
+#             f"f{vt}",
+#             lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland"),
+#             desc=f"Switch to VT{vt}",
+#         )
+#     )
 
 # key bindings to switch and move between groups
 for i in groups:
     keys.extend(
         [
-            # mod + number of group = switch to group
             Key(
                 [mod],
                 i.name,
                 lazy.group[i.name].toscreen(),
                 desc="Switch to group {}".format(i.name),
             ),
-            # mod + shift + number of group = move focused window to group
             Key(
                 [mod, "shift"],
                 i.name,
                 lazy.window.togroup(i.name, switch_group=False),
                 desc="Move focused window to group {}: {}".format(i.name, i.label),
             ),
-            # mod + control + shift + letter of group = move focused window to group
             Key(
                 [mod, "control", "shift"],
                 i.name,
@@ -426,7 +445,6 @@ for i in groups:
             ),
         ]
     )
-
 
 # Add help key
 launcher = "rofi -i -show run -matching fuzzy"
