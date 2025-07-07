@@ -20,7 +20,7 @@ layouts = [
         **layout_theme,
         active_bg="#d79922",
         active_fg="#000000",
-        inactive_bg="458587",
+        inactive_bg="#458587",
     ),
     # layout.Zoomy(**layout_theme),
     # layout.MonadTall(**layout_theme),
@@ -36,7 +36,7 @@ layouts = [
 
 floating_layout = layout.Floating(
     # **layout_theme,
-    border_focus="458587",
+    border_focus="#458587",
     border_width=2,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
