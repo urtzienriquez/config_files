@@ -459,8 +459,8 @@ for key in keys:
 # add helper key
 launcher = "rofi -i -show run -matching fuzzy"
 help_desc = "Show qtile keys in rofi"
-help_mod = "super-control"
-help_key = "y"
+help_mod = "super-alt"
+help_key = "k"
 keys_str += f"{help_mod}-{help_key}: {help_desc}"
 
 
@@ -473,7 +473,7 @@ def get_launcher_command(s, prompt, launcher):
 
 keys.append(
     Key(
-        [mod, "control"],
+        [mod, alt],
         help_key,
         lazy.spawn(**get_launcher_command(keys_str, "Qtile keys", launcher)),
         desc=help_desc,
