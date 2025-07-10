@@ -21,6 +21,8 @@ configuration {
     kb-remove-char-back: "BackSpace";
     kb-move-char-forward: "Control+f";
     kb-mode-complete: "Control+o";
+
+		font: "monospace 10";
 }
 
 * {
@@ -42,6 +44,7 @@ configuration {
     border-radius:    6;
     border-color:     @bordercolor;
     padding:          15;
+    width:						650;
 }
 #mainbox {
     border:  0;

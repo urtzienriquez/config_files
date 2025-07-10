@@ -291,10 +291,18 @@ keys = [
         lazy.window.kill(),
         desc="Kill focused window",
     ),
+    # Key(
+    #     [alt],
+    #     "r",
+    #     lazy.spawn("rofi -i -modi drun,run -show drun"),
+    #     desc="Launch rofi",
+    # ),
     Key(
         [alt],
         "r",
-        lazy.spawn("rofi -i -modi drun,run -show drun"),
+        lazy.spawn(
+            "ghostty --x11-instance-name='fzf-nova' -e bash -c 'source ~/.bashrc &>/dev/null && ~/.local/bin/fzf-nova/fzf-nova'"
+        ),
         desc="Launch rofi",
     ),
     Key(
@@ -324,7 +332,7 @@ keys = [
     Key(
         [alt],
         "a",
-        lazy.spawn("ghostty -e calcurse"),
+        lazy.spawn("ghostty --x11-instance-name='calendar' -e calcurse"),
         desc="Launch calendar",
     ),
     Key(
@@ -465,9 +473,11 @@ keys_str += f"{help_mod}-{help_key}: {help_desc}"
 
 
 def get_launcher_command(s, prompt, launcher):
+    # def get_launcher_command(s):
     return {
         "shell": True,
         "cmd": f"echo '{s}' | {launcher} -dmenu -p '{prompt}'",
+        # "cmd": f"ghostty --x11-instance-name='fzf-nova' -e bash -c 'echo -e '{s}' | fzf'",
     }
 
 
@@ -476,6 +486,7 @@ keys.append(
         [mod, alt],
         help_key,
         lazy.spawn(**get_launcher_command(keys_str, "Qtile keys", launcher)),
+        # lazy.spawn(**get_launcher_command(keys_str)),
         desc=help_desc,
     )
 )

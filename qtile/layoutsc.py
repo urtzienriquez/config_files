@@ -46,6 +46,8 @@ floating_layout = layout.Floating(
         Match(wm_class="maketag"),  # gitk
         Match(wm_class="ssh-askpass"),  # ssh-askpass
         Match(wm_class="gnome-control-center"),  # gnome-control-center
+        Match(wm_class="calendar"),  # calendar
+        Match(wm_class="fzf-nova"),  # calendar
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
     ],

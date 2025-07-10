@@ -171,12 +171,10 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -l -g "!{node_mo
 export FZF_DEFAULT_OPTS="
 		--no-height 
 		--no-reverse
-		--walker-skip .git,node_modules,go,target
     --preview 'bat -p --theme=tokyonight_night --color=always {}'
     --preview-window '~4,+{2}+4/3,<75(up)'
     --bind 'ctrl-v:toggle-preview'"
 export FZF_CTRL_T_OPTS="
-		--walker-skip .git,node_modules,go,target
     --preview 'bat -p --theme=tokyonight_night --color=always {}'
     --bind 'ctrl-v:toggle-preview'"
 export FZF_CTRL_R_OPTS="--no-preview"
@@ -188,4 +186,6 @@ if [ -f "$HOME/.bash_aliases" ]; then
 fi
 
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# --walker-skip .git,node_modules,go,target
+# --walker-skip .git,node_modules,go,target
+
