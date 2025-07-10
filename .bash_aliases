@@ -76,22 +76,22 @@ fd() {
   fi
 	cd "$to_dir"
 }
-# (find) live grep [function taken and slightly modified from https://junegunn.github.io/fzf/tips/ripgrep-integration/]
-lg() (
-  RELOAD='reload:rg -i -g "!{node_modules,.git,go}" --column --color=always {q} || :'
-  OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
-            nvim {1} +{2}     # No selection. Open the current line in Vim.
-          else
-            nvim +cw -q {+f}  # Build quickfix list for the selected items.
-          fi'
-  fzf --disabled --ansi --multi \
-		  --walker-skip .git,node_modules,go,.npm,.cpanm,.fnmt,.pki,target \
-      --bind "start:$RELOAD" --bind "change:$RELOAD" \
-      --bind "enter:become:$OPENER" \
-      --bind "ctrl-o:execute:$OPENER" \
-      --bind 'alt-a:select-all,alt-d:deselect-all,ctrl-v:toggle-preview' \
-      --delimiter : \
-      --preview 'bat -p --color=always --theme=tokyonight_night --highlight-line {2} {1}' \
-      --preview-window '~4,+{2}+4/3,<75(up)' \
-      --query "$*"
-)
+# # (find) live grep [function taken and slightly modified from https://junegunn.github.io/fzf/tips/ripgrep-integration/]
+# lg() (
+#   RELOAD='reload:rg -i -g "!{node_modules,.git,go}" --column --color=always {q} || :'
+#   OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
+#             nvim {1} +{2}     # No selection. Open the current line in Vim.
+#           else
+#             nvim +cw -q {+f}  # Build quickfix list for the selected items.
+#           fi'
+#   fzf --disabled --ansi --multi \
+# 		  --walker-skip .git,node_modules,go,.npm,.cpanm,.fnmt,.pki,target \
+#       --bind "start:$RELOAD" --bind "change:$RELOAD" \
+#       --bind "enter:become:$OPENER" \
+#       --bind "ctrl-o:execute:$OPENER" \
+#       --bind 'alt-a:select-all,alt-d:deselect-all,ctrl-v:toggle-preview' \
+#       --delimiter : \
+#       --preview 'bat -p --color=always --theme=tokyonight_night --highlight-line {2} {1}' \
+#       --preview-window '~4,+{2}+4/3,<75(up)' \
+#       --query "$*"
+# )

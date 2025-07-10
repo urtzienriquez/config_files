@@ -167,6 +167,9 @@ esac
 # <<< juliaup initialize <<<
 
 # fzf 
+# enable keybinds
+source /usr/share/doc/fzf/examples/key-bindings.bash
+# deafults
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -l -g "!{node_modules,.git,go}"'
 export FZF_DEFAULT_OPTS="
 		--no-height 
@@ -184,8 +187,3 @@ export FZF_ALT_C_OPTS="--no-preview"
 if [ -f "$HOME/.bash_aliases" ]; then
     . "$HOME/.bash_aliases"
 fi
-
-
-# --walker-skip .git,node_modules,go,target
-# --walker-skip .git,node_modules,go,target
-
