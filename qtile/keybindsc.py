@@ -291,17 +291,11 @@ keys = [
         lazy.window.kill(),
         desc="Kill focused window",
     ),
-    # Key(
-    #     [alt],
-    #     "r",
-    #     lazy.spawn("rofi -i -modi drun,run -show drun"),
-    #     desc="Launch rofi",
-    # ),
     Key(
         [alt],
-        "r",
+        "f",
         lazy.spawn(
-            "ghostty --x11-instance-name='fzf-nova' -e bash -c 'source ~/.bashrc &>/dev/null && ~/.local/bin/fzf-nova/fzf-nova'"
+            "ghostty --x11-instance-name='fzf-nova' -e bash -c 'source ~/.bashrc &>/dev/null && ~/Documents/GitHub/config_files/fzf-nova/fzf-nova'"
         ),
         desc="Launch rofi",
     ),
@@ -343,7 +337,7 @@ keys = [
     ),
     Key(
         [alt],
-        "f",
+        "r",
         lazy.spawn("ghostty -e ranger"),
         desc="Launch range file manager",
     ),
@@ -455,29 +449,28 @@ for i in groups:
     )
 
 # retrieve key information
-keys_str = ""
+keys_list = []
 for key in keys:
     modifs = key.modifiers
     modifs = [m.replace("mod1", "alt") for m in modifs]
     modifs = [m.replace("mod4", "super") for m in modifs]
     keypress = modifs + [key.key]
     keypress_str = "-".join(keypress)
-    keys_str += keypress_str + ": " + key.desc + "\n"
+    keys_list.append(f"{keypress_str}: {key.desc}")
 
 # add helper key
-launcher = "rofi -i -show run -matching fuzzy"
-help_desc = "Show qtile keys in rofi"
+help_desc = "Show qtile keys in ghostty with fzf"
 help_mod = "super-alt"
-help_key = "k"
-keys_str += f"{help_mod}-{help_key}: {help_desc}"
+help_key = "f"
+keys_list.append(f"{help_mod}-{help_key}: {help_desc}")
 
 
-def get_launcher_command(s, prompt, launcher):
-    # def get_launcher_command(s):
+def get_launcher_command(key_list):
+    # Create the command using here-document to avoid escaping issues
+    keys_text = "\n".join(key_list)
     return {
         "shell": True,
-        "cmd": f"echo '{s}' | {launcher} -dmenu -p '{prompt}'",
-        # "cmd": f"ghostty --x11-instance-name='fzf-nova' -e bash -c 'echo -e '{s}' | fzf'",
+        "cmd": f"ghostty --x11-instance-name='qtile-keys' -e bash -c 'cat <<EOF | fzf --prompt=\"Qtile keys: \"\n{keys_text}\nEOF'",
     }
 
 
@@ -485,8 +478,7 @@ keys.append(
     Key(
         [mod, alt],
         help_key,
-        lazy.spawn(**get_launcher_command(keys_str, "Qtile keys", launcher)),
-        # lazy.spawn(**get_launcher_command(keys_str)),
+        lazy.spawn(**get_launcher_command(keys_list)),
         desc=help_desc,
     )
 )

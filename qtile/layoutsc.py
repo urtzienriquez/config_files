@@ -48,6 +48,7 @@ floating_layout = layout.Floating(
         Match(wm_class="gnome-control-center"),  # gnome-control-center
         Match(wm_class="calendar"),  # calendar
         Match(wm_class="fzf-nova"),  # calendar
+        Match(wm_class="qtile-keys"),  # calendar
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
     ],

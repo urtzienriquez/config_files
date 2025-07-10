@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# modified from https://github.com/gotbletu/fzf-nova
+
+export FZF_DEFAULT_OPTS="-e -i --info=hidden --scroll-off=5 --tiebreak=index --bind 'home:first,end:last,tab:down,shift-tab:up'"
+man -k . | fzf -q "$1" --prompt='manpages: ' --preview-window down \
+  --preview $'echo {} | tr -d \'()\' | awk \'{printf "%s ", $2} {print $1}\' | xargs -r man' \
+  | tr -d '()' | awk '{printf "%s ", $2} {print $1}' | xargs -r man
