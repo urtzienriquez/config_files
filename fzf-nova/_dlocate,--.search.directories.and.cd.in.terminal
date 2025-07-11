@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+# modified from https://github.com/gotbletu/fzf-nova
+
+export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
+
+selected=$(find ~ -type d \
+  | fzf --prompt='select directory to locate: ')
+
+[ -z "$selected" ] && exit
+
+echo "$selected" | while read -r line; do
+  setsid ghostty --working-directory="$line" >/dev/null 2>&1 & disown
+  sleep 0.2
+done
