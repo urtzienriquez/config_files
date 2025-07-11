@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 \
+  --tiebreak=index --bind 'home:first,end:last' --preview 'bat -p --theme=tokyonight_night --color=always {}'"
+
+apt-cache search '' \
+	| sort \
+	| cut --delimiter ' ' --fields 1 \
+	| fzf --multi --cycle --reverse --preview 'apt-cache show {1}' \
+	| xargs -r sudo apt install -y
+
+sleep 10
