@@ -1,10 +1,4 @@
 #!/bin/bash
-# Script to display available wifi access points in an FZF selector.
-# Includes an option to filter based on networks already known to nmcli.
-# Attempts to connect to the selected network.
-# TODO: Add usage information and some basic options (FZF keybinding?)
-# TODO: Improve logging / debug facilities
-
 
 export FZF_DEFAULT_OPTS="
 		--no-height 
@@ -13,9 +7,8 @@ export FZF_DEFAULT_OPTS="
 # Time delay between nmcli rescans (milliseconds)
 declare -i RESCAN_DELAY="${RESCAN_DELAY:-2000}"
 
-LOGFILE="$HOME/nmcli.log"
+LOGFILE="/tmp/nmcli.log"
 
-# Combine list of known networks into a single gigantic regex
 KNOWN_SSIDS_REGEX="`printf '\(%s\)' "$(nmcli -t -f "name" con |
     awk 'BEGIN {ORS="\\\|";} {print $0;}' |
     sed 's:\\\|$::')" 2>/dev/null`"
@@ -29,7 +22,6 @@ process_selection() {
             "SSID '${known_ssid}' recognized!" \
             "Attempting to connect using saved credentials..."
         nmcli con up "${ssid}" |& tee -a ${LOGFILE:-/dev/null} && return 0
-        # TODO: Add loop here to allow user editing of saved creds
     fi
     echo; printf '%s\n' \
         "No valid saved credentials found for SSID '${ssid}'." \
@@ -40,7 +32,6 @@ process_selection() {
 }
 
 fzf_select_wifi() {
-    # Get colorized info on all nearby networks from nmcli
     local nmcli_fields="SSID,SIGNAL,BARS,FREQ,IN-USE"
     local get_nmcli_table=
     read -r -d '' get_nmcli_table <<-NMCLI
@@ -50,7 +41,6 @@ fzf_select_wifi() {
 	    column -t -s:
 	NMCLI
 
-    # Stuff for the FZF display
     local header=`printf '%s\n' "<C-a>: View all networks" \
         "<C-n>: View known networks"`
     local prompt_known="Available networks (known)> "
@@ -77,8 +67,6 @@ fzf_select_wifi() {
 }
 
 main() {
-    # Infinite "refresh wifi list" loop in the background
-    # This seems...suboptimal
     if (( RESCAN_DELAY < 1000 )); then
 	echo "Rescan delay must be at least 1000 ms" >&2
 	exit 23
@@ -98,9 +86,9 @@ main() {
     fi
     process_selection "${selected}"
     if (( $? )); then
-        echo "Connection failed.  XD"
+        echo "Connection failed."
     else
-        echo "Connection succeeded!  :-)"
+        echo "Connection succeeded!"
     fi
     echo
     exit $?
