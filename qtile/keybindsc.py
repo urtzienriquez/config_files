@@ -156,27 +156,13 @@ keys = [
     # session management
     Key(
         [mod, "control", "shift"],
-        "e",
-        lazy.shutdown(),
+        "x",
+        lazy.spawn(
+            "ghostty --x11-instance-name='fzf-nova' \
+                    -e bash -c 'source ~/.bashrc &>/dev/null \
+                    && ~/Documents/GitHub/config_files/fzf-nova/_session,--.manage.session'"
+        ),
         desc="Logout Qtile",
-    ),
-    Key(
-        [mod, "control", "shift"],
-        "l",
-        lazy.spawn("betterlockscreen -l"),
-        desc="Lock screen",
-    ),
-    Key(
-        [mod, "control", "shift"],
-        "r",
-        lazy.spawn("systemctl reboot"),
-        desc="Reboot",
-    ),
-    Key(
-        [mod, "control", "shift"],
-        "s",
-        lazy.spawn("systemctl poweroff"),
-        desc="Shutdown",
     ),
     # volume
     Key(

@@ -4,7 +4,7 @@
 export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
 
 selected=$(find ~ -type f \
-  | fzf --prompt='select file: ')
+  | fzf --prompt='select file to locate: ')
 
 [ -z "$selected" ] && exit
 

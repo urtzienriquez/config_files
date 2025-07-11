@@ -1,0 +1,24 @@
+
+#!/usr/bin/env sh
+# modified from https://github.com/gotbletu/fzf-nova
+
+export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
+
+selected=$(printf "lock\nlogout\nreboot\nshutdown" | fzf --prompt='Choose action: ')
+
+[ -z "$selected" ] && exit
+
+case "$selected" in
+  lock)
+    betterlockscreen -l
+    ;;
+  logout)
+    qtile cmd-obj -o cmd -f shutdown
+    ;;
+  reboot)
+    systemctl reboot
+    ;;
+  shutdown)
+    systemctl poweroff
+    ;;
+esac
