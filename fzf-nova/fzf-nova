@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # modified from https://github.com/gotbletu/fzf-nova
 
-export FZF_DEFAULT_OPTS="-e -i -d '_' --with-nth 2.. --info=hidden --scroll-off=5 --tiebreak=index --bind 'home:first,end:last,tab:down,shift-tab:up'"
+export FZF_DEFAULT_OPTS="-e -i -d '_' --reverse --with-nth 2.. --info=hidden --scroll-off=5 --tiebreak=index --bind 'home:first,end:last,tab:down,shift-tab:up'"
 mydir="${0%/*}"
 selected="$(
   find "$mydir" -type f -name '_*' -exec basename {} \; \

@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # modified from https://github.com/gotbletu/fzf-nova
 
-export FZF_DEFAULT_OPTS="-e -i --prompt='fkill >>> kill process: ' --info=hidden --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
+export FZF_DEFAULT_OPTS="-e -i --reverse --prompt='fkill >>> kill process: ' --info=hidden --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
 
 # fkill - kill processes - list only the ones you can kill. Modified the earlier script.
 fkill() {

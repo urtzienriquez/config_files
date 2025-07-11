@@ -470,7 +470,7 @@ def get_launcher_command(key_list):
     keys_text = "\n".join(key_list)
     return {
         "shell": True,
-        "cmd": f"ghostty --x11-instance-name='qtile-keys' -e bash -c 'cat <<EOF | fzf --prompt=\"Qtile keys: \"\n{keys_text}\nEOF'",
+        "cmd": f"ghostty --x11-instance-name='qtile-keys' -e bash -c 'cat <<EOF | fzf --reverse --prompt=\"Qtile keys: \"\n{keys_text}\nEOF'",
     }
 
 

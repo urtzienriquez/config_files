@@ -35,7 +35,7 @@ group_matches = [
     ["Inkscape", "Gimp"],
     ["zoom"],
 ]
-group_exclusive = [False, False, False, False, True, True, False, False, True]
+group_exclusive = [False, False, False, False, False, False, False, False, True]
 
 for i in range(len(group_names)):
     groups.append(

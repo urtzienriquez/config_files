@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # modified from https://github.com/gotbletu/fzf-nova
 
-export FZF_DEFAULT_OPTS="-e -i --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last' --header 'only searching /home and /media'"
+export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last' --header 'only searching /home and /media'"
 locate -ir '\(^/home\|^/media\)/.*' \
   | fzf -m --prompt="locate >>> select file(s) to open: " \
   |  while read -r line ; do setsid xdg-open "$line" & disown	; done
