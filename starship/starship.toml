@@ -10,7 +10,7 @@ disabled = true
 [character]
 success_symbol = "[](bold green)"
 error_symbol = "[](bold red)"
-vimcmd_symbol = "[](#d79922)"
+vimcmd_symbol = "[](#d79922)"
 
 [directory]
 truncation_length = 8
