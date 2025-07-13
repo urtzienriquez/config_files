@@ -1,5 +1,5 @@
 # theme
-theme = tokyonight-day
+theme = tokyonight
 
 # default shell
 command = /usr/bin/zsh
