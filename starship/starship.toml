@@ -1,4 +1,8 @@
-format = "$all\n\r$character"
+# Use custom format
+format = """
+$all
+$character
+"""
 
 [line_break] 
 disabled = true
