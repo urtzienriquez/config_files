@@ -38,6 +38,9 @@ export EDITOR=nvim
 # Autocompletion
 # -------------------------------
 zstyle :compinstall filename '/home/urtzi/.config/zsh/.zshrc'
+zstyle ':completion:*' menu select
+ZLS_COLORS="di=34:fi=0:ex=32:ln=36"
+zstyle ':completion:*' list-colors "${(s.:.)ZLS_COLORS}"
 
 autoload -Uz compinit
 compinit
