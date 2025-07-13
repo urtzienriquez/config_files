@@ -67,6 +67,18 @@ if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
 fi
 
 # -------------------------------
+# Prompt colors
+# -------------------------------
+case "$TERM" in
+    xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# -------------------------------
+# Misc
+# -------------------------------
+export RANGER_LOAD_DEFAULT_RC=FALSE
+
+# -------------------------------
 # PATH Setup
 # -------------------------------
 if [[ -z "$PATH" || "$PATH" == "/bin:/usr/bin" ]]; then
@@ -80,8 +92,6 @@ export PATH="/opt/nvim/bin:$PATH"
 export PATH="/usr/local/go/bin:$PATH"
 export PATH="$(go env GOPATH)/bin:$PATH"
 
-# -------------------------------
-# Juliaup
 # >>> juliaup initialize >>>
 case ":$PATH:" in
     *:/home/urtzi/.juliaup/bin:*) ;;
@@ -119,14 +129,3 @@ eval "$(zoxide init zsh)"
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
 
-# -------------------------------
-# Prompt colors
-# -------------------------------
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
-
-# -------------------------------
-# Misc
-# -------------------------------
-export RANGER_LOAD_DEFAULT_RC=FALSE
