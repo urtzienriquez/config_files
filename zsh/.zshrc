@@ -76,10 +76,9 @@ fi
 # Neovim path
 export PATH="/opt/nvim/bin:$PATH"
 
-# Go path — FIXED to not error if `go` not installed
-if command -v go >/dev/null 2>&1; then
-  export PATH="/usr/local/go/bin:$(go env GOPATH)/bin:$PATH"
-fi
+# go path export
+export PATH="/usr/local/go/bin:$PATH"
+export PATH="$(go env GOPATH)/bin:$PATH"
 
 # -------------------------------
 # Juliaup
