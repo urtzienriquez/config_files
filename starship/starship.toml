@@ -1,6 +1,5 @@
-# Use custom format
 format = """
-$all
+$directory$git_branch$git_status$git_commit
 $character
 """
 
@@ -14,61 +13,10 @@ vimcmd_symbol = "[](#d79922)"
 
 [directory]
 truncation_length = 8
+truncate_to_repo = true
 truncation_symbol = '…/'
 read_only = " 󰌾"
 
-[cmd_duration]
-disabled = true
-
-[aws]
-symbol = "  "
-
-[buf]
-symbol = " "
-
-[bun]
-symbol = " "
-
-[c]
-format = "[$symbol$version]($style) "
-symbol = " "
-
-[cpp]
-format = "[$symbol$version]($style) "
-symbol = " "
-
-[cmake]
-symbol = " "
-
-[conda]
-symbol = " "
-
-[crystal]
-symbol = " "
-
-[dart]
-symbol = " "
-
-[deno]
-symbol = " "
-
-[docker_context]
-symbol = " "
-
-[elixir]
-symbol = " "
-
-[elm]
-symbol = " "
-
-[fennel]
-symbol = " "
-
-[fossil_branch]
-symbol = " "
-
-[gcloud]
-symbol = "  "
 
 [git_branch]
 format = '[$symbol$branch(:$remote_branch)]($style) '
@@ -83,104 +31,5 @@ behind = "${count}"
 [git_commit]
 tag_symbol = '  '
 
-[golang]
-format = "[$symbol$version]($style) "
-symbol = " "
-
-[guix_shell]
-symbol = " "
-
-[haskell]
-format = "[$symbol$version]($style) "
-symbol = " "
-
-[haxe]
-symbol = " "
-
-[hg_branch]
-symbol = " "
-
-[hostname]
-ssh_symbol = " "
-
-[java]
-format = "[$symbol$version]($style) "
-symbol = " "
-
-[julia]
-format = "[$symbol$version]($style) "
-symbol = " "
-
-[kotlin]
-symbol = " "
-
-[lua]
-format = "[$symbol$version]($style) "
-detect_folders=[]
-symbol = " "
-
-[memory_usage]
-symbol = "󰍛 "
-
-[meson]
-symbol = "󰔷 "
-
-[nim]
-symbol = "󰆥 "
-
-[nix_shell]
-symbol = " "
-
-[nodejs]
-format = "[$symbol$version]($style) "
-detect_folders=[]
-symbol = " "
-
-[ocaml]
-symbol = " "
-
-[package]
-format = "[$symbol$version]($style) "
-symbol = "󰏗 "
-
-[perl]
-format = "[$symbol$version]($style) "
-symbol = " "
-
-[php]
-format = "[$symbol$version]($style) "
-symbol = " "
-
-[pijul_channel]
-symbol = " "
-
-[pixi]
-symbol = "󰏗 "
-
-[python]
-format = "[$symbol$version]($style) "
-symbol = " "
-
-[rlang]
-format = "[$symbol$version]($style) "
-symbol = "󰟔 "
-
-[ruby]
-format = "[$symbol$version]($style) "
-symbol = " "
-
-[rust]
-format = "[$symbol$version]($style) "
-symbol = "󱘗 "
-
-[scala]
-symbol = " "
-
-[swift]
-symbol = " "
-
-[zig]
-symbol = " "
-
-[gradle]
-symbol = " "
+[cmd_duration]
+disabled = true
