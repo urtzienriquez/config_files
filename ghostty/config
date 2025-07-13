@@ -1,3 +1,6 @@
+# default shell
+command = /usr/bin/zsh
+
 # theme
 theme = tokyonight
 
