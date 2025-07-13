@@ -24,6 +24,9 @@ ml() {
 # neovim alias
 alias nv='nvim'
 
+# R
+alias r='R'
+
 # python
 alias py='python3'
 

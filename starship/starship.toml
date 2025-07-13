@@ -1,7 +1,16 @@
+format = "$all\n\r$character"
+# add_newline = false
+
+[fill]
+symbol = ' '
+
+[line_break] 
+disabled = true
+
 [character]
 success_symbol = "[](bold green)"
 error_symbol = "[](bold red)"
-vimcmd_symbol = "[](bold purple)"
+vimcmd_symbol = "[](#d79922)"
 
 [directory]
 truncation_length = 8
@@ -21,9 +30,11 @@ symbol = " "
 symbol = " "
 
 [c]
+format = "[$symbol$version]($style) "
 symbol = " "
 
 [cpp]
+format = "[$symbol$version]($style) "
 symbol = " "
 
 [cmake]
@@ -60,18 +71,21 @@ symbol = " "
 symbol = "  "
 
 [git_branch]
+format = '[$symbol$branch(:$remote_branch)]($style) '
 symbol = " "
 
 [git_commit]
 tag_symbol = '  '
 
 [golang]
+format = "[$symbol$version]($style) "
 symbol = " "
 
 [guix_shell]
 symbol = " "
 
 [haskell]
+format = "[$symbol$version]($style) "
 symbol = " "
 
 [haxe]
@@ -84,15 +98,19 @@ symbol = " "
 ssh_symbol = " "
 
 [java]
+format = "[$symbol$version]($style) "
 symbol = " "
 
 [julia]
+format = "[$symbol$version]($style) "
 symbol = " "
 
 [kotlin]
 symbol = " "
 
 [lua]
+format = "[$symbol$version]($style) "
+detect_folders=[]
 symbol = " "
 
 [memory_usage]
@@ -108,66 +126,23 @@ symbol = "󰆥 "
 symbol = " "
 
 [nodejs]
+format = "[$symbol$version]($style) "
 detect_folders=[]
 symbol = " "
 
 [ocaml]
 symbol = " "
 
-[os.symbols]
-Alpaquita = " "
-Alpine = " "
-AlmaLinux = " "
-Amazon = " "
-Android = " "
-Arch = " "
-Artix = " "
-CachyOS = " "
-CentOS = " "
-Debian = " "
-DragonFly = " "
-Emscripten = " "
-EndeavourOS = " "
-Fedora = " "
-FreeBSD = " "
-Garuda = "󰛓 "
-Gentoo = " "
-HardenedBSD = "󰞌 "
-Illumos = "󰈸 "
-Kali = " "
-Linux = " "
-Mabox = " "
-Macos = " "
-Manjaro = " "
-Mariner = " "
-MidnightBSD = " "
-Mint = " "
-NetBSD = " "
-NixOS = " "
-Nobara = " "
-OpenBSD = "󰈺 "
-openSUSE = " "
-OracleLinux = "󰌷 "
-Pop = " "
-Raspbian = " "
-Redhat = " "
-RedHatEnterprise = " "
-RockyLinux = " "
-Redox = "󰀘 "
-Solus = "󰠳 "
-SUSE = " "
-Ubuntu = " "
-Unknown = " "
-Void = " "
-Windows = "󰍲 "
-
 [package]
+format = "[$symbol$version]($style) "
 symbol = "󰏗 "
 
 [perl]
+format = "[$symbol$version]($style) "
 symbol = " "
 
 [php]
+format = "[$symbol$version]($style) "
 symbol = " "
 
 [pijul_channel]
@@ -177,15 +152,19 @@ symbol = " "
 symbol = "󰏗 "
 
 [python]
+format = "[$symbol$version]($style) "
 symbol = " "
 
 [rlang]
+format = "[$symbol$version]($style) "
 symbol = "󰟔 "
 
 [ruby]
+format = "[$symbol$version]($style) "
 symbol = " "
 
 [rust]
+format = "[$symbol$version]($style) "
 symbol = "󱘗 "
 
 [scala]

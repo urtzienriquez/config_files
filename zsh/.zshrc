@@ -12,6 +12,11 @@ setopt APPEND_HISTORY            # Append to history file, don't overwrite
 setopt INC_APPEND_HISTORY        # Write to history file immediately, not when shell exits
 setopt HIST_REDUCE_BLANKS        # Remove unnecessary blanks from history
 
+
+# open man with bat
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
+
 bindkey -v 
 bindkey "^H" backward-delete-char 
 bindkey "^?" backward-delete-char 
