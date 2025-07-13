@@ -1,8 +1,4 @@
 format = "$all\n\r$character"
-# add_newline = false
-
-[fill]
-symbol = ' '
 
 [line_break] 
 disabled = true
