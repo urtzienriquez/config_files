@@ -13,7 +13,7 @@ error_symbol = "[](bold red)"
 vimcmd_symbol = "[](#d79922)"
 
 [directory]
-truncation_length = 8
+truncation_length = 5
 truncation_symbol = '…/'
 read_only = " 󰌾"
 
