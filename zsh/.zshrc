@@ -109,6 +109,11 @@ export FZF_CTRL_R_OPTS="--no-preview"
 export FZF_ALT_C_OPTS="--no-preview"
 
 # -------------------------------
+# Zoxide
+# -------------------------------
+eval "$(zoxide init zsh)"
+
+# -------------------------------
 # Starship prompt
 # -------------------------------
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
