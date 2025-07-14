@@ -17,6 +17,7 @@ setopt HIST_REDUCE_BLANKS
 # -------------------------------
 # man with bat
 # -------------------------------
+export BAT_THEME=tokyonight_night
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
@@ -109,11 +110,11 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -l -g "!{node_mo
 export FZF_DEFAULT_OPTS="
   --no-height 
   --no-reverse
-  --preview 'bat -p --theme=tokyonight_night --color=always {}'
+  --preview 'bat -p --color=always {}'
   --preview-window '~4,+{2}+4/3,<75(up)'
   --bind 'ctrl-v:toggle-preview'"
 export FZF_CTRL_T_OPTS="
-  --preview 'bat -p --theme=tokyonight_night --color=always {}'
+  --preview 'bat -p --color=always {}'
   --bind 'ctrl-v:toggle-preview'"
 export FZF_CTRL_R_OPTS="--no-preview"
 export FZF_ALT_C_OPTS="--no-preview"

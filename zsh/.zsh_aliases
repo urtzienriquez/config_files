@@ -46,7 +46,7 @@ alias iv='imv-x11'
 alias rn='ranger'
 
 # alias for bat
-alias bt='bat -p --theme="tokyonight_night"'
+alias bt='bat -p'
 
 #calcurse
 alias cl='calcurse'
@@ -95,7 +95,7 @@ fd() {
 #       --bind "ctrl-o:execute:$OPENER" \
 #       --bind 'alt-a:select-all,alt-d:deselect-all,ctrl-v:toggle-preview' \
 #       --delimiter : \
-#       --preview 'bat -p --color=always --theme=tokyonight_night --highlight-line {2} {1}' \
+#       --preview 'bat -p --color=always --highlight-line {2} {1}' \
 #       --preview-window '~4,+{2}+4/3,<75(up)' \
 #       --query "$*"
 # )
