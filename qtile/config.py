@@ -5,7 +5,14 @@ from groupsc import groups
 from layoutsc import layouts, floating_layout
 from mousec import mouse
 from screensc import screens
-from hooksc import dbus_register, autostart, auto_show_screen
+from hooksc import (
+    dbus_register,
+    autostart,
+    auto_show_screen,
+    lock_before_suspend,
+    restart_polybar,
+)
+
 
 dgroups_app_rules = []  # type: list
 follow_mouse_focus = False
