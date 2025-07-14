@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+# modified from https://github.com/gotbletu/fzf-nova
+
+export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
+
+selected=$(find ~ -type f -name "*.mp4" \
+  | fzf --prompt='select video: ')
+
+[ -z "$selected" ] && exit
+
+dir_path=$(dirname "$selected")
+echo "$dir_path" | while read -r line; do
+  setsid mpv --force-window --ontop --idle "$line" >/dev/null 2>&1 & disown
+  sleep 0.2
+done
