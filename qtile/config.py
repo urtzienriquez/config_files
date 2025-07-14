@@ -11,6 +11,9 @@ from hooksc import (
     auto_show_screen,
     lock_before_suspend,
     restart_polybar,
+    on_screen_change,
+    startup_complete,
+    on_restart,
 )
 
 
