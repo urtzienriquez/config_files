@@ -1,10 +1,21 @@
 format = """
-$directory$git_branch$git_status$git_commit
+$username$hostname$directory$git_branch$git_status$git_commit
 $character
 """
 
 [line_break] 
 disabled = true
+
+[username]
+format = '[$user](purple)'
+disabled = false
+show_always = true
+
+[hostname]
+ssh_only = false
+format = '[@$hostname](purple) '
+trim_at = '.companyname.com'
+disabled = false
 
 [character]
 success_symbol = "[](bold green)"
