@@ -60,9 +60,12 @@ cd ..
 # yay -S zoxide
 # yay -S lazygit
 # yay -S bat
-yay -S qutebrowser-git ghostty-git unzip nvim python-pynvim \
+yay -S qutebrowser-git unzip nvim python-pynvim \
 	xclip xorg-xrandr zsh fzf zathura mpv inkscape gimp imv \
-	juliaup r-base polybar zoxide lazygit bat
+	juliaup r-base polybar zoxide lazygit bat \
+	brightnessctl alsa-utils
+
+yay -S ghostty-git
 
 git clone https://github.com/0xTadash1/bat-into-tokyonight
 cd bat-into-tokyonight
