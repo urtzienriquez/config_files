@@ -1,32 +1,5 @@
 #!/bin/bash
 
-# ####################
-# # MATLAB
-# #
-#
-# ## NOTES:
-# # Remember to deactivate the license after doing the tests. If not, I won't be able to deactivate
-# # that license to get an active matlab copy in the "real" machine!
-#
-# # Unable to install matlab R2020b
-#
-# # solution!
-# # install with mpm; matlab product manager
-# wget https://www.mathworks.com/mpm/glnxa64/mpm 
-# chmod +x mpm
-# sudo ./mpm install --release=R2020b --products=MATLAB 
-# # You can change the installation destination from default to another directory by adding this flag:
-# #  --destination=/path/to/desired/installation/directory
-#
-# # to be able to launch matlab
-# yay -S libxcrypt-compat
-#
-# # still problems activating matlab
-# # it was due to the license being active in my old mac
-# # to activate
-# cd /usr/local/MATLAB/R2020b/bin/
-# ./activate_matlab.sh
-
 
 ####################
 # GENERAL
@@ -37,8 +10,6 @@
 # git clone https://github.com/urtzienriquez/config_files
 # ./config_files/arch_postinstall.sh
 
-sudo pacman -S --noconfirm man python-pip
-
 # yay aur helper
 git clone https://aur.archlinux.org/yay.git
 cd yay
@@ -46,24 +17,10 @@ makepkg -si
 cd ..
 
 # installed with yay
-# yay -S qutebrowser-git
-# yay -S ghostty-git
-# yay -S unzip
-# yay -S nvim
-# yay -S python-pynvim xclip
-# yay -S xorg-xrandr
-# yay -S zsh fzf zathura mpv
-# yay -S inkscape gimp imv
-# yay -S juliaup
-# yay -S r-base
-# yay -S polybar
-# yay -S zoxide
-# yay -S lazygit
-# yay -S bat
 yay -S qutebrowser-git unzip nvim python-pynvim \
 	xclip xorg-xrandr zsh fzf zathura mpv inkscape gimp imv \
 	juliaup r-base polybar zoxide lazygit bat \
-	brightnessctl alsa-utils
+	brightnessctl alsa-utils man python-pip
 
 yay -S ghostty-git
 
@@ -96,3 +53,32 @@ cd "$HOME/.config/zsh/plugins"
 rm -rf *
 git clone https://github.com/zsh-users/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting
+cd "$HOME"
+
+# ####################
+# # MATLAB
+# #
+#
+# ## NOTES:
+# # Remember to deactivate the license after doing the tests. If not, I won't be able to deactivate
+# # that license to get an active matlab copy in the "real" machine!
+#
+# # Unable to install matlab R2020b
+#
+# # solution!
+# # install with mpm; matlab product manager
+wget https://www.mathworks.com/mpm/glnxa64/mpm 
+chmod +x mpm
+sudo ./mpm install --release=R2020b --products=MATLAB 
+# # You can change the installation destination from default to another directory by adding this flag:
+# #  --destination=/path/to/desired/installation/directory
+#
+# # to be able to launch matlab
+yay -S libxcrypt-compat
+#
+# # still problems activating matlab
+# # it was due to the license being active in my old mac
+# # to activate
+# cd /usr/local/MATLAB/R2020b/bin/
+# ./activate_matlab.sh
+
