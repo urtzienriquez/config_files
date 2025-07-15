@@ -2,13 +2,14 @@
 
 export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
 
-selected=$(printf "lock\nlogout\nreboot\nshutdown" | fzf --prompt='Choose action: ')
+selected=$(printf "suspend\nlogout\nreboot\npoweroff" | fzf --prompt='Choose action: ')
 
 [ -z "$selected" ] && exit
 
 case "$selected" in
-  lock)
-    betterlockscreen -l
+  suspend)
+    # betterlockscreen -l
+		systemctl suspend
     ;;
   logout)
     qtile cmd-obj -o cmd -f shutdown
@@ -16,7 +17,7 @@ case "$selected" in
   reboot)
     systemctl reboot
     ;;
-  shutdown)
+  poweroff)
     systemctl poweroff
     ;;
 esac
