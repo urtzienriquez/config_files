@@ -17,12 +17,10 @@ makepkg -si
 cd ..
 
 # installed with yay
-yay -S qutebrowser-git unzip nvim python-pynvim \
+yay -S ghostty qutebrowser-git unzip nvim python-pynvim \
 	xclip xorg-xrandr zsh fzf zathura mpv inkscape gimp imv \
 	juliaup r-base polybar zoxide lazygit bat \
 	brightnessctl alsa-utils man python-pip
-
-yay -S ghostty-git
 
 git clone https://github.com/0xTadash1/bat-into-tokyonight
 cd bat-into-tokyonight
