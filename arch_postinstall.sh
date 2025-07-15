@@ -60,7 +60,7 @@ cd ..
 # yay -S zoxide
 # yay -S lazygit
 # yay -S bat
-yay -Yg qutebrowser-git ghostty-git unzip nvim python-pynvim \
+yay -S qutebrowser-git ghostty-git unzip nvim python-pynvim \
 	xclip xorg-xrandr zsh fzf zathura mpv inkscape gimp imv \
 	juliaup r-base polybar zoxide lazygit bat
 
