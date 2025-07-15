@@ -103,8 +103,13 @@ esac
 # -------------------------------
 # fzf
 # -------------------------------
-source /usr/share/doc/fzf/examples/key-bindings.zsh
-source /usr/share/doc/fzf/examples/completion.zsh
+if [[ "$HOST" == "debian" ]]; then
+	source /usr/share/doc/fzf/examples/key-bindings.zsh
+	source /usr/share/doc/fzf/examples/completion.zsh
+elif [[ "$HOST" == "archlinux" ]]; then
+	source /usr/share/fzf/key-bindings.zsh
+	source /usr/share/fzf/completion.zsh
+fi
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -l -g "!{node_modules,.git,go}"'
 export FZF_DEFAULT_OPTS="
