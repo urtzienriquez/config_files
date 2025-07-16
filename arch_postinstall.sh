@@ -31,7 +31,7 @@ yay -S ghostty qutebrowser-git unzip nvim python-pynvim \
 	xclip xorg-xrandr zsh fzf zathura mpv inkscape gimp imv \
 	juliaup r-base polybar zoxide lazygit bat \
 	brightnessctl alsa-utils man python-pip \
-	libreoffice ranger ueberzugpp tmux
+	libreoffice ranger ueberzugpp tmux ttf-hack-nerd
 
 # clone and install keyd
 git clone https://github.com/rvaiya/keyd
