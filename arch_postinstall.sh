@@ -25,6 +25,7 @@ git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 cd ..
+rm -rf yay
 
 # installed with yay
 yay -S ghostty qutebrowser-git unzip nvim python-pynvim \
