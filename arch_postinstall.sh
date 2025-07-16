@@ -90,8 +90,8 @@ cd "$HOME"
 # install with mpm; matlab product manager
 wget https://www.mathworks.com/mpm/glnxa64/mpm 
 chmod +x mpm
+sudo mpm install --release=R2020b --products=MATLAB Simulink
 sudo mv mpm /opt
-sudo ./opt/mpm install --release=R2020b --products=MATLAB Simulink
 # You can change the installation destination from default to another directory by adding this flag:
 #  --destination=/path/to/desired/installation/directory
 
