@@ -13,6 +13,7 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
     
 # matlab alias
+alias mpm="/opt/mpm"
 # cd-s to MATLAB folder so that pathdef.m is included
 # which allows to use functions from DEBTools_M and AmPtool
 ml() {
