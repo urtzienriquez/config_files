@@ -111,7 +111,7 @@ elif [[ "$HOST" == "archlinux" ]]; then
 	source /usr/share/fzf/completion.zsh
 fi
 
-export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -l -g "!{node_modules,.git,go}"'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -g "!node_modules" -g "!.git" -g "!go"'
 export FZF_DEFAULT_OPTS="
   --no-height 
   --no-reverse
