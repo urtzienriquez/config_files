@@ -33,7 +33,8 @@ yay --noconfirm -S ghostty qutebrowser-git unzip nvim python-pynvim \
 	juliaup r-base polybar zoxide lazygit bat \
 	brightnessctl alsa-utils man python-pip \
 	libreoffice ranger ueberzugpp tmux ttf-hack-nerd \
-	ripgrep
+	ripgrep unclutter xautolock betterlockscreen jdk-openjdk gcc-fortran \
+	netcdf gdal git-lfs udunits
 
 # clone and install keyd
 git clone https://github.com/rvaiya/keyd
