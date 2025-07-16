@@ -160,7 +160,7 @@ keys = [
         lazy.spawn(
             "ghostty --x11-instance-name='fzf-nova' \
                     -e bash -c 'source ~/.bashrc &>/dev/null \
-                    && ~/Documents/GitHub/config_files/fzf-nova/_session,--.manage.session'"
+                    && $HOME/config_files/fzf-nova/_session,--.manage.session'"
         ),
         desc="Logout Qtile",
     ),
@@ -281,7 +281,7 @@ keys = [
         [alt],
         "f",
         lazy.spawn(
-            "ghostty --x11-instance-name='fzf-nova' -e bash -c 'source ~/.bashrc &>/dev/null && ~/Documents/GitHub/config_files/fzf-nova/fzf-nova'"
+            "ghostty --x11-instance-name='fzf-nova' -e bash -c 'source ~/.bashrc &>/dev/null && $HOME/config_files/fzf-nova/fzf-nova'"
         ),
         desc="Launch rofi",
     ),
