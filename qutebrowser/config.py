@@ -92,6 +92,10 @@ config.bind("zl", "spawn --userscript qute-pass --dmenu-invocation dmenu")
 #     "<Ctrl-p>", "spawn --userscript qute-pass --dmenu-invocation dmenu", mode="prompt"
 # )
 
+# spawn video in mpv
+# c.aliases["mpv"] = "spawn --userscript view_in_mpv"
+config.bind("tm", "spawn --userscript view_in_mpv")
+
 # Proxy to use
 config.bind("pi", "set content.proxy http://proxy.ivb.cz:3128/")
 config.bind("ps", "set content.proxy system")
