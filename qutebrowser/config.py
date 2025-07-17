@@ -4,6 +4,9 @@ config.load_autoconfig(False)
 # set the theme
 config.source("qutebrowser-theme.py")
 
+# set start page
+config.source("start-page.py")
+
 # Which cookies to accept.
 config.set("content.cookies.accept", "no-3rdparty", "chrome-devtools://*")
 
@@ -95,6 +98,7 @@ config.bind("zl", "spawn --userscript qute-pass --dmenu-invocation dmenu")
 # spawn video in mpv
 # c.aliases["mpv"] = "spawn --userscript view_in_mpv"
 config.bind("tm", "spawn --userscript view_in_mpv")
+config.bind("X", "hint links spawn mpv {hint-url}")
 
 # Proxy to use
 config.bind("pi", "set content.proxy http://proxy.ivb.cz:3128/")
