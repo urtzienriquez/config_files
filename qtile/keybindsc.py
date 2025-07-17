@@ -349,16 +349,6 @@ keys = [
     ),
     Key(
         [alt],
-        "y",
-        lazy.to_screen(0),
-        lazy.spawn(
-            "qutebrowser --basedir /home/urtzi/.config/quteyoutube \
-                    --qt-arg class youtube --qt-arg name youtube",
-        ),
-        desc="Launch qutebrowser for youtube",
-    ),
-    Key(
-        [alt],
         "z",
         lazy.to_screen(0),
         lazy.spawn("zotero"),
