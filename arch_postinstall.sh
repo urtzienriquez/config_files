@@ -31,7 +31,7 @@ rm -rf yay
 yay --noconfirm -S ghostty qutebrowser-git unzip nvim python-pynvim \
 	xclip xorg-xrandr zsh fzf zathura mpv inkscape gimp imv \
 	juliaup r-base polybar zoxide lazygit bat \
-	brightnessctl alsa-utils man python-pip \
+	brightnessctl alsa-utils man python-pip ytdl \
 	libreoffice ranger ueberzugpp tmux ttf-hack-nerd \
 	ripgrep unclutter xautolock betterlockscreen jdk-openjdk gcc-fortran \
 	netcdf gdal git-lfs udunits
