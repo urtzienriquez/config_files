@@ -8,3 +8,4 @@ autoconfig.yml
 */spell
 lazy-lock.json
 .histfile
+.zcompdump
