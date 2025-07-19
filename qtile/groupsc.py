@@ -1,12 +1,13 @@
 from libqtile.config import Group, Match
 
 groups = []
-group_names = [str(i) for i in range(1, 8)]
+group_names = [str(i) for i in range(1, 9)]
 group_labels = [
     "ws1",
     "ws2",
     "ws3",
     "web",
+    "yt",
     "zot",
     "graph",
     "zoom",
@@ -15,6 +16,7 @@ group_layouts = [
     "columns",
     "columns",
     "columns",
+    "max",
     "max",
     "treetab",
     "max",
@@ -25,11 +27,12 @@ group_matches = [
     [],
     [],
     ["web", "librewolf"],
+    ["youtube"],
     ["Zotero"],
     ["Inkscape", "Gimp"],
     ["zoom"],
 ]
-group_exclusive = [False, False, False, False, False, False, True]
+group_exclusive = [False, False, False, False, False, False, False, True]
 
 for i in range(len(group_names)):
     groups.append(

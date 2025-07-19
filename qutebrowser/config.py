@@ -53,7 +53,10 @@ config.set("completion.use_best_match", True)
 # enable notifications
 config.set("content.notifications.enabled", True)
 
-# # use lf as file picker
+# # never use proxy for youtube
+# config.set("content.proxy", "system", "*://youtube.com/")
+
+# # use ranger as file picker
 # config.set("fileselect.handler", "external")
 # config.set(
 #     "fileselect.single_file.command",
