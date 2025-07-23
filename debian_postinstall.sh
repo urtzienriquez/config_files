@@ -3,7 +3,8 @@
 
 # HOW TO USE
 #
-# as root install git and clone this repo:
+# as root install git, sudo, vim and neovim
+# clone this repo:
 # Clone this repo with config files and this script:
 # git clone https://github.com/urtzienriquez/config_files
 #
@@ -27,7 +28,7 @@
 # 	ripgrep unclutter xautolock betterlockscreen jdk-openjdk gcc-fortran \
 # 	netcdf gdal git-lfs udunits
 
-sudo apt install sudo vim neovim xorg xserver-xorg polybar \
+sudo apt install xorg xserver-xorg polybar \
 	alacritty qtile lightdm gpg curl wget qutebrowser \
 	unzip zsh fzf zathura mpv inkscape gimp imv libreoffice \
 	bat lazygit zoxide ranger unclutter r-base
