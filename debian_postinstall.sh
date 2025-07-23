@@ -28,16 +28,22 @@
 # 	ripgrep unclutter xautolock betterlockscreen jdk-openjdk gcc-fortran \
 # 	netcdf gdal git-lfs udunits
 
+home="/home/urtzi"
+
 apt install xorg xserver-xorg polybar \
 	alacritty qtile lightdm gpg curl wget qutebrowser \
 	unzip zsh fzf zathura mpv inkscape gimp imv libreoffice \
-	bat lazygit zoxide ranger unclutter r-base
+	bat lazygit zoxide ranger unclutter r-base \
+	libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev \
+	libxml2-dev libtiff5-dev libtool libgdal-dev libudunits2-dev \
+	libabsl-dev brightnessctl network-manager
 
 # i3lock-color
-apt install autoconf gcc make pkg-config libpam0g-dev libcairo2-dev \
-	libfontconfig1-dev libxcb-composite0-dev libev-dev libx11-xcb-dev \
-	libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-image0-dev \
-	libxcb-util-dev libxcb-xrm-dev libxkbcommon-dev libxkbcommon-x11-dev \
+apt install autoconf gcc make pkg-config libpam0g-dev \
+	libcairo2-dev libfontconfig1-dev libxcb-composite0-dev \
+	libev-dev libx11-xcb-dev libxcb-xkb-dev libxcb-xinerama0-dev \
+	libxcb-randr0-dev libxcb-image0-dev libxcb-util-dev \
+	libxcb-xrm-dev libxkbcommon-dev libxkbcommon-x11-dev \
 	libjpeg-dev libgif-dev
 
 git clone https://github.com/Raymo111/i3lock-color.git
@@ -64,22 +70,25 @@ wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releas
 wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Hack.zip
 cd /usr/share/fonts/truetype
 unzip JetBrainsMono.zip
+unzip Hack.zip
 rm JetBrainsMono.zip
+rm Hack.zip
 fc-cache -fv
+cd "$home"
 
 # clone and install keyd
 git clone https://github.com/rvaiya/keyd
 cd keyd
 make && sudo make install
 sudo systemctl enable --now keyd
-cd ..
+cd "$home"
 mv keyd .keyd
 
 # clone and install bat theme
 git clone https://github.com/0xTadash1/bat-into-tokyonight
 cd bat-into-tokyonight
 ./bat-into-tokyonight
-cd ..
+cd "$home"
 rm -rf bat-into-tokyonight
 
 # install starship
@@ -89,7 +98,6 @@ curl -sS https://starship.rs/install.sh | sh
 ####################
 # config files
 #
-home="/home/urtzi"
 mkdir "$home/.config"
 
 # make links of config files to .config
