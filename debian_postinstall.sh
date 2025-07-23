@@ -104,7 +104,7 @@ mkdir "$home/.config"
 git clone https://github.com/0xTadash1/bat-into-tokyonight
 cd bat-into-tokyonight
 mkdir "$home/.config/bat"
-./bat-into-tokyonight
+bash ./bat-into-tokyonight
 cd "$home"
 rm -rf bat-into-tokyonight
 
