@@ -90,7 +90,7 @@ curl -sS https://starship.rs/install.sh | sh
 # config files
 #
 
-mkdir .config
+mkdir "$HOME/.config"
 
 # make links of config files to .config
 for i in alacritty zsh starship tmux lazygit nvim polybar qtile qutebrowser ranger
