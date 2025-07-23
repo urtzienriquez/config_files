@@ -28,7 +28,7 @@ cd ..
 rm -rf yay
 
 # installed with yay
-yay --noconfirm -S ghostty qutebrowser-git unzip nvim python-pynvim \
+yay --noconfirm -S qutebrowser-git unzip nvim python-pynvim \
 	xclip xorg-xrandr zsh fzf zathura mpv inkscape gimp imv \
 	juliaup r-base polybar zoxide lazygit bat \
 	brightnessctl alsa-utils man python-pip ytdl \
@@ -60,7 +60,7 @@ curl -sS https://starship.rs/install.sh | sh
 #
 
 # make links of config files to .config
-for i in ghostty zsh starship tmux lazygit nvim polybar qtile qutebrowser ranger
+for i in alacritty zsh starship tmux lazygit nvim polybar qtile qutebrowser ranger
 do 
 	rm -rf "$HOME/.config/$i"
 	ln -s "$HOME/config_files/$i" "$HOME/.config/$i"
