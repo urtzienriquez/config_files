@@ -92,11 +92,13 @@ curl -sS https://starship.rs/install.sh | sh
 # change home directory as needed
 home="/home/urtzi"
 
+mkdir "$home/.config"
+
 # make links of config files to .config
 for i in alacritty zsh starship tmux lazygit nvim polybar qtile qutebrowser ranger
 do 
 	rm -rf "$home/.config/$i"
-	ln -s "$home/config_files/$i" "$home/.config/"
+	ln -s "$home/config_files/$i" "$home/.config/$i"
 done
 
 # make link to keyd remaps to /etc/keyd
@@ -107,7 +109,7 @@ sudo keyd reload
 for i in .gitconfig .zshenv .julia_scripts
 do 
 	rm -rf "$home/$i"
-	ln -s "$home/config_files/$i" "$home/"
+	ln -s "$home/config_files/$i" "$home/$i"
 done
 
 # clone zsh plugins
