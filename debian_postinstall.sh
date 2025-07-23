@@ -136,31 +136,31 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting
 cd "$home"
 
 
-# ####################
-# # MATLAB
-# #
+####################
+# MATLAB
 #
-# # install with mpm; matlab product manager
-# wget https://www.mathworks.com/mpm/glnxa64/mpm 
-# chmod +x mpm
-# sudo ./mpm install --release=R2020b --products=MATLAB Simulink
-# sudo mv mpm /opt
-# # You can change the installation destination from default to another directory by adding this flag:
-# #  --destination=/path/to/desired/installation/directory
+
+# install with mpm; matlab product manager
+wget https://www.mathworks.com/mpm/glnxa64/mpm 
+chmod +x mpm
+sudo ./mpm install --release=R2020b --products=MATLAB Simulink
+sudo mv mpm /opt
+# You can change the installation destination from default to another directory by adding this flag:
+#  --destination=/path/to/desired/installation/directory
+
+# to be able to launch matlab
+yay --noconfirm -S libxcrypt-compat
+
+# to activate
+# cd /usr/local/MATLAB/R2020b/bin/
+# ./activate_matlab.sh
+
+
+####################
+# Additional
 #
-# # to be able to launch matlab
-# yay --noconfirm -S libxcrypt-compat
-#
-# # to activate
-# # cd /usr/local/MATLAB/R2020b/bin/
-# # ./activate_matlab.sh
-#
-#
-# ####################
-# # Additional
-# #
-#
-# # install zotero by downloading the tarball
-# # https://www.zotero.org/
-# # tar -xf Zotero-7.xxxxxxxxxx.tar.bz2
-# # follow the instruction in zotero.org
+
+# install zotero by downloading the tarball
+# https://www.zotero.org/
+# tar -xf Zotero-7.xxxxxxxxxx.tar.bz2
+# follow the instruction in zotero.org
