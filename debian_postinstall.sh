@@ -7,10 +7,10 @@
 # Clone this repo with config files and this script:
 # git clone https://github.com/urtzienriquez/config_files
 #
-# Then, as root, run the script from $HOME
-# ./config_files/debian_postinstall.sh
+# Change /etc/sudoers to add user to sudoer group
 #
-# Once installed change /etc/sudoers to add user to sudoer group
+# Then run the script from $HOME
+# ./config_files/debian_postinstall.sh
 
 
 
@@ -27,13 +27,13 @@
 # 	ripgrep unclutter xautolock betterlockscreen jdk-openjdk gcc-fortran \
 # 	netcdf gdal git-lfs udunits
 
-apt install sudo vim neovim xorg xserver-xorg polybar \
+sudo apt install sudo vim neovim xorg xserver-xorg polybar \
 	alacritty qtile lightdm gpg curl wget qutebrowser \
 	unzip zsh fzf zathura mpv inkscape gimp imv libreoffice \
 	bat lazygit zoxide ranger unclutter r-base
 
 # i3lock-color
-apt install autoconf gcc make pkg-config libpam0g-dev libcairo2-dev \
+sudo apt install autoconf gcc make pkg-config libpam0g-dev libcairo2-dev \
 	libfontconfig1-dev libxcb-composite0-dev libev-dev libx11-xcb-dev \
 	libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-image0-dev \
 	libxcb-util-dev libxcb-xrm-dev libxkbcommon-dev libxkbcommon-x11-dev \
@@ -89,35 +89,30 @@ curl -sS https://starship.rs/install.sh | sh
 # config files
 #
 
-# change home directory as needed
-home="/home/urtzi"
-
-mkdir "$home/.config"
-
 # make links of config files to .config
 for i in alacritty zsh starship tmux lazygit nvim polybar qtile qutebrowser ranger
 do 
-	rm -rf "$home/.config/$i"
-	ln -s "$home/config_files/$i" "$home/.config/$i"
+	rm -rf "$HOME/.config/$i"
+	ln -s "$HOME/config_files/$i" "$HOME/.config/$i"
 done
 
 # make link to keyd remaps to /etc/keyd
-sudo ln -s "$home/config_files/keyd/default.conf" /etc/keyd/
+sudo ln -s "$HOME/config_files/keyd/default.conf" /etc/keyd/
 sudo keyd reload
 
 # make links in $HOME
 for i in .gitconfig .zshenv .julia_scripts
 do 
-	rm -rf "$home/$i"
-	ln -s "$home/config_files/$i" "$home/$i"
+	rm -rf "$HOME/$i"
+	ln -s "$HOME/config_files/$i" "$HOME/$i"
 done
 
 # clone zsh plugins
-cd "$home/.config/zsh/plugins"
+cd "$HOME/.config/zsh/plugins"
 rm -rf *
 git clone https://github.com/zsh-users/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting
-cd "$home"
+cd "$HOME"
 
 
 # ####################
