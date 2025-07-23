@@ -60,6 +60,7 @@ rm xautolock_2.2-8_amd64.deb
 
 
 wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip
+wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Hack.zip
 cd /usr/share/fonts/truetype
 unzip JetBrainsMono.zip
 rm JetBrainsMono.zip
@@ -95,7 +96,7 @@ home="/home/urtzi"
 for i in alacritty zsh starship tmux lazygit nvim polybar qtile qutebrowser ranger
 do 
 	rm -rf "$home/.config/$i"
-	ln -s "$home/config_files/$i" "$home/.config/$i"
+	ln -s "$home/config_files/$i" "$home/.config/"
 done
 
 # make link to keyd remaps to /etc/keyd
@@ -106,7 +107,7 @@ sudo keyd reload
 for i in .gitconfig .zshenv .julia_scripts
 do 
 	rm -rf "$home/$i"
-	ln -s "$home/config_files/$i" "$home/$i"
+	ln -s "$home/config_files/$i" "$home/"
 done
 
 # clone zsh plugins
