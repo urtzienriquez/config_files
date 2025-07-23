@@ -148,9 +148,6 @@ sudo mv mpm /opt
 # You can change the installation destination from default to another directory by adding this flag:
 #  --destination=/path/to/desired/installation/directory
 
-# to be able to launch matlab
-yay --noconfirm -S libxcrypt-compat
-
 # to activate
 # cd /usr/local/MATLAB/R2020b/bin/
 # ./activate_matlab.sh
