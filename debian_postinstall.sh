@@ -34,8 +34,16 @@
 # 	ripgrep unclutter xautolock betterlockscreen jdk-openjdk gcc-fortran \
 # 	netcdf gdal git-lfs udunits
 
-sudo apt install xinit
-sudo apt install python3-pip python3-qtile lightdm
+sudo apt install git sudo vim neovim xorg xserver-xorg \
+	alacritty qtile lightdm gpg curl wget qutebrowser
+
+
+
+wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip \
+&& cd /usr/share/fonts/truetype \
+&& unzip JetBrainsMono.zip \
+&& rm JetBrainsMono.zip \
+&& fc-cache -fv
 
 # clone and install keyd
 git clone https://github.com/rvaiya/keyd
