@@ -60,9 +60,9 @@ cd ..
 rm -rf i3lock-color
 
 # neovim
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-tar -xzf nvim-linux64.tar.gz
-sudo rm -rf /opt/nvim && sudo mv nvim-linux64 /opt/nvim
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+tar -xzf nvim-linux-x86_64.tar.gz
+sudo rm -rf /opt/nvim && sudo mv nvim-linux-x86_64 /opt/nvim
 rm nvim-linux64.tar.gz
 
 # betterlockscreen
