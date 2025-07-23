@@ -3,7 +3,7 @@
 
 # HOW TO USE
 #
-# as root install git, sudo, vim and neovim
+# as root install git, sudo and vim
 # clone this repo:
 # Clone this repo with config files and this script:
 # git clone https://github.com/urtzienriquez/config_files
@@ -37,7 +37,7 @@ sudo apt install -y xorg xserver-xorg polybar \
 	libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev \
 	libxml2-dev libtiff5-dev libtool libgdal-dev libudunits2-dev \
 	libabsl-dev brightnessctl network-manager lua5.4 luarocks \
-	golang ripgrep
+	golang ripgrep xclip
 
 mkdir -p ~/.local/bin
 ln -s /usr/bin/batcat ~/.local/bin/bat
@@ -58,6 +58,11 @@ cd i3lock-color
 ./install-i3lock-color.sh
 cd ..
 rm -rf i3lock-color
+
+# neovim
+latest=$(curl -s https://api.github.com/repos/neovim/neovim/releases/latest | grep tag_name | cut -d '"' -f 4)
+url="https://github.com/neovim/neovim/releases/download/$latest/nvim-linux64.tar.gz"
+curl -L "$url" | tar xz -C /tmp && sudo rm -rf /opt/nvim && sudo mv /tmp/nvim-linux64 /opt/nvim
 
 # betterlockscreen
 wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system
