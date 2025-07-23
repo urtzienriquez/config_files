@@ -30,16 +30,20 @@
 
 home="/home/urtzi"
 
-apt install xorg xserver-xorg polybar \
+sudo apt install -y xorg xserver-xorg polybar \
 	alacritty qtile lightdm gpg curl wget qutebrowser \
 	unzip zsh fzf zathura mpv inkscape gimp imv libreoffice \
 	bat lazygit zoxide ranger unclutter r-base \
 	libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev \
 	libxml2-dev libtiff5-dev libtool libgdal-dev libudunits2-dev \
-	libabsl-dev brightnessctl network-manager
+	libabsl-dev brightnessctl network-manager lua5.4 luarocks \
+	golang
+
+mkdir -p ~/.local/bin
+ln -s /usr/bin/batcat ~/.local/bin/bat
 
 # i3lock-color
-apt install autoconf gcc make pkg-config libpam0g-dev \
+sudo apt install -y autoconf gcc make pkg-config libpam0g-dev \
 	libcairo2-dev libfontconfig1-dev libxcb-composite0-dev \
 	libev-dev libx11-xcb-dev libxcb-xkb-dev libxcb-xinerama0-dev \
 	libxcb-randr0-dev libxcb-image0-dev libxcb-util-dev \
@@ -66,17 +70,17 @@ sudo dpkg -i xautolock_2.2-8_amd64.deb
 rm xautolock_2.2-8_amd64.deb
 
 # nerd fonts
-wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
-wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
-cd /usr/share/fonts/truetype
-mkdir /usr/share/fonts/truetype/JetBrains/
-mkdir /usr/share/fonts/truetype/HackNerdFont/
-unzip JetBrainsMono.zip -d JetBrains/
-unzip Hack.zip -d HackNerdFont/
-rm JetBrainsMono.zip
-rm Hack.zip
-fc-cache -fv
-cd "$home"
+sudo wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip \
+&&	wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip \
+&& cd /usr/share/fonts/truetype \
+&& mkdir JetBrains/ \
+&& mkdir HackNerdFont/ \
+&& unzip JetBrainsMono.zip -d JetBrains/ \
+&& unzip Hack.zip -d HackNerdFont/ \
+&& rm JetBrainsMono.zip \
+&& rm Hack.zip \
+&& fc-cache -fv \
+&& cd "$home"
 
 # clone and install keyd
 git clone https://github.com/rvaiya/keyd
@@ -86,13 +90,6 @@ sudo systemctl enable --now keyd
 cd "$home"
 mv keyd .keyd
 
-# clone and install bat theme
-git clone https://github.com/0xTadash1/bat-into-tokyonight
-cd bat-into-tokyonight
-./bat-into-tokyonight
-cd "$home"
-rm -rf bat-into-tokyonight
-
 # install starship
 curl -sS https://starship.rs/install.sh | sh
 
@@ -101,6 +98,14 @@ curl -sS https://starship.rs/install.sh | sh
 # config files
 #
 mkdir "$home/.config"
+
+# clone and install bat theme
+git clone https://github.com/0xTadash1/bat-into-tokyonight
+cd bat-into-tokyonight
+mkdir "$home/.config/bat"
+./bat-into-tokyonight
+cd "$home"
+rm -rf bat-into-tokyonight
 
 # make links of config files to .config
 for i in alacritty zsh starship tmux lazygit nvim polybar qtile qutebrowser ranger
