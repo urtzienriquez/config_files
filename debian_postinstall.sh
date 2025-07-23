@@ -65,12 +65,14 @@ wget http://deb.debian.org/debian/pool/main/x/xautolock/xautolock_2.2-8_amd64.de
 sudo dpkg -i xautolock_2.2-8_amd64.deb
 rm xautolock_2.2-8_amd64.deb
 
-
-wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip
-wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Hack.zip
+# nerd fonts
+wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
+wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
 cd /usr/share/fonts/truetype
-unzip JetBrainsMono.zip
-unzip Hack.zip
+mkdir /usr/share/fonts/truetype/JetBrains/
+mkdir /usr/share/fonts/truetype/HackNerdFont/
+unzip JetBrainsMono.zip -d JetBrains/
+unzip Hack.zip -d HackNerdFont/
 rm JetBrainsMono.zip
 rm Hack.zip
 fc-cache -fv
