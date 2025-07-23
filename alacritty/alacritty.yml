@@ -1,7 +1,12 @@
 # Window padding (changes require restart)
-padding:
-  x: 0
-  y: 0
+window:
+  padding:
+    x: 3
+    y: 3
+  # Glyph offset determines the locations of the glyphs within their cells with
+  glyph_offset:
+    x: 0
+    y: 0
 
 # Font configuration
 font:
@@ -18,11 +23,6 @@ font:
     family: JetBrainsMono Nerd Font
     style: Bold Italic
   size: 10
-
-# Glyph offset determines the locations of the glyphs within their cells with
-glyph_offset:
-  x: 0
-  y: 0
 
 # Colors (Tokyo Night)
 colors:
