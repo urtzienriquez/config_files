@@ -3,27 +3,20 @@
 
 # HOW TO USE
 #
-# install sudo as root
-# change /etc/sudoers to add your user to the sudoers group
-# install git and nvim
+# as root install git and clone this repo:
 # Clone this repo with config files and this script:
 # git clone https://github.com/urtzienriquez/config_files
 #
-# Then, run the script from $HOME
+# Then, as root, run the script from $HOME
 # ./config_files/debian_postinstall.sh
+#
+# Once installed change /etc/sudoers to add user to sudoer group
 
 
 
 ####################
 # GENERAL
 #
-
-# # yay aur helper
-# git clone https://aur.archlinux.org/yay.git
-# cd yay
-# makepkg -si
-# cd ..
-# rm -rf yay
 
 # # installed with yay
 # yay --noconfirm -S ghostty qutebrowser-git unzip nvim python-pynvim \
@@ -34,16 +27,43 @@
 # 	ripgrep unclutter xautolock betterlockscreen jdk-openjdk gcc-fortran \
 # 	netcdf gdal git-lfs udunits
 
-sudo apt install git sudo vim neovim xorg xserver-xorg \
-	alacritty qtile lightdm gpg curl wget qutebrowser
+apt install sudo vim neovim xorg xserver-xorg polybar \
+	alacritty qtile lightdm gpg curl wget qutebrowser \
+	unzip zsh fzf zathura mpv inkscape gimp imv libreoffice \
+	bat lazygit zoxide ranger unclutter r-base
+
+# i3lock-color
+apt install autoconf gcc make pkg-config libpam0g-dev libcairo2-dev \
+	libfontconfig1-dev libxcb-composite0-dev libev-dev libx11-xcb-dev \
+	libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-image0-dev \
+	libxcb-util-dev libxcb-xrm-dev libxkbcommon-dev libxkbcommon-x11-dev \
+	libjpeg-dev libgif-dev
+
+git clone https://github.com/Raymo111/i3lock-color.git
+cd i3lock-color
+./build.sh
+./install-i3lock-color.sh
+cd ..
+rm -rf i3lock-color
+
+# betterlockscreen
+wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system
+
+# juliaup
+curl -fsSL https://install.julialang.org | sh
+
+# xautolock
+# install from repos once it is there
+wget http://deb.debian.org/debian/pool/main/x/xautolock/xautolock_2.2-8_amd64.deb
+sudo dpkg -i xautolock_2.2-8_amd64.deb
+rm xautolock_2.2-8_amd64.deb
 
 
-
-wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip \
-&& cd /usr/share/fonts/truetype \
-&& unzip JetBrainsMono.zip \
-&& rm JetBrainsMono.zip \
-&& fc-cache -fv
+wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip
+cd /usr/share/fonts/truetype
+unzip JetBrainsMono.zip
+rm JetBrainsMono.zip
+fc-cache -fv
 
 # clone and install keyd
 git clone https://github.com/rvaiya/keyd
@@ -68,57 +88,60 @@ curl -sS https://starship.rs/install.sh | sh
 # config files
 #
 
+# change home directory as needed
+home="/home/urtzi"
+
 # make links of config files to .config
 for i in alacritty zsh starship tmux lazygit nvim polybar qtile qutebrowser ranger
 do 
-	rm -rf "$HOME/.config/$i"
-	ln -s "$HOME/config_files/$i" "$HOME/.config/$i"
+	rm -rf "$home/.config/$i"
+	ln -s "$home/config_files/$i" "$home/.config/$i"
 done
 
 # make link to keyd remaps to /etc/keyd
-sudo ln -s "$HOME/config_files/keyd/default.conf" /etc/keyd/
+sudo ln -s "$home/config_files/keyd/default.conf" /etc/keyd/
 sudo keyd reload
 
 # make links in $HOME
 for i in .gitconfig .zshenv .julia_scripts
 do 
-	rm -rf "$HOME/$i"
-	ln -s "$HOME/config_files/$i" "$HOME/$i"
+	rm -rf "$home/$i"
+	ln -s "$home/config_files/$i" "$home/$i"
 done
 
 # clone zsh plugins
-cd "$HOME/.config/zsh/plugins"
+cd "$home/.config/zsh/plugins"
 rm -rf *
 git clone https://github.com/zsh-users/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting
-cd "$HOME"
+cd "$home"
 
 
-####################
-# MATLAB
+# ####################
+# # MATLAB
+# #
 #
-
-# install with mpm; matlab product manager
-wget https://www.mathworks.com/mpm/glnxa64/mpm 
-chmod +x mpm
-sudo ./mpm install --release=R2020b --products=MATLAB Simulink
-sudo mv mpm /opt
-# You can change the installation destination from default to another directory by adding this flag:
-#  --destination=/path/to/desired/installation/directory
-
-# to be able to launch matlab
-yay --noconfirm -S libxcrypt-compat
-
-# to activate
-# cd /usr/local/MATLAB/R2020b/bin/
-# ./activate_matlab.sh
-
-
-####################
-# Additional
+# # install with mpm; matlab product manager
+# wget https://www.mathworks.com/mpm/glnxa64/mpm 
+# chmod +x mpm
+# sudo ./mpm install --release=R2020b --products=MATLAB Simulink
+# sudo mv mpm /opt
+# # You can change the installation destination from default to another directory by adding this flag:
+# #  --destination=/path/to/desired/installation/directory
 #
-
-# install zotero by downloading the tarball
-# https://www.zotero.org/
-# tar -xf Zotero-7.xxxxxxxxxx.tar.bz2
-# follow the instruction in zotero.org
+# # to be able to launch matlab
+# yay --noconfirm -S libxcrypt-compat
+#
+# # to activate
+# # cd /usr/local/MATLAB/R2020b/bin/
+# # ./activate_matlab.sh
+#
+#
+# ####################
+# # Additional
+# #
+#
+# # install zotero by downloading the tarball
+# # https://www.zotero.org/
+# # tar -xf Zotero-7.xxxxxxxxxx.tar.bz2
+# # follow the instruction in zotero.org
