@@ -70,17 +70,18 @@ sudo dpkg -i xautolock_2.2-8_amd64.deb
 rm xautolock_2.2-8_amd64.deb
 
 # nerd fonts
-sudo wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip \
-&&	wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip \
-&& cd /usr/share/fonts/truetype \
-&& mkdir JetBrains/ \
-&& mkdir HackNerdFont/ \
-&& unzip JetBrainsMono.zip -d JetBrains/ \
-&& unzip Hack.zip -d HackNerdFont/ \
-&& rm JetBrainsMono.zip \
-&& rm Hack.zip \
-&& fc-cache -fv \
-&& cd "$home"
+# nerd fonts
+sudo wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
+sudo wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
+cd /usr/share/fonts/truetype
+sudo mkdir -p JetBrains
+sudo mkdir -p HackNerdFont
+sudo unzip JetBrainsMono.zip -d JetBrains
+sudo unzip Hack.zip -d HackNerdFont
+sudo rm JetBrainsMono.zip
+sudo rm Hack.zip
+sudo fc-cache -fv
+cd "$home"
 
 # clone and install keyd
 git clone https://github.com/rvaiya/keyd
