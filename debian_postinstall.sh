@@ -60,9 +60,9 @@ cd ..
 rm -rf i3lock-color
 
 # neovim
-latest=$(curl -s https://api.github.com/repos/neovim/neovim/releases/latest | grep tag_name | cut -d '"' -f 4)
-url="https://github.com/neovim/neovim/releases/download/$latest/nvim-linux64.tar.gz"
-curl -L "$url" | tar xz -C /tmp && sudo rm -rf /opt/nvim && sudo mv /tmp/nvim-linux64 /opt/nvim
+url=$(curl -s https://api.github.com/repos/neovim/neovim/releases/latest | grep "browser_download_url" | grep "nvim-linux64.tar.gz" | cut -d '"' -f 4)
+curl -L "$url" -o /tmp/nvim.tar.gz
+tar -xzf /tmp/nvim.tar.gz -C /tmp && sudo rm -rf /opt/nvim && sudo mv /tmp/nvim-linux64 /opt/nvim
 
 # betterlockscreen
 wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system
