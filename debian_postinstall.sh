@@ -42,6 +42,8 @@ sudo apt install -y xorg xserver-xorg polybar \
 mkdir -p ~/.local/bin
 ln -s /usr/bin/batcat ~/.local/bin/bat
 
+export PATH="$home/.local/bin:$PATH"
+
 # i3lock-color
 sudo apt install -y autoconf gcc make pkg-config libpam0g-dev \
 	libcairo2-dev libfontconfig1-dev libxcb-composite0-dev \
