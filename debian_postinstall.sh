@@ -89,33 +89,33 @@ curl -sS https://starship.rs/install.sh | sh
 ####################
 # config files
 #
-
-mkdir "$HOME/.config"
+home="/home/urtzi"
+mkdir "$home/.config"
 
 # make links of config files to .config
 for i in alacritty zsh starship tmux lazygit nvim polybar qtile qutebrowser ranger
 do 
-	rm -rf "$HOME/.config/$i"
-	ln -s "$HOME/config_files/$i" "$HOME/.config/$i"
+	rm -rf "$home/.config/$i"
+	ln -s "$home/config_files/$i" "$home/.config/$i"
 done
 
 # make link to keyd remaps to /etc/keyd
-sudo ln -s "$HOME/config_files/keyd/default.conf" /etc/keyd/
+sudo ln -s "$home/config_files/keyd/default.conf" /etc/keyd/
 sudo keyd reload
 
 # make links in $HOME
 for i in .gitconfig .zshenv .julia_scripts
 do 
-	rm -rf "$HOME/$i"
-	ln -s "$HOME/config_files/$i" "$HOME/$i"
+	rm -rf "$home/$i"
+	ln -s "$home/config_files/$i" "$home/$i"
 done
 
 # clone zsh plugins
-cd "$HOME/.config/zsh/plugins"
+cd "$home/.config/zsh/plugins"
 rm -rf *
 git clone https://github.com/zsh-users/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting
-cd "$HOME"
+cd "$home"
 
 
 # ####################
