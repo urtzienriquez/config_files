@@ -14,10 +14,11 @@ GSETTINGS_CMD=$(command -v gsettings)
 # ===== Define your shortcuts here =====
 # Format: 'Name|Command|Keybinding'
 declare -a SHORTCUTS=(
-  'Open Terminal|gnome-terminal|<Primary><Alt>T'
-  'Open Files|nautilus|<Primary><Alt>F'
-  'Open Browser|firefox|<Primary><Alt>B'
-  'Open Web|alacritty --class web -e "qutebrowser --args bla"|<Primary><Alt>W'
+  'Open Terminal|alacritty|<Alt>Return'
+  'Open Files|nautilus|<Alt>F'
+  'Open Browser|qutebrowser|<Alt>J'
+  'Open Browser|librewolf|<Alt>B'
+  # 'Open Web|alacritty --class web -e "qutebrowser --args bla"|<Primary><Alt>W'
 )
 
 # ===== Setup paths =====
