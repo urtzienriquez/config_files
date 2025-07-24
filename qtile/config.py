@@ -9,7 +9,6 @@ from hooksc import (
     dbus_register,
     autostart,
     auto_show_screen,
-    lock_before_suspend,
     restart_polybar,
     on_screen_change,
     startup_complete,

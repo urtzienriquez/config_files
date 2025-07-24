@@ -41,9 +41,9 @@ def auto_show_screen(window):
         window.group.cmd_toscreen()
 
 
-@hook.subscribe.suspend
-def lock_before_suspend():
-    subprocess.run(["betterlockscreen", "-l"])
+# @hook.subscribe.suspend
+# def lock_before_suspend():
+#     subprocess.run(["betterlockscreen", "-l"])
 
 
 def restart_polybar():
