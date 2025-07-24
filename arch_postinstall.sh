@@ -11,10 +11,6 @@
 # ./config_files/arch_postinstall.sh
 
 
-# NOTES
-#
-# ranger is not displaying previews
-
 
 ####################
 # GENERAL
@@ -113,3 +109,12 @@ yay --noconfirm -S libxcrypt-compat
 # https://www.zotero.org/
 # tar -xf Zotero-7.xxxxxxxxxx.tar.bz2
 # follow the instruction in zotero.org
+
+
+####################
+# Install and configure NetworkManager for WiFi
+#
+
+yay --noconfirm -S networkmanager
+sudo systemctl enable NetworkManager
+sudo systemctl start NetworkManager
