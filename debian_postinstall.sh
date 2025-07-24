@@ -27,7 +27,7 @@ sudo apt install -y xorg xserver-xorg polybar \
 	libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev \
 	libxml2-dev libtiff5-dev libtool libgdal-dev libudunits2-dev \
 	libabsl-dev brightnessctl network-manager lua5.4 luarocks \
-	golang ripgrep xclip pulseaudio alsa-utils bc
+	golang ripgrep xclip pulseaudio alsa-utils bc rfkill
 
 mkdir -p ~/.local/bin
 ln -s /usr/bin/batcat ~/.local/bin/bat
@@ -163,16 +163,16 @@ cd "$home"
 # WiFi configuration
 #
 
-echo ">>> Configuring WiFi..."
+echo ">>> Configuring WiFi for NetworkManager..."
 
-# 1. Clean up /etc/network/interfaces to remove Wi-Fi settings
-sudo sed -i '/^auto wl/d;/^iface wl/d;/wpa-psk/d;/wpa-ssid/d' /etc/network/interfaces
-sudo sed -i '/^allow-hotplug wl/d' /etc/network/interfaces
-# Keep only loopback if desired:
-# echo -e "auto lo\niface lo inet loopback" | sudo tee /etc/network/interfaces
+# Clean up /etc/network/interfaces (remove old Wi-Fi configs)
+# Leave only loopback to prevent ifupdown from managing Wi-Fi
+sudo tee /etc/network/interfaces > /dev/null <<EOF
+auto lo
+iface lo inet loopback
+EOF
 
-# 2. Ensure NetworkManager is configured to manage interfaces
-sudo mkdir -p /etc/NetworkManager
+# Enable NetworkManager to manage all interfaces
 sudo tee /etc/NetworkManager/NetworkManager.conf > /dev/null <<EOF
 [main]
 plugins=ifupdown,keyfile
@@ -184,19 +184,19 @@ managed=true
 wifi.scan-rand-mac-address=no
 EOF
 
-# 3. Disable system-wide wpa_supplicant service
+# Disable and stop system-level wpa_supplicant (NM will use its own instance)
 sudo systemctl stop wpa_supplicant.service
 sudo systemctl disable wpa_supplicant.service
 
-# Disable any wpa_supplicant@<iface>.service instances (common for WiFi)
-for iface in $(ls /sys/class/net/ | grep -E '^wl'); do
-    sudo systemctl stop "wpa_supplicant@${iface}.service" 2>/dev/null
-    sudo systemctl disable "wpa_supplicant@${iface}.service" 2>/dev/null
+# Disable any per-interface wpa_supplicant instances
+for iface in $(ls /sys/class/net | grep '^wl'); do
+    sudo systemctl stop "wpa_supplicant@$iface.service" 2>/dev/null
+    sudo systemctl disable "wpa_supplicant@$iface.service" 2>/dev/null
 done
 
-# 4. Restart NetworkManager and unblock Wi-Fi
+# Restart NetworkManager and ensure Wi-Fi is enabled
 sudo systemctl restart NetworkManager
 sudo rfkill unblock wifi
 nmcli radio wifi on
 
-echo ">>> WiFi setup complete. Use 'nmcli' or 'nmtui' to manage your networks."
+echo ">>> WiFi setup complete. Use 'nmtui' or 'nmcli' to connect to a network."
