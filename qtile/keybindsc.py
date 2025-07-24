@@ -212,31 +212,6 @@ keys = [
         lazy.spawn("brightnessctl -c backlight set 2%-"),
         desc="Decrease brightness",
     ),
-    # dark/light mode
-    KeyChord(
-        [mod],
-        "t",
-        [
-            Key(
-                [],
-                "d",
-                lazy.spawn(
-                    "sed -i '2 s/night-day$/night/' \
-                            /home/urtzi/.config/ghostty/config"
-                ),
-                desc="to dark mode",
-            ),
-            Key(
-                [],
-                "l",
-                lazy.spawn(
-                    "sed -i '2 s/night$/night-day/' \
-                            /home/urtzi/.config/ghostty/config"
-                ),
-                desc="to light mode",
-            ),
-        ],
-    ),
     # mouseless pointer
     Key(
         [mod],

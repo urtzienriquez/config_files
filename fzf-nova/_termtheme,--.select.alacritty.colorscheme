@@ -1,0 +1,50 @@
+#!/usr/bin/env sh
+# Alacritty theme switcher using fzf
+# Lists all theme files in ~/.config/alacritty/ and replaces alacritty.yml with selected theme
+
+export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
+
+# Check if alacritty config directory exists
+config_dir="$HOME/.config/alacritty"
+if [ ! -d "$config_dir" ]; then
+    echo "Error: Alacritty config directory not found at $config_dir"
+    exit 1
+fi
+
+# Get the real path if it's a symbolic link
+real_config_dir=$(readlink -f "$config_dir")
+echo "Config directory: $config_dir"
+echo "Real path: $real_config_dir"
+
+# Debug: Show what files exist
+echo "Files found in $config_dir:"
+find "$config_dir" -follow -type f 2>/dev/null
+echo ""
+
+# Find all theme files (excluding main config files)
+selected=$(find "$config_dir" -follow -type f 2>/dev/null \
+    | grep -v "alacritty.yml" \
+    | grep -v "alacritty.yaml" \
+    | grep -v "alacritty.toml" \
+    | grep -v "theme.yml" \
+    | sed "s|$config_dir/||" \
+    | fzf --prompt='Select Alacritty theme: ')
+
+# Exit if no selection made
+[ -z "$selected" ] && exit
+
+# Full path to selected theme
+theme_file="$config_dir/$selected"
+
+# Check if selected file exists
+if [ ! -f "$theme_file" ]; then
+    echo "Error: Selected theme file does not exist: $theme_file"
+    exit 1
+fi
+
+# Copy selected theme to theme.yml (preserving the original theme file)
+cp "$theme_file" "$config_dir/theme.yml"
+
+echo "Theme switched to: $selected"
+echo "Copied '$selected' to 'theme.yml'"
+echo "Make sure your alacritty.yml imports theme.yml"
