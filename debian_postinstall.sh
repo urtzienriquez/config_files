@@ -28,7 +28,7 @@ sudo apt install -y xorg xserver-xorg polybar \
 	libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev \
 	libxml2-dev libtiff5-dev libtool libgdal-dev libudunits2-dev \
 	libabsl-dev brightnessctl network-manager lua5.4 luarocks \
-	golang ripgrep xclip pulseaudio alsa-utils
+	golang ripgrep xclip pulseaudio alsa-utils bc
 
 mkdir -p ~/.local/bin
 ln -s /usr/bin/batcat ~/.local/bin/bat
@@ -158,3 +158,12 @@ sudo mv mpm /opt
 # https://www.zotero.org/
 # tar -xf Zotero-7.xxxxxxxxxx.tar.bz2
 # follow the instruction in zotero.org
+
+
+####################
+# Configure NetworkManager for WiFi
+#
+
+sudo systemctl disable wpa_supplicant 2>/dev/null || true
+sudo sed -i 's/managed=false/managed=true/' /etc/NetworkManager/NetworkManager.conf 2>/dev/null || true
+sudo systemctl restart NetworkManager
