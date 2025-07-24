@@ -9,46 +9,51 @@ declare -a SHORTCUTS=(
   'Open Web|alacritty --class web -e "qutebrowser --args bla"|<Primary><Alt>W'
 )
 
-# ===== Setup paths and get existing bindings =====
+# ===== Setup paths =====
 BASE_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings"
+
+# ===== Clear all existing custom shortcuts =====
 EXISTING=$(gsettings get org.gnome.settings-daemon.plugins.media-keys custom-keybindings)
 EXISTING=${EXISTING//[\[\]\' ]/}  # Remove brackets, quotes, spaces
 IFS=',' read -r -a CURRENT <<< "$EXISTING"
 
-# ===== Start assigning shortcuts =====
-NEW_BINDINGS=()
-i=0
+for PATH in "${CURRENT[@]}"; do
+  gsettings reset-recursively "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$PATH" 2>/dev/null
+done
 
-for ENTRY in "${SHORTCUTS[@]}"; do
+# Clear top-level list
+gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "[]"
+
+# ===== Apply new shortcuts =====
+NEW_BINDINGS=()
+
+for i in "${!SHORTCUTS[@]}"; do
+  ENTRY="${SHORTCUTS[$i]}"
   NAME=$(echo "$ENTRY" | cut -d'|' -f1)
   CMD=$(echo "$ENTRY" | cut -d'|' -f2)
   KEY=$(echo "$ENTRY" | cut -d'|' -f3)
 
-  # Generate unique customX path
-  while [[ " ${CURRENT[*]} " == *"custom$i/"* ]] || [[ " ${NEW_BINDINGS[*]} " == *"custom$i/"* ]]; do
-    ((i++))
-  done
-
   KEY_PATH="$BASE_PATH/custom$i/"
   NEW_BINDINGS+=("$KEY_PATH")
 
-  # Assign settings safely (command may have complex quoting)
-  gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH name "$NAME"
-  gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH command "$(printf "%s" "$CMD")"
-  gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH binding "$KEY"
+  # Create the new shortcut
+  gsettings set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH" name "$NAME"
+  gsettings set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH" command "$CMD"
+  gsettings set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH" binding "$KEY"
 
   echo "✅ Assigned: '$NAME' → $KEY → $CMD"
 done
 
-# ===== Merge old and new bindings =====
-ALL_BINDINGS=("${CURRENT[@]}" "${NEW_BINDINGS[@]}")
+# ===== Update GNOME with new shortcut list =====
+BINDING_LIST="["
+for index in "${!NEW_BINDINGS[@]}"; do
+  BINDING_LIST+="'${NEW_BINDINGS[$index]}'"
+  if [[ $index -lt $((${#NEW_BINDINGS[@]} - 1)) ]]; then
+    BINDING_LIST+=", "
+  fi
+done
+BINDING_LIST+="]"
 
-# Reconstruct the list for gsettings
-BINDING_LIST="['"
-BINDING_LIST+=$(IFS="', '"; echo "${ALL_BINDINGS[*]}")
-BINDING_LIST+="']"
-
-# Apply to GNOME
 gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "$BINDING_LIST"
 
-echo "🎉 All shortcuts applied successfully!"
+echo "🎉 All shortcuts overwritten and applied successfully!"
