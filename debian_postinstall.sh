@@ -160,9 +160,40 @@ cd "$home"
 
 
 ####################
-# Configure NetworkManager for WiFi
+# WiFi configuration
 #
 
-sudo systemctl disable wpa_supplicant 2>/dev/null || true
-sudo sed -i 's/managed=false/managed=true/' /etc/NetworkManager/NetworkManager.conf 2>/dev/null || true
+echo ">>> Configuring WiFi..."
+
+# Detect wireless interface
+wifi_iface=$(nmcli device | awk '/wifi/ {print $1; exit}')
+[ -z "$wifi_iface" ] && wifi_iface=$(iw dev | awk '$1=="Interface"{print $2; exit}')
+
+# Install firmware based on hardware
+if lspci | grep -i 'Network\|Wireless' | grep -qi intel; then
+    sudo apt install -y firmware-iwlwifi
+elif lspci | grep -i 'Network\|Wireless' | grep -qi realtek; then
+    sudo apt install -y firmware-realtek
+elif lspci | grep -i 'Network\|Wireless' | grep -qi broadcom; then
+    sudo apt install -y firmware-brcm80211
+else
+    echo "⚠️  Could not determine wireless chipset. You may need to manually install firmware."
+fi
+
+# Ensure NetworkManager manages interfaces
+sudo sed -i '/\[ifupdown\]/,/^\[.*\]/{s/managed=false/managed=true/}' /etc/NetworkManager/NetworkManager.conf \
+    || echo -e "[ifupdown]\nmanaged=true" | sudo tee -a /etc/NetworkManager/NetworkManager.conf
+
+# Disable wpa_supplicant and per-device instances
+sudo systemctl mask wpa_supplicant.service
+for iface in $(ls /sys/class/net/ | grep -E '^wl'); do
+    sudo systemctl mask "wpa_supplicant@${iface}.service" || true
+done
+
+# Restart NetworkManager
 sudo systemctl restart NetworkManager
+
+# Bring interface up
+[ -n "$wifi_iface" ] && sudo ip link set "$wifi_iface" up
+
+echo ">>> WiFi setup complete."
