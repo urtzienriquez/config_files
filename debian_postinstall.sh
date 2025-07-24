@@ -165,35 +165,23 @@ cd "$home"
 
 echo ">>> Configuring WiFi..."
 
-# Detect wireless interface
-wifi_iface=$(nmcli device | awk '/wifi/ {print $1; exit}')
-[ -z "$wifi_iface" ] && wifi_iface=$(iw dev | awk '$1=="Interface"{print $2; exit}')
-
-# Install firmware based on hardware
-if lspci | grep -i 'Network\|Wireless' | grep -qi intel; then
-    sudo apt install -y firmware-iwlwifi
-elif lspci | grep -i 'Network\|Wireless' | grep -qi realtek; then
-    sudo apt install -y firmware-realtek
-elif lspci | grep -i 'Network\|Wireless' | grep -qi broadcom; then
-    sudo apt install -y firmware-brcm80211
-else
-    echo "⚠️  Could not determine wireless chipset. You may need to manually install firmware."
-fi
-
-# Ensure NetworkManager manages interfaces
+# Ensure NetworkManager is managing all interfaces
 sudo sed -i '/\[ifupdown\]/,/^\[.*\]/{s/managed=false/managed=true/}' /etc/NetworkManager/NetworkManager.conf \
-    || echo -e "[ifupdown]\nmanaged=true" | sudo tee -a /etc/NetworkManager/NetworkManager.conf
+  || echo -e "[ifupdown]\nmanaged=true" | sudo tee -a /etc/NetworkManager/NetworkManager.conf
 
-# Disable wpa_supplicant and per-device instances
-sudo systemctl mask wpa_supplicant.service
+# Unmask wpa_supplicant (so NM can use it)
+sudo systemctl unmask wpa_supplicant.service
+sudo systemctl unmask wpa_supplicant@.service
+
+# Stop and disable system-wide instances of wpa_supplicant (they interfere with NM)
+sudo systemctl stop wpa_supplicant
+sudo systemctl disable wpa_supplicant
+
 for iface in $(ls /sys/class/net/ | grep -E '^wl'); do
-    sudo systemctl mask "wpa_supplicant@${iface}.service" || true
+    sudo systemctl stop "wpa_supplicant@${iface}.service" 2>/dev/null
+    sudo systemctl disable "wpa_supplicant@${iface}.service" 2>/dev/null
 done
 
-# Restart NetworkManager
+# Restart NetworkManager AFTER wpa_supplicant is stopped
 sudo systemctl restart NetworkManager
-
-# Bring interface up
-[ -n "$wifi_iface" ] && sudo ip link set "$wifi_iface" up
-
 echo ">>> WiFi setup complete."
