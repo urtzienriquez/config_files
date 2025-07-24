@@ -27,7 +27,8 @@ sudo apt install -y xorg xserver-xorg polybar \
 	libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev \
 	libxml2-dev libtiff5-dev libtool libgdal-dev libudunits2-dev \
 	libabsl-dev brightnessctl network-manager lua5.4 luarocks \
-	golang ripgrep xclip pulseaudio alsa-utils bc rfkill
+	golang ripgrep xclip pulseaudio alsa-utils bc rfkill \
+	autorandr
 
 mkdir -p ~/.local/bin
 ln -s /usr/bin/batcat ~/.local/bin/bat

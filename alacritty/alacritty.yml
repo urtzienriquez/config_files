@@ -30,3 +30,10 @@ font:
 # Shell
 shell:
   program: /usr/bin/zsh
+
+key_bindings:
+  - { key: J, mods: Control|Shift, action: ScrollLineDown }
+  - { key: K, mods: Control|Shift, action: ScrollLineUp }
+  - { key: J, mods: Control|Shift|Super, action: ScrollPageDown }
+  - { key: K, mods: Control|Shift|Super, action: ScrollPageUp }
+  - { key: V, mods: Control, action: ToggleViMode }

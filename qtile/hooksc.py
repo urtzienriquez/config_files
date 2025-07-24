@@ -41,8 +41,13 @@ def auto_show_screen(window):
         window.group.cmd_toscreen()
 
 
+# @hook.subscribe.suspend
+# def lock_before_suspend():
+#     subprocess.run(["betterlockscreen", "-l"])
 @hook.subscribe.suspend
 def lock_before_suspend():
+    with open("/tmp/qtile_suspend.log", "a") as f:
+        f.write("Suspending at {}\n".format(time.strftime("%Y-%m-%d %H:%M:%S")))
     subprocess.run(["betterlockscreen", "-l"])
 
 
