@@ -19,15 +19,6 @@
 # GENERAL
 #
 
-# # installed with yay
-# yay --noconfirm -S ghostty qutebrowser-git unzip nvim python-pynvim \
-# 	xclip xorg-xrandr zsh fzf zathura mpv inkscape gimp imv \
-# 	juliaup r-base polybar zoxide lazygit bat \
-# 	brightnessctl alsa-utils man python-pip ytdl \
-# 	libreoffice ranger ueberzugpp tmux ttf-hack-nerd \
-# 	ripgrep unclutter xautolock betterlockscreen jdk-openjdk gcc-fortran \
-# 	netcdf gdal git-lfs udunits
-
 home="/home/urtzi"
 
 sudo apt install -y xorg xserver-xorg polybar \
@@ -37,7 +28,7 @@ sudo apt install -y xorg xserver-xorg polybar \
 	libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev \
 	libxml2-dev libtiff5-dev libtool libgdal-dev libudunits2-dev \
 	libabsl-dev brightnessctl network-manager lua5.4 luarocks \
-	golang ripgrep xclip
+	golang ripgrep xclip pulseaudio alsa-utils
 
 mkdir -p ~/.local/bin
 ln -s /usr/bin/batcat ~/.local/bin/bat

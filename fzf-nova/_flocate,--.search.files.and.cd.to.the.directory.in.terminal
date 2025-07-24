@@ -10,6 +10,6 @@ selected=$(find ~ -type f \
 
 dir_path=$(dirname "$selected")
 echo "$dir_path" | while read -r line; do
-  setsid ghostty --working-directory="$line" >/dev/null 2>&1 & disown
+  setsid alacritty --working-directory $line >/dev/null 2>&1 & disown
   sleep 0.2
 done

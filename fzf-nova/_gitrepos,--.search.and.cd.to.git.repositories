@@ -10,6 +10,6 @@ selected=$(find . -type d -name '*.git' \
 [ -z "$selected" ] && exit
 
 echo "$selected" | while read -r line; do
-  setsid ghostty --working-directory="$line" >/dev/null 2>&1 & disown
+  setsid alacritty --working-directory $line >/dev/null 2>&1 & disown
   sleep 0.2
 done
