@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Ensure PATH is correctly set
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Check dependencies
+command -v gsettings >/dev/null || { echo "❌ gsettings not found in PATH"; exit 1; }
+command -v cut >/dev/null || { echo "❌ cut not found in PATH"; exit 1; }
+
+# Commands (optional full path resolution)
+CUT_CMD=$(command -v cut)
+GSETTINGS_CMD=$(command -v gsettings)
+
 # ===== Define your shortcuts here =====
 # Format: 'Name|Command|Keybinding'
 declare -a SHORTCUTS=(
@@ -13,33 +24,31 @@ declare -a SHORTCUTS=(
 BASE_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings"
 
 # ===== Clear all existing custom shortcuts =====
-EXISTING=$(gsettings get org.gnome.settings-daemon.plugins.media-keys custom-keybindings)
-EXISTING=${EXISTING//[\[\]\' ]/}  # Remove brackets, quotes, spaces
+EXISTING=$($GSETTINGS_CMD get org.gnome.settings-daemon.plugins.media-keys custom-keybindings)
+EXISTING=${EXISTING//[\[\]\' ]/}
 IFS=',' read -r -a CURRENT <<< "$EXISTING"
 
 for PATH in "${CURRENT[@]}"; do
-  gsettings reset-recursively "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$PATH" 2>/dev/null
+  $GSETTINGS_CMD reset-recursively "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$PATH" 2>/dev/null
 done
 
-# Clear top-level list
-gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "[]"
+$GSETTINGS_CMD set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "[]"
 
 # ===== Apply new shortcuts =====
 NEW_BINDINGS=()
 
 for i in "${!SHORTCUTS[@]}"; do
   ENTRY="${SHORTCUTS[$i]}"
-  NAME=$(echo "$ENTRY" | cut -d'|' -f1)
-  CMD=$(echo "$ENTRY" | cut -d'|' -f2)
-  KEY=$(echo "$ENTRY" | cut -d'|' -f3)
+  NAME=$(echo "$ENTRY" | $CUT_CMD -d'|' -f1)
+  CMD=$(echo "$ENTRY" | $CUT_CMD -d'|' -f2)
+  KEY=$(echo "$ENTRY" | $CUT_CMD -d'|' -f3)
 
   KEY_PATH="$BASE_PATH/custom$i/"
   NEW_BINDINGS+=("$KEY_PATH")
 
-  # Create the new shortcut
-  gsettings set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH" name "$NAME"
-  gsettings set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH" command "$CMD"
-  gsettings set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH" binding "$KEY"
+  $GSETTINGS_CMD set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH" name "$NAME"
+  $GSETTINGS_CMD set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH" command "$CMD"
+  $GSETTINGS_CMD set "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH" binding "$KEY"
 
   echo "✅ Assigned: '$NAME' → $KEY → $CMD"
 done
@@ -54,6 +63,6 @@ for index in "${!NEW_BINDINGS[@]}"; do
 done
 BINDING_LIST+="]"
 
-gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "$BINDING_LIST"
+$GSETTINGS_CMD set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "$BINDING_LIST"
 
 echo "🎉 All shortcuts overwritten and applied successfully!"
