@@ -5,12 +5,11 @@
 #
 # as root install git, sudo and vim
 # clone this repo:
-# Clone this repo with config files and this script:
 # git clone https://github.com/urtzienriquez/config_files
 #
 # Change /etc/sudoers to add user to sudoer group
 #
-# Then run the script from $HOME
+# Then, as your user (ie, not root) run the script from $HOME
 # ./config_files/debian_postinstall.sh
 
 
@@ -133,21 +132,21 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting
 cd "$home"
 
 
-####################
-# MATLAB
+# ####################
+# # MATLAB
+# #
 #
-
-# install with mpm; matlab product manager
-wget https://www.mathworks.com/mpm/glnxa64/mpm 
-chmod +x mpm
-sudo ./mpm install --release=R2020b --products=MATLAB Simulink
-sudo mv mpm /opt
-# You can change the installation destination from default to another directory by adding this flag:
-#  --destination=/path/to/desired/installation/directory
-
-# to activate
-# cd /usr/local/MATLAB/R2020b/bin/
-# ./activate_matlab.sh
+# # install with mpm; matlab product manager
+# wget https://www.mathworks.com/mpm/glnxa64/mpm 
+# chmod +x mpm
+# sudo ./mpm install --release=R2020b --products=MATLAB Simulink
+# sudo mv mpm /opt
+# # You can change the installation destination from default to another directory by adding this flag:
+# #  --destination=/path/to/desired/installation/directory
+#
+# # to activate
+# # cd /usr/local/MATLAB/R2020b/bin/
+# # ./activate_matlab.sh
 
 
 ####################
