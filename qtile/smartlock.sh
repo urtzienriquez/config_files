@@ -34,7 +34,6 @@ webcam_active=$(is_webcam_active)
 
 # Suspend prevention logic
 if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
-    # Skip locking and suspending if media is active
     exit 0
 fi
 
@@ -42,10 +41,10 @@ fi
 export DISPLAY=:0
 export XAUTHORITY="/home/urtzi/.Xauthority"
 
-# Lock the screen
+# Lock the screen in background
 if command -v betterlockscreen >/dev/null 2>&1; then
-    betterlockscreen -l
-    sleep 1  # Give locker time to draw
+    betterlockscreen -l &
+    sleep 1
 fi
 
 # Now suspend
