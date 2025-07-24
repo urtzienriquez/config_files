@@ -37,7 +37,7 @@ vim.keymap.set("n", "<leader>ff", function()
 end, { desc = "picker [f]ind [f]iles" })
 vim.keymap.set("n", "<leader>fb", function()
 	Snacks.picker.buffers({
-		win = { input = { keys = { ["d"] = "bufdelete" } } },
+		win = { input = { keys = { ["<C-d>"] = { "bufdelete", mode = { "i", "n" } } } } },
 	})
 end, { desc = "picker [f]ind [b]uffers" })
 vim.keymap.set("n", "<leader>fg", function()
