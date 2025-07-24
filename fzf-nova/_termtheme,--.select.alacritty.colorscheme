@@ -28,6 +28,7 @@ selected=$(find "$config_dir" -follow -type f 2>/dev/null \
     | grep -v "alacritty.toml" \
     | grep -v "theme.yml" \
     | sed "s|$config_dir/||" \
+		| sort \
     | fzf --prompt='Select Alacritty theme: ')
 
 # Exit if no selection made
