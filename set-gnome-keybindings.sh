@@ -6,12 +6,10 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 # Check dependencies
 command -v gsettings >/dev/null || { echo "❌ gsettings not found in PATH"; exit 1; }
 command -v cut >/dev/null || { echo "❌ cut not found in PATH"; exit 1; }
-command -v xdotool >/dev/null || { echo "❌ xdotool not found in PATH. Please install it (sudo apt install xdotool)"; exit 1; }
 
 # Commands (optional full path resolution)
 CUT_CMD=$(command -v cut)
 GSETTINGS_CMD=$(command -v gsettings)
-XDO_CMD=$(command -v xdotool)
 
 # ===== Define your shortcuts here =====
 # Format: 'Name|Command|Keybinding'
@@ -20,14 +18,9 @@ declare -a SHORTCUTS=(
   'Open Files|nautilus|<Alt>F'
   'Open Browser|qutebrowser|<Alt>J'
   'Open Browser|librewolf|<Alt>B'
-  'Close Window|gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell --method org.gnome.Shell.Eval "global.get_window_actors().find(w => w.meta_window.has_focus()).meta_window.delete(global.get_current_time());"|<Primary><Alt>Q'
-  'Open Settings|gnome-control-center|<Alt>S'
-
-  # New directional workspace focus shortcuts (simulate directional window focus)
-  'Focus Workspace Left|xdotool key ctrl+alt+Left|<Primary><Alt>h'
-  'Focus Workspace Right|xdotool key ctrl+alt+Right|<Primary><Alt>l'
-  'Focus Workspace Up|xdotool key ctrl+alt+Up|<Primary><Alt>k'
-  'Focus Workspace Down|xdotool key ctrl+alt+Down|<Primary><Alt>j'
+	'Close Window|gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell --method org.gnome.Shell.Eval "global.get_window_actors().find(w => w.meta_window.has_focus()).meta_window.delete(global.get_current_time());"|<Primary><Alt>Q'
+	'Open Settings|gnome-control-center|<Alt>S'
+  # 'Open Web|alacritty --class web -e "qutebrowser --args bla"|<Primary><Alt>W'
 )
 
 # ===== Setup paths =====
