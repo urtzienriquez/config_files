@@ -22,7 +22,7 @@ home="/home/urtzi"
 
 sudo apt install -y alacritty gpg curl wget qutebrowser \
 	unzip zsh fzf zathura mpv imv libreoffice \
-	bat lazygit zoxide
+	bat lazygit zoxide qbittorrent vlc
 
 mkdir -p ~/.local/bin
 ln -s /usr/bin/batcat ~/.local/bin/bat

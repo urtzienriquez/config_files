@@ -18,6 +18,8 @@ declare -a SHORTCUTS=(
   'Open Files|nautilus|<Alt>F'
   'Open Browser|qutebrowser|<Alt>J'
   'Open Browser|librewolf|<Alt>B'
+	'Close Window|xdotool getwindowfocus windowkill|<Alt>Q'
+	'Open Settings|gnome-control-center|<Alt>S'
   # 'Open Web|alacritty --class web -e "qutebrowser --args bla"|<Primary><Alt>W'
 )
 
