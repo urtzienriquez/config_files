@@ -18,7 +18,7 @@ declare -a SHORTCUTS=(
   'Open Files|nautilus|<Alt>F'
   'Open Browser|qutebrowser|<Alt>J'
   'Open Browser|librewolf|<Alt>B'
-	'Close Window|xdotool getwindowfocus windowkill|<Alt>Q'
+	'Close Window|gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell --method org.gnome.Shell.Eval "global.get_window_actors().find(w => w.meta_window.has_focus()).meta_window.delete(global.get_current_time());"|<Primary><Alt>Q'
 	'Open Settings|gnome-control-center|<Alt>S'
   # 'Open Web|alacritty --class web -e "qutebrowser --args bla"|<Primary><Alt>W'
 )
