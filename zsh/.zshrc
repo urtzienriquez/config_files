@@ -129,7 +129,7 @@ export FZF_ALT_C_OPTS="--no-preview"
 # -------------------------------
 # Zoxide
 # -------------------------------
-eval "$(zoxide init zsh)"
+eval "$(zoxide init --cmd cd zsh)"
 
 # -------------------------------
 # Starship prompt
