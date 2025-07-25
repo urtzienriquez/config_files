@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # Alacritty theme switcher using fzf
-# Lists all theme files in ~/.config/alacritty/ and replaces alacritty.yml with selected theme
+# Lists all *.toml theme files in ~/.config/alacritty and replaces theme.toml with selected theme
 
 export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
 
@@ -16,19 +16,17 @@ real_config_dir=$(readlink -f "$config_dir")
 echo "Config directory: $config_dir"
 echo "Real path: $real_config_dir"
 
-# Debug: Show what files exist
-echo "Files found in $config_dir:"
-find "$config_dir" -follow -type f 2>/dev/null
+# Debug: Show what TOML files exist
+echo "TOML files found in $config_dir:"
+find "$config_dir" -follow -type f -name "*.toml" 2>/dev/null
 echo ""
 
-# Find all theme files (excluding main config files)
-selected=$(find "$config_dir" -follow -type f 2>/dev/null \
-    | grep -v "alacritty.yml" \
-    | grep -v "alacritty.yaml" \
+# Find all theme .toml files (excluding main config files)
+selected=$(find "$config_dir" -follow -type f -name "*.toml" 2>/dev/null \
     | grep -v "alacritty.toml" \
-    | grep -v "theme.yml" \
+    | grep -v "theme.toml" \
     | sed "s|$config_dir/||" \
-		| sort \
+    | sort \
     | fzf --prompt='Select Alacritty theme: ')
 
 # Exit if no selection made
@@ -43,9 +41,9 @@ if [ ! -f "$theme_file" ]; then
     exit 1
 fi
 
-# Copy selected theme to theme.yml (preserving the original theme file)
-cp "$theme_file" "$config_dir/theme.yml"
+# Copy selected theme to theme.toml (preserving the original theme file)
+cp "$theme_file" "$config_dir/theme.toml"
 
 echo "Theme switched to: $selected"
-echo "Copied '$selected' to 'theme.yml'"
-echo "Make sure your alacritty.yml imports theme.yml"
+echo "Copied '$selected' to 'theme.toml'"
+echo "Make sure your alacritty.toml includes theme.toml using 'import = [\"theme.toml\"]'"
