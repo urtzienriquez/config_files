@@ -28,7 +28,7 @@ sudo apt install -y xorg xserver-xorg polybar \
 	libxml2-dev libtiff5-dev libtool libgdal-dev libudunits2-dev \
 	libabsl-dev brightnessctl network-manager lua5.4 luarocks \
 	golang ripgrep xclip pulseaudio alsa-utils bc rfkill \
-	autorandr i3lock feh udisks2
+	autorandr i3lock feh udisks2 poppler-utils
 
 mkdir -p ~/.local/bin
 ln -s /usr/bin/batcat ~/.local/bin/bat
