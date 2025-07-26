@@ -79,7 +79,7 @@ cmake -DCMAKE_BUILD_TYPE=Release \
       -DENABLE_X11=ON ..
 cmake --build . -- -j$(nproc)
 sudo cmake --install .
-cd ..
+cd ../..
 rm -rf ueberzugpp
 
 # nerd fonts
