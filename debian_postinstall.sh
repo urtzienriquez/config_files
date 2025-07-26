@@ -154,10 +154,8 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting
 cd "$home"
 
 # set natural scrolling and click on tap
-mkdir -p /etc/X11/xorg.conf.d
-
-# Create the config file for libinput touchpad settings
-cat <<EOF > /etc/X11/xorg.conf.d/40-libinput.conf
+sudo mkdir -p /etc/X11/xorg.conf.d
+sudo tee /etc/X11/xorg.conf.d/40-libinput.conf > /dev/null <<EOF
 Section "InputClass"
     Identifier "touchpad defaults"
     MatchIsTouchpad "on"
