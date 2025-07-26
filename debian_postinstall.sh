@@ -28,7 +28,7 @@ sudo apt install -y xorg xserver-xorg polybar \
 	libxml2-dev libtiff5-dev libtool libgdal-dev libudunits2-dev \
 	libabsl-dev brightnessctl network-manager lua5.4 luarocks \
 	golang ripgrep xclip pulseaudio alsa-utils bc rfkill \
-	autorandr i3lock feh
+	autorandr i3lock feh udisks2
 
 mkdir -p ~/.local/bin
 ln -s /usr/bin/batcat ~/.local/bin/bat
@@ -118,6 +118,8 @@ done
 sudo ln -s "$home/config_files/keyd/default.conf" /etc/keyd/
 sudo keyd reload
 
+# make link for mount options
+sudo ln -s "$home/config_files/mount_options.conf" /etc/udisks2/
 # make links in $HOME
 for i in .gitconfig .zshenv .julia_scripts
 do 
