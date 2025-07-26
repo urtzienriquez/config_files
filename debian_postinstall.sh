@@ -69,7 +69,7 @@ sudo dpkg -i xautolock_2.2-8_amd64.deb
 rm xautolock_2.2-8_amd64.deb
 
 # install ueberzugpp
-sudo apt install cmake libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev
+sudo apt install cmake libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev libxcb-res0-dev libopencv-dev
 git clone https://github.com/jstkdng/ueberzugpp.git
 cd ueberzugpp
 mkdir build && cd build
