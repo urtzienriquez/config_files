@@ -101,21 +101,19 @@ class fzf_locate(Command):
     """
     :fzf_locate
 
-    Find a file using fzf.
+    Use 'locate' to find files and open them in ranger.
 
-    With a prefix argument select only directories.
-
-    See: https://github.com/junegunn/fzf
+    Requires the mlocate or plocate database to be up to date.
     """
 
     def execute(self):
         import subprocess
 
-        if self.quantifier:
-            command = "locate home media | fzf -e -i"
-        else:
-            command = "locate home media | fzf -e -i"
-        fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
+        locate_cmd = "locate ~"  # or just "locate" for full search
+        fzf_opts = "--preview 'bat -p --color=always {}' --bind 'ctrl-v:toggle-preview'"
+        full_cmd = f"{locate_cmd} | fzf {fzf_opts}"
+
+        fzf = self.fm.execute_command(full_cmd, stdout=subprocess.PIPE, shell=True)
         stdout, stderr = fzf.communicate()
         if fzf.returncode == 0:
             fzf_file = os.path.abspath(stdout.decode("utf-8").rstrip("\n"))
