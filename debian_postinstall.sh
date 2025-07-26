@@ -82,6 +82,11 @@ sudo cmake --install .
 cd ../..
 rm -rf ueberzugpp
 
+# install librewolf
+sudo apt update && sudo apt install extrepo -y
+sudo extrepo enable librewolf
+sudo apt update && sudo apt install librewolf -y
+
 # nerd fonts
 # nerd fonts
 sudo wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip

@@ -35,6 +35,11 @@ tar -xzf nvim-linux-x86_64.tar.gz
 sudo rm -rf /opt/nvim && sudo mv nvim-linux-x86_64 /opt/nvim
 rm nvim-linux-x86_64.tar.gz
 
+# install librewolf
+sudo apt update && sudo apt install extrepo -y
+sudo extrepo enable librewolf
+sudo apt update && sudo apt install librewolf -y
+
 # nerd fonts
 sudo wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
 sudo wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
