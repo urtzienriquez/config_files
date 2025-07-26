@@ -1,31 +1,28 @@
 #!/usr/bin/env sh
 # Alacritty theme switcher using fzf
-# Lists all *.toml theme files in ~/.config/alacritty and replaces theme.toml with selected theme
+# Lists all *.toml theme files in ~/.config/alacritty/themes and replaces theme.toml with selected theme
 
 export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
 
-# Check if alacritty config directory exists
+# Define paths
 config_dir="$HOME/.config/alacritty"
+themes_dir="$config_dir/themes"
+theme_target="$config_dir/theme.toml"
+
+# Check directories
 if [ ! -d "$config_dir" ]; then
     echo "Error: Alacritty config directory not found at $config_dir"
     exit 1
 fi
 
-# Get the real path if it's a symbolic link
-real_config_dir=$(readlink -f "$config_dir")
-echo "Config directory: $config_dir"
-echo "Real path: $real_config_dir"
+if [ ! -d "$themes_dir" ]; then
+    echo "Error: Themes directory not found at $themes_dir"
+    exit 1
+fi
 
-# Debug: Show what TOML files exist
-echo "TOML files found in $config_dir:"
-find "$config_dir" -follow -type f -name "*.toml" 2>/dev/null
-echo ""
-
-# Find all theme .toml files (excluding main config files)
-selected=$(find "$config_dir" -follow -type f -name "*.toml" 2>/dev/null \
-    | grep -v "alacritty.toml" \
-    | grep -v "theme.toml" \
-    | sed "s|$config_dir/||" \
+# Find all theme .toml files in the themes directory
+selected=$(find "$themes_dir" -type f -name "*.toml" \
+    | sed "s|$themes_dir/||" \
     | sort \
     | fzf --prompt='Select Alacritty theme: ')
 
@@ -33,17 +30,13 @@ selected=$(find "$config_dir" -follow -type f -name "*.toml" 2>/dev/null \
 [ -z "$selected" ] && exit
 
 # Full path to selected theme
-theme_file="$config_dir/$selected"
+theme_file="$themes_dir/$selected"
 
-# Check if selected file exists
+# Confirm selected file exists
 if [ ! -f "$theme_file" ]; then
     echo "Error: Selected theme file does not exist: $theme_file"
     exit 1
 fi
 
-# Copy selected theme to theme.toml (preserving the original theme file)
-cp "$theme_file" "$config_dir/theme.toml"
-
-echo "Theme switched to: $selected"
-echo "Copied '$selected' to 'theme.toml'"
-echo "Make sure your alacritty.toml includes theme.toml using 'import = [\"theme.toml\"]'"
+# Copy selected theme to theme.toml
+cp "$theme_file" "$theme_target"
