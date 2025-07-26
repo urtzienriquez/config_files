@@ -68,6 +68,20 @@ wget http://deb.debian.org/debian/pool/main/x/xautolock/xautolock_2.2-8_amd64.de
 sudo dpkg -i xautolock_2.2-8_amd64.deb
 rm xautolock_2.2-8_amd64.deb
 
+# install ueberzugpp
+sudo apt install cmake libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev
+git clone https://github.com/jstkdng/ueberzugpp.git
+cd ueberzugpp
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release \
+      -DENABLE_OPENCV=ON \
+      -DENABLE_WAYLAND=OFF \
+      -DENABLE_X11=ON ..
+cmake --build . -- -j$(nproc)
+sudo cmake --install .
+cd ..
+rm -rf ueberzugpp
+
 # nerd fonts
 # nerd fonts
 sudo wget -P /usr/share/fonts/truetype https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
