@@ -54,49 +54,79 @@ alias cl='calcurse'
 
 # fzf 
 		
-# by default ff searches for files in the current dir
-# optionally I can pass a path ($1) to search within that path
-# or use the fh alias to search in $HOME
+# ff: find files in given path (or current directory), open appropriately
 ff() {
-	local ofile
-	ofile=$(find $1 \( -path $1/node_modules -prune -o -path '*/.git' -prune -o -path $HOME/go -prune \) -o -type f | fzf) || return
-	mime=$(file -b --mime-type "$ofile")
-	if [[ $mime = text/@(plain|x-*) ]] || [[ $mime = application/javascript ]]; then
-		nvim "$ofile"
+  local search_path="${1:-.}"
+  local ofile
+  ofile=$(find "$search_path" \
+    \( -path "$search_path/node_modules" -o -path '*/.git' -o -path "$HOME/go" \) -prune -o \
+    -type f -print | \
+    fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+
+  local mime
+  mime=$(file -b --mime-type "$ofile")
+
+  if [[ $mime == text/html ]]; then
+    qutebrowser --qt-arg class web --qt-arg name web "$ofile" &
+  elif [[ $mime == text/* || $mime == application/javascript ]]; then
+    nvim "$ofile"
+  elif [[ -x "$ofile" ]]; then
+    gio open "$ofile"
+  elif [[ $mime == video/* ]]; then
+    mpv "$ofile"
   else
-		gio open "$ofile"
-	fi
+    gio open "$ofile"
+  fi
 }
+
 alias fh="ff ~"
 
-# by default fd searches for directories in the $HOME dir
-# optionally I can pass a path ($1) to search within that path
+# fd: find file or dir in $HOME (or given path), and cd appropriately
 fd() {
-	local to_dir
-  if [ $# -eq 0 ]
-    then
-    to_dir=$(find $HOME \( -path $HOME/node_modules -prune -o -path '*/.git' -prune -o -path $HOME/go -prune \) -o -type d | fzf --no-preview) || return
-	else
-    to_dir=$(find $1 \( -path $1/node_modules -prune -o -path '*/.git' -prune -o -path $HOME/go -prune \) -o -type d | fzf --no-preview) || return
+  local search_path="${1:-$HOME}"
+  local selected
+  selected=$(find "$search_path" \
+    \( -path "$search_path/node_modules" -o -path '*/.git' -o -path "$HOME/go" \) -prune -o \
+    \( -type f -o -type d \) -print | \
+    fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+
+  if [[ -d "$selected" ]]; then
+    cd "$selected"
+  else
+    cd "$(dirname "$selected")"
   fi
-	cd "$to_dir"
 }
-# # (find) live grep [function taken and slightly modified from https://junegunn.github.io/fzf/tips/ripgrep-integration/]
-# lg() (
-#   RELOAD='reload:rg -i -g "!{node_modules,.git,go}" --column --color=always {q} || :'
-#   OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
-#             nvim {1} +{2}     # No selection. Open the current line in Vim.
-#           else
-#             nvim +cw -q {+f}  # Build quickfix list for the selected items.
-#           fi'
-#   fzf --disabled --ansi --multi \
-# 		  --walker-skip .git,node_modules,go,.npm,.cpanm,.fnmt,.pki,target \
-#       --bind "start:$RELOAD" --bind "change:$RELOAD" \
-#       --bind "enter:become:$OPENER" \
-#       --bind "ctrl-o:execute:$OPENER" \
-#       --bind 'alt-a:select-all,alt-d:deselect-all,ctrl-v:toggle-preview' \
-#       --delimiter : \
-#       --preview 'bat -p --color=always --highlight-line {2} {1}' \
-#       --preview-window '~4,+{2}+4/3,<75(up)' \
-#       --query "$*"
-# )
+
+# ffr: like ff but searches the whole system with locate
+ffr() {
+  local file
+  file=$(locate / | while read -r f; do [[ -f "$f" ]] && echo "$f"; done | \
+    fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+
+  local mime
+  mime=$(file -b --mime-type "$file")
+
+  if [[ $mime == text/html ]]; then
+    qutebrowser --qt-arg class web --qt-arg name web "$file" &
+  elif [[ $mime == text/* || $mime == application/javascript ]]; then
+    nvim "$file"
+  elif [[ -x "$file" ]]; then
+    gio open "$file"
+  elif [[ $mime == video/* ]]; then
+    mpv "$file"
+  else
+    gio open "$file"
+  fi
+}
+
+# fdr: like fd but searches entire system using locate, and cd accordingly
+fdr() {
+  local file
+  file=$(locate / | fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+
+  if [[ -d "$file" ]]; then
+    cd "$file"
+  else
+    cd "$(dirname "$file")"
+  fi
+}
