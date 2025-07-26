@@ -69,7 +69,7 @@ sudo dpkg -i xautolock_2.2-8_amd64.deb
 rm xautolock_2.2-8_amd64.deb
 
 # install ueberzugpp
-sudo apt install cmake libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev libxcb-res0-dev libopencv-dev
+sudo apt install -y cmake libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev libxcb-res0-dev libopencv-dev
 git clone https://github.com/jstkdng/ueberzugpp.git
 cd ueberzugpp
 mkdir build && cd build
@@ -153,6 +153,19 @@ git clone https://github.com/zsh-users/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting
 cd "$home"
 
+# set natural scrolling and click on tap
+mkdir -p /etc/X11/xorg.conf.d
+
+# Create the config file for libinput touchpad settings
+cat <<EOF > /etc/X11/xorg.conf.d/40-libinput.conf
+Section "InputClass"
+    Identifier "touchpad defaults"
+    MatchIsTouchpad "on"
+    Driver "libinput"
+    Option "Tapping" "on"
+    Option "NaturalScrolling" "on"
+EndSection
+EOF
 
 # ####################
 # # MATLAB
