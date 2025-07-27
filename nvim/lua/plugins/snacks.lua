@@ -24,7 +24,7 @@ return {
 		},
 		lazygit = { enabled = true },
 		bigfile = { enabled = true },
-		image = { enabled = true },
+		image = { enabled = false },
 		dashboard = {
 			enabled = true,
 			sections = {

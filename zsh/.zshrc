@@ -64,7 +64,7 @@ source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # Terminal compatibility
 # -------------------------------
 if [[ "$TERM_PROGRAM" == "alacritty" ]]; then
-    export TERM=xterm-256color
+    export TERM=screen-256color
 fi
 
 # -------------------------------
