@@ -63,7 +63,7 @@ source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # -------------------------------
 # Terminal compatibility
 # -------------------------------
-if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+if [[ "$TERM_PROGRAM" == "alacritty" ]]; then
     export TERM=xterm-256color
 fi
 
