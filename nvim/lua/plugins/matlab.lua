@@ -1,7 +1,7 @@
 return {
 	{
 		"idossha/matlab.nvim",
-		lazy = true,
+		ft = "matlab",
 		config = function()
 			require("matlab").setup({
 				-- Path to MATLAB executable (should be full path)
