@@ -9,3 +9,4 @@ autoconfig.yml
 lazy-lock.json
 .histfile
 .zcompdump
+tmux*.log
