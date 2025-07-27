@@ -78,6 +78,7 @@ esac
 # Misc
 # -------------------------------
 export RANGER_LOAD_DEFAULT_RC=FALSE
+[ -z "$TMUX" ] && export TERM=xterm-256color
 
 # -------------------------------
 # PATH Setup
@@ -94,6 +95,9 @@ export PATH="/opt/nvim/bin:$PATH"
 # go path export
 export PATH="/usr/local/go/bin:$PATH"
 export PATH="$(go env GOPATH)/bin:$PATH"
+
+# zig version manager
+export PATH="$PATH:$HOME/.zvm/current"
 
 # >>> juliaup initialize >>>
 case ":$PATH:" in

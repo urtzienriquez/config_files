@@ -188,3 +188,4 @@ if [ -f "$HOME/.bash_aliases" ]; then
     . "$HOME/.bash_aliases"
 fi
 . "$HOME/.cargo/env"
+export PATH="$PATH:$HOME/.zvm/current"
