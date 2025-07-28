@@ -4,13 +4,26 @@ set -euo pipefail
 resurrect_dir="$HOME/.local/share/tmux/resurrect"
 saved_dir="$resurrect_dir/saved"
 
-# Enable multi-select with --multi and --bind tab:toggle+down
-sessions=$(ls "$saved_dir" | sed 's/\.resurrect$//' | \
-  fzf --no-preview --multi --prompt="Restore sessions: " --bind tab:toggle+up)
+# Collect all active session names
+active_sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null || true)
 
-[[ -z "$sessions" ]] && exit 0
+# List saved sessions, mark with '+' if already active
+session_list=$(ls "$saved_dir" | sed 's/\.resurrect$//' | while read -r session; do
+  if echo "$active_sessions" | grep -Fxq "$session"; then
+    echo "+ $session"
+  else
+    echo "  $session"
+  fi
+done)
 
-for session in $sessions; do
+# Enable multi-select with --multi and --bind tab:toggle+up
+selected=$(echo "$session_list" | \
+  fzf --no-preview --multi --prompt="Restore sessions: " --bind tab:toggle+up | \
+  sed 's/^[+ ]*//')
+
+[[ -z "$selected" ]] && exit 0
+
+for session in $selected; do
   file="$saved_dir/$session.resurrect"
   [[ -f "$file" ]] || { echo "No saved session: $session"; continue; }
 
@@ -29,10 +42,10 @@ for session in $sessions; do
   # Restore session contents
   tmux run-shell -b "$HOME/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh"
 
-  # (Optional) Give tmux some time to finish before restoring the next one
+  # Optional delay between restores
   sleep 0.3
 done
 
 # Attach to the last selected session
-last_session=$(echo "$sessions" | tail -n 1)
+last_session=$(echo "$selected" | tail -n 1)
 tmux switch-client -t "$last_session"
