@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+session="${1:-}"
+[[ -z "$session" ]] && { echo "Usage: save-session <session-name>"; exit 1; }
+
+resurrect_dir="$HOME/.local/share/tmux/resurrect"
+saved_dir="$resurrect_dir/saved"
+mkdir -p "$saved_dir"
+
+# Trigger save
+ tmux run-shell "$HOME/.config/tmux/plugins/tmux-resurrect/scripts/save.sh"
+sleep 0.2
+
+# Filter only this session
+awk -v sname="$session" '
+  $1=="state" { print; next }
+  $2==sname { print }
+' "$resurrect_dir/last" > "$saved_dir/$session.resurrect"
+
+echo "Saved session '$session' -> $saved_dir/$session.resurrect"

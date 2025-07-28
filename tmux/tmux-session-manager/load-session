@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+session="$1"
+[[ -z "$session" ]] && echo "Usage: load-session <session-name>" && exit 1
+
+resurrect_dir="$HOME/.local/share/tmux/resurrect"
+file="$resurrect_dir/saved/$session.resurrect"
+
+[[ ! -f "$file" ]] && echo "No saved session named '$session'" && exit 1
+
+cp "$file" "$resurrect_dir/last"
+
+tmux has-session -t "$session" 2>/dev/null || tmux new-session -ds "$session"
+
+tmux list-windows -t "$session" -F "#{window_index}" | while read -r win; do
+    tmux kill-window -t "${session}:${win}"
+done
+
+tmux run-shell -b "sleep 0.1 && $HOME/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh"
+
+tmux switch-client -t "$session"

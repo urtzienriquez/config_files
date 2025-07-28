@@ -272,12 +272,6 @@ keys = [
     ),
     Key(
         [alt],
-        "s",
-        lazy.spawn("gnome-control-center"),
-        desc="Launch gnome settings",
-    ),
-    Key(
-        [alt],
         "v",
         lazy.spawn("alacritty -e /opt/nvim/bin/nvim"),
         desc="Launch nvim",
