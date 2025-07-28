@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -euxo pipefail  # enable debug output
 
 session="${1:-}"
 [[ -z "$session" ]] && { echo "Usage: save-session <session-name>"; exit 1; }
@@ -8,18 +8,35 @@ resurrect_dir="$HOME/.local/share/tmux/resurrect"
 saved_dir="$resurrect_dir/saved"
 mkdir -p "$saved_dir"
 
-# Trigger save
-tmux run-shell "$HOME/.config/tmux/plugins/tmux-resurrect/scripts/save.sh"
-sleep 0.2
+# Trigger tmux-resurrect save
+tmux run-shell "$HOME/.config/tmux/plugins/tmux-resurrect/scripts/save.sh" || true
 
-# Filter only this session
+sleep 0.3
+
+if [[ ! -f "$resurrect_dir/last" ]]; then
+  echo "Error: tmux-resurrect did not generate a 'last' file."
+  exit 1
+fi
+
 awk -v sname="$session" '
-  $1=="state" { print; next }
-  $2==sname { print }
+  $1 == "state" { print; next }
+  $2 == sname { print }
 ' "$resurrect_dir/last" > "$saved_dir/$session.resurrect"
 
-# Clean up the most recent .txt backup file created by save.sh
-latest_txt=$(ls -t "$resurrect_dir"/tmux_resurrect_*.txt 2>/dev/null | head -n 1)
-[ -n "$latest_txt" ] && rm -f "$latest_txt"
-
 echo "Saved session '$session' -> $saved_dir/$session.resurrect"
+
+shopt -s nullglob
+txt_files=("$resurrect_dir"/tmux_resurrect_*.txt)
+shopt -u nullglob
+
+last_target=""
+if [[ -L "$resurrect_dir/last" ]]; then
+  resolved=$(readlink -f "$resurrect_dir/last" 2>/dev/null || true)
+  if [[ "$resolved" == "$resurrect_dir"/tmux_resurrect_*.txt ]]; then
+    last_target="$resolved"
+  fi
+fi
+
+for f in "${txt_files[@]}"; do
+  [[ "$f" != "$last_target" ]] && rm -f -- "$f" || true
+done

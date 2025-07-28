@@ -4,18 +4,40 @@ session="$1"
 [[ -z "$session" ]] && echo "Usage: load-session <session-name>" && exit 1
 
 resurrect_dir="$HOME/.local/share/tmux/resurrect"
-file="$resurrect_dir/saved/$session.resurrect"
+saved_dir="$resurrect_dir/saved"
+file="$saved_dir/$session.resurrect"
 
 [[ ! -f "$file" ]] && echo "No saved session named '$session'" && exit 1
 
-cp "$file" "$resurrect_dir/last"
+# Gather all sessions to preserve
+active_sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null || true)
+all_sessions=$(echo -e "$active_sessions\n$session" | sort -u)
 
+# Rewrite the 'state' line in the resurrect file
+awk -v all="$all_sessions" '
+  BEGIN {
+    split(all, sessions, "\n")
+    state_line = "state"
+    for (s in sessions) {
+      if (length(sessions[s]) > 0) {
+        state_line = state_line "\t" sessions[s]
+      }
+    }
+  }
+  $1 == "state" { print state_line; next }
+  { print }
+' "$file" > "$resurrect_dir/last"
+
+# Create session if missing
 tmux has-session -t "$session" 2>/dev/null || tmux new-session -ds "$session"
 
-tmux list-windows -t "$session" -F "#{window_index}" | while read -r win; do
+# Kill windows (optional)
+tmux list-windows -t "$session" -F "#{window_index}" 2>/dev/null | while read -r win; do
     tmux kill-window -t "${session}:${win}"
 done
 
+# Restore session from the new 'last' file
 tmux run-shell -b "sleep 0.1 && $HOME/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh"
 
+# Switch to the session
 tmux switch-client -t "$session"
