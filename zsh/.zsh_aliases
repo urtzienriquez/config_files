@@ -130,3 +130,9 @@ fdr() {
     cd "$(dirname "$file")"
   fi
 }
+
+tm() {
+	  tty_id=$(basename "$(tty)")
+	  session="term_${tty_id}"
+	  tmux new-session -A -s "$session"
+}

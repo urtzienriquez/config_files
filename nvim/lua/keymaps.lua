@@ -25,7 +25,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- escape terminal mode with two esc
+-- escape terminal mode with Control-c + Control-d
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- keymaps for fuzzy finding with Snacks.picker
@@ -84,4 +84,4 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- toggle rendering in render-markdown
-vim.keymap.set("n", "<leader>m", require("render-markdown").toggle, { desc = "render markdown toogle" })
+vim.keymap.set("n", "<leader>a", require("render-markdown").toggle, { desc = "render markdown toogle" })
