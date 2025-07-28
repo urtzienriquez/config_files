@@ -143,7 +143,7 @@ eval "$(starship init zsh)"
 
 # always start in a tmux session
 if [ -z "$TMUX" ]; then
-  tty_id=$(basename "$(tty)")  # e.g., pts/4 -> pts_4
+  tty_id=$(basename "$(tty)")
   session="term_${tty_id}"
-  exec tmux new-session -A -s "$session"
+  tmux new-session -A -s "$session"
 fi
