@@ -12,21 +12,14 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
     
-# matlab alias
+# matlab package manager
 alias mpm="/opt/mpm"
-# cd-s to MATLAB folder so that pathdef.m is included
-# which allows to use functions from DEBTools_M and AmPtool
-ml() {
-	cd /home/urtzi/Documents/MATLAB
-	matlab
-	cd -
-}
 
 # neovim alias
 alias nv='nvim'
 
 # R
-alias r='R'
+alias r='radian'
 
 # python
 alias py='python3'

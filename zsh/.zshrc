@@ -59,7 +59,7 @@ source ~/.config/zsh/.zsh_aliases
 
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
+source ~/.config/zsh/plugins/zsh-autopair/autopair.zsh
 # -------------------------------
 # Terminal compatibility
 # -------------------------------
@@ -147,3 +147,7 @@ if [ -z "$TMUX" ]; then
   session="term_${tty_id}"
   tmux new-session -A -s "$session"
 fi
+
+
+
+export R_PROFILE_USER="$HOME/.Rprofile"
