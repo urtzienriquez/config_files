@@ -40,15 +40,31 @@ local function configure_cmp()
 end
 
 return {
-	"hrsh7th/nvim-cmp",
-	dependencies = {
-		{ "hrsh7th/cmp-nvim-lsp" },
-		{ "hrsh7th/cmp-buffer" },
-		{ "hrsh7th/cmp-path" },
-		{ "R-nvim/cmp-r" },
-		-- Snippet engine(s) required for nvim-cmp (expands things from LS)
-		{ "L3MON4D3/LuaSnip" },
-		{ "saadparwaiz1/cmp_luasnip" },
+	{
+		"hrsh7th/nvim-cmp",
+		dependencies = {
+			{ "hrsh7th/cmp-nvim-lsp" },
+			{ "hrsh7th/cmp-buffer" },
+			{ "hrsh7th/cmp-path" },
+			{ "R-nvim/cmp-r" },
+			-- Snippet engine(s) required for nvim-cmp (expands things from LS)
+			{ "L3MON4D3/LuaSnip" },
+			{ "saadparwaiz1/cmp_luasnip" },
+		},
+		config = configure_cmp,
 	},
-	config = configure_cmp,
+
+	-- Add nvim-autopairs plugin and integrate it with nvim-cmp
+	{
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+		config = function()
+			local npairs = require("nvim-autopairs")
+			npairs.setup({})
+
+			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+			local cmp = require("cmp")
+			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+		end,
+	},
 }

@@ -276,12 +276,12 @@ keys = [
         lazy.spawn("alacritty -e /opt/nvim/bin/nvim"),
         desc="Launch nvim",
     ),
-    Key(
-        [alt],
-        "a",
-        lazy.spawn("alacritty --class='calendar' -e calcurse"),
-        desc="Launch calendar",
-    ),
+    # Key(
+    #     [alt],
+    #     "a",
+    #     lazy.spawn("alacritty --class='calendar' -e calcurse"),
+    #     desc="Launch calendar",
+    # ),
     Key(
         [alt],
         "n",
