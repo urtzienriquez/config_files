@@ -27,13 +27,13 @@ keys = [
         desc="Next monitor",
     ),
     Key(
-        [mod, "shift"],
+        [mod, "control"],
         "space",
         swap_screens(),
         desc="Swap screens, but keep focus",
     ),
     Key(
-        [mod, "shift", "control"],
+        [mod, "control", "shift"],
         "space",
         swap_screens(),
         lazy.next_screen(),
@@ -385,7 +385,7 @@ for i in groups:
                 desc="Switch to group {}: {}".format(i.name, i.label),
             ),
             Key(
-                [mod, "shift"],
+                [mod, "control"],
                 i.name,
                 lazy.window.togroup(i.name, switch_group=False),
                 desc="Move focused window to group {}: {}".format(i.name, i.label),
