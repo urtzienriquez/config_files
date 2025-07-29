@@ -50,7 +50,7 @@ alias rn='ranger'
 alias bt='bat -p'
 
 #calcurse
-alias cl='calcurse'
+alias cl='clear'
 
 # fzf 
 		
