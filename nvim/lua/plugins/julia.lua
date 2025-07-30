@@ -70,7 +70,7 @@ return {
 				callback = function()
 					vim.keymap.set("n", "<localleader>jf", function()
 						os.execute(
-							"tmux split-window -v 'bash -c \"julia -i /home/urtzi/.julia_scripts/nvjulia.jl; exec bash\"'"
+							"tmux split-window -h 'bash -c \"julia -i /home/urtzi/.julia_scripts/nvjulia.jl; exec bash\"'"
 						)
 						vim.defer_fn(function()
 							vim.cmd("JuliaREPLConnect 2345")
