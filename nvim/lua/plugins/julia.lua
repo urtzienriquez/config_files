@@ -28,7 +28,7 @@ return {
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "julia",
 				callback = function()
-					-- Normal mode: send current line and move to next code line
+					-- Send line & move to next code
 					vim.keymap.set("n", "<CR>", function()
 						local cur_line = vim.api.nvim_win_get_cursor(0)[1]
 						vim.cmd("JuliaREPLSend")
@@ -36,7 +36,7 @@ return {
 						vim.api.nvim_win_set_cursor(0, { next_line, 0 })
 					end, { buffer = true, silent = true })
 
-					-- Visual mode: send selection and move to next code line after selection
+					-- Send visual selection
 					vim.keymap.set("x", "<CR>", function()
 						local start_line = vim.fn.line("v")
 						local end_line = vim.fn.line(".")
@@ -48,19 +48,34 @@ return {
 						local next_line = next_code_line(end_line)
 						vim.api.nvim_win_set_cursor(0, { next_line, 0 })
 					end, { buffer = true, silent = true })
+
+					-- Auto-connect new buffers to running REPL
+					vim.schedule(function()
+						vim.cmd("silent! JuliaREPLConnect 2345")
+					end)
+
+					-- <localleader>jq: Quit Julia and kill tmux pane
+					vim.keymap.set("n", "<localleader>jq", function()
+						os.execute("tmux send-keys -t ! C-d")
+						vim.defer_fn(function()
+							os.execute("tmux kill-pane -t !")
+						end, 200)
+					end, { desc = "Close Julia REPL and kill tmux pane", buffer = true })
 				end,
 			})
 
-			-- connect to opened julia session in another terminal (only available when filetype = julia)
+			-- Keymap: open tmux pane, run 'julia', then connect to REPL
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = { "julia", "markdown" },
 				callback = function()
-					vim.keymap.set(
-						"n",
-						"<localleader>jf",
-						"<cmd>JuliaREPLConnect 2345<CR>",
-						{ desc = "Connect [j]ulia [f]ile to server running in opened terminal" }
-					)
+					vim.keymap.set("n", "<localleader>jf", function()
+						os.execute(
+							"tmux split-window -v 'bash -c \"julia -i /home/urtzi/.julia_scripts/nvjulia.jl; exec bash\"'"
+						)
+						vim.defer_fn(function()
+							vim.cmd("JuliaREPLConnect 2345")
+						end, 2000)
+					end, { desc = "Start [j]ulia server and connect [f]ile", buffer = true })
 				end,
 			})
 		end,
