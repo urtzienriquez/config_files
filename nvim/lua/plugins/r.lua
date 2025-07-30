@@ -18,7 +18,7 @@ return {
 				rconsole_width = 78,
 				objbr_mappings = { -- Object browser keymap
 					c = "class", -- Call R functions
-					["<localleader>gg"] = "head({object}, n = 15)", -- Use {object} notation to write arbitrary R code.
+					["<leader>gg"] = "head({object}, n = 15)", -- Use {object} notation to write arbitrary R code.
 					v = function()
 						-- Run lua functions
 						require("r.browser").toggle_view()
