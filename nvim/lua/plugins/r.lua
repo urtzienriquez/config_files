@@ -3,10 +3,9 @@ return {
 		"R-nvim/R.nvim",
 		lazy = false,
 		config = function()
-			-- Set this as a global so R.nvim and radian can detect it properly
 			local opts = {
-				-- for r.nvim
 				R_app = "radian",
+				external_term = "tmux split-window -h",
 				bracketed_paste = true,
 				hook = {
 					on_filetype = function()
@@ -14,7 +13,6 @@ return {
 						vim.api.nvim_buf_set_keymap(0, "v", "<Enter>", "<Plug>RSendSelection", {})
 					end,
 				},
-				-- These values are still valid here
 				min_editor_width = 72,
 				rconsole_width = 78,
 				objbr_mappings = {

@@ -83,8 +83,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- toggle rendering in render-markdown
-vim.keymap.set("n", "<leader>a", require("render-markdown").toggle, { desc = "render markdown toogle" })
+-- -- toggle rendering in render-markdown
+-- vim.keymap.set("n", "<leader>a", require("render-markdown").toggle, { desc = "render markdown toogle" })
 
 -- toggle colorscheme
 vim.keymap.set("n", "<leader>cc", toggle_tokyonight_style, { desc = "Toggle TokyoNight style" })

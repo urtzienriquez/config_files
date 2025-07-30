@@ -1,0 +1,20 @@
+options(radian.color_scheme = "native")
+options(radian.editing_mode = "vi")
+options(radian.show_vi_mode_prompt = TRUE)
+
+options(radian.vi_mode_prompt = "\033[0;34m[{}]\033[0m ")
+options(radian.prompt = "\033[0;34m> \033[0m")
+options(radian.continue_prompt = "\033[34m+ \033[0m")
+options(radian.shell_prompt = "\033[0;31m$\033[0m ")
+options(radian.browse_prompt = "\033[0;33mBrowse[{}]>\033[0m ")
+
+options(radian.modal_cursor = TRUE)
+
+options(
+    radian.vi_mode_prompt = list(
+        "ins" = "\033[0;34m(I) \033[0m",
+        "nav" = "\033[0;34m(N) \033[0m",
+        "rep" = "\033[0;34m(R) \033[0m"
+    )
+)
+
