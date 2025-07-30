@@ -12,19 +12,6 @@ vim.keymap.set("n", "<C-x><C-k>", "i<C-X><C-K>", { desc = "Dictionary suggestion
 -- open oil
 vim.keymap.set("n", "-", require("oil").open, { desc = "Open parent directory" })
 
--- connect to opened julia session in another terminal (only available when filetype = julia)
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "julia", "markdown" },
-	callback = function()
-		vim.keymap.set(
-			"n",
-			"<localleader>jf",
-			"<cmd>JuliaREPLConnect 2345<CR>",
-			{ desc = "Connect [j]ulia [f]ile to server running in opened terminal" }
-		)
-	end,
-})
-
 -- escape terminal mode with Control-c + Control-d
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
@@ -80,80 +67,5 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
 	callback = function()
 		vim.hl.on_yank()
-	end,
-})
-
--- -- toggle rendering in render-markdown
--- vim.keymap.set("n", "<leader>a", require("render-markdown").toggle, { desc = "render markdown toogle" })
-
--- toggle colorscheme
-vim.keymap.set("n", "<leader>cc", toggle_tokyonight_style, { desc = "Toggle TokyoNight style" })
-
--- Check if a line is "code": not empty and not a comment line starting with #
-local function is_code_line(lnum)
-	local line = vim.fn.getline(lnum)
-	return line:match("^%s*$") == nil and not line:match("^%s*#")
-end
-
--- Find next code line starting from line 'start' + 1
-local function next_code_line(start)
-	local last = vim.api.nvim_buf_line_count(0)
-	for lnum = start + 1, last do
-		if is_code_line(lnum) then
-			return lnum
-		end
-	end
-	-- fallback to last line if no code found
-	return last
-end
-
--- Check if a line is "code": not empty and not a comment line starting with #
-local function is_code_line(lnum)
-	local line = vim.fn.getline(lnum)
-	return line:match("^%s*$") == nil and not line:match("^%s*#")
-end
-
--- Find next code line starting from line 'start' + 1
-local function next_code_line(start)
-	local last = vim.api.nvim_buf_line_count(0)
-	for lnum = start + 1, last do
-		if is_code_line(lnum) then
-			return lnum
-		end
-	end
-	-- fallback to last line if no code found
-	return last
-end
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "julia",
-	callback = function()
-		-- Normal mode: send current line and move to next code line
-		vim.keymap.set("n", "<CR>", function()
-			local cur_line = vim.api.nvim_win_get_cursor(0)[1]
-			vim.cmd("JuliaREPLSend")
-			local next_line = next_code_line(cur_line)
-			vim.api.nvim_win_set_cursor(0, { next_line, 0 })
-		end, { buffer = true, silent = true })
-
-		-- Visual mode: send selection and move to next code line after selection
-		vim.keymap.set("x", "<CR>", function()
-			-- Get selection bounds while in visual mode
-			local start_line = vim.fn.line("v")
-			local end_line = vim.fn.line(".")
-
-			-- Ensure correct order
-			if start_line > end_line then
-				start_line, end_line = end_line, start_line
-			end
-
-			-- Exit visual mode and send the selection
-			vim.cmd("normal! " .. vim.api.nvim_replace_termcodes("<Esc>", true, false, true))
-			vim.cmd(start_line .. "," .. end_line .. "JuliaREPLSendRegion")
-
-			-- Move to next code line after selection
-			local next_line = next_code_line(end_line)
-			vim.api.nvim_win_set_cursor(0, { next_line, 0 })
-		end, { buffer = true, silent = true })
 	end,
 })
