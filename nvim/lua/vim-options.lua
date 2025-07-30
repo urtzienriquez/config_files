@@ -1,6 +1,6 @@
 -- map leaders
 vim.g.mapleader = " "
-vim.g.maplocalleader = "ç"
+vim.g.maplocalleader = " "
 
 -- spelling language
 vim.opt.spelllang = "en_us"

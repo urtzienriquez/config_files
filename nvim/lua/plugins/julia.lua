@@ -54,8 +54,8 @@ return {
 						vim.cmd("silent! JuliaREPLConnect 2345")
 					end)
 
-					-- <localleader>jq: Quit Julia and kill tmux pane
-					vim.keymap.set("n", "<localleader>jq", function()
+					-- <leader>jq: Quit Julia and kill tmux pane
+					vim.keymap.set("n", "<leader>jq", function()
 						os.execute("tmux send-keys -t ! C-d")
 						vim.defer_fn(function()
 							os.execute("tmux kill-pane -t !")
@@ -68,7 +68,7 @@ return {
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = { "julia", "markdown" },
 				callback = function()
-					vim.keymap.set("n", "<localleader>jf", function()
+					vim.keymap.set("n", "<leader>jf", function()
 						os.execute(
 							"tmux split-window -h 'bash -c \"julia -i /home/urtzi/.julia_scripts/nvjulia.jl; exec bash\"'"
 						)
