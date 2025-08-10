@@ -10,7 +10,14 @@ vim.keymap.set("n", "<C-x><C-x>", "i<C-X><C-O>", { desc = "Omni suggestion in no
 vim.keymap.set("n", "<C-x><C-k>", "i<C-X><C-K>", { desc = "Dictionary suggestion in normal mode" })
 
 -- open oil
-vim.keymap.set("n", "-", require("oil").open, { desc = "Open parent directory" })
+-- vim.keymap.set("n", "-", require("oil").open, { desc = "Open parent directory" })
+vim.keymap.set("n", "<leader>-", function()
+	if vim.bo.filetype == "oil" then
+		require("oil").close()
+	else
+		require("oil").open()
+	end
+end, { desc = "Open parent directory" })
 
 -- escape terminal mode with Control-c + Control-d
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })

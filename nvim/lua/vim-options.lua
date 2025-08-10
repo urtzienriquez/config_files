@@ -41,17 +41,6 @@ vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decr
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
 
--- Autocommands
-local augroup_julia = vim.api.nvim_create_augroup("FileTypeJulia", {})
-vim.api.nvim_create_autocmd({ "FileType" }, {
-	group = augroup_julia,
-	pattern = "julia",
-	callback = function(ev)
-		vim.opt_local.textwidth = 92
-		vim.opt_local.colorcolumn = "93"
-	end,
-})
-
 -- Show diagnostics as virtual text (disabled by default since 0.11)
 vim.diagnostic.config({ virtual_text = true })
 

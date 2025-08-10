@@ -7,6 +7,9 @@ config.source("qutebrowser-theme.py")
 # set start page
 config.source("start-page.py")
 
+# set font size
+config.set("fonts.default_size", "11pt")
+
 # Which cookies to accept.
 config.set("content.cookies.accept", "no-3rdparty", "chrome-devtools://*")
 
