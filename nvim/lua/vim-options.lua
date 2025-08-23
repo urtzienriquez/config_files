@@ -28,9 +28,11 @@ vim.opt.relativenumber = true
 vim.opt.autoindent = true
 vim.opt.scrolloff = 5
 vim.cmd("set backspace=indent,eol,start")
-vim.cmd("set tabstop=2")
-vim.cmd("set shiftwidth=2")
-vim.cmd("set softtabstop=2")
+vim.opt.expandtab = true -- Use spaces instead of tabs
+vim.opt.tabstop = 2 -- Display width of tab characters
+vim.opt.shiftwidth = 2 -- Width for autoindent
+vim.opt.softtabstop = 2 -- Number of spaces tab key inserts
+vim.opt.smartindent = true -- Smart autoindenting (optional)
 vim.cmd("set ignorecase") -- case insensitive search
 vim.opt.clipboard = "unnamedplus"
 vim.o.termguicolors = true
