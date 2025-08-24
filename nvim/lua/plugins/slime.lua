@@ -18,32 +18,26 @@ return {
 			vim.g.slime_dont_ask_default = 1
 			vim.g.slime_python_ipython = 0 -- Disable IPython-specific features for standard Python
 			vim.g.slime_bracketed_paste = 0 -- Disable bracketed paste globally
-
 			-- ADDED: Progress indication utilities (robust)
 			-- Uses a job "token" to invalidate late callbacks.
 			-- Uses nvim-notify's real replace handle when available.
 			-- Hard-dismisses both notify + noice queues at finish.
-
 			local has_notify, notify_lib = pcall(require, "notify")
 			local notify = has_notify and notify_lib or vim.notify
-
 			-- monotonic token to invalidate any queued callbacks from previous runs
 			local JOB_TOKEN = 0
-
 			local function safe_noice_dismiss()
 				-- dismiss Noice messages (if installed)
 				pcall(function()
 					require("noice").cmd("dismiss")
 				end)
 			end
-
 			local function safe_notify_dismiss()
 				-- dismiss nvim-notify messages (if installed)
 				if has_notify then
 					notify_lib.dismiss({ silent = true, pending = true })
 				end
 			end
-
 			local function show_progress_factory()
 				-- keep the last notification handle so we can replace it properly
 				local last_notif = nil
@@ -65,14 +59,12 @@ return {
 					})
 				end
 			end
-
 			local function show_spinner_factory(token)
 				local frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
 				local frame_index = 1
 				local timer = vim.loop.new_timer()
 				-- also keep a handle here so spinner frames replace each other
 				local last_notif = nil
-
 				local function tick()
 					-- hard guard: if token changed, bail (late callback)
 					if token ~= JOB_TOKEN then
@@ -90,9 +82,7 @@ return {
 						frame_index = (frame_index % #frames) + 1
 					end)
 				end
-
 				timer:start(0, 100, tick)
-
 				return {
 					stop = function()
 						-- stop timer first; queued schedules still check token below
@@ -103,36 +93,27 @@ return {
 					end,
 				}
 			end
-
 			local function run_with_progress(cmd, success_msg, error_msg)
 				-- start a new job; capture token for this run
 				JOB_TOKEN = JOB_TOKEN + 1
 				local token = JOB_TOKEN
-
 				local progress_line, replace_with_final = show_progress_factory()
-
 				-- initial short progress (replaces itself later)
 				progress_line("Starting render process...")
-
 				local spinner = show_spinner_factory(token)
-
 				local function finish(ok, detail)
 					-- if this completion is from an old job, ignore
 					if token ~= JOB_TOKEN then
 						return
 					end
-
 					-- stop spinner + invalidate any queued spinner callbacks
 					spinner.stop()
-
 					-- hard flush both notify + noice queues BEFORE posting the final message
 					safe_notify_dismiss()
 					safe_noice_dismiss()
-
 					local title = ok and "Success" or "Error"
 					local level = ok and vim.log.levels.INFO or vim.log.levels.ERROR
 					local msg = ok and success_msg or (error_msg .. (detail and ("\n" .. detail) or ""))
-
 					-- replace any remaining "Progress" handle with the final result
 					replace_with_final({
 						msg = msg,
@@ -141,7 +122,6 @@ return {
 						timeout = ok and 3000 or 5000,
 					})
 				end
-
 				-- Neovim 0.10+: vim.system
 				if vim.system then
 					vim.system(cmd, {}, function(result)
@@ -192,7 +172,6 @@ return {
 					})
 				end
 			end
-
 			-- Bracketed paste wrapper
 			local function bracketed_wrap(text, filetype)
 				if filetype == "python" then
@@ -791,7 +770,6 @@ return {
 					vim.api.nvim_win_set_cursor(0, { end_line + 2, 0 })
 				end
 			end
-
 			-- ENHANCED: Render functions for markdown documents with progress indication
 			local function render_rmarkdown()
 				local filename = vim.fn.expand("%:p")
@@ -804,10 +782,8 @@ return {
 				-- Render using rmarkdown::render() with progress indication
 				local r_cmd = string.format('rmarkdown::render("%s")', filename)
 				local cmd = { "Rscript", "-e", r_cmd }
-
 				run_with_progress(cmd, "R Markdown rendered successfully", "Error rendering R Markdown file")
 			end
-
 			local function render_jmarkdown()
 				local filename = vim.fn.expand("%:p")
 				if not filename:match("%.jmd$") then
@@ -819,14 +795,12 @@ return {
 				-- Render using Weave.jl with progress indication
 				local julia_cmd = string.format('using Weave; weave("%s")', filename)
 				local cmd = { "julia", "-e", julia_cmd }
-
 				run_with_progress(
 					cmd,
 					"Julia Markdown rendered successfully",
 					"Error rendering Julia Markdown file. Make sure Weave.jl is installed."
 				)
 			end
-
 			local function render_quarto()
 				local filename = vim.fn.expand("%:p")
 				if not filename:match("%.qmd$") and not filename:match("%.Qmd$") then
@@ -837,7 +811,6 @@ return {
 				vim.cmd("write")
 				-- Render using quarto with progress indication
 				local cmd = { "quarto", "render", filename }
-
 				run_with_progress(
 					cmd,
 					"Quarto document rendered successfully",
@@ -845,89 +818,74 @@ return {
 				)
 			end
 
-			local function open_repl()
-				local current_filetype = get_markdown_language()
-				local cmd = repls[current_filetype]
-				if cmd then
-					-- Don't switch focus to the new pane
-					vim.fn.system("tmux split-window -d -h '" .. cmd .. "'")
-					vim.notify("Opened " .. current_filetype .. " REPL", vim.log.levels.INFO)
+			-- Track the last opened REPL pane globally
+			local last_repl_pane = nil
+			local last_repl_type = nil
+
+			-- Generic REPL opener that stores the pane id
+			local function open_repl_for(ft)
+				local cmd = repls[ft]
+				if not cmd then
+					vim.notify("No REPL for filetype: " .. ft, vim.log.levels.WARN)
+					return
+				end
+				-- Split a pane and run the command
+				vim.fn.system("tmux split-window -d -h '" .. cmd .. "'")
+				-- Find the most recently created pane (highest %number)
+				local panes_output = vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_current_command}'")
+				local max_num, max_id = -1, nil
+				for line in panes_output:gmatch("[^\r\n]+") do
+					local id = line:match("^(%%[%d]+)")
+					local num = tonumber(id:match("%%(%d+)"))
+					if num and num > max_num then
+						max_num, max_id = num, id
+					end
+				end
+				if max_id then
+					last_repl_pane = max_id
+					last_repl_type = ft
+					vim.notify("Opened " .. ft .. " REPL in pane " .. max_id, vim.log.levels.INFO)
 				else
-					vim.notify("No REPL for filetype: " .. current_filetype, vim.log.levels.WARN)
+					vim.notify("Opened " .. ft .. " REPL (pane id not detected)", vim.log.levels.WARN)
 				end
 			end
+
+			-- Language-specific wrappers
+			local function open_r_repl()
+				open_repl_for("r")
+			end
+			local function open_python_repl()
+				open_repl_for("python")
+			end
+			local function open_julia_repl()
+				open_repl_for("julia")
+			end
+			local function open_matlab_repl()
+				open_repl_for("matlab")
+			end
+
+			-- Generic open depending on buffer (still supported)
+			local function open_repl()
+				local ft = get_markdown_language()
+				open_repl_for(ft)
+			end
+
+			-- Close the last opened REPL regardless of buffer type
 			local function close_repl()
-				local current_filetype = get_markdown_language()
-				local repl_cmd = repls[current_filetype]
-				local process_name = repl_process_names[current_filetype]
-				print("Debug: Filetype=" .. current_filetype .. ", Looking for process=" .. (process_name or "nil"))
-				if repl_cmd and process_name then
-					-- Use tmux list-panes to get pane IDs and commands
-					local cmd = "tmux list-panes -F '#{pane_id} #{pane_current_command}'"
-					local panes_output = vim.fn.system(cmd)
-					local pane_id = nil
-					local python_panes = {} -- Store python panes for R detection
-					local matlab_panes = {} -- Store potential MATLAB panes
-					for line in panes_output:gmatch("[^\r\n]+") do
-						local id, command = line:match("^(%S+)%s+(.+)")
-						if id and command then
-							print("Debug: Checking pane " .. id .. " with command: " .. command)
-							if current_filetype == "r" then
-								if command:find("python", 1, true) then
-									table.insert(python_panes, id)
-									print("Debug: Found python pane " .. id)
-								end
-							elseif current_filetype == "matlab" then
-								-- Handle MATLAB process name variations (case-insensitive)
-								if command:lower():find("matlab", 1, true) then
-									table.insert(matlab_panes, id)
-									print("Debug: Found potential MATLAB pane " .. id)
-								end
-							else
-								-- For other languages, match process name directly
-								if command:find(process_name, 1, true) then
-									pane_id = id
-									print("Debug: Found matching pane " .. id .. " with command: " .. command)
-									break
-								end
-							end
-						end
-					end
-					-- Special handling for R (radian runs as python)
-					if current_filetype == "r" and #python_panes > 0 then
-						table.sort(python_panes, function(a, b)
-							local num_a = tonumber(a:match("%%(%d+)"))
-							local num_b = tonumber(b:match("%%(%d+)"))
-							return (num_a or 0) > (num_b or 0)
-						end)
-						pane_id = python_panes[1]
-						print("Debug: Selected python pane " .. pane_id .. " as radian")
-					end
-					-- Special handling for MATLAB
-					if current_filetype == "matlab" and #matlab_panes > 0 then
-						table.sort(matlab_panes, function(a, b)
-							local num_a = tonumber(a:match("%%(%d+)"))
-							local num_b = tonumber(b:match("%%(%d+)"))
-							return (num_a or 0) > (num_b or 0)
-						end)
-						pane_id = matlab_panes[1]
-						print("Debug: Selected MATLAB pane " .. pane_id)
-					end
-					if pane_id then
-						local result = vim.fn.system("tmux kill-pane -t " .. pane_id)
-						if vim.v.shell_error == 0 then
-							print("Closed " .. current_filetype .. " REPL (pane " .. pane_id .. ")")
-						else
-							print("Error closing pane " .. pane_id .. ": " .. result)
-						end
+				if last_repl_pane then
+					local result = vim.fn.system("tmux kill-pane -t " .. last_repl_pane)
+					if vim.v.shell_error == 0 then
+						vim.notify(
+							"Closed " .. (last_repl_type or "unknown") .. " REPL (pane " .. last_repl_pane .. ")",
+							vim.log.levels.INFO
+						)
 					else
-						print("No " .. current_filetype .. " REPL found. Available panes:")
-						local debug_cmd = "tmux list-panes -F 'Pane #{pane_id}: #{pane_current_command}'"
-						local debug_output = vim.fn.system(debug_cmd)
-						print(debug_output)
+						vim.notify("Error closing REPL: " .. result, vim.log.levels.ERROR)
 					end
+					last_repl_pane = nil
+					last_repl_type = nil
 				else
-					print("No REPL for filetype: " .. current_filetype)
+					vim.notify("No REPL pane tracked to close", vim.log.levels.WARN)
 				end
 			end
 			-- Set cursor movement preference (0 = don't move, 1 = move)
@@ -935,8 +893,11 @@ return {
 			-- ========================================
 			-- KEYBINDINGS (centralized for easy editing)
 			-- ========================================
-			-- Global keymaps
-			vim.keymap.set("n", "<leader>or", open_repl, { desc = "Open REPL" })
+			-- Global keymaps - MODIFIED: Language-specific REPL opening
+			vim.keymap.set("n", "<leader>or", open_r_repl, { desc = "Open R (radian) REPL" })
+			vim.keymap.set("n", "<leader>op", open_python_repl, { desc = "Open Python REPL" })
+			vim.keymap.set("n", "<leader>oj", open_julia_repl, { desc = "Open Julia REPL" })
+			vim.keymap.set("n", "<leader>om", open_matlab_repl, { desc = "Open MATLAB REPL" })
 			vim.keymap.set("n", "<leader>cr", close_repl, { desc = "Close REPL" })
 			vim.keymap.set("n", "<leader>sc", "<Cmd>SlimeConfig<CR>", { desc = "Configure slime" })
 			-- ENHANCED: Global render keybinds with better file type detection
