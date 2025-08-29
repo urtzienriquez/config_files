@@ -76,8 +76,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		vim.hl.on_yank()
 	end,
 })
-
--- clear notifications
-vim.keymap.set("n", "<leader>cn", function()
-	require("noice").cmd("dismiss")
-end, { desc = "Noice: Dismiss All Notifications" })
