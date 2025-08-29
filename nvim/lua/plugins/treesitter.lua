@@ -23,6 +23,7 @@ return {
 				"yaml",
 				"r",
 				"julia",
+				"matlab",
 			},
 			auto_install = false,
 			highlight = {

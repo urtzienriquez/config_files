@@ -770,6 +770,34 @@ return {
 					vim.api.nvim_win_set_cursor(0, { end_line + 2, 0 })
 				end
 			end
+			-- change dir in repl
+			local function sync_working_directory()
+				local current_dir = vim.fn.getcwd()
+
+				-- Get the appropriate language
+				local ft
+				if vim.bo.filetype == "markdown" or vim.bo.filetype == "rmd" or vim.bo.filetype == "quarto" then
+					ft = get_markdown_language() -- Use your existing function for markdown
+				else
+					-- For direct language files, use filetype directly
+					ft = vim.bo.filetype
+				end
+
+				local cd_commands = {
+					python = string.format("import os; os.chdir('%s')", current_dir),
+					r = string.format("setwd('%s')", current_dir),
+					julia = string.format('cd("%s")', current_dir),
+					matlab = string.format("cd '%s'", current_dir),
+				}
+
+				local cmd = cd_commands[ft]
+				if cmd then
+					vim.fn["slime#send"](cmd .. "\n")
+					vim.notify("Synced REPL directory to: " .. current_dir, vim.log.levels.INFO)
+				else
+					vim.notify("No directory sync command for filetype: " .. tostring(ft), vim.log.levels.WARN)
+				end
+			end
 			-- ENHANCED: Render functions for markdown documents with progress indication
 			local function render_rmarkdown()
 				local filename = vim.fn.expand("%:p")
@@ -900,6 +928,9 @@ return {
 			vim.keymap.set("n", "<leader>om", open_matlab_repl, { desc = "Open MATLAB REPL" })
 			vim.keymap.set("n", "<leader>cr", close_repl, { desc = "Close REPL" })
 			vim.keymap.set("n", "<leader>sc", "<Cmd>SlimeConfig<CR>", { desc = "Configure slime" })
+
+			-- Add a keymap for manual sync of directory (cd)
+			vim.keymap.set("n", "<leader>sd", sync_working_directory, { desc = "Sync REPL directory" })
 			-- ENHANCED: Global render keybinds with better file type detection
 			vim.keymap.set("n", "<leader>rr", function()
 				local filename = vim.fn.expand("%:t")
