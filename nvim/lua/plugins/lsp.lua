@@ -1,19 +1,6 @@
--- nvim-lspconfig, https://github.com/neovim/nvim-lspconfig
-
--- Set LSP keymappings in on_attach (i.e. only in buffers with LSP active)
--- TODO: lspconfig recommend doing this in an LspAttach autocommand instead
-local on_attach = function(client, bufnr)
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, silent = true, desc = "information hover" })
-	vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, silent = true, desc = "go to definition" })
-end
-
--- Setup lspconfig: capabilities is passed to lspconfig.$server.setup
--- TODO: Why don't I have to make_client_capabilities and extend?
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
 local default_opts = {
-	on_attach = on_attach,
-	capabilities = capabilities,
+	-- REMOVED: on_attach function - keymaps now in keymaps.lua via LspAttach autocmd
+	capabilities = require("cmp_nvim_lsp").default_capabilities(),
 }
 
 local servers = {
@@ -48,7 +35,7 @@ local servers = {
 			return util.root_pattern("Project.toml")(fname) or util.find_git_ancestor(fname) or util.path.dirname(fname)
 		end,
 		on_attach = function(client, bufnr)
-			on_attach(client, bufnr)
+			-- REMOVED: on_attach keymaps - now handled by LspAttach autocmd in keymaps.lua
 			vim.bo[bufnr].formatexpr = ""
 		end,
 	}),

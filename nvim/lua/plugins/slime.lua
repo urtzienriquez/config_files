@@ -916,94 +916,26 @@ return {
 					vim.notify("No REPL pane tracked to close", vim.log.levels.WARN)
 				end
 			end
+
 			-- Set cursor movement preference (0 = don't move, 1 = move)
 			vim.g.slime_move_cursor = 1 -- Set to 1 to move cursor down after sending
-			-- ========================================
-			-- KEYBINDINGS (centralized for easy editing)
-			-- ========================================
-			-- Global keymaps - MODIFIED: Language-specific REPL opening
-			vim.keymap.set("n", "<leader>or", open_r_repl, { desc = "Open R (radian) REPL" })
-			vim.keymap.set("n", "<leader>op", open_python_repl, { desc = "Open Python REPL" })
-			vim.keymap.set("n", "<leader>oj", open_julia_repl, { desc = "Open Julia REPL" })
-			vim.keymap.set("n", "<leader>om", open_matlab_repl, { desc = "Open MATLAB REPL" })
-			vim.keymap.set("n", "<leader>cr", close_repl, { desc = "Close REPL" })
-			vim.keymap.set("n", "<leader>sc", "<Cmd>SlimeConfig<CR>", { desc = "Configure slime" })
 
-			-- Add a keymap for manual sync of directory (cd)
-			vim.keymap.set("n", "<leader>sd", sync_working_directory, { desc = "Sync REPL directory" })
-			-- ENHANCED: Global render keybinds with better file type detection
-			vim.keymap.set("n", "<leader>rr", function()
-				local filename = vim.fn.expand("%:t")
-				if filename:match("%.rmd$") or filename:match("%.Rmd$") then
-					render_rmarkdown()
-				elseif filename:match("%.jmd$") then
-					render_jmarkdown()
-				elseif filename:match("%.qmd$") or filename:match("%.Qmd$") then
-					render_quarto()
-				else
-					vim.notify("Not a renderable markdown file (.rmd, .jmd, or .qmd)", vim.log.levels.WARN)
-				end
-			end, { desc = "Render markdown document" })
-			-- FIXED: Language-specific keymaps - Added rmd and quarto filetypes
-			vim.api.nvim_create_autocmd("FileType", {
-				pattern = { "python", "julia", "r", "matlab", "markdown", "rmd", "quarto" }, -- Added rmd and quarto filetypes
-				callback = function()
-					local current_ft = vim.bo.filetype
-					if current_ft == "matlab" then
-						vim.b.slime_cell_delimiter = "%% "
-					else
-						vim.b.slime_cell_delimiter = "# %%"
-					end
-					local opts = { buffer = true, silent = true }
-					-- Main smart send - Enter key
-					vim.keymap.set("n", "<Enter>", function()
-						smart_send("n")
-					end, vim.tbl_extend("force", opts, { desc = "Smart send" }))
-					vim.keymap.set("v", "<Enter>", function()
-						smart_send("v")
-					end, vim.tbl_extend("force", opts, { desc = "Send selection" }))
-					-- -- Alternative keybinds
-					-- vim.keymap.set("n", "<C-c><C-c>", function()
-					-- 	smart_send("n")
-					-- end, vim.tbl_extend("force", opts, { desc = "Smart send" }))
-					-- vim.keymap.set("v", "<C-c><C-c>", function()
-					-- 	smart_send("v")
-					-- end, vim.tbl_extend("force", opts, { desc = "Send selection" }))
-					-- Send cell
-					vim.keymap.set("n", "<leader>sx", send_cell, vim.tbl_extend("force", opts, { desc = "Send cell" }))
-					-- Send buffer
-					vim.keymap.set(
-						"n",
-						"<leader>sb",
-						"<Cmd>%SlimeSend<CR>",
-						vim.tbl_extend("force", opts, { desc = "Send buffer" })
-					)
-					-- ENHANCED: Render keybinds for markdown files with file-specific functions
-					local filename = vim.fn.expand("%:t")
-					if filename:match("%.rmd$") or filename:match("%.Rmd$") then
-						vim.keymap.set(
-							"n",
-							"<leader>rr",
-							render_rmarkdown,
-							vim.tbl_extend("force", opts, { desc = "Render R Markdown" })
-						)
-					elseif filename:match("%.jmd$") then
-						vim.keymap.set(
-							"n",
-							"<leader>rr",
-							render_jmarkdown,
-							vim.tbl_extend("force", opts, { desc = "Render Julia Markdown" })
-						)
-					elseif filename:match("%.qmd$") or filename:match("%.Qmd$") then
-						vim.keymap.set(
-							"n",
-							"<leader>rr",
-							render_quarto,
-							vim.tbl_extend("force", opts, { desc = "Render Quarto" })
-						)
-					end
-				end,
-			})
+			-- ========================================
+			-- EXPOSE FUNCTIONS GLOBALLY FOR KEYMAPS
+			-- ========================================
+			_G.smart_send = smart_send
+			_G.send_cell = send_cell
+			_G.open_r_repl = open_r_repl
+			_G.open_python_repl = open_python_repl
+			_G.open_julia_repl = open_julia_repl
+			_G.open_matlab_repl = open_matlab_repl
+			_G.open_repl = open_repl
+			_G.close_repl = close_repl
+			_G.sync_working_directory = sync_working_directory
+			_G.render_rmarkdown = render_rmarkdown
+			_G.render_jmarkdown = render_jmarkdown
+			_G.render_quarto = render_quarto
+
 			-- FIXED: Auto-start REPL if environment variable is set - Added .qmd support
 			if vim.env.SLIME_AUTO_START == "true" then
 				vim.api.nvim_create_autocmd("BufEnter", {

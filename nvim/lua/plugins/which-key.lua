@@ -41,11 +41,7 @@ return {
 					F12 = "<F12>",
 				},
 			},
-			-- Document existing key chains
-			spec = {
-				{ "<leader>f", group = "[F]ind" },
-				{ "<leader>g", group = "[G]o to windows" },
-			},
+			-- REMOVED: spec section - now handled in keymaps.lua
 		},
 	},
 }

@@ -25,13 +25,6 @@ return {
 				timeout_ms = 500,
 			},
 		})
-
-		vim.keymap.set({ "n", "v" }, "<leader>bf", function()
-			conform.format({
-				lsp_fallback = true,
-				async = false,
-				timeout_ms = 500,
-			})
-		end, { desc = "Format file or range (in visual mode)" })
+		-- REMOVED: Keymap is now in keymaps.lua
 	end,
 }
