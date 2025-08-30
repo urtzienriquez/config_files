@@ -851,32 +851,52 @@ return {
 			local last_repl_type = nil
 
 			-- Generic REPL opener that stores the pane id
-			local function open_repl_for(ft)
-				local cmd = repls[ft]
-				if not cmd then
-					vim.notify("No REPL for filetype: " .. ft, vim.log.levels.WARN)
-					return
-				end
-				-- Split a pane and run the command
-				vim.fn.system("tmux split-window -d -h '" .. cmd .. "'")
-				-- Find the most recently created pane (highest %number)
-				local panes_output = vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_current_command}'")
-				local max_num, max_id = -1, nil
-				for line in panes_output:gmatch("[^\r\n]+") do
-					local id = line:match("^(%%[%d]+)")
-					local num = tonumber(id:match("%%(%d+)"))
-					if num and num > max_num then
-						max_num, max_id = num, id
-					end
-				end
-				if max_id then
-					last_repl_pane = max_id
-					last_repl_type = ft
-					vim.notify("Opened " .. ft .. " REPL in pane " .. max_id, vim.log.levels.INFO)
-				else
-					vim.notify("Opened " .. ft .. " REPL (pane id not detected)", vim.log.levels.WARN)
-				end
+-- Find this section in your slime.lua file (around line 860-890):
+-- Track the last opened REPL pane globally
+local last_repl_pane = nil
+local last_repl_type = nil
+
+-- Generic REPL opener that stores the pane id
+local function open_repl_for(ft)
+	local cmd = repls[ft]
+	if not cmd then
+		vim.notify("No REPL for filetype: " .. ft, vim.log.levels.WARN)
+		return
+	end
+	-- Split a pane and run the command
+	vim.fn.system("tmux split-window -d -h '" .. cmd .. "'")
+	
+	-- Find the most recently created pane (highest %number)
+	local panes_output = vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_current_command}'")
+	local max_num, max_id = -1, nil
+	
+	for line in panes_output:gmatch("[^\r\n]+") do
+		local id = line:match("^(%%[%d]+)")
+		if id then  -- FIXED: Check if id is not nil before proceeding
+			local num = tonumber(id:match("%%(%d+)"))
+			if num and num > max_num then
+				max_num, max_id = num, id
 			end
+		end
+	end
+	
+	if max_id then
+		last_repl_pane = max_id
+		last_repl_type = ft
+		vim.notify("Opened " .. ft .. " REPL in pane " .. max_id, vim.log.levels.INFO)
+	else
+		-- Fallback: try to get the last pane created
+		local fallback_output = vim.fn.system("tmux display-message -p '#{pane_id}'")
+		local fallback_id = fallback_output:match("%%(%d+)")
+		if fallback_id then
+			last_repl_pane = "%" .. fallback_id
+			last_repl_type = ft
+			vim.notify("Opened " .. ft .. " REPL (fallback pane detection)", vim.log.levels.INFO)
+		else
+			vim.notify("Opened " .. ft .. " REPL (pane id not detected)", vim.log.levels.WARN)
+		end
+	end
+end
 
 			-- Language-specific wrappers
 			local function open_r_repl()

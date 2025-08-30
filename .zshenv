@@ -13,4 +13,3 @@
 # Global Order: zshenv, zprofile, zshrc, zlogin
 
 ZDOTDIR=~/.config/zsh
-. "$HOME/.cargo/env"
