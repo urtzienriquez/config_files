@@ -230,15 +230,15 @@ vim.api.nvim_create_autocmd("User", {
 		if wk_ok then
 			wk.add({
 				-- Main groups
-				{ "<leader>f", group = "[f]ind" },
-				{ "<leader>b", group = "[b]uffer" },
-				{ "<leader>c", group = "[c]lose REPL" },
-				{ "<leader>g", group = "[g]it" },
-				{ "<leader>l", group = "[l]azygit" },
-				{ "<leader>o", group = "[o]pen REPL" },
-				{ "<leader>r", group = "[r]ender" },
-				{ "<leader>s", group = "[s]end / slime" },
-				{ "<leader>u", group = "[u]i / toggle" },
+				{ "<leader>f", group = "Find" },
+				{ "<leader>b", group = "Buffer" },
+				{ "<leader>c", group = "Close REPL" },
+				{ "<leader>g", group = "Git" },
+				{ "<leader>l", group = "Lazygit" },
+				{ "<leader>o", group = "Open REPL" },
+				{ "<leader>r", group = "Render" },
+				{ "<leader>s", group = "Send/Sync" },
+				{ "<leader>u", group = "UI toggle" },
 
 				-- Specific mappings for better organization
 				{ "<leader>or", desc = "Open R REPL" },
@@ -258,7 +258,6 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>bf", desc = "Format buffer" },
 				{ "<leader>bd", desc = "Delete buffer" },
 
-				{ "<leader>sc", desc = "Configure slime" },
 				{ "<leader>sd", desc = "Sync directory" },
 				{ "<leader>sx", desc = "Send cell" },
 				{ "<leader>sb", desc = "Send buffer" },
