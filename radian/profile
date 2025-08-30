@@ -18,3 +18,6 @@ options(
     )
 )
 
+options(radian.auto_match = FALSE)
+options(radian.complete_while_typing = FALSE)
+options(radian.auto_indents = FALSE)
