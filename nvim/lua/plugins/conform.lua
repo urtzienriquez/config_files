@@ -13,16 +13,12 @@ return {
 				lua = { "stylua" },
 				python = { "black" },
 				fortran = { "fprettify" },
+				r = { "styler" }, -- ✅ Add this line
 			},
 			formatters = {
 				prettier = {
 					prepend_args = { "--single-quote" },
 				},
-			},
-			format_on_save = {
-				lsp_fallback = true,
-				async = false,
-				timeout_ms = 500,
 			},
 		})
 		-- REMOVED: Keymap is now in keymaps.lua
