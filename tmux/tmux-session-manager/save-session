@@ -4,44 +4,83 @@ set -euo pipefail
 session="${1:-}"
 [[ -z "$session" ]] && { echo "Usage: save-session <session-name>"; exit 1; }
 
-resurrect_dir="$HOME/.local/share/tmux/resurrect"
+# Get resurrect directory
+resurrect_dir_config=$(tmux show-option -gv @resurrect-dir 2>/dev/null || echo "NOT_SET")
+if [[ "$resurrect_dir_config" != "NOT_SET" ]]; then
+    resurrect_dir="$resurrect_dir_config"
+else
+    resurrect_dir="$HOME/.local/share/tmux/resurrect"
+fi
+
 saved_dir="$resurrect_dir/saved"
 mkdir -p "$saved_dir"
 
+# Get list of existing files BEFORE save
+shopt -s nullglob
+old_files=("$resurrect_dir"/tmux_resurrect_*.txt)
+shopt -u nullglob
+
+echo "Files before save: ${#old_files[@]}"
+
 # Trigger tmux-resurrect save
-tmux run-shell "$HOME/.config/tmux/plugins/tmux-resurrect/scripts/save.sh" || true
+tmux run-shell "$HOME/.config/tmux/plugins/tmux-resurrect/scripts/save.sh"
+sleep 1
 
-sleep 0.3
-
-if [[ ! -f "$resurrect_dir/last" ]]; then
-  echo "Error: tmux-resurrect did not generate a 'last' file."
-  exit 1
+# Check if 'last' file exists
+if [[ ! -f "$resurrect_dir/last" && ! -L "$resurrect_dir/last" ]]; then
+    echo "Error: tmux-resurrect did not generate a 'last' file."
+    exit 1
 fi
 
-# Extract session-specific data and save it
+# Get the source file to read from
+source_file=""
+if [[ -f "$resurrect_dir/last" ]]; then
+    source_file="$resurrect_dir/last"
+elif [[ -L "$resurrect_dir/last" ]]; then
+    source_file=$(readlink -f "$resurrect_dir/last" 2>/dev/null || echo "")
+    if [[ ! -f "$source_file" ]]; then
+        echo "Error: Cannot resolve 'last' symlink"
+        exit 1
+    fi
+fi
+
+# Extract and save session data
 awk -v sname="$session" '
   $1 == "state" { print; next }
   $2 == sname { print }
-' "$resurrect_dir/last" > "$saved_dir/$session.resurrect"
+' "$source_file" > "$saved_dir/$session.resurrect"
 
 echo "Saved session '$session' -> $saved_dir/$session.resurrect"
 
-# Clean up old resurrect files, but preserve the one that 'last' points to
+# Get list of files AFTER save
 shopt -s nullglob
-txt_files=("$resurrect_dir"/tmux_resurrect_*.txt)
+new_files=("$resurrect_dir"/tmux_resurrect_*.txt)
 shopt -u nullglob
 
-# Get the target of the 'last' symlink
-last_target=""
-if [[ -L "$resurrect_dir/last" ]]; then
-  last_target=$(readlink -f "$resurrect_dir/last" 2>/dev/null || true)
-fi
+echo "Files after save: ${#new_files[@]}"
 
-# Remove old files, but keep the one that 'last' points to
-for f in "${txt_files[@]}"; do
-  if [[ -n "$last_target" && "$f" == "$last_target" ]]; then
-    # Keep this file - it's what 'last' points to
-    continue
-  fi
-  rm -f -- "$f" || true
+# Find the newly created file (the one that wasn't there before)
+newly_created=""
+for new_file in "${new_files[@]}"; do
+    is_old=false
+    for old_file in "${old_files[@]}"; do
+        if [[ "$new_file" == "$old_file" ]]; then
+            is_old=true
+            break
+        fi
+    done
+    if [[ "$is_old" == false ]]; then
+        newly_created="$new_file"
+        break
+    fi
 done
+
+echo "Newly created file: ${newly_created:-NONE}"
+
+# Clean up old files, but NEVER remove the newly created one
+for f in "${old_files[@]}"; do
+    echo "Removing old file: $f"
+    rm -f -- "$f" || true
+done
+
+echo "Cleanup complete. Kept: ${newly_created:-the current file}"
