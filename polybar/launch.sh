@@ -8,10 +8,12 @@ polybar-msg cmd quit
 
 if type "xrandr"; then
   for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
-    MONITOR=$m polybar --reload bar1 &
+    if [[ $m == "eDP-1" ]]; then
+      MONITOR=$m polybar --reload primary &
+    else
+      MONITOR=$m polybar --reload secondary &
+    fi
   done
 else
-  polybar --reload bar1 &
+  polybar --reload primary &
 fi
-
-echo "Bars launched..."
