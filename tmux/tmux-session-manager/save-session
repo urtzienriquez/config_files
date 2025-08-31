@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euxo pipefail  # enable debug output
+set -euo pipefail
 
 session="${1:-}"
 [[ -z "$session" ]] && { echo "Usage: save-session <session-name>"; exit 1; }
@@ -18,6 +18,7 @@ if [[ ! -f "$resurrect_dir/last" ]]; then
   exit 1
 fi
 
+# Extract session-specific data and save it
 awk -v sname="$session" '
   $1 == "state" { print; next }
   $2 == sname { print }
@@ -25,18 +26,22 @@ awk -v sname="$session" '
 
 echo "Saved session '$session' -> $saved_dir/$session.resurrect"
 
+# Clean up old resurrect files, but preserve the one that 'last' points to
 shopt -s nullglob
 txt_files=("$resurrect_dir"/tmux_resurrect_*.txt)
 shopt -u nullglob
 
+# Get the target of the 'last' symlink
 last_target=""
 if [[ -L "$resurrect_dir/last" ]]; then
-  resolved=$(readlink -f "$resurrect_dir/last" 2>/dev/null || true)
-  if [[ "$resolved" == "$resurrect_dir"/tmux_resurrect_*.txt ]]; then
-    last_target="$resolved"
-  fi
+  last_target=$(readlink -f "$resurrect_dir/last" 2>/dev/null || true)
 fi
 
+# Remove old files, but keep the one that 'last' points to
 for f in "${txt_files[@]}"; do
-  [[ "$f" != "$last_target" ]] && rm -f -- "$f" || true
+  if [[ -n "$last_target" && "$f" == "$last_target" ]]; then
+    # Keep this file - it's what 'last' points to
+    continue
+  fi
+  rm -f -- "$f" || true
 done
