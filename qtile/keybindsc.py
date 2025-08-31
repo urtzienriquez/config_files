@@ -297,15 +297,15 @@ keys = [
     Key(
         [alt],
         "w",
-        lazy.spawn("libreoffice25.2 --writer"),
+        lazy.spawn("libreoffice --writer"),
         desc="Launch libreoffice writer",
     ),
     Key(
         [alt],
         "b",
         lazy.to_screen(0),
-        lazy.spawn("librewolf"),
-        desc="Launch librewolf",
+        lazy.spawn("firefox"),
+        desc="Launch firefox",
     ),
     Key(
         [alt],
