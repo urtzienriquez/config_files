@@ -126,3 +126,6 @@ tm() {
 	  session="term_${tty_id}"
 	  tmux new-session -A -s "$session"
 }
+
+alias tmu="~/.config/tmux/plugins/tpm/bin/update_plugins all"
+alias tmi="~/.config/tmux/plugins/tpm/bin/install_plugins"
