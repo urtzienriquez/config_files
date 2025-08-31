@@ -212,37 +212,37 @@ keys = [
         lazy.spawn("brightnessctl -c backlight set 2%-"),
         desc="Decrease brightness",
     ),
-    # mouseless pointer
-    Key(
-        [mod],
-        "d",
-        lazy.spawn("warpd --hint"),
-        desc="Launch pointer hint mode",
-    ),
-    Key(
-        [mod, "shift"],
-        "d",
-        lazy.spawn("warpd --hint2"),
-        desc="Launch pointer hint 2step mode",
-    ),
-    Key(
-        [mod],
-        "c",
-        lazy.spawn("warpd --normal"),
-        desc="Launch pointer normal mode",
-    ),
-    Key(
-        [mod],
-        "g",
-        lazy.spawn("warpd --grid"),
-        desc="Launch pointer grid mode",
-    ),
-    Key(
-        [mod],
-        "s",
-        lazy.spawn("warpd --screen"),
-        desc="Launch pointer screen mode",
-    ),
+    # # mouseless pointer
+    # Key(
+    #     [mod],
+    #     "d",
+    #     lazy.spawn("warpd --hint"),
+    #     desc="Launch pointer hint mode",
+    # ),
+    # Key(
+    #     [mod, "shift"],
+    #     "d",
+    #     lazy.spawn("warpd --hint2"),
+    #     desc="Launch pointer hint 2step mode",
+    # ),
+    # Key(
+    #     [mod],
+    #     "c",
+    #     lazy.spawn("warpd --normal"),
+    #     desc="Launch pointer normal mode",
+    # ),
+    # Key(
+    #     [mod],
+    #     "g",
+    #     lazy.spawn("warpd --grid"),
+    #     desc="Launch pointer grid mode",
+    # ),
+    # Key(
+    #     [mod],
+    #     "s",
+    #     lazy.spawn("warpd --screen"),
+    #     desc="Launch pointer screen mode",
+    # ),
     # Launchers
     Key(
         [alt],
@@ -257,6 +257,12 @@ keys = [
             'bash -c "alacritty --class=fzf-nova -e $HOME/config_files/fzf-nova/fzf-nova"'
         ),
         desc="Launch fzf-nova",
+    ),
+    Key(
+        [alt],
+        "s",
+        lazy.spawn("env XDG_CURRENT_DESKTOP=GNOME gnome-control-center"),
+        desc="Launch terminal",
     ),
     Key(
         [alt],
