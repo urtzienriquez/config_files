@@ -15,20 +15,18 @@ fi
 saved_dir="$resurrect_dir/saved"
 mkdir -p "$saved_dir"
 
-# Get list of existing files BEFORE save
+# Get list of existing files BEFORE save (silently)
 shopt -s nullglob
 old_files=("$resurrect_dir"/tmux_resurrect_*.txt)
 shopt -u nullglob
 
-echo "Files before save: ${#old_files[@]}"
-
-# Trigger tmux-resurrect save
-tmux run-shell "$HOME/.config/tmux/plugins/tmux-resurrect/scripts/save.sh"
+# Trigger tmux-resurrect save (silently)
+tmux run-shell "$HOME/.config/tmux/plugins/tmux-resurrect/scripts/save.sh" >/dev/null 2>&1
 sleep 1
 
 # Check if 'last' file exists
 if [[ ! -f "$resurrect_dir/last" && ! -L "$resurrect_dir/last" ]]; then
-    echo "Error: tmux-resurrect did not generate a 'last' file."
+    tmux display-message "❌ Error: tmux-resurrect did not generate a 'last' file."
     exit 1
 fi
 
@@ -39,7 +37,7 @@ if [[ -f "$resurrect_dir/last" ]]; then
 elif [[ -L "$resurrect_dir/last" ]]; then
     source_file=$(readlink -f "$resurrect_dir/last" 2>/dev/null || echo "")
     if [[ ! -f "$source_file" ]]; then
-        echo "Error: Cannot resolve 'last' symlink"
+        tmux display-message "❌ Error: Cannot resolve 'last' symlink"
         exit 1
     fi
 fi
@@ -50,16 +48,12 @@ awk -v sname="$session" '
   $2 == sname { print }
 ' "$source_file" > "$saved_dir/$session.resurrect"
 
-echo "Saved session '$session' -> $saved_dir/$session.resurrect"
-
-# Get list of files AFTER save
+# Clean up old files silently
 shopt -s nullglob
 new_files=("$resurrect_dir"/tmux_resurrect_*.txt)
 shopt -u nullglob
 
-echo "Files after save: ${#new_files[@]}"
-
-# Find the newly created file (the one that wasn't there before)
+# Find newly created file and clean up old ones
 newly_created=""
 for new_file in "${new_files[@]}"; do
     is_old=false
@@ -75,12 +69,11 @@ for new_file in "${new_files[@]}"; do
     fi
 done
 
-echo "Newly created file: ${newly_created:-NONE}"
-
-# Clean up old files, but NEVER remove the newly created one
 for f in "${old_files[@]}"; do
-    echo "Removing old file: $f"
-    rm -f -- "$f" || true
+    rm -f -- "$f" >/dev/null 2>&1 || true
 done
 
-echo "Cleanup complete. Kept: ${newly_created:-the current file}"
+# Show success message in popup using bash -c
+file_path="$saved_dir/$session.resurrect"
+tmux display-popup -E -w 80 -h 10 -T " Session Saved " \
+  bash -c "clear; echo ''; echo '  ✅ Session \"$session\" saved successfully!'; echo ''; echo '  📁 Saved to:'; echo '  $file_path'; echo ''; echo '  Press Enter to continue...'; echo ''; read -r"
