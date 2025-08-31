@@ -97,7 +97,8 @@ export PATH="/opt:$PATH"
 
 # go path export
 export PATH="/usr/local/go/bin:$PATH"
-export PATH="$(go env GOPATH)/bin:$PATH"
+export GOPATH=$HOME/.go
+export PATH=$PATH:$GOPATH/bin
 
 # zig version manager
 export PATH="$PATH:$HOME/.zvm/current"

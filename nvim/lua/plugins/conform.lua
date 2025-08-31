@@ -13,7 +13,7 @@ return {
 				lua = { "stylua" },
 				python = { "black" },
 				fortran = { "fprettify" },
-				r = { "styler" }, -- ✅ Add this line
+				r = { "styler" },
 			},
 			formatters = {
 				prettier = {

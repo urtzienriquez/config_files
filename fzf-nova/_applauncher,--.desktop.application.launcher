@@ -2,11 +2,11 @@
 # modified from https://github.com/gotbletu/fzf-nova
 
 desktop_file() {
-# find /usr/share/applications -name "*.desktop" 2>/dev/null
-# find /usr/local/share/applications -name "*.desktop" 2>/dev/null
+find /usr/share/applications -name "*.desktop" 2>/dev/null
+find /usr/local/share/applications -name "*.desktop" 2>/dev/null
 find "$HOME/.local/share/applications" -name "*.desktop" 2>/dev/null
-# find /var/lib/flatpak/exports/share/applications -name "*.desktop" 2>/dev/null
-# find "$HOME/.local/share/flatpak/exports/share/applications" -name "*.desktop" 2>/dev/null
+find /var/lib/flatpak/exports/share/applications -name "*.desktop" 2>/dev/null
+find "$HOME/.local/share/flatpak/exports/share/applications" -name "*.desktop" 2>/dev/null
 }
 
 export FZF_DEFAULT_OPTS="-e -i --reverse --info=hidden --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
