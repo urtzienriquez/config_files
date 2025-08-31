@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 
-export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 \
+# Load theme
+. "$HOME/config_files/fzf-nova/theme.sh"
+
+export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=inline --scroll-off=5 \
   --tiebreak=index --bind 'home:first,end:last'"
 
 selected=$(find . -type d -name '*.git' \

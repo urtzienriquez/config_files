@@ -1,12 +1,16 @@
 #!/usr/bin/env sh
 # modified from https://github.com/gotbletu/fzf-nova
 
-export FZF_DEFAULT_OPTS="-e -i -d '_' --reverse --with-nth 2.. --info=hidden --scroll-off=5 --tiebreak=begin --bind 'home:first,end:last,tab:down,shift-tab:up'"
+# Load theme
+. "$HOME/config_files/fzf-nova/theme.sh"
+
+export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i -d '_' --reverse --with-nth 2.. --info=hidden --scroll-off=5 --tiebreak=begin --bind 'home:first,end:last,tab:down,shift-tab:up'"
+
 mydir="${0%/*}"
 selected="$(
   find "$mydir" -type f -name '_*' -exec basename {} \; \
   | sort | sed 's@\.@ @g' | column -t -s ',' \
   | fzf --prompt='fzf-nova: ' | cut -d ' ' -f1
-  )"
+)"
 [ -z "$selected" ] && exit
 eval "${mydir}/${selected},*"

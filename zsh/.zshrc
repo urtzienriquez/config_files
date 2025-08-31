@@ -121,8 +121,13 @@ elif [[ "$HOST" == "archlinux" ]]; then
 	source /usr/share/fzf/completion.zsh
 fi
 
+export FZF_THEME_OPTS="--color=fg:#c0caf5,bg:#1a1b26,hl:#7dcfff \
+--color=fg+:#c0caf5,bg+:#292929,hl+:#bb9af7 \
+--color=info:#7aa2f7,prompt:#bb9af7,pointer:#f7768e \
+--color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a"
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -g "!node_modules" -g "!.git" -g "!go"'
 export FZF_DEFAULT_OPTS="
+  $FZF_THEME_OPTS
   --no-height 
   --no-reverse
   --preview 'bat -p --color=always {}'

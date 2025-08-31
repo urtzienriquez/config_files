@@ -2,7 +2,10 @@
 # Alacritty theme switcher using fzf
 # Lists all *.toml theme files in ~/.config/alacritty/themes and replaces theme.toml with selected theme
 
-export FZF_DEFAULT_OPTS="-e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
+# Load theme
+. "$HOME/config_files/fzf-nova/theme.sh"
+
+export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
 
 # Define paths
 config_dir="$HOME/.config/alacritty"

@@ -1,6 +1,10 @@
 #!/bin/bash
 
+# Load theme
+. "$HOME/config_files/fzf-nova/theme.sh"
+
 export FZF_DEFAULT_OPTS="
+    $FZF_THEME_OPTS
 		--no-height 
 		--reverse"
 
