@@ -44,6 +44,36 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- Visual line navigation for wrapped lines
+-- only have this behavior in markdown files
+vim.api.nvim_create_autocmd("FileType", {
+pattern = { 
+        "markdown", 
+        "text", 
+        "rmd", "Rmd",           -- R Markdown
+        "jmd", "Jmd",           -- Julia Markdown (Weave.jl)
+        "quarto", "qmd", "Qmd", -- Quarto
+        "org",                  -- Org-mode files
+        "rst",                  -- reStructuredText
+        "asciidoc", "adoc",     -- AsciiDoc
+        "tex", "latex",         -- LaTeX files
+        "wiki",                 -- Wiki files
+        "textile",              -- Textile markup
+        "mail",                 -- Email files
+        "gitcommit",            -- Git commit messages
+    },
+    callback = function()
+        local opts = { buffer = true }
+        vim.keymap.set("n", "j", "gj", vim.tbl_extend("force", opts, { desc = "Move down by visual line" }))
+        vim.keymap.set("n", "k", "gk", vim.tbl_extend("force", opts, { desc = "Move up by visual line" }))
+        vim.keymap.set("v", "j", "gj", vim.tbl_extend("force", opts, { desc = "Move down by visual line" }))
+        vim.keymap.set("v", "k", "gk", vim.tbl_extend("force", opts, { desc = "Move up by visual line" }))
+        
+        -- Keep original behavior accessible
+        vim.keymap.set("n", "gj", "j", vim.tbl_extend("force", opts, { desc = "Move down by logical line" }))
+        vim.keymap.set("n", "gk", "k", vim.tbl_extend("force", opts, { desc = "Move up by logical line" }))
+    end,
+})
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
 -- ========================================
