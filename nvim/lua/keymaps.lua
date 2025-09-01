@@ -5,9 +5,6 @@
 -- Basic keymaps (available immediately)
 -- ========================================
 
--- Escape as jj
-vim.keymap.set("i", "jj", "<Esc>", { desc = "Esc using jj" })
-
 -- Escape terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
@@ -277,7 +274,7 @@ vim.api.nvim_create_autocmd("User", {
 local citation = require("citation-picker")  -- replace with your module name
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "tex", "pandoc" },
+  pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
   callback = function()
     local opts = { buffer = true, silent = true }
     vim.keymap.set("i", "<C-Space>", citation.simple_citation_picker,
