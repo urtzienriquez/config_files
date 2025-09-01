@@ -163,6 +163,9 @@ vim.api.nvim_create_autocmd("User", {
 			vim.keymap.set("n", "<leader>fk", function()
 				Snacks.picker.keymaps()
 			end, { desc = "Find keymaps" })
+      vim.keymap.set("n", "<leader>fw", function() 
+        Snacks.picker.spelling() 
+      end, { desc = "Find spell suggestions" })
 		end
 
 		-- ========================================
