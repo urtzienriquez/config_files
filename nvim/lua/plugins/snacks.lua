@@ -8,7 +8,8 @@ return {
 			layout = {
 				cycle = true,
 				preset = function()
-					return vim.o.columns >= 120 and "ivy" or "vertical"
+					return vim.o.columns >= 120 and "default" or "vertical"
+					-- return vim.o.columns >= 120 and "ivy" or "vertical"
 				end,
 			},
 			matcher = { frecency = true },
