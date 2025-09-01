@@ -40,7 +40,7 @@ mods = "Control|Shift|Super"
 
 [[keyboard.bindings]]
 action = "ToggleViMode"
-key = "N"
+key = "ç"
 mods = "Control"
 
 [general]

@@ -269,6 +269,13 @@ vim.api.nvim_create_autocmd("User", {
 	end,
 })
 
+
+local bib_picker = require("my_bib_picker")
+
+vim.keymap.set("n", "<leader>br", function()
+  bib_picker.bib_picker("~/Documents/zotero.bib")
+end, { noremap = true, silent = true })
+
 -- ========================================
 -- LSP KEYMAPS (set when LSP attaches)
 -- ========================================
