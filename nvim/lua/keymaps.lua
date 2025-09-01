@@ -272,6 +272,24 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 -- ========================================
+-- Citation Picker
+-- ========================================
+local citation = require("citation-picker")  -- replace with your module name
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "tex", "pandoc" },
+  callback = function()
+    local opts = { buffer = true, silent = true }
+    vim.keymap.set("i", "<C-Space>", citation.simple_citation_picker,
+      vim.tbl_extend("force", opts, { desc = "Open citation picker" }))
+    vim.keymap.set("n", "<leader>fc", citation.simple_citation_picker,
+      vim.tbl_extend("force", opts, { desc = "Find citations" }))
+  end,
+})
+
+vim.api.nvim_create_user_command("CitationPicker", citation.simple_citation_picker, { desc = "Open citation picker" })
+
+-- ========================================
 -- LSP KEYMAPS (set when LSP attaches)
 -- ========================================
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -316,7 +334,7 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>fG", desc = "Grep in buffers" },
 				{ "<leader>fd", desc = "Find diagnostics" },
 				{ "<leader>fk", desc = "Find keymaps" },
-				{ "<leader>fc", desc = "Find citations" }, -- ADD THIS LINE
+				{ "<leader>fc", desc = "Find citations" },
 				{ "<leader>fs", desc = "Smart find" },
         { "<leader>fw", desc = "Find spell suggestions" },
 

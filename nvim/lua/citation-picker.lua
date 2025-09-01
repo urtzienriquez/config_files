@@ -229,22 +229,6 @@ local function simple_citation_picker()
 end
 
 ---------------------------------------------------------------------
--- Keymaps and command
----------------------------------------------------------------------
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "tex", "pandoc" },
-  callback = function()
-    local opts = { buffer = true, silent = true }
-    vim.keymap.set("i", "<C-Space>", simple_citation_picker,
-      vim.tbl_extend("force", opts, { desc = "Open citation picker" }))
-    vim.keymap.set("n", "<leader>fc", simple_citation_picker,
-      vim.tbl_extend("force", opts, { desc = "Find citations" }))
-  end,
-})
-
-vim.api.nvim_create_user_command("CitationPicker", simple_citation_picker, { desc = "Open citation picker" })
-
----------------------------------------------------------------------
 -- Exports
 ---------------------------------------------------------------------
 return {
