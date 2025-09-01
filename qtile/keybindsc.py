@@ -310,6 +310,7 @@ keys = [
         [alt],
         "b",
         lazy.to_screen(0),
+        lazy.group["4"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
         lazy.spawn("firefox"),
         desc="Launch firefox",
     ),
@@ -317,6 +318,7 @@ keys = [
         [alt],
         "j",
         lazy.to_screen(0),
+        lazy.group["4"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
         lazy.spawn("qutebrowser --qt-arg class web --qt-arg name web"),
         desc="Launch qutebrowser",
     ),
@@ -324,6 +326,7 @@ keys = [
         [alt],
         "y",
         lazy.to_screen(0),
+        lazy.group["4"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
         lazy.spawn(
             "qutebrowser --basedir /home/urtzi/.config/quteyoutube \
                     --qt-arg class youtube --qt-arg name youtube",

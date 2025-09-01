@@ -26,7 +26,7 @@ group_matches = [
     [],
     [],
     [],
-    ["web", "librewolf"],
+    ["web", "firefox-esr"],
     ["youtube"],
     ["Zotero"],
     ["Inkscape", "Gimp"],
