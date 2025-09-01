@@ -9,7 +9,6 @@ local function configure_cmp()
 		luasnip = "[LuaSnip]",
 		path = "[Path]",
 		buffer = "[Buffer]",
-		omni = "[Omni]",  -- Added omni source mapping
 	}
 
 	cmp.setup({
@@ -19,12 +18,10 @@ local function configure_cmp()
 				require("luasnip").lsp_expand(args.body)
 			end,
 		},
-		-- Updated sources to include omni
 		sources = cmp.config.sources({
 			{ name = "nvim_lsp" },
 			{ name = "luasnip" },
 			{ name = "path" },
-			{ name = "omni" },  -- Added omni completion source
 		}, {
 			{ name = "buffer" },
 		}),
@@ -39,8 +36,6 @@ local function configure_cmp()
 			end,
 		},
 	})
-
-	-- Remove the specific markdown filetype config since omni is now global
 end
 
 return {
@@ -50,7 +45,6 @@ return {
 			{ "hrsh7th/cmp-nvim-lsp" },
 			{ "hrsh7th/cmp-buffer" },
 			{ "hrsh7th/cmp-path" },
-			{ "hrsh7th/cmp-omni" },  -- Added omni completion dependency
 			{ "R-nvim/cmp-r" },
 			-- Snippet engine(s) required for nvim-cmp (expands things from LS)
 			{ "L3MON4D3/LuaSnip" },
