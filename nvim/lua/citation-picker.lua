@@ -135,9 +135,9 @@ local function apply_insert_at_saved_context(saved, citation_key)
 end
 
 ---------------------------------------------------------------------
--- Simple picker wrapper
+-- Picker
 ---------------------------------------------------------------------
-local function simple_citation_picker()
+local function citation_picker()
 	local citations = parse_bib_file(bib_file)
 	if #citations == 0 then
 		vim.notify("No citations found in " .. bib_file, vim.log.levels.WARN)
@@ -171,6 +171,6 @@ end
 -- Exports
 ---------------------------------------------------------------------
 return {
-	simple_citation_picker = simple_citation_picker,
+	citation_picker = citation_picker,
 	parse_bib_file = parse_bib_file,
 }
