@@ -100,8 +100,8 @@ export PATH="/usr/local/go/bin:$PATH"
 export GOPATH=$HOME/.go
 export PATH=$PATH:$GOPATH/bin
 
-# zig version manager
-export PATH="$PATH:$HOME/.zvm/current"
+# cargo path
+export PATH=$PATH:$HOME/.cargo/bin
 
 # >>> juliaup initialize >>>
 case ":$PATH:" in
