@@ -101,6 +101,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.keymap.set("n", "gk", "k", vim.tbl_extend("force", opts, { desc = "Move up by logical line" }))
 	end,
 })
+
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
 -- ========================================
