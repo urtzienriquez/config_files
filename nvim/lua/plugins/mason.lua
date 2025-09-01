@@ -4,7 +4,6 @@ return {
     -- import mason
     local mason = require("mason")
 
-    -- enable mason and configure icons
     mason.setup({
       ui = {
         icons = {

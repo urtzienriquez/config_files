@@ -41,7 +41,6 @@ return {
 					F12 = "<F12>",
 				},
 			},
-			-- REMOVED: spec section - now handled in keymaps.lua
 		},
 	},
 }

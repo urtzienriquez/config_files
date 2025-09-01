@@ -21,6 +21,5 @@ return {
 				},
 			},
 		})
-		-- REMOVED: Keymap is now in keymaps.lua
 	end,
 }

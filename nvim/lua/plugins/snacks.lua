@@ -47,7 +47,6 @@ return {
 			},
 		},
 	},
-	-- REMOVED: keys section - all keymaps now in keymaps.lua
 	init = function()
 		vim.api.nvim_create_autocmd("User", {
 			pattern = "VeryLazy",

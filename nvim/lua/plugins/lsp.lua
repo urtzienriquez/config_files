@@ -1,5 +1,4 @@
 local default_opts = {
-	-- REMOVED: on_attach function - keymaps now in keymaps.lua via LspAttach autocmd
 	capabilities = require("cmp_nvim_lsp").default_capabilities(),
 }
 
@@ -35,7 +34,6 @@ local servers = {
 			return util.root_pattern("Project.toml")(fname) or util.find_git_ancestor(fname) or util.path.dirname(fname)
 		end,
 		on_attach = function(client, bufnr)
-			-- REMOVED: on_attach keymaps - now handled by LspAttach autocmd in keymaps.lua
 			vim.bo[bufnr].formatexpr = ""
 		end,
 	}),

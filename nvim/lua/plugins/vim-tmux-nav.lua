@@ -9,5 +9,4 @@ return {
 		"TmuxNavigatePrevious",
 		"TmuxNavigatorProcessList",
 	},
-	-- REMOVED: keys section - keymaps now in keymaps.lua
 }
