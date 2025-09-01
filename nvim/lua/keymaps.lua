@@ -272,7 +272,7 @@ vim.api.nvim_create_autocmd("User", {
 -- ========================================
 -- Citation Picker
 -- ========================================
-local citation = require("citation-picker")  -- replace with your module name
+local citation = require("citation-picker")
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
