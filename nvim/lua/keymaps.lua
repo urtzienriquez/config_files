@@ -8,13 +8,6 @@
 -- Escape as jj
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Esc using jj" })
 
--- Word suggestions in normal mode
-vim.keymap.set("n", "<C-x><C-s>", "i<C-X><C-S>", { desc = "Spelling suggestion in normal mode" })
-vim.keymap.set("n", "<C-x><C-n>", "i<C-X><C-N>", { desc = "Next word suggestion in normal mode" })
-vim.keymap.set("n", "<C-x><C-p>", "i<C-X><C-P>", { desc = "Previous word suggestion in normal mode" })
-vim.keymap.set("n", "<C-x><C-x>", "i<C-X><C-O>", { desc = "Omni suggestion in normal mode" })
-vim.keymap.set("n", "<C-x><C-k>", "i<C-X><C-K>", { desc = "Dictionary suggestion in normal mode" })
-
 -- Escape terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
