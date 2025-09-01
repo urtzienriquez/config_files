@@ -1,128 +1,255 @@
--- Citation completion setup for .bib files
--- Add this to your vim-options.lua or create a new file in lua/
-
+-- Citation picker using Snacks.nvim
 -- Path to your .bib file (adjust as needed)
-local bib_file = vim.fn.expand("~/Documents/zotero.bib") -- Change this to your actual .bib file path
+local bib_file = vim.fn.expand("~/Documents/zotero.bib")
 
--- Function to parse .bib file and extract citation keys
+---------------------------------------------------------------------
+-- Parse .bib file and extract citation keys with titles
+---------------------------------------------------------------------
 local function parse_bib_file(file_path)
-    local citations = {}
-    local file = io.open(file_path, "r")
-    
-    if not file then
-        return citations
+  local citations = {}
+  local file = io.open(file_path, "r")
+  if not file then return citations end
+
+  local current_entry = {}
+  local in_entry = false
+
+  for line in file:lines() do
+    -- Match entry start: @article{key, @book{key, etc.
+    local entry_type, key = line:match("^%s*@(%w+)%s*{%s*([^,%s]+)")
+    if entry_type and key then
+      -- Save previous entry if exists
+      if current_entry.key then
+        table.insert(citations, current_entry)
+      end
+      -- Start new entry
+      current_entry = {
+        key = key,
+        type = entry_type,
+        title = "",
+        author = "",
+        year = ""
+      }
+      in_entry = true
+    elseif in_entry then
+      -- Extract title (handle multi-brace and quoted forms)
+      local title = line:match("%s*title%s*=%s*[{\"](.-)[}\",]*$")
+      if title then
+        current_entry.title = current_entry.title .. " " .. title
+        current_entry.title = current_entry.title:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
+      end
+
+      -- Extract author
+      local author = line:match("%s*author%s*=%s*[{\"](.-)[}\",]*$")
+      if author then
+        current_entry.author = author:gsub("[{}]", "")
+      end
+
+      -- Extract year (or date if year missing)
+      local year = line:match("%s*year%s*=%s*[{\"]*(%d+)[}\",]*")
+      local date = line:match("%s*date%s*=%s*[{\"]*(%d+)[}\",]*")
+      if year then
+        current_entry.year = year
+      elseif date then
+        current_entry.year = date
+      end
+
+      -- End of entry
+      if line:match("^%s*}%s*$") then
+        in_entry = false
+      end
     end
-    
-    for line in file:lines() do
-        -- Match @article{key, @book{key, etc.
-        local key = line:match("^%s*@%w+%s*{%s*([^,%s]+)")
-        if key then
-            table.insert(citations, key)
-        end
-    end
-    
-    file:close()
-    return citations
+  end
+
+  -- Add last entry
+  if current_entry.key then
+    table.insert(citations, current_entry)
+  end
+
+  file:close()
+  return citations
 end
 
--- Context-aware omnifunc that falls back to default completion
-local function smart_omnifunc(findstart, base)
-    if findstart == 1 then
-        -- Find the start of the citation
-        local line = vim.api.nvim_get_current_line()
-        local col = vim.api.nvim_win_get_cursor(0)[2]
-        
-        -- Look for @ symbol before cursor for citation context
-        local start = col
-        local found_at = false
-        while start > 0 do
-            local char = line:sub(start, start)
-            if char == "@" then
-                found_at = true
-                break
-            elseif char:match("%s") then
-                break
-            end
-            start = start - 1
-        end
-        
-        if found_at then
-            return start  -- Return 0-based column for citation completion
-        else
-            -- Fall back to default omnifunc behavior (keyword completion)
-            local word_start = col
-            while word_start > 0 do
-                local char = line:sub(word_start, word_start)
-                if char:match("[%w_]") then
-                    word_start = word_start - 1
-                else
-                    break
-                end
-            end
-            return word_start  -- Return start of current word
-        end
-    else
-        -- Check if we're in citation context
-        local line = vim.api.nvim_get_current_line()
-        local col = vim.api.nvim_win_get_cursor(0)[2]
-        
-        -- Look for @ symbol before current position
-        local in_citation = false
-        local start = col - #base
-        while start > 0 do
-            local char = line:sub(start, start)
-            if char == "@" then
-                in_citation = true
-                break
-            elseif char:match("%s") then
-                break
-            end
-            start = start - 1
-        end
-        
-        if in_citation then
-            -- Return citation candidates
-            local citations = parse_bib_file(bib_file)
-            local matches = {}
-            
-            for _, citation in ipairs(citations) do
-                if citation:lower():find(base:lower(), 1, true) then
-                    table.insert(matches, citation)
-                end
-            end
-            
-            return matches
-        else
-            -- Fall back to default completion (syntaxcomplete, dictionary, etc.)
-            -- This mimics the default omnifunc behavior
-            local words = {}
-            local current_buf = vim.api.nvim_get_current_buf()
-            local lines = vim.api.nvim_buf_get_lines(current_buf, 0, -1, false)
-            
-            -- Extract words from current buffer
-            for _, line_text in ipairs(lines) do
-                for word in line_text:gmatch("[%w_]+") do
-                    if word:lower():find(base:lower(), 1, true) and #word > #base then
-                        if not vim.tbl_contains(words, word) then
-                            table.insert(words, word)
-                        end
-                    end
-                end
-            end
-            
-            return words
-        end
+---------------------------------------------------------------------
+-- Format citation entries for display: key | title only
+---------------------------------------------------------------------
+local function format_citation_entry(entry)
+  local display = entry.key
+  if entry.title and entry.title ~= "" then
+    display = display .. " | " .. entry.title:sub(1, 60)
+    if #entry.title > 60 then
+      display = display .. "..."
     end
+  end
+  return display
 end
 
--- Set up the omnifunc for markdown files
+---------------------------------------------------------------------
+-- Robust insertion helper
+---------------------------------------------------------------------
+local function apply_insert_at_saved_context(saved, citation_key)
+  if not saved or not citation_key then return end
+  local insert_text = "@" .. citation_key
+
+  if not vim.api.nvim_buf_is_valid(saved.buf) then
+    vim.notify("Buffer for citation insertion is no longer valid", vim.log.levels.WARN)
+    return
+  end
+
+  if saved.win and vim.api.nvim_win_is_valid(saved.win) then
+    pcall(vim.api.nvim_set_current_win, saved.win)
+  end
+  pcall(vim.api.nvim_set_current_buf, saved.buf)
+
+  local row, col = saved.row, saved.col
+
+  -- Normal mode adjustment: move col after cursor for proper insertion
+  if not saved.was_insert_mode then
+    col = col + 1
+  end
+
+  local ok = false
+  if vim.api.nvim_buf_set_text then
+    ok = pcall(function()
+      vim.api.nvim_buf_set_text(saved.buf, row - 1, col, row - 1, col, { insert_text })
+    end)
+  end
+
+  if not ok then
+    -- fallback using nvim_put
+    pcall(vim.api.nvim_put, { insert_text }, 'c', false, true)
+  end
+
+  -- Set cursor after inserted text
+  local line = vim.api.nvim_buf_get_lines(saved.buf, row - 1, row, false)[1] or ""
+  local start_pos = line:find(insert_text, col + 1, true)
+  local new_col0 = start_pos and (start_pos - 1 + #insert_text) or (col + #insert_text)
+  pcall(vim.api.nvim_win_set_cursor, 0, { row, new_col0 })
+
+  if saved.was_insert_mode then
+    vim.cmd("startinsert!")
+  end
+end
+
+---------------------------------------------------------------------
+-- Main citation picker
+---------------------------------------------------------------------
+local function citation_picker()
+  local citations = parse_bib_file(bib_file)
+  if #citations == 0 then
+    vim.notify("No citations found in " .. bib_file, vim.log.levels.WARN)
+    return
+  end
+
+  local cur_win = vim.api.nvim_get_current_win()
+  local cur_buf = vim.api.nvim_get_current_buf()
+  local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
+  local was_insert = vim.api.nvim_get_mode().mode:find('i') ~= nil
+  local saved = { win = cur_win, buf = cur_buf, row = cur_row, col = cur_col, was_insert_mode = was_insert }
+
+  local function use_snacks_picker()
+    if _G.Snacks and _G.Snacks.picker and _G.Snacks.picker.pick then
+      local s_ok, s_err = pcall(function()
+        Snacks.picker.pick({
+          name = "citations",
+          items = function()
+            local pi = {}
+            for _, e in ipairs(citations) do
+              table.insert(pi, { text = format_citation_entry(e), value = e.key, entry = e })
+            end
+            return pi
+          end,
+          format = function(item) return item.text end,
+          -- Fuzzy sorting: prioritize earlier matches
+          sorter = function(item, query)
+            local pos = query and item.text:lower():find(query:lower(), 1, true) or math.huge
+            return pos
+          end,
+          on_select = function(item)
+            if item then apply_insert_at_saved_context(saved, item.value) end
+          end,
+        })
+      end)
+      if not s_ok then
+        vim.notify("Snacks picker failed, falling back: " .. tostring(s_err), vim.log.levels.WARN)
+        return false
+      end
+      return true
+    end
+    return false
+  end
+
+  if not use_snacks_picker() then
+    local items = {}
+    local citation_map = {}
+    for _, e in ipairs(citations) do
+      local display = format_citation_entry(e)
+      table.insert(items, display)
+      citation_map[display] = e
+    end
+    vim.ui.select(items, {
+      prompt = "Select citation:",
+      format_item = function(item) return item end,
+    }, function(choice)
+      if choice and citation_map[choice] then
+        apply_insert_at_saved_context(saved, citation_map[choice].key)
+      end
+    end)
+  end
+end
+
+---------------------------------------------------------------------
+-- Simple picker wrapper
+---------------------------------------------------------------------
+local function simple_citation_picker()
+  local citations = parse_bib_file(bib_file)
+  if #citations == 0 then
+    vim.notify("No citations found in " .. bib_file, vim.log.levels.WARN)
+    return
+  end
+
+  local items = {}
+  for _, e in ipairs(citations) do
+    table.insert(items, { display = format_citation_entry(e), key = e.key, entry = e })
+  end
+
+  local cur_win = vim.api.nvim_get_current_win()
+  local cur_buf = vim.api.nvim_get_current_buf()
+  local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
+  local was_insert = vim.api.nvim_get_mode().mode:find('i') ~= nil
+  local saved = { win = cur_win, buf = cur_buf, row = cur_row, col = cur_col, was_insert_mode = was_insert }
+
+  vim.ui.select(items, {
+    prompt = "Citations> ",
+    format_item = function(item) return item.display end,
+  }, function(choice)
+    if choice then
+      apply_insert_at_saved_context(saved, choice.key)
+    end
+  end)
+end
+
+---------------------------------------------------------------------
+-- Keymaps and command
+---------------------------------------------------------------------
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "tex", "pandoc" },
-    callback = function()
-        -- Set the smart omnifunc that handles both citations and normal completion
-        vim.bo.omnifunc = "v:lua.smart_omnifunc"
-    end,
+  pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "tex", "pandoc" },
+  callback = function()
+    local opts = { buffer = true, silent = true }
+    vim.keymap.set("i", "<C-Space>", simple_citation_picker,
+      vim.tbl_extend("force", opts, { desc = "Open citation picker" }))
+    vim.keymap.set("n", "<leader>fc", simple_citation_picker,
+      vim.tbl_extend("force", opts, { desc = "Find citations" }))
+  end,
 })
 
--- Make the function globally accessible
-_G.smart_omnifunc = smart_omnifunc
+vim.api.nvim_create_user_command("CitationPicker", simple_citation_picker, { desc = "Open citation picker" })
+
+---------------------------------------------------------------------
+-- Exports
+---------------------------------------------------------------------
+return {
+  citation_picker = citation_picker,
+  simple_citation_picker = simple_citation_picker,
+  parse_bib_file = parse_bib_file,
+}
+
