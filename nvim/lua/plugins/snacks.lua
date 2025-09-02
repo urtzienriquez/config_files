@@ -41,6 +41,13 @@ return {
 		quickfile = { enabled = true },
 		scope = { enabled = true },
 		words = { enabled = true },
+		zen = {
+			enabled = true,
+			win = {
+				width = 0,
+				height = 0,
+			},
+		},
 		styles = {
 			notification = {
 				-- wo = { wrap = true } -- Wrap notifications
