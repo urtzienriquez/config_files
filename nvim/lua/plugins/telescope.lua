@@ -3,8 +3,14 @@ return {
 		"nvim-telescope/telescope.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
-			-- close buffers from telescope and change how find buffers look
 			require("telescope").setup({
+				defaults = {
+					layout_strategy = "horizontal",
+					layout_config = {
+						prompt_position = "top",
+					},
+					sorting_strategy = "ascending",
+				},
 				pickers = {
 					buffers = {
 						show_all_buffers = true,

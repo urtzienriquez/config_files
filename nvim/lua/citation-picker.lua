@@ -48,7 +48,8 @@ local function parse_bib_file(file_path)
 					current_entry.shorttitle = value
 					current_field = "shorttitle"
 				elseif field == "author" then
-					current_entry.author = value
+					-- Replace " and " with "; " for better display
+					current_entry.author = value:gsub("%s+and%s+", "; ")
 					current_field = "author"
 				elseif field == "year" then
 					current_entry.year = value
@@ -69,6 +70,10 @@ local function parse_bib_file(file_path)
 				-- Handle multiline field continuation
 				if current_field and line:match("^[^%s]+") == nil then
 					local continued = line:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
+					if current_field == "author" then
+						-- For author field, also handle "and" replacement in continuation lines
+						continued = continued:gsub("%s+and%s+", "; ")
+					end
 					current_entry[current_field] = current_entry[current_field] .. " " .. continued
 				end
 			end
@@ -95,13 +100,25 @@ end
 ---------------------------------------------------------------------
 local function format_citation_display(entry)
 	local display = entry.key
+	
+	-- Add title if available
 	if entry.title and entry.title ~= "" then
 		local title = entry.title
-		if #title > 50 then
-			title = title:sub(1, 47) .. "..."
+		if #title > 40 then  -- Reduced from 50 to make room for authors
+			title = title:sub(1, 37) .. "..."
 		end
 		display = display .. " │ " .. title
 	end
+	
+	-- Add authors if available
+	if entry.author and entry.author ~= "" then
+		local authors = entry.author
+		if #authors > 30 then  -- Truncate long author lists
+			authors = authors:sub(1, 27) .. "..."
+		end
+		display = display .. " │ " .. authors
+	end
+	
 	return display
 end
 
@@ -162,6 +179,8 @@ end
 ---------------------------------------------------------------------
 local function calculate_match_score(entry, query)
 	if not query or query == "" then
+		-- When no query, return 0 so all entries have the same score
+		-- We'll handle default sorting in the sorter setup
 		return 0
 	end
 	local score = 0
@@ -267,7 +286,7 @@ local function apply_insert_at_saved_context(saved, citation_keys)
 
 	local row, col = saved.row, saved.col
 	
-	-- FIXED: In normal mode, move cursor position one character to the right
+	-- In normal mode, move cursor position one character to the right
 	-- so text is inserted after the cursor character, not before it
 	if not saved.was_insert_mode then
 		col = col + 1
@@ -361,6 +380,22 @@ local function citation_picker()
 		if not entry or not entry.value then
 			return original_scoring_function(self, prompt, line, entry)
 		end
+		
+		-- If no prompt (empty search), sort alphabetically by citation key
+		if not prompt or prompt == "" then
+			-- Create a numeric score based on alphabetical order
+			-- Use character codes to create proper alphabetical ordering
+			local key = entry.value.key:lower()
+			local score = 0
+			-- Use first few characters to create ordering
+			for i = 1, math.min(#key, 8) do
+				local char_code = key:byte(i)
+				score = score + (char_code * math.pow(256, 8-i))
+			end
+			return score
+		end
+		
+		-- Otherwise use our custom scoring
 		return -calculate_match_score(entry.value, prompt)
 	end
 
@@ -457,6 +492,21 @@ local function citation_replace()
 		if not entry or not entry.value then
 			return original_scoring_function(self, prompt, line, entry)
 		end
+		
+		-- If no prompt (empty search), sort alphabetically by citation key
+		if not prompt or prompt == "" then
+			-- Create a numeric score based on alphabetical order
+			local key = entry.value.key:lower()
+			local score = 10000
+			-- Use first few characters to create ordering
+			for i = 1, math.min(#key, 8) do
+				local char_code = key:byte(i)
+				score = score - (char_code * math.pow(256, 8-i))
+			end
+			return score
+		end
+		
+		-- Otherwise use our custom scoring
 		return -calculate_match_score(entry.value, prompt)
 	end
 
