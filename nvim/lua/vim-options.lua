@@ -27,21 +27,21 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.autoindent = true
 vim.opt.scrolloff = 5
-vim.cmd("set backspace=indent,eol,start")
+vim.opt.backspace = { "indent", "eol", "start" }
 vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.tabstop = 2 -- Display width of tab characters
 vim.opt.shiftwidth = 2 -- Width for autoindent
 vim.opt.softtabstop = 2 -- Number of spaces tab key inserts
 vim.opt.smartindent = true -- Smart autoindenting (optional)
-vim.cmd("set ignorecase") -- case insensitive search
+vim.opt.ignorecase = true -- Case insensitive search
 vim.opt.clipboard = "unnamedplus"
-vim.o.termguicolors = true
+vim.opt.termguicolors = true
 
 -- code folding, automatic to manual
-vim.o.foldcolumn = "1" -- '0' is not bad
-vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
-vim.o.foldlevelstart = 99
-vim.o.foldenable = true
+vim.opt.foldcolumn = "1" -- '0' is not bad
+vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
 
 -- Show diagnostics as virtual text (disabled by default since 0.11)
 vim.diagnostic.config({ virtual_text = true })
