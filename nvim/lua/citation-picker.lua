@@ -266,6 +266,13 @@ local function apply_insert_at_saved_context(saved, citation_keys)
 	pcall(vim.api.nvim_set_current_buf, saved.buf)
 
 	local row, col = saved.row, saved.col
+	
+	-- FIXED: In normal mode, move cursor position one character to the right
+	-- so text is inserted after the cursor character, not before it
+	if not saved.was_insert_mode then
+		col = col + 1
+	end
+	
 	local ok = false
 	if vim.api.nvim_buf_set_text then
 		ok = pcall(function()
