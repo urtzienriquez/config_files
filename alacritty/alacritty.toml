@@ -43,11 +43,6 @@ action = "ToggleViMode"
 key = "ç"
 mods = "Control"
 
-[[keyboard.bindings]]
-key = "I"
-mods = "Control"
-chars = "\u001bi" # to be able to send control-I in neovim
-
 [general]
 import = ["/home/urtzi/.config/alacritty/theme.toml"]
 

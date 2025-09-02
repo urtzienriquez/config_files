@@ -4,7 +4,7 @@ return {
 	lazy = false,
 	opts = {
 		picker = {
-			enabled = true,
+			enabled = false,
 			layout = {
 				cycle = true,
 				preset = function()

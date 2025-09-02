@@ -10,7 +10,12 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 
 -- Resize windows
 vim.keymap.set("n", "<C-A-Left>", ":vertical resize +2<CR>", { silent = true, desc = "Resize vertically split window" })
-vim.keymap.set("n", "<C-A-Right>", ":vertical resize -2<CR>", { silent = true, desc = "Resize vertically split window" })
+vim.keymap.set(
+	"n",
+	"<C-A-Right>",
+	":vertical resize -2<CR>",
+	{ silent = true, desc = "Resize vertically split window" }
+)
 vim.keymap.set("n", "<C-A-Up>", ":resize +2<CR>", { silent = true, desc = "Resize horizontally split window" })
 vim.keymap.set("n", "<C-A-Down>", ":resize -2<CR>", { silent = true, desc = "Resize horizontally split window" })
 
@@ -136,34 +141,50 @@ vim.api.nvim_create_autocmd("User", {
 		-- ========================================
 		-- Snacks picker (fuzzy finding) keymaps
 		-- ========================================
-		if _G.Snacks and _G.Snacks.picker then
-			vim.keymap.set("n", "<leader>fs", function()
-				Snacks.picker.smart()
-			end, { desc = "Smart files" })
-			vim.keymap.set("n", "<leader>ff", function()
-				Snacks.picker.files()
-			end, { desc = "Find files" })
-			vim.keymap.set("n", "<leader>fb", function()
-				Snacks.picker.buffers({
-					win = { input = { keys = { ["<C-d>"] = { "bufdelete", mode = { "i", "n" } } } } },
-				})
-			end, { desc = "Find buffers" })
-			vim.keymap.set("n", "<leader>fg", function()
-				Snacks.picker.grep()
-			end, { desc = "Find grep" })
-			vim.keymap.set("n", "<leader>fG", function()
-				Snacks.picker.grep_buffers()
-			end, { desc = "Grep in buffers" })
-			vim.keymap.set("n", "<leader>fd", function()
-				Snacks.picker.diagnostics_buffer()
-			end, { desc = "Find diagnostics" })
-			vim.keymap.set("n", "<leader>fk", function()
-				Snacks.picker.keymaps()
-			end, { desc = "Find keymaps" })
-			vim.keymap.set("n", "<leader>fw", function()
-				Snacks.picker.spelling()
-			end, { desc = "Find spell suggestions" })
-		end
+		-- if _G.Snacks and _G.Snacks.picker then
+		-- 	vim.keymap.set("n", "<leader>fs", function()
+		-- 		Snacks.picker.smart()
+		-- 	end, { desc = "Smart files" })
+		-- 	vim.keymap.set("n", "<leader>ff", function()
+		-- 		Snacks.picker.files()
+		-- 	end, { desc = "Find files" })
+		-- 	vim.keymap.set("n", "<leader>fb", function()
+		-- 		Snacks.picker.buffers({
+		-- 			win = { input = { keys = { ["<C-d>"] = { "bufdelete", mode = { "i", "n" } } } } },
+		-- 		})
+		-- 	end, { desc = "Find buffers" })
+		-- 	vim.keymap.set("n", "<leader>fg", function()
+		-- 		Snacks.picker.grep()
+		-- 	end, { desc = "Find grep" })
+		-- 	vim.keymap.set("n", "<leader>fG", function()
+		-- 		Snacks.picker.grep_buffers()
+		-- 	end, { desc = "Grep in buffers" })
+		-- 	vim.keymap.set("n", "<leader>fd", function()
+		-- 		Snacks.picker.diagnostics_buffer()
+		-- 	end, { desc = "Find diagnostics" })
+		-- 	vim.keymap.set("n", "<leader>fk", function()
+		-- 		Snacks.picker.keymaps()
+		-- 	end, { desc = "Find keymaps" })
+		-- 	vim.keymap.set("n", "<leader>fw", function()
+		-- 		Snacks.picker.spelling()
+		-- 	end, { desc = "Find spell suggestions" })
+		-- end
+		--
+
+		local builtin = require("telescope.builtin")
+		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope [f]ind [f]iles" })
+		vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope [f]ind with [g]rep inside the file" })
+		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope [f]ind [b]uffers" })
+		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope [f]ind [h]elp tags" })
+		vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "[f]ind [k]eymaps" })
+		vim.keymap.set("n", "<leader>fs", builtin.builtin, { desc = "[f]ind [s]elect Telescope" })
+		vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "[f]ind current [w]ord" })
+		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "[f]ind [d]iagnostics" })
+		vim.keymap.set("n", "<leader>f,", builtin.resume, { desc = "[f]ind [r]esume" })
+		vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = '[f]ind Recent Files ("." for repeat)' })
+		vim.keymap.set("n", "<leader>fm", function()
+			Snacks.picker.spelling()
+		end, { desc = "Find misspelled word suggestions" })
 
 		-- ========================================
 		-- Conform (formatting) keymaps
@@ -275,23 +296,39 @@ vim.api.nvim_create_autocmd("User", {
 local citation = require("citation-picker")
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
-  callback = function()
-    local opts = { buffer = true, silent = true }
-    -- Insert new citation
-    vim.keymap.set("i", "<C-Space>", citation.citation_picker,
-      vim.tbl_extend("force", opts, { desc = "Open citation picker" }))
-    vim.keymap.set("n", "<leader>fc", citation.citation_picker,
-      vim.tbl_extend("force", opts, { desc = "Find citations" }))
-    
-    -- NEW: Replace citation under cursor
-    vim.keymap.set("n", "<leader>fr", citation.citation_replace,
-      vim.tbl_extend("force", opts, { desc = "Replace citation under cursor" }))
-  end,
+	pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
+	callback = function()
+		local opts = { buffer = true, silent = true }
+		-- Insert new citation
+		vim.keymap.set(
+			"i",
+			"<C-Space>",
+			citation.citation_picker,
+			vim.tbl_extend("force", opts, { desc = "Open citation picker" })
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>fc",
+			citation.citation_picker,
+			vim.tbl_extend("force", opts, { desc = "Find citations" })
+		)
+
+		-- NEW: Replace citation under cursor
+		vim.keymap.set(
+			"n",
+			"<leader>fr",
+			citation.citation_replace,
+			vim.tbl_extend("force", opts, { desc = "Replace citation under cursor" })
+		)
+	end,
 })
 
 vim.api.nvim_create_user_command("CitationPicker", citation.citation_picker, { desc = "Open citation picker" })
-vim.api.nvim_create_user_command("CitationReplace", citation.citation_replace, { desc = "Replace citation under cursor" })
+vim.api.nvim_create_user_command(
+	"CitationReplace",
+	citation.citation_replace,
+	{ desc = "Replace citation under cursor" }
+)
 
 -- ========================================
 -- LSP KEYMAPS (set when LSP attaches)
@@ -333,15 +370,18 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>cr", desc = "Close REPL" },
 
 				{ "<leader>ff", desc = "Find files" },
-				{ "<leader>fb", desc = "Find buffers" },
 				{ "<leader>fg", desc = "Find with grep" },
-				{ "<leader>fG", desc = "Grep in buffers" },
-				{ "<leader>fd", desc = "Find diagnostics" },
+				{ "<leader>fb", desc = "Find buffers" },
+				{ "<leader>fh", desc = "Find help tags" },
 				{ "<leader>fk", desc = "Find keymaps" },
-				{ "<leader>fc", desc = "Find citations" },
-        { "<leader>fr", desc = "Replace citation under cursor" },
-				{ "<leader>fs", desc = "Smart find" },
-        { "<leader>fw", desc = "Find spell suggestions" },
+				{ "<leader>fs", desc = "Find select picker" },
+				{ "<leader>fw", desc = "Find word" },
+				{ "<leader>fd", desc = "Find diagnostics" },
+				{ "<leader>f,", desc = "Find resume" },
+				{ "<leader>f.", desc = "Find  recent files" },
+				{ "<leader>fm", desc = "Find misspelled word suggestions" },
+				{ "<leader>fc", desc = "Find citation" },
+				{ "<leader>fr", desc = "Find replacement for citation" },
 
 				{ "<leader>bf", desc = "Format buffer" },
 				{ "<leader>bd", desc = "Delete buffer" },
