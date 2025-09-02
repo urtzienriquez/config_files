@@ -278,14 +278,20 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
   callback = function()
     local opts = { buffer = true, silent = true }
+    -- Insert new citation
     vim.keymap.set("i", "<C-Space>", citation.citation_picker,
       vim.tbl_extend("force", opts, { desc = "Open citation picker" }))
     vim.keymap.set("n", "<leader>fc", citation.citation_picker,
       vim.tbl_extend("force", opts, { desc = "Find citations" }))
+    
+    -- NEW: Replace citation under cursor
+    vim.keymap.set("n", "<leader>fr", citation.citation_replace,
+      vim.tbl_extend("force", opts, { desc = "Replace citation under cursor" }))
   end,
 })
 
 vim.api.nvim_create_user_command("CitationPicker", citation.citation_picker, { desc = "Open citation picker" })
+vim.api.nvim_create_user_command("CitationReplace", citation.citation_replace, { desc = "Replace citation under cursor" })
 
 -- ========================================
 -- LSP KEYMAPS (set when LSP attaches)
@@ -333,6 +339,7 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>fd", desc = "Find diagnostics" },
 				{ "<leader>fk", desc = "Find keymaps" },
 				{ "<leader>fc", desc = "Find citations" },
+        { "<leader>fr", desc = "Replace citation under cursor" },
 				{ "<leader>fs", desc = "Smart find" },
         { "<leader>fw", desc = "Find spell suggestions" },
 
