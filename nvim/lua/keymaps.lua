@@ -9,10 +9,10 @@
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- Resize windows
-vim.keymap.set("n", "<C-Left>", ":vertical resize +2<CR>", { silent = true, desc = "Resize vertically split window" })
-vim.keymap.set("n", "<C-Right>", ":vertical resize -2<CR>", { silent = true, desc = "Resize vertically split window" })
-vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { silent = true, desc = "Resize horizontally split window" })
-vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { silent = true, desc = "Resize horizontally split window" })
+vim.keymap.set("n", "<C-A-Left>", ":vertical resize +2<CR>", { silent = true, desc = "Resize vertically split window" })
+vim.keymap.set("n", "<C-A-Right>", ":vertical resize -2<CR>", { silent = true, desc = "Resize vertically split window" })
+vim.keymap.set("n", "<C-A-Up>", ":resize +2<CR>", { silent = true, desc = "Resize horizontally split window" })
+vim.keymap.set("n", "<C-A-Down>", ":resize -2<CR>", { silent = true, desc = "Resize horizontally split window" })
 
 -- Split windows (i3-style)
 vim.keymap.set("n", "<C-w>v", ":split<CR>", { desc = "Vertically split window as in i3" })
