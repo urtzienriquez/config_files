@@ -1,4 +1,4 @@
--- Citation picker
+-- Citation picker with Telescope integration
 local bib_file = vim.fn.expand("~/Documents/zotero.bib")
 
 ---------------------------------------------------------------------
@@ -13,10 +13,13 @@ local function parse_bib_file(file_path)
 
 	local current_entry = {}
 	local in_entry = false
+	local current_field = nil
 
 	for line in file:lines() do
+		-- Detect new entry
 		local entry_type, key = line:match("^%s*@(%w+)%s*{%s*([^,%s]+)")
 		if entry_type and key then
+			-- save previous entry
 			if current_entry.key then
 				table.insert(citations, current_entry)
 			end
@@ -24,33 +27,61 @@ local function parse_bib_file(file_path)
 				key = key,
 				type = entry_type,
 				title = "",
+				shorttitle = "",
 				author = "",
 				year = "",
+				journaltitle = "",
+				abstract = "",
 			}
 			in_entry = true
+			current_field = nil
 		elseif in_entry then
-			local title = line:match('%s*title%s*=%s*[{"](.-)[}",]*$')
-			if title then
-				current_entry.title = current_entry.title .. " " .. title
-				current_entry.title = current_entry.title:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
+			-- Check if line is a field assignment
+			local field, value = line:match('%s*(%w+)%s*=%s*[{"](.-)[}",]*$')
+			if field and value then
+				field = field:lower()
+				value = value:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
+				if field == "title" then
+					current_entry.title = value
+					current_field = "title"
+				elseif field == "shorttitle" then
+					current_entry.shorttitle = value
+					current_field = "shorttitle"
+				elseif field == "author" then
+					current_entry.author = value
+					current_field = "author"
+				elseif field == "year" then
+					current_entry.year = value
+					current_field = "year"
+				elseif field == "date" and current_entry.year == "" then
+					current_entry.year = value
+					current_field = "date"
+				elseif field == "journaltitle" then
+					current_entry.journaltitle = value
+					current_field = "journaltitle"
+				elseif field == "abstract" then
+					current_entry.abstract = value
+					current_field = "abstract"
+				else
+					current_field = nil
+				end
+			else
+				-- Handle multiline field continuation
+				if current_field and line:match("^[^%s]+") == nil then
+					local continued = line:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
+					current_entry[current_field] = current_entry[current_field] .. " " .. continued
+				end
 			end
-			local author = line:match('%s*author%s*=%s*[{"](.-)[}",]*$')
-			if author then
-				current_entry.author = author:gsub("[{}]", "")
-			end
-			local year = line:match('%s*year%s*=%s*[{"]*(%d+)[}",]*')
-			local date = line:match('%s*date%s*=%s*[{"]*(%d+)[}",]*')
-			if year then
-				current_entry.year = year
-			elseif date then
-				current_entry.year = date
-			end
+
+			-- Detect end of entry
 			if line:match("^%s*}%s*$") then
 				in_entry = false
+				current_field = nil
 			end
 		end
 	end
 
+	-- save last entry
 	if current_entry.key then
 		table.insert(citations, current_entry)
 	end
@@ -60,57 +91,149 @@ local function parse_bib_file(file_path)
 end
 
 ---------------------------------------------------------------------
--- Format citation entries for display: key | title only
+-- Format citation for display in main picker
 ---------------------------------------------------------------------
-local function format_citation_entry(entry)
+local function format_citation_display(entry)
 	local display = entry.key
 	if entry.title and entry.title ~= "" then
-		display = display .. " | " .. entry.title:sub(1, 60)
-		if #entry.title > 60 then
-			display = display .. "..."
+		local title = entry.title
+		if #title > 50 then
+			title = title:sub(1, 47) .. "..."
 		end
+		display = display .. " │ " .. title
 	end
 	return display
 end
 
 ---------------------------------------------------------------------
--- Helper function to detect if cursor is on a citation
+-- Wrap text to preview width
+---------------------------------------------------------------------
+local function wrap_text_to_width(text, width)
+	local lines = {}
+	while #text > 0 do
+		local break_point = width
+		local space_pos = text:sub(1, width):match(".*%s()")
+		if space_pos then
+			break_point = space_pos - 1
+		end
+		table.insert(lines, text:sub(1, break_point))
+		text = text:sub(break_point + 1):gsub("^%s+", "")
+	end
+	return lines
+end
+
+---------------------------------------------------------------------
+-- Create preview content (compact single-line labels)
+---------------------------------------------------------------------
+local function create_preview_content(entry, winid)
+	local lines = {}
+
+	local width = 80
+	if winid and vim.api.nvim_win_is_valid(winid) then
+		width = vim.api.nvim_win_get_width(winid) - 10
+	end
+
+	local function wrap_field(label, text)
+		if not text or text == "" then
+			return
+		end
+		local line_prefix = label .. ": "
+		local first_line_width = width - #line_prefix
+		local wrapped = wrap_text_to_width(text, first_line_width)
+		if #wrapped > 0 then
+			lines[#lines + 1] = line_prefix .. table.remove(wrapped, 1)
+			for _, l in ipairs(wrapped) do
+				lines[#lines + 1] = string.rep(" ", #line_prefix) .. l
+			end
+		end
+	end
+
+	wrap_field("Title", entry.title)
+	wrap_field("Author", entry.author)
+	wrap_field("Year", entry.date ~= "" and entry.date or entry.year)
+	wrap_field("Journal", entry.journaltitle)
+	wrap_field("Abstract", entry.abstract)
+
+	return lines
+end
+
+---------------------------------------------------------------------
+-- Calculate match score
+---------------------------------------------------------------------
+local function calculate_match_score(entry, query)
+	if not query or query == "" then
+		return 0
+	end
+	local score = 0
+	local query_lower = query:lower()
+	local searchable_text = (entry.key .. " " .. (entry.title or "") .. " " .. (entry.author or "")):lower()
+
+	if entry.key:lower() == query_lower then
+		score = score + 1000
+	end
+	if entry.key:lower():find("^" .. vim.pesc(query_lower)) then
+		score = score + 500
+	end
+	local key_match = entry.key:lower():find(vim.pesc(query_lower))
+	if key_match then
+		score = score + 300 - key_match
+	end
+	if entry.title and entry.title:lower() == query_lower then
+		score = score + 800
+	end
+	if entry.title and entry.title:lower():find("^" .. vim.pesc(query_lower)) then
+		score = score + 400
+	end
+	if entry.title then
+		local title_match = entry.title:lower():find(vim.pesc(query_lower))
+		if title_match then
+			score = score + 200 - (title_match / 2)
+		end
+	end
+	if entry.author then
+		local author_match = entry.author:lower():find(vim.pesc(query_lower))
+		if author_match then
+			score = score + 100 - (author_match / 2)
+		end
+	end
+
+	local longest_match = 0
+	for word in query_lower:gmatch("%S+") do
+		local match_start, match_end = searchable_text:find(vim.pesc(word))
+		if match_start then
+			longest_match = math.max(longest_match, match_end - match_start + 1)
+		end
+	end
+	score = score + longest_match * 10
+	return score
+end
+
+---------------------------------------------------------------------
+-- Helpers for inserting/replacing citations
 ---------------------------------------------------------------------
 local function get_citation_under_cursor()
 	local line = vim.api.nvim_get_current_line()
 	local col = vim.api.nvim_win_get_cursor(0)[2]
-
 	local pos = 1
 	for citation in line:gmatch("@([%w_%-:%.]+)") do
 		local start_pos, end_pos = line:find("@" .. citation, pos, true)
 		if start_pos and col >= start_pos - 1 and col <= end_pos then
-			return {
-				key = citation,
-				start_col = start_pos - 1,
-				end_col = end_pos,
-				full_match = "@" .. citation,
-			}
+			return { key = citation, start_col = start_pos - 1, end_col = end_pos, full_match = "@" .. citation }
 		end
 		pos = end_pos and end_pos + 1 or pos + 1
 	end
 	return nil
 end
 
----------------------------------------------------------------------
--- Helpers: cursor management
----------------------------------------------------------------------
 local function set_cursor_after_inserted_text(buf, win, row, start_col, inserted_text)
 	if not vim.api.nvim_buf_is_valid(buf) then
 		return nil
 	end
-
 	local winid = (win and vim.api.nvim_win_is_valid(win)) and win or 0
 	local target_col = start_col + #inserted_text
-
 	pcall(vim.api.nvim_set_current_win, winid)
 	pcall(vim.api.nvim_set_current_buf, buf)
 	pcall(vim.api.nvim_win_set_cursor, winid, { row, target_col })
-
 	return target_col
 end
 
@@ -118,48 +241,31 @@ local function reenter_insert_mode_at_cursor_for_buffer(win, buf, row, col, inse
 	local winid = (win and vim.api.nvim_win_is_valid(win)) and win or 0
 	pcall(vim.api.nvim_set_current_win, winid)
 	pcall(vim.api.nvim_set_current_buf, buf)
-
-	-- Get current line after insertion
-	local ok, lines = pcall(vim.api.nvim_buf_get_lines, buf, row - 1, row, false)
-	local line = (ok and lines and #lines > 0) and lines[1] or ""
-
-	-- Determine cursor column after insertion
-	local cursor_col = col + inserted_text_len
-	pcall(vim.api.nvim_win_set_cursor, winid, { row, cursor_col })
-
-	-- Feed "i" if there is text after the inserted citation, "a" if at end of line
-	local key
-	if cursor_col >= #line then
-		key = vim.api.nvim_replace_termcodes("a", true, false, true)
-	else
-		key = vim.api.nvim_replace_termcodes("i", true, false, true)
-	end
+	pcall(vim.api.nvim_win_set_cursor, winid, { row, col + inserted_text_len })
+	local key = vim.api.nvim_replace_termcodes("a", true, false, true)
 	pcall(vim.api.nvim_feedkeys, key, "n", true)
 end
 
----------------------------------------------------------------------
--- Insert citation
----------------------------------------------------------------------
-local function apply_insert_at_saved_context(saved, citation_key)
-	if not saved or not citation_key then
+local function apply_insert_at_saved_context(saved, citation_keys)
+	if not saved or not citation_keys or #citation_keys == 0 then
 		return
 	end
-	local insert_text = "@" .. citation_key
+	local insert_text = table.concat(
+		vim.tbl_map(function(k)
+			return "@" .. k
+		end, citation_keys),
+		"; "
+	)
 
 	if not vim.api.nvim_buf_is_valid(saved.buf) then
 		return
 	end
-
 	if saved.win and vim.api.nvim_win_is_valid(saved.win) then
 		pcall(vim.api.nvim_set_current_win, saved.win)
 	end
 	pcall(vim.api.nvim_set_current_buf, saved.buf)
 
 	local row, col = saved.row, saved.col
-	if not saved.was_insert_mode then
-		col = col + 1
-	end
-
 	local ok = false
 	if vim.api.nvim_buf_set_text then
 		ok = pcall(function()
@@ -171,33 +277,25 @@ local function apply_insert_at_saved_context(saved, citation_key)
 	end
 
 	set_cursor_after_inserted_text(saved.buf, saved.win, row, col, insert_text)
-
 	if saved.was_insert_mode then
 		reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, col, #insert_text)
 	end
+	vim.notify("Inserted citation" .. (#citation_keys > 1 and "s" or "") .. ": " .. insert_text, vim.log.levels.INFO)
 end
 
----------------------------------------------------------------------
--- Replace citation
----------------------------------------------------------------------
 local function replace_citation_at_cursor(saved, new_citation_key, citation_info)
 	if not saved or not new_citation_key or not citation_info then
 		return
 	end
-
 	local new_text = "@" .. new_citation_key
-
 	if not vim.api.nvim_buf_is_valid(saved.buf) then
 		return
 	end
-
 	if saved.win and vim.api.nvim_win_is_valid(saved.win) then
 		pcall(vim.api.nvim_set_current_win, saved.win)
 	end
 	pcall(vim.api.nvim_set_current_buf, saved.buf)
-
 	local row = saved.row
-
 	local ok = pcall(function()
 		vim.api.nvim_buf_set_text(
 			saved.buf,
@@ -208,7 +306,6 @@ local function replace_citation_at_cursor(saved, new_citation_key, citation_info
 			{ new_text }
 		)
 	end)
-
 	if ok then
 		set_cursor_after_inserted_text(saved.buf, saved.win, row, citation_info.start_col, new_text)
 		if saved.was_insert_mode then
@@ -221,7 +318,7 @@ local function replace_citation_at_cursor(saved, new_citation_key, citation_info
 end
 
 ---------------------------------------------------------------------
--- Picker for inserting new citations
+-- Telescope picker for inserting new citations with multi-select
 ---------------------------------------------------------------------
 local function citation_picker()
 	local citations = parse_bib_file(bib_file)
@@ -230,31 +327,91 @@ local function citation_picker()
 		return
 	end
 
-	local items = {}
-	for _, e in ipairs(citations) do
-		table.insert(items, { display = format_citation_entry(e), key = e.key, entry = e })
-	end
-
 	local cur_win = vim.api.nvim_get_current_win()
 	local cur_buf = vim.api.nvim_get_current_buf()
 	local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
 	local was_insert = vim.api.nvim_get_mode().mode:find("i") ~= nil
 	local saved = { win = cur_win, buf = cur_buf, row = cur_row, col = cur_col, was_insert_mode = was_insert }
 
-	vim.ui.select(items, {
-		prompt = "Citations 󱔗 ",
-		format_item = function(item)
-			return item.display
+	local pickers = require("telescope.pickers")
+	local finders = require("telescope.finders")
+	local conf = require("telescope.config").values
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+	local previewers = require("telescope.previewers")
+	local multi_select = require("telescope.actions.mt").transform_mod({
+		toggle_selection = function(prompt_bufnr)
+			actions.toggle_selection(prompt_bufnr)
+			local picker = action_state.get_current_picker(prompt_bufnr)
+			picker:reset_prompt()
+			actions.move_selection_next(prompt_bufnr)
 		end,
-	}, function(choice)
-		if choice then
-			apply_insert_at_saved_context(saved, choice.key)
+	})
+
+	local custom_sorter = conf.generic_sorter({})
+	local original_scoring_function = custom_sorter.scoring_function
+	custom_sorter.scoring_function = function(self, prompt, line, entry)
+		if not entry or not entry.value then
+			return original_scoring_function(self, prompt, line, entry)
 		end
-	end)
+		return -calculate_match_score(entry.value, prompt)
+	end
+
+	local previewer = previewers.new_buffer_previewer({
+		title = "Citation Details",
+		define_preview = function(self, entry)
+			local content = create_preview_content(entry.value, self.state.winid)
+			vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, content)
+			vim.api.nvim_buf_set_option(self.state.bufnr, "filetype", "text")
+			vim.api.nvim_buf_set_option(self.state.bufnr, "wrap", true)
+		end,
+	})
+
+	pickers
+		.new({}, {
+			prompt_title = "Citations 󱔗",
+			finder = finders.new_table({
+				results = citations,
+				entry_maker = function(entry)
+					return {
+						value = entry,
+						display = format_citation_display(entry),
+						ordinal = entry.key .. " " .. (entry.title or "") .. " " .. (entry.author or ""),
+					}
+				end,
+			}),
+			sorter = custom_sorter,
+			previewer = previewer,
+			attach_mappings = function(prompt_bufnr, map)
+				map({ "i", "n" }, "<Tab>", multi_select.toggle_selection)
+				actions.select_default:replace(function()
+					local selections = {}
+					local picker = action_state.get_current_picker(prompt_bufnr)
+					for entry in picker.manager:iter() do
+						if picker:is_multi_selected(entry) then
+							table.insert(selections, entry.value.key)
+						end
+					end
+					if #selections == 0 then
+						local current_entry = action_state.get_selected_entry()
+						if current_entry then
+							table.insert(selections, current_entry.value.key)
+						end
+					end
+					actions.close(prompt_bufnr)
+					if #selections > 0 then
+						table.sort(selections)
+						apply_insert_at_saved_context(saved, selections)
+					end
+				end)
+				return true
+			end,
+		})
+		:find()
 end
 
 ---------------------------------------------------------------------
--- Picker for replacing citations
+-- Telescope picker for replacing citations (single selection)
 ---------------------------------------------------------------------
 local function citation_replace()
 	local citation_info = get_citation_under_cursor()
@@ -269,34 +426,76 @@ local function citation_replace()
 		return
 	end
 
-	local items = {}
-	for _, e in ipairs(citations) do
-		local display = format_citation_entry(e)
-		if e.key == citation_info.key then
-			display = display .. " (current)"
-		end
-		table.insert(items, { display = display, key = e.key, entry = e })
-	end
-
 	local cur_win = vim.api.nvim_get_current_win()
 	local cur_buf = vim.api.nvim_get_current_buf()
 	local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
-	local saved = { win = cur_win, buf = cur_buf, row = cur_row, col = cur_col, was_insert_mode = vim.api.nvim_get_mode().mode:find("i") ~= nil }
+	local saved = {
+		win = cur_win,
+		buf = cur_buf,
+		row = cur_row,
+		col = cur_col,
+		was_insert_mode = vim.api.nvim_get_mode().mode:find("i") ~= nil,
+	}
 
-	vim.ui.select(items, {
-		prompt = "Replace citation @" .. citation_info.key .. " with: ",
-		format_item = function(item)
-			return item.display
-		end,
-	}, function(choice)
-		if choice then
-			if choice.key ~= citation_info.key then
-				replace_citation_at_cursor(saved, choice.key, citation_info)
-			else
-				vim.notify("Same citation selected, no replacement needed", vim.log.levels.INFO)
-			end
+	local pickers = require("telescope.pickers")
+	local finders = require("telescope.finders")
+	local conf = require("telescope.config").values
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+	local previewers = require("telescope.previewers")
+
+	local custom_sorter = conf.generic_sorter({})
+	local original_scoring_function = custom_sorter.scoring_function
+	custom_sorter.scoring_function = function(self, prompt, line, entry)
+		if not entry or not entry.value then
+			return original_scoring_function(self, prompt, line, entry)
 		end
-	end)
+		return -calculate_match_score(entry.value, prompt)
+	end
+
+	local previewer = previewers.new_buffer_previewer({
+		title = "Citation Details",
+		define_preview = function(self, entry)
+			local content = create_preview_content(entry.value, self.state.winid)
+			vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, content)
+			vim.api.nvim_buf_set_option(self.state.bufnr, "filetype", "text")
+			vim.api.nvim_buf_set_option(self.state.bufnr, "wrap", true)
+		end,
+	})
+
+	pickers
+		.new({}, {
+			prompt_title = "Replace citation @" .. citation_info.key .. " with:",
+			finder = finders.new_table({
+				results = citations,
+				entry_maker = function(entry)
+					local display = format_citation_display(entry)
+					if entry.key == citation_info.key then
+						display = display .. " (current)"
+					end
+					return {
+						value = entry,
+						display = display,
+						ordinal = entry.key .. " " .. (entry.title or "") .. " " .. (entry.author or ""),
+					}
+				end,
+			}),
+			sorter = custom_sorter,
+			previewer = previewer,
+			attach_mappings = function(prompt_bufnr, map)
+				actions.select_default:replace(function()
+					actions.close(prompt_bufnr)
+					local selection = action_state.get_selected_entry()
+					if selection and selection.value.key ~= citation_info.key then
+						replace_citation_at_cursor(saved, selection.value.key, citation_info)
+					else
+						vim.notify("Same citation selected, no replacement needed", vim.log.levels.INFO)
+					end
+				end)
+				return true
+			end,
+		})
+		:find()
 end
 
 ---------------------------------------------------------------------
@@ -307,4 +506,3 @@ return {
 	citation_replace = citation_replace,
 	parse_bib_file = parse_bib_file,
 }
-
