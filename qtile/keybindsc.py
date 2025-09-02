@@ -12,12 +12,24 @@ terminal = "alacritty"
 def swap_screens():
     @lazy.function
     def __inner(qtile):
-        i = qtile.screens.index(qtile.current_screen)
-        group = qtile.screens[i - 1].group
-        qtile.current_screen.set_group(group)
+        if len(qtile.screens) < 2:
+            return
+        
+        # Get current screen index
+        current_screen_index = qtile.screens.index(qtile.current_screen)
+        
+        # Calculate other screen index (works for 2+ screens)
+        other_screen_index = (current_screen_index + 1) % len(qtile.screens)
+        
+        # Get the groups from both screens
+        current_group = qtile.current_screen.group
+        other_group = qtile.screens[other_screen_index].group
+        
+        # Swap the groups without changing focus
+        qtile.screens[other_screen_index].set_group(current_group)
+        qtile.current_screen.set_group(other_group)
 
     return __inner
-
 
 keys = [
     Key(
