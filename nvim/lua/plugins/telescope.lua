@@ -3,7 +3,6 @@ return {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      -- Correctly define fzf-native as a dependency
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release",
@@ -13,6 +12,7 @@ return {
     config = function()
       local telescope = require("telescope")
       local actions = require("telescope.actions")
+      local action_layout = require("telescope.actions.layout")
 
       telescope.setup({
         defaults = {
@@ -21,13 +21,28 @@ return {
             prompt_position = "top",
           },
           sorting_strategy = "ascending",
+          mappings = {
+            i = {
+              -- Explicitly remap C-j / C-k
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
+              ["<C-p>"] = action_layout.toggle_preview,
+              ["<C-h>"] = actions.which_key,            -- show keybindings inside Telescope
+              ["<C-s>"] = actions.cycle_previewers_next, -- cycle through previewers
+            },
+            n = {
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
+              ["<C-p>"] = action_layout.toggle_preview,
+              ["<C-h>"] = actions.which_key,            -- show keybindings inside Telescope
+              ["<C-s>"] = actions.cycle_previewers_next, -- cycle through previewers
+            },
+          },
         },
         pickers = {
           buffers = {
             show_all_buffers = true,
             sort_lastused = true,
-            theme = "dropdown",
-            previewer = false,
             mappings = {
               i = {
                 ["<c-d>"] = "delete_buffer",
@@ -44,7 +59,6 @@ return {
           ["ui-select"] = {
             require("telescope.themes").get_dropdown({}),
           },
-          -- Correctly configure fzf
           fzf = {
             fuzzy = true,
             override_generic_sorter = true,
@@ -53,9 +67,10 @@ return {
           },
         },
       })
-      -- Load extensions after setup
+
       telescope.load_extension("ui-select")
       telescope.load_extension("fzf")
     end,
   },
 }
+
