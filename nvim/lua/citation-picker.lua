@@ -1,5 +1,4 @@
 -- Citation picker
--- Path to your .bib file (adjust as needed)
 local bib_file = vim.fn.expand("~/Documents/zotero.bib")
 
 ---------------------------------------------------------------------
@@ -16,14 +15,11 @@ local function parse_bib_file(file_path)
 	local in_entry = false
 
 	for line in file:lines() do
-		-- Match entry start: @article{key, @book{key, etc.
 		local entry_type, key = line:match("^%s*@(%w+)%s*{%s*([^,%s]+)")
 		if entry_type and key then
-			-- Save previous entry if exists
 			if current_entry.key then
 				table.insert(citations, current_entry)
 			end
-			-- Start new entry
 			current_entry = {
 				key = key,
 				type = entry_type,
@@ -33,20 +29,15 @@ local function parse_bib_file(file_path)
 			}
 			in_entry = true
 		elseif in_entry then
-			-- Extract title (handle multi-brace and quoted forms)
 			local title = line:match('%s*title%s*=%s*[{"](.-)[}",]*$')
 			if title then
 				current_entry.title = current_entry.title .. " " .. title
 				current_entry.title = current_entry.title:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
 			end
-
-			-- Extract author
 			local author = line:match('%s*author%s*=%s*[{"](.-)[}",]*$')
 			if author then
 				current_entry.author = author:gsub("[{}]", "")
 			end
-
-			-- Extract year (or date if year missing)
 			local year = line:match('%s*year%s*=%s*[{"]*(%d+)[}",]*')
 			local date = line:match('%s*date%s*=%s*[{"]*(%d+)[}",]*')
 			if year then
@@ -54,15 +45,12 @@ local function parse_bib_file(file_path)
 			elseif date then
 				current_entry.year = date
 			end
-
-			-- End of entry
 			if line:match("^%s*}%s*$") then
 				in_entry = false
 			end
 		end
 	end
 
-	-- Add last entry
 	if current_entry.key then
 		table.insert(citations, current_entry)
 	end
@@ -91,34 +79,66 @@ end
 local function get_citation_under_cursor()
 	local line = vim.api.nvim_get_current_line()
 	local col = vim.api.nvim_win_get_cursor(0)[2]
-	
-	-- Look for citation pattern @citationkey
-	-- Find all citations in the line
-	local citations = {}
-	for citation in line:gmatch("@([%w_%-:%.]+)") do
-		table.insert(citations, citation)
-	end
-	
-	-- Find which citation the cursor is on
+
 	local pos = 1
 	for citation in line:gmatch("@([%w_%-:%.]+)") do
 		local start_pos, end_pos = line:find("@" .. citation, pos, true)
 		if start_pos and col >= start_pos - 1 and col <= end_pos then
 			return {
 				key = citation,
-				start_col = start_pos - 1, -- 0-indexed for nvim API
+				start_col = start_pos - 1,
 				end_col = end_pos,
-				full_match = "@" .. citation
+				full_match = "@" .. citation,
 			}
 		end
 		pos = end_pos and end_pos + 1 or pos + 1
 	end
-	
 	return nil
 end
 
 ---------------------------------------------------------------------
--- FIXED: Robust insertion helper with proper cursor positioning
+-- Helpers: cursor management
+---------------------------------------------------------------------
+local function set_cursor_after_inserted_text(buf, win, row, start_col, inserted_text)
+	if not vim.api.nvim_buf_is_valid(buf) then
+		return nil
+	end
+
+	local winid = (win and vim.api.nvim_win_is_valid(win)) and win or 0
+	local target_col = start_col + #inserted_text
+
+	pcall(vim.api.nvim_set_current_win, winid)
+	pcall(vim.api.nvim_set_current_buf, buf)
+	pcall(vim.api.nvim_win_set_cursor, winid, { row, target_col })
+
+	return target_col
+end
+
+local function reenter_insert_mode_at_cursor_for_buffer(win, buf, row, col, inserted_text_len)
+	local winid = (win and vim.api.nvim_win_is_valid(win)) and win or 0
+	pcall(vim.api.nvim_set_current_win, winid)
+	pcall(vim.api.nvim_set_current_buf, buf)
+
+	-- Get current line after insertion
+	local ok, lines = pcall(vim.api.nvim_buf_get_lines, buf, row - 1, row, false)
+	local line = (ok and lines and #lines > 0) and lines[1] or ""
+
+	-- Determine cursor column after insertion
+	local cursor_col = col + inserted_text_len
+	pcall(vim.api.nvim_win_set_cursor, winid, { row, cursor_col })
+
+	-- Feed "i" if there is text after the inserted citation, "a" if at end of line
+	local key
+	if cursor_col >= #line then
+		key = vim.api.nvim_replace_termcodes("a", true, false, true)
+	else
+		key = vim.api.nvim_replace_termcodes("i", true, false, true)
+	end
+	pcall(vim.api.nvim_feedkeys, key, "n", true)
+end
+
+---------------------------------------------------------------------
+-- Insert citation
 ---------------------------------------------------------------------
 local function apply_insert_at_saved_context(saved, citation_key)
 	if not saved or not citation_key then
@@ -127,7 +147,6 @@ local function apply_insert_at_saved_context(saved, citation_key)
 	local insert_text = "@" .. citation_key
 
 	if not vim.api.nvim_buf_is_valid(saved.buf) then
-		vim.notify("Buffer for citation insertion is no longer valid", vim.log.levels.WARN)
 		return
 	end
 
@@ -137,46 +156,38 @@ local function apply_insert_at_saved_context(saved, citation_key)
 	pcall(vim.api.nvim_set_current_buf, saved.buf)
 
 	local row, col = saved.row, saved.col
-
-	-- Normal mode adjustment: move col after cursor for proper insertion
 	if not saved.was_insert_mode then
 		col = col + 1
 	end
 
-	-- Insert the text
 	local ok = false
 	if vim.api.nvim_buf_set_text then
 		ok = pcall(function()
 			vim.api.nvim_buf_set_text(saved.buf, row - 1, col, row - 1, col, { insert_text })
 		end)
 	end
-
 	if not ok then
-		-- fallback using nvim_put
 		pcall(vim.api.nvim_put, { insert_text }, "c", false, true)
 	end
 
-	-- FIXED: Set cursor position right after the inserted citation
-	local new_col = col + #insert_text
-	pcall(vim.api.nvim_win_set_cursor, 0, { row, new_col })
+	set_cursor_after_inserted_text(saved.buf, saved.win, row, col, insert_text)
 
 	if saved.was_insert_mode then
-		vim.cmd("startinsert!")
+		reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, col, #insert_text)
 	end
 end
 
 ---------------------------------------------------------------------
--- NEW: Replace citation under cursor
+-- Replace citation
 ---------------------------------------------------------------------
 local function replace_citation_at_cursor(saved, new_citation_key, citation_info)
 	if not saved or not new_citation_key or not citation_info then
 		return
 	end
-	
+
 	local new_text = "@" .. new_citation_key
 
 	if not vim.api.nvim_buf_is_valid(saved.buf) then
-		vim.notify("Buffer for citation replacement is no longer valid", vim.log.levels.WARN)
 		return
 	end
 
@@ -187,22 +198,22 @@ local function replace_citation_at_cursor(saved, new_citation_key, citation_info
 
 	local row = saved.row
 
-	-- Replace the citation
 	local ok = pcall(function()
 		vim.api.nvim_buf_set_text(
-			saved.buf, 
-			row - 1, 
-			citation_info.start_col, 
-			row - 1, 
-			citation_info.end_col, 
+			saved.buf,
+			row - 1,
+			citation_info.start_col,
+			row - 1,
+			citation_info.end_col,
 			{ new_text }
 		)
 	end)
 
 	if ok then
-		-- Set cursor position right after the replaced citation
-		local new_col = citation_info.start_col + #new_text
-		pcall(vim.api.nvim_win_set_cursor, 0, { row, new_col })
+		set_cursor_after_inserted_text(saved.buf, saved.win, row, citation_info.start_col, new_text)
+		if saved.was_insert_mode then
+			reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, citation_info.start_col, #new_text)
+		end
 		vim.notify("Replaced citation: " .. citation_info.key .. " → " .. new_citation_key, vim.log.levels.INFO)
 	else
 		vim.notify("Failed to replace citation", vim.log.levels.ERROR)
@@ -243,10 +254,9 @@ local function citation_picker()
 end
 
 ---------------------------------------------------------------------
--- NEW: Picker for replacing citations
+-- Picker for replacing citations
 ---------------------------------------------------------------------
 local function citation_replace()
-	-- First, check if cursor is on a citation
 	local citation_info = get_citation_under_cursor()
 	if not citation_info then
 		vim.notify("Cursor is not on a citation", vim.log.levels.WARN)
@@ -261,7 +271,6 @@ local function citation_replace()
 
 	local items = {}
 	for _, e in ipairs(citations) do
-		-- Mark the current citation in the list
 		local display = format_citation_entry(e)
 		if e.key == citation_info.key then
 			display = display .. " (current)"
@@ -272,7 +281,7 @@ local function citation_replace()
 	local cur_win = vim.api.nvim_get_current_win()
 	local cur_buf = vim.api.nvim_get_current_buf()
 	local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
-	local saved = { win = cur_win, buf = cur_buf, row = cur_row, col = cur_col }
+	local saved = { win = cur_win, buf = cur_buf, row = cur_row, col = cur_col, was_insert_mode = vim.api.nvim_get_mode().mode:find("i") ~= nil }
 
 	vim.ui.select(items, {
 		prompt = "Replace citation @" .. citation_info.key .. " with: ",
@@ -281,10 +290,10 @@ local function citation_replace()
 		end,
 	}, function(choice)
 		if choice then
-			if choice.key == citation_info.key then
-				vim.notify("Same citation selected, no replacement needed", vim.log.levels.INFO)
-			else
+			if choice.key ~= citation_info.key then
 				replace_citation_at_cursor(saved, choice.key, citation_info)
+			else
+				vim.notify("Same citation selected, no replacement needed", vim.log.levels.INFO)
 			end
 		end
 	end)
@@ -298,3 +307,4 @@ return {
 	citation_replace = citation_replace,
 	parse_bib_file = parse_bib_file,
 }
+
