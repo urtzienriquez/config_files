@@ -35,8 +35,8 @@ return {
 		noice.setup(opts)
 
 		local macro_group = vim.api.nvim_create_augroup("MacroRecording", { clear = true })
-		local macro_id = "macro_recording"
 		local last_recorded_register = nil
+		local recording_notification = nil
 
 		-- When macro recording starts
 		vim.api.nvim_create_autocmd("RecordingEnter", {
@@ -45,10 +45,17 @@ return {
 				local reg = vim.fn.reg_recording()
 				last_recorded_register = reg
 
-				require("noice").notify("Recording macro @" .. reg, "info", {
+				-- First dismiss any existing macro notifications
+				if recording_notification then
+					pcall(function()
+						require("notify").dismiss({ id = recording_notification.id })
+					end)
+				end
+
+				-- Create new recording notification
+				recording_notification = require("notify")("Recording macro @" .. reg, vim.log.levels.INFO, {
 					title = "Macro Recording",
 					timeout = false,
-					replace = macro_id,
 				})
 			end,
 		})
@@ -58,14 +65,24 @@ return {
 			group = macro_group,
 			callback = function()
 				vim.defer_fn(function()
+					-- Dismiss the recording notification first
+					if recording_notification then
+						pcall(function()
+							require("notify").dismiss({ id = recording_notification.id })
+						end)
+					end
+
+					-- Show completion notification
 					if last_recorded_register then
-						require("noice").notify("Macro recorded @" .. last_recorded_register, "info", {
+						require("notify")("Macro recorded @" .. last_recorded_register, vim.log.levels.INFO, {
 							title = "Macro Recording",
 							timeout = 1500,
-							replace = macro_id,
 						})
 					end
+
+					-- Clean up
 					last_recorded_register = nil
+					recording_notification = nil
 				end, 50)
 			end,
 		})
