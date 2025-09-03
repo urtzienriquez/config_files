@@ -6,6 +6,21 @@ vim.g.maplocalleader = " "
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
 
+-- FILETYPE DETECTION - Add this section to properly detect file types
+vim.filetype.add({
+	extension = {
+		jmd = "markdown",  -- Julia Markdown files
+		qmd = "markdown",  -- Quarto files  
+		Qmd = "markdown",  -- Quarto files (capitalized)
+		rmd = "rmd",       -- R Markdown files
+		Rmd = "rmd",       -- R Markdown files (capitalized)
+	},
+	pattern = {
+		[".*%.qmd"] = "markdown",
+		[".*%.jmd"] = "markdown",
+	}
+})
+
 -- Disable arrow keys in normal mode
 vim.api.nvim_set_keymap("n", "<Up>", "<Nop>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<Down>", "<Nop>", { noremap = true, silent = true })

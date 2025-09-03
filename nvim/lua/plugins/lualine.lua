@@ -11,7 +11,18 @@ return {
 				globalstatus = true,
 			},
 			sections = {
-				lualine_a = { "buffers" },
+				lualine_a = {
+					{
+						"filename",
+						path = 3,
+						symbols = {
+							modified = "", -- remove [+]
+							readonly = " ", -- remove [RO]
+							unnamed = "[No Name]", -- still keep unnamed buffers readable
+							newfile = "", -- remove [New]
+						},
+					},
+				},
 				lualine_b = { { "branch", icon = "󰘬" }, "diff", "diagnostics" },
 				lualine_c = {},
 				lualine_x = {},
@@ -19,6 +30,5 @@ return {
 				lualine_z = { "progress", "location" },
 			},
 		})
-
 	end,
 }

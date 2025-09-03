@@ -150,11 +150,15 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find keymaps" })
 		vim.keymap.set("n", "<leader>fs", builtin.builtin, { desc = "Find select picker" })
 		vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "Find word" })
-		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Find diagnostics" })
+		vim.keymap.set("n", "<leader>fdg", builtin.diagnostics, { desc = "Find diagnostics globally (in workspace)" })
+		vim.keymap.set("n", "<leader>fdd", function()
+			builtin.diagnostics({ bufnr = 0 })
+		end, { desc = "Find diagnostics in current buffer" })
 		vim.keymap.set("n", "<leader>fl", builtin.lsp_definitions, { desc = "Find lsp definitions" })
+		vim.keymap.set("n", "<leader>ft", builtin.treesitter, { desc = "treesitter symbols" })
 		vim.keymap.set("n", "<leader>fm", builtin.spell_suggest, { desc = "Find (misspelled) spell suggestion" })
-    vim.keymap.set("n", "<leader>f,", builtin.resume, { desc = "Find resume" })
-		vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = "Find recent files"})
+		vim.keymap.set("n", "<leader>f,", builtin.resume, { desc = "Find resume" })
+		vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = "Find recent files" })
 
 		-- ========================================
 		-- Conform (formatting) keymaps
@@ -227,7 +231,6 @@ vim.api.nvim_create_autocmd("User", {
 			vim.keymap.set({ "n", "t" }, "[[", function()
 				Snacks.words.jump(-vim.v.count1)
 			end, { desc = "Prev Reference" })
-
 		end
 	end,
 })
@@ -277,7 +280,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(event)
 		local opts = { buffer = event.buf, silent = true }
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Information hover" }))
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
 	end,
 })
 
@@ -292,6 +294,7 @@ vim.api.nvim_create_autocmd("User", {
 			wk.add({
 				-- Main groups
 				{ "<leader>f", group = "Find" },
+				{ "<leader>fd", group = "diagnostics" },
 				{ "<leader>b", group = "Buffer" },
 				{ "<leader>c", group = "Close REPL" },
 				{ "<leader>g", group = "Git" },
@@ -315,8 +318,10 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>fk", desc = "keymaps" },
 				{ "<leader>fs", desc = "select picker" },
 				{ "<leader>fw", desc = "word" },
-				{ "<leader>fd", desc = "diagnostics" },
+				{ "<leader>fdg", desc = "globally" },
+				{ "<leader>fdd", desc = "in current buffer" },
 				{ "<leader>fl", desc = "lsp definitions" },
+				{ "<leader>ft", desc = "treesitter symbols" },
 				{ "<leader>fm", desc = "(misspelled) spell suggestion" },
 				{ "<leader>f,", desc = "resume" },
 				{ "<leader>f.", desc = "recent files" },

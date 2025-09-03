@@ -19,17 +19,21 @@ return {
 				"query",
 				"vim",
 				"vimdoc",
-				"rnoweb",
+				"rnoweb",  -- For R Markdown (.Rmd files)
 				"yaml",
 				"r",
 				"julia",
 				"matlab",
+				"python",  -- Added for better support
+				"javascript",  -- Added for web content in markdown
+				"css",  -- Added for styling in markdown
+				"json",  -- Added for JSON blocks in markdown
 			},
-			auto_install = false,
+			auto_install = true,  -- Changed to true to automatically install missing parsers
 			highlight = {
 				enable = true,
 				disable = { "fortran" },
-				additional_vim_regex_highlighting = { "ruby" },
+				additional_vim_regex_highlighting = { "ruby", "markdown" },  -- Added markdown for better highlighting
 			},
 			indent = {
 				enable = true,
