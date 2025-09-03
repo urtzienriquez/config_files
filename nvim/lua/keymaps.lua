@@ -107,6 +107,22 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- add all variants of a word to spellfile
+vim.api.nvim_create_user_command('ZgVariants', function()
+  local word = vim.fn.expand('<cword>')
+  local variants = {
+    word:lower(),
+    word:sub(1,1):upper() .. word:sub(2):lower(),
+    word:upper()
+  }
+  for _, v in ipairs(variants) do
+    vim.cmd('silent spellgood ' .. v)  -- <- suppress messages
+  end
+  print("Added variants of '" .. word .. "' to spellfile")
+end, {})
+
+vim.keymap.set('n', 'zg', ':ZgVariants<CR>', { noremap = true, silent = true })
+
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
 -- ========================================
