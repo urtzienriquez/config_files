@@ -53,8 +53,8 @@ return {
 				end
 
 				-- Create new recording notification
-				recording_notification = require("notify")("Recording macro @" .. reg, vim.log.levels.INFO, {
-					title = "Macro Recording",
+				recording_notification = require("notify")(" Recording macro @" .. reg, vim.log.levels.INFO, {
+					title = "Macro recording started",
 					timeout = false,
 				})
 			end,
@@ -74,8 +74,8 @@ return {
 
 					-- Show completion notification
 					if last_recorded_register then
-						require("notify")("Macro recorded @" .. last_recorded_register, vim.log.levels.INFO, {
-							title = "Macro Recording",
+						require("notify")(" Macro recorded @" .. last_recorded_register, vim.log.levels.INFO, {
+							title = "Macro recording finished",
 							timeout = 1500,
 						})
 					end
