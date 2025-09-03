@@ -7,7 +7,7 @@ return {
 				theme = "nightfly",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
-				disabled_filetypes = { "snacks_dashboard" },
+				disabled_filetypes = { "snacks_dashboard", "TelescopePrompt", "TelescopeResults" },
 				globalstatus = true,
 			},
 			sections = {
@@ -19,5 +19,6 @@ return {
 				lualine_z = { "progress", "location" },
 			},
 		})
+
 	end,
 }
