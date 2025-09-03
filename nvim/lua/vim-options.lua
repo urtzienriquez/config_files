@@ -6,21 +6,6 @@ vim.g.maplocalleader = " "
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
 
--- FILETYPE DETECTION - Add this section to properly detect file types
-vim.filetype.add({
-	extension = {
-		jmd = "markdown",  -- Julia Markdown files
-		qmd = "markdown",  -- Quarto files  
-		Qmd = "markdown",  -- Quarto files (capitalized)
-		rmd = "rmd",       -- R Markdown files
-		Rmd = "rmd",       -- R Markdown files (capitalized)
-	},
-	pattern = {
-		[".*%.qmd"] = "markdown",
-		[".*%.jmd"] = "markdown",
-	}
-})
-
 -- Disable arrow keys in normal mode
 vim.api.nvim_set_keymap("n", "<Up>", "<Nop>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<Down>", "<Nop>", { noremap = true, silent = true })
@@ -74,24 +59,30 @@ vim.api.nvim_create_autocmd({ "VimResized" }, { pattern = "*", command = "wincmd
 
 -- Better line wrapping for text files
 vim.api.nvim_create_autocmd("FileType", {
-pattern = { 
-        "markdown", 
-        "text", 
-        "rmd", "Rmd",           -- R Markdown
-        "jmd", "Jmd",           -- Julia Markdown (Weave.jl)
-        "quarto", "qmd", "Qmd", -- Quarto
-        "org",                  -- Org-mode files
-        "rst",                  -- reStructuredText
-        "asciidoc", "adoc",     -- AsciiDoc
-        "tex", "latex",         -- LaTeX files
-        "wiki",                 -- Wiki files
-        "textile",              -- Textile markup
-        "mail",                 -- Email files
-        "gitcommit",            -- Git commit messages
-    },
-    callback = function()
-        vim.opt_local.wrap = true
-        vim.opt_local.linebreak = true  -- Break at word boundaries
-        vim.opt_local.showbreak = "↳ "  -- Visual indicator for wrapped lines
-    end,
+	pattern = {
+		"markdown",
+		"text",
+		"rmd",
+		"Rmd", -- R Markdown
+		"jmd",
+		"Jmd", -- Julia Markdown (Weave.jl)
+		"quarto",
+		"qmd",
+		"Qmd", -- Quarto
+		"org", -- Org-mode files
+		"rst", -- reStructuredText
+		"asciidoc",
+		"adoc", -- AsciiDoc
+		"tex",
+		"latex", -- LaTeX files
+		"wiki", -- Wiki files
+		"textile", -- Textile markup
+		"mail", -- Email files
+		"gitcommit", -- Git commit messages
+	},
+	callback = function()
+		vim.opt_local.wrap = true
+		vim.opt_local.linebreak = true -- Break at word boundaries
+		vim.opt_local.showbreak = "↳ " -- Visual indicator for wrapped lines
+	end,
 })

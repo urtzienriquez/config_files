@@ -143,19 +143,20 @@ vim.api.nvim_create_autocmd("User", {
 		-- ========================================
 
 		local builtin = require("telescope.builtin")
+		vim.keymap.set("n", "<leader>fp", builtin.builtin, { desc = "Find picker" })
 		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find file" })
 		vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Find with grep" })
 		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
 		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help tags" })
 		vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find keymaps" })
-		vim.keymap.set("n", "<leader>fs", builtin.builtin, { desc = "Find select picker" })
 		vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "Find word" })
 		vim.keymap.set("n", "<leader>fdg", builtin.diagnostics, { desc = "Find diagnostics globally (in workspace)" })
 		vim.keymap.set("n", "<leader>fdd", function()
 			builtin.diagnostics({ bufnr = 0 })
 		end, { desc = "Find diagnostics in current buffer" })
 		vim.keymap.set("n", "<leader>fl", builtin.lsp_definitions, { desc = "Find lsp definitions" })
-		vim.keymap.set("n", "<leader>ft", builtin.treesitter, { desc = "treesitter symbols" })
+		vim.keymap.set("n", "<leader>fs", builtin.lsp_document_symbols, { desc = "Find lsp document symbols" })
+		vim.keymap.set("n", "<leader>ft", builtin.treesitter, { desc = "Find treesitter symbols" })
 		vim.keymap.set("n", "<leader>fm", builtin.spell_suggest, { desc = "Find (misspelled) spell suggestion" })
 		vim.keymap.set("n", "<leader>f,", builtin.resume, { desc = "Find resume" })
 		vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = "Find recent files" })
@@ -311,16 +312,17 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>om", desc = "Open MATLAB REPL" },
 				{ "<leader>cr", desc = "Close REPL" },
 
+				{ "<leader>fp", desc = "picker" },
 				{ "<leader>ff", desc = "files" },
 				{ "<leader>fg", desc = "grep" },
 				{ "<leader>fb", desc = "buffers" },
 				{ "<leader>fh", desc = "help tags" },
 				{ "<leader>fk", desc = "keymaps" },
-				{ "<leader>fs", desc = "select picker" },
 				{ "<leader>fw", desc = "word" },
 				{ "<leader>fdg", desc = "globally" },
 				{ "<leader>fdd", desc = "in current buffer" },
 				{ "<leader>fl", desc = "lsp definitions" },
+				{ "<leader>fs", desc = "lsp symbols" },
 				{ "<leader>ft", desc = "treesitter symbols" },
 				{ "<leader>fm", desc = "(misspelled) spell suggestion" },
 				{ "<leader>f,", desc = "resume" },

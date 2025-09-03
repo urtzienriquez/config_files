@@ -19,7 +19,7 @@ return {
 				"query",
 				"vim",
 				"vimdoc",
-				"rnoweb",  -- For R Markdown (.Rmd files)
+				"rnoweb", -- for Rmarkdown
 				"yaml",
 				"r",
 				"julia",
