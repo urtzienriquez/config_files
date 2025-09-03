@@ -139,52 +139,25 @@ vim.api.nvim_create_autocmd("User", {
 		end
 
 		-- ========================================
-		-- Snacks picker (fuzzy finding) keymaps
+		-- Telescope pickers (fuzzy finding) keymaps
+    --  + Snacks spelling picker
 		-- ========================================
-		-- if _G.Snacks and _G.Snacks.picker then
-		-- 	vim.keymap.set("n", "<leader>fs", function()
-		-- 		Snacks.picker.smart()
-		-- 	end, { desc = "Smart files" })
-		-- 	vim.keymap.set("n", "<leader>ff", function()
-		-- 		Snacks.picker.files()
-		-- 	end, { desc = "Find files" })
-		-- 	vim.keymap.set("n", "<leader>fb", function()
-		-- 		Snacks.picker.buffers({
-		-- 			win = { input = { keys = { ["<C-d>"] = { "bufdelete", mode = { "i", "n" } } } } },
-		-- 		})
-		-- 	end, { desc = "Find buffers" })
-		-- 	vim.keymap.set("n", "<leader>fg", function()
-		-- 		Snacks.picker.grep()
-		-- 	end, { desc = "Find grep" })
-		-- 	vim.keymap.set("n", "<leader>fG", function()
-		-- 		Snacks.picker.grep_buffers()
-		-- 	end, { desc = "Grep in buffers" })
-		-- 	vim.keymap.set("n", "<leader>fd", function()
-		-- 		Snacks.picker.diagnostics_buffer()
-		-- 	end, { desc = "Find diagnostics" })
-		-- 	vim.keymap.set("n", "<leader>fk", function()
-		-- 		Snacks.picker.keymaps()
-		-- 	end, { desc = "Find keymaps" })
-		-- 	vim.keymap.set("n", "<leader>fw", function()
-		-- 		Snacks.picker.spelling()
-		-- 	end, { desc = "Find spell suggestions" })
-		-- end
-		--
 
 		local builtin = require("telescope.builtin")
-		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope [f]ind [f]iles" })
-		vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope [f]ind with [g]rep inside the file" })
-		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope [f]ind [b]uffers" })
-		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope [f]ind [h]elp tags" })
-		vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "[f]ind [k]eymaps" })
-		vim.keymap.set("n", "<leader>fs", builtin.builtin, { desc = "[f]ind [s]elect Telescope" })
-		vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "[f]ind current [w]ord" })
-		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "[f]ind [d]iagnostics" })
-		vim.keymap.set("n", "<leader>f,", builtin.resume, { desc = "[f]ind [r]esume" })
-		vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = '[f]ind Recent Files ("." for repeat)' })
+		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find file (telescope)" })
+		vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Find with grep (telescope)" })
+		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers (telescope)" })
+		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help tags (telescope)" })
+		vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find keymaps (telescope)" })
+		vim.keymap.set("n", "<leader>fs", builtin.builtin, { desc = "Find select picker (telescope)" })
+		vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "Find word (telescope)" })
+		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Find diagnostics (telescope)" })
+		vim.keymap.set("n", "<leader>fl", builtin.lsp_definitions, { desc = "Find lsp definitions (telescope)" })
+    vim.keymap.set("n", "<leader>f,", builtin.resume, { desc = "Find resume (telescope)" })
+		vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = "Find recent files (telescope)"})
 		vim.keymap.set("n", "<leader>fm", function()
 			Snacks.picker.spelling()
-		end, { desc = "Find misspelled word suggestions" })
+		end, { desc = "Find misspelled word suggestions (snacks)" })
 
 		-- ========================================
 		-- Conform (formatting) keymaps
@@ -221,14 +194,6 @@ vim.api.nvim_create_autocmd("User", {
 				Snacks.zen.zoom()
 			end, { desc = "Toggle Zoom" })
 
-			-- Scratch buffer
-			vim.keymap.set("n", "<leader>.", function()
-				Snacks.scratch()
-			end, { desc = "Toggle Scratch Buffer" })
-			vim.keymap.set("n", "<leader>S", function()
-				Snacks.scratch.select()
-			end, { desc = "Select Scratch Buffer" })
-
 			-- Notifications
 			vim.keymap.set("n", "<leader>n", function()
 				Snacks.notifier.show_history()
@@ -241,11 +206,6 @@ vim.api.nvim_create_autocmd("User", {
 			vim.keymap.set("n", "<leader>bd", function()
 				Snacks.bufdelete()
 			end, { desc = "Delete Buffer" })
-
-			-- File operations
-			vim.keymap.set("n", "<leader>R", function()
-				Snacks.rename.rename_file()
-			end, { desc = "Rename File" })
 
 			-- Git
 			vim.keymap.set({ "n", "v" }, "<leader>gB", function()
@@ -271,21 +231,6 @@ vim.api.nvim_create_autocmd("User", {
 				Snacks.words.jump(-vim.v.count1)
 			end, { desc = "Prev Reference" })
 
-			-- Neovim news
-			vim.keymap.set("n", "<leader>N", function()
-				Snacks.win({
-					file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
-					width = 0.6,
-					height = 0.6,
-					wo = {
-						spell = false,
-						wrap = false,
-						signcolumn = "yes",
-						statuscolumn = " ",
-						conceallevel = 3,
-					},
-				})
-			end, { desc = "Neovim News" })
 		end
 	end,
 })
@@ -299,26 +244,23 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
 	callback = function()
 		local opts = { buffer = true, silent = true }
-		-- Insert new citation
 		vim.keymap.set(
 			"i",
 			"<C-Space>",
 			citation.citation_picker,
-			vim.tbl_extend("force", opts, { desc = "Open citation picker" })
+			vim.tbl_extend("force", opts, { desc = "Find citations (custom)" })
 		)
 		vim.keymap.set(
 			"n",
 			"<leader>fc",
 			citation.citation_picker,
-			vim.tbl_extend("force", opts, { desc = "Find citations" })
+			vim.tbl_extend("force", opts, { desc = "Find citations (custom)" })
 		)
-
-		-- NEW: Replace citation under cursor
 		vim.keymap.set(
 			"n",
 			"<leader>fr",
 			citation.citation_replace,
-			vim.tbl_extend("force", opts, { desc = "Replace citation under cursor" })
+			vim.tbl_extend("force", opts, { desc = "Find replacement citation under cursor (custom)" })
 		)
 	end,
 })
@@ -369,19 +311,20 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>om", desc = "Open MATLAB REPL" },
 				{ "<leader>cr", desc = "Close REPL" },
 
-				{ "<leader>ff", desc = "Find files" },
-				{ "<leader>fg", desc = "Find with grep" },
-				{ "<leader>fb", desc = "Find buffers" },
-				{ "<leader>fh", desc = "Find help tags" },
-				{ "<leader>fk", desc = "Find keymaps" },
-				{ "<leader>fs", desc = "Find select picker" },
-				{ "<leader>fw", desc = "Find word" },
-				{ "<leader>fd", desc = "Find diagnostics" },
-				{ "<leader>f,", desc = "Find resume" },
-				{ "<leader>f.", desc = "Find  recent files" },
-				{ "<leader>fm", desc = "Find misspelled word suggestions" },
-				{ "<leader>fc", desc = "Find citation" },
-				{ "<leader>fr", desc = "Find replacement for citation" },
+				{ "<leader>ff", desc = "files" },
+				{ "<leader>fg", desc = "grep" },
+				{ "<leader>fb", desc = "buffers" },
+				{ "<leader>fh", desc = "help tags" },
+				{ "<leader>fk", desc = "keymaps" },
+				{ "<leader>fs", desc = "select picker" },
+				{ "<leader>fw", desc = "word" },
+				{ "<leader>fd", desc = "diagnostics" },
+				{ "<leader>fl", desc = "lsp definitions" },
+				{ "<leader>f,", desc = "resume" },
+				{ "<leader>f.", desc = "recent files" },
+				{ "<leader>fm", desc = "misspelled word suggestions" },
+				{ "<leader>fc", desc = "citation" },
+				{ "<leader>fr", desc = "replacement for citation" },
 
 				{ "<leader>bf", desc = "Format buffer" },
 				{ "<leader>bd", desc = "Delete buffer" },
