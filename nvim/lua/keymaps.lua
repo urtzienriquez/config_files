@@ -132,15 +132,6 @@ vim.api.nvim_create_autocmd("User", {
 	pattern = "VeryLazy",
 	callback = function()
 		-- ========================================
-		-- UFO (code folding) keymaps
-		-- ========================================
-		local ufo_ok, ufo = pcall(require, "ufo")
-		if ufo_ok then
-			vim.keymap.set("n", "zR", ufo.openAllFolds, { desc = "Open all folds" })
-			vim.keymap.set("n", "zM", ufo.closeAllFolds, { desc = "Close all folds" })
-		end
-
-		-- ========================================
 		-- Oil file explorer keymaps
 		-- ========================================
 		local oil_ok, oil = pcall(require, "oil")
