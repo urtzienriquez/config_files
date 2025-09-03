@@ -23,19 +23,18 @@ return {
           sorting_strategy = "ascending",
           mappings = {
             i = {
-              -- Explicitly remap C-j / C-k
               ["<C-j>"] = actions.move_selection_next,
               ["<C-k>"] = actions.move_selection_previous,
               ["<C-p>"] = action_layout.toggle_preview,
-              ["<C-h>"] = actions.which_key,            -- show keybindings inside Telescope
-              ["<C-s>"] = actions.cycle_previewers_next, -- cycle through previewers
+              ["<C-h>"] = actions.which_key,
+              ["<C-s>"] = actions.cycle_previewers_next,
             },
             n = {
               ["<C-j>"] = actions.move_selection_next,
               ["<C-k>"] = actions.move_selection_previous,
               ["<C-p>"] = action_layout.toggle_preview,
-              ["<C-h>"] = actions.which_key,            -- show keybindings inside Telescope
-              ["<C-s>"] = actions.cycle_previewers_next, -- cycle through previewers
+              ["<C-h>"] = actions.which_key,
+              ["<C-s>"] = actions.cycle_previewers_next,
             },
           },
         },
