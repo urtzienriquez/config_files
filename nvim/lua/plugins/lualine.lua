@@ -14,7 +14,7 @@ return {
 				lualine_a = {
 					{
 						"filename",
-						path = 3,
+						path = 0,
 						symbols = {
 							modified = "", -- remove [+]
 							readonly = " ", -- remove [RO]
