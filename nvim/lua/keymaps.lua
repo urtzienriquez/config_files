@@ -139,25 +139,22 @@ vim.api.nvim_create_autocmd("User", {
 		end
 
 		-- ========================================
-		-- Telescope pickers (fuzzy finding) keymaps
-    --  + Snacks spelling picker
+		-- Telescope (fuzzy finding) keymaps
 		-- ========================================
 
 		local builtin = require("telescope.builtin")
-		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find file (telescope)" })
-		vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Find with grep (telescope)" })
-		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers (telescope)" })
-		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help tags (telescope)" })
-		vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find keymaps (telescope)" })
-		vim.keymap.set("n", "<leader>fs", builtin.builtin, { desc = "Find select picker (telescope)" })
-		vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "Find word (telescope)" })
-		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Find diagnostics (telescope)" })
-		vim.keymap.set("n", "<leader>fl", builtin.lsp_definitions, { desc = "Find lsp definitions (telescope)" })
-    vim.keymap.set("n", "<leader>f,", builtin.resume, { desc = "Find resume (telescope)" })
-		vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = "Find recent files (telescope)"})
-		vim.keymap.set("n", "<leader>fm", function()
-			Snacks.picker.spelling()
-		end, { desc = "Find misspelled word suggestions (snacks)" })
+		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find file" })
+		vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Find with grep" })
+		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
+		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help tags" })
+		vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find keymaps" })
+		vim.keymap.set("n", "<leader>fs", builtin.builtin, { desc = "Find select picker" })
+		vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "Find word" })
+		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Find diagnostics" })
+		vim.keymap.set("n", "<leader>fl", builtin.lsp_definitions, { desc = "Find lsp definitions" })
+		vim.keymap.set("n", "<leader>fm", builtin.spell_suggest, { desc = "Find (misspelled) spell suggestion" })
+    vim.keymap.set("n", "<leader>f,", builtin.resume, { desc = "Find resume" })
+		vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = "Find recent files"})
 
 		-- ========================================
 		-- Conform (formatting) keymaps
@@ -320,9 +317,9 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>fw", desc = "word" },
 				{ "<leader>fd", desc = "diagnostics" },
 				{ "<leader>fl", desc = "lsp definitions" },
+				{ "<leader>fm", desc = "(misspelled) spell suggestion" },
 				{ "<leader>f,", desc = "resume" },
 				{ "<leader>f.", desc = "recent files" },
-				{ "<leader>fm", desc = "misspelled word suggestions" },
 				{ "<leader>fc", desc = "citation" },
 				{ "<leader>fr", desc = "replacement for citation" },
 
