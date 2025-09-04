@@ -18,6 +18,9 @@ alias mpm="/opt/mpm"
 # neovim alias
 alias nv='nvim'
 
+# lazygit alias
+alias lg='lazygit'
+
 # R
 alias r='radian'
 
