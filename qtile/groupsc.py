@@ -16,10 +16,10 @@ group_layouts = [
     "columns",
     "columns",
     "columns",
-    "max",
-    "max",
+    "columns",
+    "columns",
     "treetab",
-    "max",
+    "columns",
     "columns",
 ]
 group_matches = [
