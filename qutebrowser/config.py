@@ -59,19 +59,22 @@ config.set("content.notifications.enabled", True)
 # # never use proxy for youtube
 # config.set("content.proxy", "system", "*://youtube.com/")
 
-# # use ranger as file picker
-# config.set("fileselect.handler", "external")
-# config.set(
-#     "fileselect.single_file.command",
-#     ["ghostty", "-e", "ranger", "--choosefile={}"],
-# )
-# config.set(
-#     "fileselect.multiple_files.command",
-#     ["ghostty", "-e", "ranger", "--choosefiles={}"],
-# )
+# use ranger as file picker
+config.set("fileselect.handler", "external")
+config.set(
+    "fileselect.single_file.command",
+    ["alacritty", "-e", "ranger", "--choosefile={}"],
+)
+config.set(
+    "fileselect.multiple_files.command",
+    ["alacritty", "-e", "ranger", "--choosefiles={}"],
+)
 
 # open neovim from qutebrowser
-c.editor.command = ["ghostty", "-e", "/opt/nvim/bin/nvim", "-f", "{}"]
+c.editor.command = ["alacritty", "-e", "/opt/nvim/bin/nvim", "-f", "{}"]
+
+# edit url / to edit text control-e in insert mode sends you to the editor
+config.bind("eu", "edit-url")
 
 # Readline keybinds
 config.bind("<Ctrl-0>", "fake-key <Home>", "insert")
@@ -112,6 +115,10 @@ config.bind("ps", "set content.proxy system")
 
 # download images with hints
 config.bind(";p", "hint images download")
+
+# open page/link in firefox
+config.bind('pf', 'spawn --detach firefox {url}')
+config.bind('ph', 'hint links spawn --detach firefox {hint-url}')
 
 # switch mapping of F and ;f so that:
 # F follows a link to a new active tab
