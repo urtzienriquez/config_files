@@ -63,11 +63,25 @@ config.set("content.notifications.enabled", True)
 config.set("fileselect.handler", "external")
 config.set(
     "fileselect.single_file.command",
-    ["alacritty", "-e", "ranger", "--choosefile={}"],
+    [
+        "alacritty", 
+        "--class=ranger",
+        "-o", "window.dimensions.columns=90",
+        "-o", "window.dimensions.lines=30", 
+        "-e", "ranger", 
+        "--choosefile={}"
+    ],
 )
 config.set(
     "fileselect.multiple_files.command",
-    ["alacritty", "-e", "ranger", "--choosefiles={}"],
+    [
+        "alacritty", 
+        "--class=ranger",
+        "-o", "window.dimensions.columns=90",
+        "-o", "window.dimensions.lines=30", 
+        "-e", "ranger", 
+        "--choosefiles={}"
+    ],
 )
 
 # open neovim from qutebrowser

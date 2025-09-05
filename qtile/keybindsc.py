@@ -297,7 +297,7 @@ keys = [
     Key(
         [alt],
         "c",
-        lazy.spawn("alacritty --class='calendar' -e calcurse"),
+        lazy.spawn("alacritty --class='calendar' -o window.dimensions.columns=120 -o window.dimensions.lines=40 -e calcurse"),
         desc="Launch calendar",
     ),
     Key(
@@ -309,7 +309,7 @@ keys = [
     Key(
         [alt],
         "r",
-        lazy.spawn("alacritty --class='ranger' -e ranger"),
+        lazy.spawn("alacritty --class='ranger' -o window.dimensions.columns=120 -o window.dimensions.lines=40 -e ranger"),
         desc="Launch range file manager",
     ),
     Key(
