@@ -99,20 +99,20 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- add all variants of a word to spellfile
-vim.api.nvim_create_user_command('ZgVariants', function()
-  local word = vim.fn.expand('<cword>')
-  local variants = {
-    word:lower(),
-    word:sub(1,1):upper() .. word:sub(2):lower(),
-    word:upper()
-  }
-  for _, v in ipairs(variants) do
-    vim.cmd('silent spellgood ' .. v)  -- <- suppress messages
-  end
-  print("Added variants of '" .. word .. "' to spellfile")
+vim.api.nvim_create_user_command("ZgVariants", function()
+	local word = vim.fn.expand("<cword>")
+	local variants = {
+		word:lower(),
+		word:sub(1, 1):upper() .. word:sub(2):lower(),
+		word:upper(),
+	}
+	for _, v in ipairs(variants) do
+		vim.cmd("silent spellgood " .. v) -- <- suppress messages
+	end
+	print("Added variants of '" .. word .. "' to spellfile")
 end, {})
 
-vim.keymap.set('n', 'zg', ':ZgVariants<CR>', { noremap = true, silent = true })
+vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
@@ -142,7 +142,14 @@ vim.api.nvim_create_autocmd("User", {
 
 		local builtin = require("telescope.builtin")
 		vim.keymap.set("n", "<leader>fp", builtin.builtin, { desc = "Find picker" })
-		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find file" })
+		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+		vim.keymap.set("n", "<leader>f~", function()
+			require("telescope.builtin").find_files({
+				cwd = vim.fn.expand("~"),
+				prompt_title = "Find files in home directory",
+				hidden = true, -- Show hidden files
+			})
+		end, { desc = "Find files in home directory" })
 		vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Find with grep" })
 		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
 		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help tags" })
@@ -312,6 +319,7 @@ vim.api.nvim_create_autocmd("User", {
 
 				{ "<leader>fp", desc = "picker" },
 				{ "<leader>ff", desc = "files" },
+				{ "<leader>f~", desc = "files in home" },
 				{ "<leader>fg", desc = "grep" },
 				{ "<leader>fb", desc = "buffers" },
 				{ "<leader>fh", desc = "help tags" },
