@@ -11,7 +11,24 @@ return {
 					on_filetype = function()
 						vim.api.nvim_buf_set_keymap(0, "n", "<Enter>", "<Plug>RDSendLine", {})
 						vim.api.nvim_buf_set_keymap(0, "v", "<Enter>", "<Plug>RSendSelection", {})
-					end,
+
+            -- Clear any existing mappings first (optional)
+            pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>rf")
+            
+            -- Set your custom mappings
+            local opts_keymap = { noremap = true, silent = true }
+            
+            -- Your custom mapping: leader or instead of leader rf
+            vim.api.nvim_buf_set_keymap(0, "n", "<leader>or", "<Plug>RStart", opts_keymap)
+            
+            -- Keep your existing ones
+            vim.api.nvim_buf_set_keymap(0, "n", "<Enter>", "<Plug>RDSendLine", opts_keymap)
+            vim.api.nvim_buf_set_keymap(0, "v", "<Enter>", "<Plug>RSendSelection", opts_keymap)
+            
+            -- Add other custom mappings
+            vim.api.nvim_buf_set_keymap(0, "n", "<leader>cr", "<Plug>RClose", opts_keymap)
+            vim.api.nvim_buf_set_keymap(0, "n", "<leader>rh", "<Plug>RHelp", opts_keymap)				
+          end,
 				},
 				R_args = { "--quiet", "--no-save" },
 				min_editor_width = 72,
