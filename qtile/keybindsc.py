@@ -309,7 +309,7 @@ keys = [
     Key(
         [alt],
         "r",
-        lazy.spawn("alacritty -e ranger"),
+        lazy.spawn("alacritty --class='ranger' -e ranger"),
         desc="Launch range file manager",
     ),
     Key(
