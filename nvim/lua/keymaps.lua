@@ -67,10 +67,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
 		"markdown",
 		"text",
-		"rmd",
-		"Rmd", -- R Markdown
-		"jmd",
-		"Jmd", -- Julia Markdown (Weave.jl)
 		"quarto",
 		"qmd",
 		"Qmd", -- Quarto
@@ -247,7 +243,7 @@ vim.api.nvim_create_autocmd("User", {
 local citation = require("citation-picker")
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
+	pattern = { "markdown", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
 	callback = function()
 		local opts = { buffer = true, silent = true }
 		vim.keymap.set(
@@ -311,7 +307,6 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>u", group = "UI toggle" },
 
 				-- Specific mappings for better organization
-				{ "<leader>or", desc = "Open R REPL" },
 				{ "<leader>op", desc = "Open Python REPL" },
 				{ "<leader>oj", desc = "Open Julia REPL" },
 				{ "<leader>om", desc = "Open MATLAB REPL" },

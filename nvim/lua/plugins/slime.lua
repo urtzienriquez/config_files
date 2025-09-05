@@ -184,14 +184,12 @@ return {
 			local repls = {
 				python = "python3",
 				julia = "julia",
-				r = "radian",
 				matlab = "matlab -nodesktop -nosplash",
 			}
 			-- Map REPL commands to their actual process names in tmux
 			local repl_process_names = {
 				python = "python3",
 				julia = "julia",
-				r = "python", -- radian shows up as python process
 				matlab = "matlab",
 			}
 			-- Send with highlighting (using default vim highlight like yank)
@@ -237,7 +235,6 @@ return {
 				local lang_map = {
 					python = "python",
 					julia = "julia",
-					r = "r",
 					matlab = "matlab",
 				}
 				local lang = lang_map[filetype]
@@ -327,16 +324,14 @@ return {
 			-- FIXED: Helper function to detect current language in markdown files
 			local function get_markdown_language()
 				-- For non-markdown files, check if it's a known markdown variant
-				if vim.bo.filetype ~= "markdown" and vim.bo.filetype ~= "rmd" and vim.bo.filetype ~= "quarto" then
+				if vim.bo.filetype ~= "markdown" then
 					return vim.bo.filetype
 				end
 				-- First check file extension for default language
 				local filename = vim.fn.expand("%:t")
 				local default_lang = nil
-				if filename:match("%.rmd$") or filename:match("%.Rmd$") then
-					default_lang = "r"
-				elseif filename:match("%.qmd$") or filename:match("%.Qmd$") then -- ADDED .qmd support
-					default_lang = "r"
+				if filename:match("%.qmd$") or filename:match("%.Qmd$") then -- ADDED .qmd support
+					default_lang = "python" -- Default to python for Quarto
 				elseif filename:match("%.jmd$") then -- ADDED .jmd support
 					default_lang = "julia"
 				end
@@ -349,7 +344,7 @@ return {
 						local lang = text:match("^```(%w+)")
 						if lang then
 							-- Use the fence language if it matches our supported languages
-							if lang == "python" or lang == "julia" or lang == "r" or lang == "matlab" then
+							if lang == "python" or lang == "julia" or lang == "matlab" then
 								return lang
 							end
 						elseif text:match("^```%s*$") then
@@ -366,24 +361,10 @@ return {
 					local text = vim.fn.getline(i)
 					local lang = text:match("^```(%w+)")
 					if lang then
-						return lang == "r" and "r" or lang
+						return lang
 					end
 				end
 				return "markdown" -- Final fallback
-			end
-			-- Language-specific block detection functions
-			-- R detection
-			local function is_r_function_start()
-				local line = vim.api.nvim_get_current_line()
-				return line:match("%w+%s*[<%-=]+%s*function%s*%(")
-			end
-			local function is_r_control_structure()
-				local line = vim.api.nvim_get_current_line()
-				return line:match("^%s*for%s*%(")
-					or line:match("^%s*if%s*%(")
-					or line:match("^%s*while%s*%(")
-					or line:match("^%s*repeat%s*{")
-					or line:match("^%s*{%s*$")
 			end
 			-- Python detection
 			local function is_python_block_start()
@@ -530,7 +511,7 @@ return {
 					end
 					return { start_line = start_line, end_line = end_line }
 				end
-				-- Original logic for R and other languages
+				-- Original logic for other languages
 				local start_indent = start_text:match("^(%s*)")
 				local start_indent_len = #start_indent
 				local end_line = start_line
@@ -548,142 +529,6 @@ return {
 					end_line = line_num
 				end
 				return { start_line = start_line, end_line = end_line }
-			end
-			-- Get R control structure range
-			local function get_r_control_range()
-				local start_line = vim.fn.line(".")
-				local saved_pos = vim.api.nvim_win_get_cursor(0)
-				local line_text = vim.api.nvim_get_current_line()
-				-- Find the opening brace
-				local brace_line = nil
-				local brace_col = nil
-				-- For most control structures, brace might be on same line or next line
-				-- Check current line first
-				local brace_pos = line_text:find("{")
-				if brace_pos then
-					brace_line = start_line
-					brace_col = brace_pos
-				else
-					-- Check next few lines for opening brace
-					for line_num = start_line + 1, math.min(start_line + 2, vim.fn.line("$")) do
-						local next_line = vim.fn.getline(line_num)
-						brace_pos = next_line:find("{")
-						if brace_pos then
-							brace_line = line_num
-							brace_col = brace_pos
-							break
-						end
-					end
-				end
-				if not brace_line then
-					return nil
-				end
-				-- Move to the opening brace and find its match
-				vim.api.nvim_win_set_cursor(0, { brace_line, brace_col - 1 })
-				local ok = pcall(function()
-					vim.cmd("normal! %")
-				end)
-				local end_line = start_line
-				if ok then
-					end_line = vim.api.nvim_win_get_cursor(0)[1]
-				end
-				-- Restore cursor position
-				vim.api.nvim_win_set_cursor(0, saved_pos)
-				if end_line > start_line then
-					return { start_line = start_line, end_line = end_line }
-				end
-				return nil
-			end
-			-- Get R function range by finding matching braces
-			local function get_r_function_range()
-				local start_line = vim.fn.line(".")
-				local saved_pos = vim.api.nvim_win_get_cursor(0)
-				-- Search for the opening brace after function declaration
-				local brace_line = nil
-				local brace_col = nil
-				-- First, find the closing parenthesis of function parameters
-				local paren_closed = false
-				local paren_depth = 0
-				-- Search forward for opening brace, but be smart about function context
-				for line_num = start_line, vim.fn.line("$") do
-					local line_text = vim.fn.getline(line_num)
-					-- Track parentheses to know when we're out of function parameters
-					if not paren_closed then
-						for i = 1, #line_text do
-							local char = line_text:sub(i, i)
-							if char == "(" then
-								paren_depth = paren_depth + 1
-							elseif char == ")" then
-								paren_depth = paren_depth - 1
-								if paren_depth == 0 then
-									paren_closed = true
-									break
-								end
-							end
-						end
-					end
-					-- Look for opening brace
-					local brace_pos = line_text:find("{")
-					if brace_pos then
-						brace_line = line_num
-						brace_col = brace_pos
-						break
-					end
-					-- Only stop for new assignments if we're past the function parameters
-					if line_num > start_line and paren_closed then
-						-- Check for new assignment at start of line (not indented)
-						if line_text:match("^[%w%.]+%s*[<%-=]+%s*function") or line_text:match("^[%w%.]+%s*[<%-]+") then
-							break
-						end
-					end
-				end
-				if not brace_line then
-					-- No braces found - handle single-expression functions
-					local end_line = start_line
-					local paren_closed_single = false
-					local paren_depth_single = 0
-					for line_num = start_line, vim.fn.line("$") do
-						local line_text = vim.fn.getline(line_num)
-						-- Track when we exit function parameters
-						if not paren_closed_single then
-							for i = 1, #line_text do
-								local char = line_text:sub(i, i)
-								if char == "(" then
-									paren_depth_single = paren_depth_single + 1
-								elseif char == ")" then
-									paren_depth_single = paren_depth_single - 1
-									if paren_depth_single == 0 then
-										paren_closed_single = true
-										break
-									end
-								end
-							end
-						end
-						-- After parameters closed, look for end of function
-						if paren_closed_single and line_num > start_line then
-							if line_text:match("^%s*$") or line_text:match("^[%w%.]+%s*[<%-=]+") then
-								break
-							end
-						end
-						end_line = line_num
-					end
-					return { start_line = start_line, end_line = end_line }
-				end
-				-- Move to the opening brace and find its match
-				vim.api.nvim_win_set_cursor(0, { brace_line, brace_col - 1 })
-				local ok = pcall(function()
-					vim.cmd("normal! %")
-				end)
-				local end_line = start_line -- fallback
-				if ok then
-					end_line = vim.api.nvim_win_get_cursor(0)[1]
-				end
-				-- Restore cursor position
-				vim.api.nvim_win_set_cursor(0, saved_pos)
-				if end_line > start_line then
-					return { start_line = start_line, end_line = end_line }
-				end
-				return nil
 			end
 			-- Main smart send function
 			local function smart_send(mode)
@@ -704,15 +549,7 @@ return {
 				else
 					-- Normal mode: language-specific detection
 					local range_found = false
-					if current_filetype == "r" then
-						if is_r_function_start() then
-							range = get_r_function_range()
-							range_found = (range ~= nil)
-						elseif is_r_control_structure() then
-							range = get_r_control_range()
-							range_found = (range ~= nil)
-						end
-					elseif current_filetype == "python" then
+					if current_filetype == "python" then
 						if is_python_block_start() then
 							range = get_indented_block_range()
 							range_found = (range ~= nil)
@@ -776,7 +613,7 @@ return {
 
 				-- Get the appropriate language
 				local ft
-				if vim.bo.filetype == "markdown" or vim.bo.filetype == "rmd" or vim.bo.filetype == "quarto" then
+				if vim.bo.filetype == "markdown" then
 					ft = get_markdown_language() -- Use your existing function for markdown
 				else
 					-- For direct language files, use filetype directly
@@ -785,7 +622,6 @@ return {
 
 				local cd_commands = {
 					python = string.format("import os; os.chdir('%s')", current_dir),
-					r = string.format("setwd('%s')", current_dir),
 					julia = string.format('cd("%s")', current_dir),
 					matlab = string.format("cd '%s'", current_dir),
 				}
@@ -799,19 +635,6 @@ return {
 				end
 			end
 			-- ENHANCED: Render functions for markdown documents with progress indication
-			local function render_rmarkdown()
-				local filename = vim.fn.expand("%:p")
-				if not filename:match("%.rmd$") and not filename:match("%.Rmd$") then
-					vim.notify("Not an R Markdown file", vim.log.levels.WARN)
-					return
-				end
-				-- Save the file first
-				vim.cmd("write")
-				-- Render using rmarkdown::render() with progress indication
-				local r_cmd = string.format('rmarkdown::render("%s")', filename)
-				local cmd = { "Rscript", "-e", r_cmd }
-				run_with_progress(cmd, "R Markdown rendered successfully", "Error rendering R Markdown file")
-			end
 			local function render_jmarkdown()
 				local filename = vim.fn.expand("%:p")
 				if not filename:match("%.jmd$") then
@@ -846,12 +669,6 @@ return {
 				)
 			end
 
-			-- Track the last opened REPL pane globally
-			local last_repl_pane = nil
-			local last_repl_type = nil
-
-			-- Generic REPL opener that stores the pane id
-			-- Find this section in your slime.lua file (around line 860-890):
 			-- Track the last opened REPL pane globally
 			local last_repl_pane = nil
 			local last_repl_type = nil
@@ -899,9 +716,6 @@ return {
 			end
 
 			-- Language-specific wrappers
-			local function open_r_repl()
-				open_repl_for("r")
-			end
 			local function open_python_repl()
 				open_repl_for("python")
 			end
@@ -943,7 +757,6 @@ return {
 			-- KEYBINDINGS (centralized for easy editing)
 			-- ========================================
 			-- Global keymaps - MODIFIED: Language-specific REPL opening
-			vim.keymap.set("n", "<leader>or", open_r_repl, { desc = "Open R (radian) REPL" })
 			vim.keymap.set("n", "<leader>op", open_python_repl, { desc = "Open Python REPL" })
 			vim.keymap.set("n", "<leader>oj", open_julia_repl, { desc = "Open Julia REPL" })
 			vim.keymap.set("n", "<leader>om", open_matlab_repl, { desc = "Open MATLAB REPL" })
@@ -954,19 +767,17 @@ return {
 			-- ENHANCED: Global render keybinds with better file type detection
 			vim.keymap.set("n", "<leader>rr", function()
 				local filename = vim.fn.expand("%:t")
-				if filename:match("%.rmd$") or filename:match("%.Rmd$") then
-					render_rmarkdown()
-				elseif filename:match("%.jmd$") then
+				if filename:match("%.jmd$") then
 					render_jmarkdown()
 				elseif filename:match("%.qmd$") or filename:match("%.Qmd$") then
 					render_quarto()
 				else
-					vim.notify("Not a renderable markdown file (.rmd, .jmd, or .qmd)", vim.log.levels.WARN)
+					vim.notify("Not a renderable markdown file (.jmd or .qmd)", vim.log.levels.WARN)
 				end
 			end, { desc = "Render markdown document" })
-			-- FIXED: Language-specific keymaps - Added rmd and quarto filetypes
+			-- FIXED: Language-specific keymaps - Added quarto filetypes
 			vim.api.nvim_create_autocmd("FileType", {
-				pattern = { "python", "julia", "r", "matlab", "markdown", "rmd", "quarto" }, -- Added rmd and quarto filetypes
+				pattern = { "python", "julia", "matlab", "markdown", "quarto" },
 				callback = function()
 					local current_ft = vim.bo.filetype
 					if current_ft == "matlab" then
@@ -1000,14 +811,7 @@ return {
 					)
 					-- ENHANCED: Render keybinds for markdown files with file-specific functions
 					local filename = vim.fn.expand("%:t")
-					if filename:match("%.rmd$") or filename:match("%.Rmd$") then
-						vim.keymap.set(
-							"n",
-							"<leader>rr",
-							render_rmarkdown,
-							vim.tbl_extend("force", opts, { desc = "Render R Markdown" })
-						)
-					elseif filename:match("%.jmd$") then
+					if filename:match("%.jmd$") then
 						vim.keymap.set(
 							"n",
 							"<leader>rr",
@@ -1027,7 +831,7 @@ return {
 			-- FIXED: Auto-start REPL if environment variable is set - Added .qmd support
 			if vim.env.SLIME_AUTO_START == "true" then
 				vim.api.nvim_create_autocmd("BufEnter", {
-					pattern = { "*.py", "*.jl", "*.r", "*.R", "*.m", "*.rmd", "*.Rmd", "*.qmd", "*.Qmd", "*.jmd" }, -- Added .qmd files
+					pattern = { "*.py", "*.jl", "*.m", "*.qmd", "*.Qmd", "*.jmd" },
 					callback = function()
 						local current_filetype = get_markdown_language()
 						local repl = repls[current_filetype]
