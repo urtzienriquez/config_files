@@ -81,11 +81,19 @@ class fzf_select(Command):
         if self.quantifier:
             # match only directories
             command = r"find -L . \( -path '*/\.*' -o -fstype 'dev' -o -fstype 'proc' \) -prune \
-            -o -type d -print 2> /dev/null | sed 1d | cut -b3- | fzf --preview 'bat -p --theme=tokyonight_night --color=always {}'"
+            -o -type d -print 2> /dev/null | sed 1d | cut -b3- | fzf \
+            --color=fg+:#c0caf5,bg+:#35274a,hl+:#bb9af7 \
+            --color=info:#7aa2f7,prompt:#7dcfff,pointer:#bb9af7 \
+            --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a \
+            --preview 'bat -p --theme=tokyonight_night --color=always {}'"
         else:
             # match files and directories
             command = r"find -L . \( -path '*/\.*' -o -fstype 'dev' -o -fstype 'proc' \) -prune \
-            -o -print 2> /dev/null | sed 1d | cut -b3- | fzf --preview 'bat -p --theme=tokyonight_night --color=always {}'"
+            -o -print 2> /dev/null | sed 1d | cut -b3- | fzf \
+            --color=fg+:#c0caf5,bg+:#35274a,hl+:#bb9af7 \
+            --color=info:#7aa2f7,prompt:#7dcfff,pointer:#bb9af7 \
+            --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a \
+            --preview 'bat -p --theme=tokyonight_night --color=always {}'"
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, stderr = fzf.communicate()
         if fzf.returncode == 0:
@@ -110,7 +118,10 @@ class fzf_locate(Command):
         import subprocess
 
         locate_cmd = "locate ~"  # or just "locate" for full search
-        fzf_opts = "--preview 'bat -p --color=always {}' --bind 'ctrl-v:toggle-preview'"
+        fzf_opts = "--color=fg+:#c0caf5,bg+:#35274a,hl+:#bb9af7 \
+                    --color=info:#7aa2f7,prompt:#7dcfff,pointer:#bb9af7 \
+                    --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a \
+                    --preview 'bat -p --color=always {}' --bind 'ctrl-v:toggle-preview'"
         full_cmd = f"{locate_cmd} | fzf {fzf_opts}"
 
         fzf = self.fm.execute_command(full_cmd, stdout=subprocess.PIPE, shell=True)
