@@ -23,7 +23,7 @@ return {
 						vim.api.nvim_buf_set_keymap(0, "n", "<leader>sb", "<Plug>RSendFile", opts_keymap)
 						vim.api.nvim_buf_set_keymap(0, "n", "<Enter>", "<Plug>RDSendLine", opts_keymap)
 						vim.api.nvim_buf_set_keymap(0, "v", "<Enter>", "<Plug>RSendSelection", opts_keymap)
-						vim.api.nvim_buf_set_keymap(0, "n", "<leader>cr", "<Plug>RClose", opts_keymap)
+						vim.api.nvim_buf_set_keymap(0, "n", "<leader>cc", "<Plug>RClose", opts_keymap)
 						vim.api.nvim_buf_set_keymap(0, "n", "<leader>rr", "<Plug>RMakeAll", opts_keymap)
 					end,
 				},

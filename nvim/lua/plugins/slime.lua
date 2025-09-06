@@ -760,7 +760,7 @@ return {
 			vim.keymap.set("n", "<leader>op", open_python_repl, { desc = "Open Python REPL" })
 			vim.keymap.set("n", "<leader>oj", open_julia_repl, { desc = "Open Julia REPL" })
 			vim.keymap.set("n", "<leader>om", open_matlab_repl, { desc = "Open MATLAB REPL" })
-			vim.keymap.set("n", "<leader>cr", close_repl, { desc = "Close REPL" })
+			vim.keymap.set("n", "<leader>cc", close_repl, { desc = "Close REPL" })
 
 			-- Add a keymap for manual sync of directory (cd)
 			vim.keymap.set("n", "<leader>sd", sync_working_directory, { desc = "Sync REPL directory" })
