@@ -309,11 +309,11 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>u", group = "UI toggle" },
 
 				-- Specific mappings for better organization
-				{ "<leader>or", desc = "Open R REPL" },
-				{ "<leader>op", desc = "Open Python REPL" },
-				{ "<leader>oj", desc = "Open Julia REPL" },
-				{ "<leader>om", desc = "Open MATLAB REPL" },
-				{ "<leader>cr", desc = "Close REPL" },
+				{ "<leader>or", desc = "R" },
+				{ "<leader>op", desc = "python" },
+				{ "<leader>oj", desc = "julia" },
+				{ "<leader>om", desc = "MATLAB" },
+				{ "<leader>cc", desc = "Close REPL" },
 
 				{ "<leader>fp", desc = "picker" },
 				{ "<leader>ff", desc = "files" },
