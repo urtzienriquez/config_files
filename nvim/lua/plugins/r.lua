@@ -14,6 +14,7 @@ return {
 
 						-- Clear any existing mappings first (optional)
 						pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>rf")
+						pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>ka")
 
 						-- Set your custom mappings
 						local opts_keymap = { noremap = true, silent = true }
@@ -66,6 +67,7 @@ return {
 					"RMakeODT",
 					"RMakePDFK",
 					"RMakeWord",
+					"RUndebug",
 				},
 			}
 			if vim.env.R_AUTO_START == "true" then
