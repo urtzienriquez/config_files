@@ -68,6 +68,8 @@ vim.api.nvim_create_autocmd("FileType", {
 		"markdown",
 		"text",
 		"quarto",
+    "rmd",
+    "Rmd",
 		"qmd",
 		"Qmd", -- Quarto
 		"org", -- Org-mode files
@@ -243,7 +245,7 @@ vim.api.nvim_create_autocmd("User", {
 local citation = require("citation-picker")
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "markdown", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
+	pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
 	callback = function()
 		local opts = { buffer = true, silent = true }
 		vim.keymap.set(
@@ -302,11 +304,12 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>g", group = "Git" },
 				{ "<leader>l", group = "Lazygit" },
 				{ "<leader>o", group = "Open REPL" },
-				{ "<leader>r", group = "Render" },
+				{ "<leader>r", group = "R/Render" },
 				{ "<leader>s", group = "Send/Sync" },
 				{ "<leader>u", group = "UI toggle" },
 
 				-- Specific mappings for better organization
+				{ "<leader>or", desc = "Open R REPL" },
 				{ "<leader>op", desc = "Open Python REPL" },
 				{ "<leader>oj", desc = "Open Julia REPL" },
 				{ "<leader>om", desc = "Open MATLAB REPL" },
