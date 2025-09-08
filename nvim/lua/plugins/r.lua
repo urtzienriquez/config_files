@@ -5,7 +5,7 @@ return {
 		config = function()
 			local opts = {
 				R_app = "radian",
-				external_term = "tmux split-window -h",
+				external_term = "tmux split-window -d -h",
 				bracketed_paste = true,
 				hook = {
 					on_filetype = function()

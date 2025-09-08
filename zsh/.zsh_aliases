@@ -3,6 +3,15 @@ alias ls='ls -F --color=auto'
 alias ll='ls -lhA'
 alias la='ls -hA'
 
+# enable/disable keyd
+alias kdon="sudo systemctl enable --now keyd "
+alias kdoff="sudo systemctl disable --now keyd "
+
+# change keyboard layout
+alias kles="setxkbmap es"
+alias klus="setxkbmap us"
+alias klq="setxkbmap -query"
+
 # remove always with confirmation
 rm() {
   # For portability, reset all options (in this function only).
