@@ -45,6 +45,7 @@ return {
 			{ "hrsh7th/cmp-nvim-lsp" },
 			{ "hrsh7th/cmp-buffer" },
 			{ "hrsh7th/cmp-path" },
+      { "kdheepak/cmp-latex-symbols" },
 			{ "R-nvim/cmp-r" },
 			-- Snippet engine(s) required for nvim-cmp (expands things from LS)
 			{ "L3MON4D3/LuaSnip" },

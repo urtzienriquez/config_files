@@ -10,6 +10,9 @@ return {
 			"icon",
 		},
 		use_default_keymaps = true,
+    keymaps = {
+      ["/"] = { "actions.parent", mode = "n" },
+    },
 		view_options = { show_hidden = false },
 		win_options = {
 			signcolumn = "yes:2",
