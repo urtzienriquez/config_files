@@ -28,6 +28,7 @@ return {
 				"javascript", -- Added for web content in markdown
 				"css", -- Added for styling in markdown
 				"json", -- Added for JSON blocks in markdown
+				"latex",
 			},
 			auto_install = true, -- Changed to true to automatically install missing parsers
 			highlight = {
