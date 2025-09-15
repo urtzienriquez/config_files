@@ -57,6 +57,7 @@ return {
 					"RSendMotion",
 					"RDSendSelection",
 					"RInsertLineOutput",
+					"RInsertPipe",
 					"RSendLine",
 					"RDSendParagraph",
 					"RSendParagraph",
