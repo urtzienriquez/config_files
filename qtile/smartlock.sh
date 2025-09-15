@@ -38,8 +38,8 @@ if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
 fi
 
 # Prepare environment variables for graphical lock
-export DISPLAY=:0
-export XAUTHORITY="/home/urtzi/.Xauthority"
+export DISPLAY=:1
+export XAUTHORITY=$(find /run/user/$(id -u) -name "Xauthority" | head -n 1)
 
 # Lock the screen in background
 if command -v betterlockscreen >/dev/null 2>&1; then
