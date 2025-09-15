@@ -274,7 +274,7 @@ keys = [
         [alt],
         "s",
         lazy.spawn("env XDG_CURRENT_DESKTOP=GNOME gnome-control-center"),
-        desc="Launch terminal",
+        desc="Launch gnome control center",
     ),
     Key(
         [alt],
