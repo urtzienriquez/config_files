@@ -37,15 +37,69 @@ if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
     exit 0
 fi
 
-# Prepare environment variables for graphical lock
-export DISPLAY=:1
-export XAUTHORITY=$(find /run/user/$(id -u) -name "Xauthority" | head -n 1)
-
-# Lock the screen in background
-if command -v betterlockscreen >/dev/null 2>&1; then
-    betterlockscreen -l &
-    sleep 1
+# Get the correct DISPLAY and XAUTHORITY from the current session
+if [ -z "$DISPLAY" ]; then
+    # Try to get DISPLAY from the current user's processes
+    DISPLAY=$(ps -u $(whoami) -o pid,cmd | grep -E "(qtile|X|Xorg)" | head -1 | sed -n 's/.*DISPLAY=\([^ ]*\).*/\1/p')
+    if [ -z "$DISPLAY" ]; then
+        DISPLAY=":0"  # fallback to :0 instead of :1
+    fi
 fi
 
-# Now suspend
+# Set XAUTHORITY if not already set
+if [ -z "$XAUTHORITY" ]; then
+    XAUTHORITY=$(find /run/user/$(id -u) -name "Xauth*" -o -name "*authority*" 2>/dev/null | head -n 1)
+    if [ -z "$XAUTHORITY" ]; then
+        XAUTHORITY="$HOME/.Xauthority"
+    fi
+fi
+
+export DISPLAY
+export XAUTHORITY
+
+# Alternative approach: try using loginctl to get session info
+if command -v loginctl >/dev/null 2>&1; then
+    SESSION_ID=$(loginctl list-sessions --no-legend | grep $(whoami) | awk '{print $1}' | head -1)
+    if [ -n "$SESSION_ID" ]; then
+        SESSION_INFO=$(loginctl show-session "$SESSION_ID" -p Display -p Remote)
+        if echo "$SESSION_INFO" | grep -q "Remote=no"; then
+            DISPLAY_FROM_SESSION=$(echo "$SESSION_INFO" | grep "Display=" | cut -d'=' -f2)
+            if [ -n "$DISPLAY_FROM_SESSION" ]; then
+                export DISPLAY="$DISPLAY_FROM_SESSION"
+            fi
+        fi
+    fi
+fi
+
+# Lock the screen
+if command -v betterlockscreen >/dev/null 2>&1; then
+    # Try different approaches to ensure proper locking
+    betterlockscreen -l --off 5 &
+    LOCK_PID=$!
+    
+    # Give it a moment to initialize
+    sleep 2
+    
+    # Ensure all displays are properly locked
+    if command -v xset >/dev/null 2>&1; then
+        xset dpms force off
+    fi
+    
+    # Wait a bit more before suspending
+    sleep 1
+else
+    # Fallback to i3lock or xlock if available
+    if command -v i3lock >/dev/null 2>&1; then
+        i3lock -c 000000 &
+        sleep 2
+    elif command -v xlock >/dev/null 2>&1; then
+        xlock &
+        sleep 2
+    else
+        echo "No lock screen utility found!" >&2
+        exit 1
+    fi
+fi
+
+# Suspend the system
 systemctl suspend
