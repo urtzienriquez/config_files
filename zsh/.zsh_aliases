@@ -12,36 +12,6 @@ alias kles="setxkbmap es"
 alias klus="setxkbmap us"
 alias klq="setxkbmap -query"
 
-# # remove always with confirmation
-# rm() {
-#   # For portability, reset all options (in this function only).
-#   emulate -L zsh
-#
-#   # Divide the files into dirs and other files.
-#   # $^ treats the array as a brace expansion.
-#   # (N) eliminates non-existing matches.
-#   # (-/) matches dirs, incl. symlinks pointing to dirs.
-#   # (-^/) matches everything else.
-#   # (T) appends file type markers to the file names.
-#   local -a dirs=( $^@(TN-/) ) files=( $^@(TN-^/) )
-#
-#   # Tell the user how many dirs and files would be deleted.
-#   print "Sure you want to delete these $#dirs dirs and $#files files in $PWD?"
-#
-#   # List the files in columns à la `ls`, dirs first.
-#   print -c - $dirs $files
-#
-#   # Prompt the user to confirm.
-#   # If `y`, delete the files.
-#   #   -f skips any confirmation.
-#   #   -r recurses into directories.
-#   #   -s makes sure we don't accidentally the whole thing.
-#   # If this succeeds, print a confirmation.
-#   read -q "?[yn] " &&
-#       zf_rm -frs - $@ && 
-#       print -l '' "$#dirs dirs and $#files files deleted from $PWD."
-# }
-
 # dir aliases
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
