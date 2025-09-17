@@ -161,6 +161,7 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<leader>fs", builtin.lsp_document_symbols, { desc = "Find lsp document symbols" })
 		vim.keymap.set("n", "<leader>ft", builtin.treesitter, { desc = "Find treesitter symbols" })
 		vim.keymap.set("n", "<leader>fm", builtin.spell_suggest, { desc = "Find (misspelled) spell suggestion" })
+		vim.keymap.set("n", "<leader>f'", builtin.marks, { desc = "Find marks" })
 		vim.keymap.set("n", "<leader>f,", builtin.resume, { desc = "Find resume" })
 		vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = "Find recent files" })
 
@@ -329,6 +330,7 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>fs", desc = "lsp symbols" },
 				{ "<leader>ft", desc = "treesitter symbols" },
 				{ "<leader>fm", desc = "(misspelled) spell suggestion" },
+				{ "<leader>f,", desc = "marks" },
 				{ "<leader>f,", desc = "resume" },
 				{ "<leader>f.", desc = "recent files" },
 				{ "<leader>fc", desc = "citation" },
