@@ -18,160 +18,6 @@ return {
 			vim.g.slime_dont_ask_default = 1
 			vim.g.slime_python_ipython = 0 -- Disable IPython-specific features for standard Python
 			vim.g.slime_bracketed_paste = 0 -- Disable bracketed paste globally
-			-- ADDED: Progress indication utilities (robust)
-			-- Uses a job "token" to invalidate late callbacks.
-			-- Uses nvim-notify's real replace handle when available.
-			-- Hard-dismisses both notify + noice queues at finish.
-			local has_notify, notify_lib = pcall(require, "notify")
-			local notify = has_notify and notify_lib or vim.notify
-			-- monotonic token to invalidate any queued callbacks from previous runs
-			local JOB_TOKEN = 0
-			local function safe_noice_dismiss()
-				-- dismiss Noice messages (if installed)
-				pcall(function()
-					require("noice").cmd("dismiss")
-				end)
-			end
-			local function safe_notify_dismiss()
-				-- dismiss nvim-notify messages (if installed)
-				if has_notify then
-					notify_lib.dismiss({ silent = true, pending = true })
-				end
-			end
-			local function show_progress_factory()
-				-- keep the last notification handle so we can replace it properly
-				local last_notif = nil
-				return function(message)
-					-- short-lived, replaced progress line
-					last_notif = notify(message, vim.log.levels.INFO, {
-						title = "Progress",
-						-- IMPORTANT: replace MUST be the previous notification handle/object,
-						-- not a boolean. This is the official nvim-notify pattern.
-						replace = last_notif,
-						timeout = 1000,
-					})
-				end, function(text) -- replace_with_final
-					-- use the stored handle to overwrite any remaining progress
-					last_notif = notify(text.msg, text.level, {
-						title = text.title,
-						replace = last_notif,
-						timeout = text.timeout,
-					})
-				end
-			end
-			local function show_spinner_factory(token)
-				local frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
-				local frame_index = 1
-				local timer = vim.loop.new_timer()
-				-- also keep a handle here so spinner frames replace each other
-				local last_notif = nil
-				local function tick()
-					-- hard guard: if token changed, bail (late callback)
-					if token ~= JOB_TOKEN then
-						return
-					end
-					vim.schedule(function()
-						if token ~= JOB_TOKEN then
-							return
-						end
-						last_notif = notify(frames[frame_index] .. " Rendering...", vim.log.levels.INFO, {
-							title = "Progress",
-							replace = last_notif, -- real handle replacement
-							timeout = 1000,
-						})
-						frame_index = (frame_index % #frames) + 1
-					end)
-				end
-				timer:start(0, 100, tick)
-				return {
-					stop = function()
-						-- stop timer first; queued schedules still check token below
-						timer:stop()
-						timer:close()
-						-- invalidate by bumping token so any already-scheduled ticks no-op
-						JOB_TOKEN = JOB_TOKEN + 1
-					end,
-				}
-			end
-			local function run_with_progress(cmd, success_msg, error_msg)
-				-- start a new job; capture token for this run
-				JOB_TOKEN = JOB_TOKEN + 1
-				local token = JOB_TOKEN
-				local progress_line, replace_with_final = show_progress_factory()
-				-- initial short progress (replaces itself later)
-				progress_line("Starting render process...")
-				local spinner = show_spinner_factory(token)
-				local function finish(ok, detail)
-					-- if this completion is from an old job, ignore
-					if token ~= JOB_TOKEN then
-						return
-					end
-					-- stop spinner + invalidate any queued spinner callbacks
-					spinner.stop()
-					-- hard flush both notify + noice queues BEFORE posting the final message
-					safe_notify_dismiss()
-					safe_noice_dismiss()
-					local title = ok and "Success" or "Error"
-					local level = ok and vim.log.levels.INFO or vim.log.levels.ERROR
-					local msg = ok and success_msg or (error_msg .. (detail and ("\n" .. detail) or ""))
-					-- replace any remaining "Progress" handle with the final result
-					replace_with_final({
-						msg = msg,
-						level = level,
-						title = title,
-						timeout = ok and 3000 or 5000,
-					})
-				end
-				-- Neovim 0.10+: vim.system
-				if vim.system then
-					vim.system(cmd, {}, function(result)
-						vim.schedule(function()
-							if token ~= JOB_TOKEN then
-								return
-							end
-							if result.code == 0 then
-								finish(true)
-							else
-								local err = (result.stderr and #result.stderr > 0) and result.stderr or "Unknown error"
-								finish(false, err)
-							end
-						end)
-					end)
-				else
-					-- Fallback: jobstart
-					vim.fn.jobstart(cmd, {
-						on_exit = function(_, exit_code)
-							vim.schedule(function()
-								if token ~= JOB_TOKEN then
-									return
-								end
-								if exit_code == 0 then
-									finish(true)
-								else
-									finish(false)
-								end
-							end)
-						end,
-						on_stdout = function(_, data)
-							if token ~= JOB_TOKEN then
-								return
-							end
-							if data and #data > 0 then
-								local output = table.concat(data, "\n")
-								if output:match("%S") then
-									vim.schedule(function()
-										if token ~= JOB_TOKEN then
-											return
-										end
-										progress_line("Progress: " .. output:sub(1, 50))
-									end)
-								end
-							end
-						end,
-						stdout_buffered = false,
-					})
-				end
-			end
 			-- Bracketed paste wrapper
 			local function bracketed_wrap(text, filetype)
 				if filetype == "python" then
@@ -634,39 +480,30 @@ return {
 					vim.notify("No directory sync command for filetype: " .. tostring(ft), vim.log.levels.WARN)
 				end
 			end
-			-- ENHANCED: Render functions for markdown documents with progress indication
+			-- ENHANCED: Render functions for markdown documents
+			-- Render Julia Markdown (.jmd) using Weave.jl
 			local function render_jmarkdown()
 				local filename = vim.fn.expand("%:p")
 				if not filename:match("%.jmd$") then
-					vim.notify("Not a Julia Markdown file", vim.log.levels.WARN)
-					return
+					return -- silently do nothing if it's not a .jmd file
 				end
-				-- Save the file first
-				vim.cmd("write")
-				-- Render using Weave.jl with progress indication
+				vim.cmd("write") -- Save before rendering
 				local julia_cmd = string.format('using Weave; weave("%s")', filename)
 				local cmd = { "julia", "-e", julia_cmd }
-				run_with_progress(
-					cmd,
-					"Julia Markdown rendered successfully",
-					"Error rendering Julia Markdown file. Make sure Weave.jl is installed."
-				)
+				-- Run silently without notifications
+				vim.fn.jobstart(cmd, { detach = true })
 			end
+
+			-- Render Quarto document (.qmd or .Qmd)
 			local function render_quarto()
 				local filename = vim.fn.expand("%:p")
 				if not filename:match("%.qmd$") and not filename:match("%.Qmd$") then
-					vim.notify("Not a Quarto file", vim.log.levels.WARN)
-					return
+					return -- silently do nothing if it's not a .qmd file
 				end
-				-- Save the file first
-				vim.cmd("write")
-				-- Render using quarto with progress indication
+				vim.cmd("write") -- Save before rendering
 				local cmd = { "quarto", "render", filename }
-				run_with_progress(
-					cmd,
-					"Quarto document rendered successfully",
-					"Error rendering Quarto document. Make sure Quarto is installed."
-				)
+				-- Run silently without notifications
+				vim.fn.jobstart(cmd, { detach = true })
 			end
 
 			-- Track the last opened REPL pane globally

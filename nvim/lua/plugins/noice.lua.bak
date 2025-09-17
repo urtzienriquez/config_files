@@ -28,6 +28,15 @@ return {
 				cmdline = { pattern = "^:", icon = ":", lang = "vim" },
 			},
 		},
+    routes = {
+    {
+      filter = {
+        event = "msg_show",
+        find = "jumps",
+      },
+      opts = { skip = true },
+    },
+  },
 	},
 
 	config = function(_, opts)

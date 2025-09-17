@@ -34,10 +34,7 @@ return {
 			},
 		},
 		input = { enabled = true },
-		notifier = {
-			enabled = true,
-			timeout = 3000,
-		},
+		notifier = { enabled = false },
 		quickfile = { enabled = true },
 		scope = { enabled = true },
 		words = { enabled = true },
