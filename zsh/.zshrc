@@ -13,9 +13,6 @@ setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 setopt INC_APPEND_HISTORY
 setopt HIST_REDUCE_BLANKS
-# Disable the default prompt that says
-# 'zsh: sure you want to delete all 4 files in /home/user [yn]?'
-setopt rmstarsilent
 
 # For portability, use the `zf_rm` builtin instead of any external `rm` command.
 zmodload -Fa zsh/files b:zf_rm
