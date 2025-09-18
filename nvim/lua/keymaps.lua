@@ -311,6 +311,7 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>g", group = "Git" },
 				{ "<leader>l", group = "Lazygit" },
 				{ "<leader>o", group = "Open REPL" },
+				{ "<leader>q", group = "Close REPL" },
 				{ "<leader>r", group = "R/Render" },
 				{ "<leader>s", group = "Send/Sync" },
 				{ "<leader>u", group = "UI toggle" },
@@ -320,7 +321,11 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>op", desc = "python" },
 				{ "<leader>oj", desc = "julia" },
 				{ "<leader>om", desc = "MATLAB" },
-				{ "<leader>cc", desc = "Close REPL" },
+
+				{ "<leader>qr", desc = "R" },
+				{ "<leader>qp", desc = "python" },
+				{ "<leader>qj", desc = "julia" },
+				{ "<leader>qm", desc = "MATLAB" },
 
 				{ "<leader>fp", desc = "picker" },
 				{ "<leader>ff", desc = "files" },

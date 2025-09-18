@@ -38,11 +38,25 @@ return {
 				julia = "julia",
 				matlab = "matlab",
 			}
-			-- Send with highlighting (using default vim highlight like yank)
+			--- Send with highlighting (using default vim highlight like yank)
 			local function send_with_highlight(text, start_line, end_line)
 				local ns = vim.api.nvim_create_namespace("slime_highlight")
 				for i = start_line - 1, end_line - 1 do
-					vim.api.nvim_buf_add_highlight(0, ns, "IncSearch", i, 0, -1)
+					local line_text = vim.api.nvim_buf_get_lines(0, i, i + 1, false)[1] or ""
+					local line_length = #line_text
+					if line_length > 0 then
+						vim.api.nvim_buf_set_extmark(0, ns, i, 0, {
+							end_col = line_length,
+							hl_group = "IncSearch",
+						})
+					else
+						-- For empty lines, just highlight the line break
+						vim.api.nvim_buf_set_extmark(0, ns, i, 0, {
+							end_col = 0,
+							hl_group = "IncSearch",
+							hl_eol = true, -- Highlight end of line
+						})
+					end
 				end
 				vim.defer_fn(function()
 					vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
@@ -456,7 +470,6 @@ return {
 			-- change dir in repl
 			local function sync_working_directory()
 				local current_dir = vim.fn.getcwd()
-
 				-- Get the appropriate language
 				local ft
 				if vim.bo.filetype == "markdown" then
@@ -465,13 +478,11 @@ return {
 					-- For direct language files, use filetype directly
 					ft = vim.bo.filetype
 				end
-
 				local cd_commands = {
 					python = string.format("import os; os.chdir('%s')", current_dir),
 					julia = string.format('cd("%s")', current_dir),
 					matlab = string.format("cd '%s'", current_dir),
 				}
-
 				local cmd = cd_commands[ft]
 				if cmd then
 					vim.fn["slime#send"](cmd .. "\n")
@@ -493,7 +504,6 @@ return {
 				-- Run silently without notifications
 				vim.fn.jobstart(cmd, { detach = true })
 			end
-
 			-- Render Quarto document (.qmd or .Qmd)
 			local function render_quarto()
 				local filename = vim.fn.expand("%:p")
@@ -505,28 +515,78 @@ return {
 				-- Run silently without notifications
 				vim.fn.jobstart(cmd, { detach = true })
 			end
-
-			-- Track the last opened REPL pane globally
-			local last_repl_pane = nil
-			local last_repl_type = nil
-
-			-- Generic REPL opener that stores the pane id
-			local function open_repl_for(ft)
-				local cmd = repls[ft]
+			-- Language-specific wrappers
+			local function open_python_repl()
+				local cmd = repls["python"]
 				if not cmd then
-					vim.notify("No REPL for filetype: " .. ft, vim.log.levels.WARN)
+					vim.notify("No REPL for Python", vim.log.levels.WARN)
 					return
 				end
 				-- Split a pane and run the command
 				vim.fn.system("tmux split-window -d -h '" .. cmd .. "'")
-
 				-- Find the most recently created pane (highest %number)
 				local panes_output = vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_current_command}'")
 				local max_num, max_id = -1, nil
-
 				for line in panes_output:gmatch("[^\r\n]+") do
 					local id = line:match("^(%%[%d]+)")
-					if id then -- FIXED: Check if id is not nil before proceeding
+					if id then
+						local num = tonumber(id:match("%%(%d+)"))
+						if num and num > max_num then
+							max_num, max_id = num, id
+						end
+					end
+				end
+				if max_id then
+					vim.notify("Opened Python REPL in pane " .. max_id, vim.log.levels.INFO)
+				else
+					vim.notify("Opened Python REPL (pane id not detected)", vim.log.levels.WARN)
+				end
+			end
+
+			local function open_julia_repl()
+				local cmd = repls["julia"]
+				if not cmd then
+					vim.notify("No REPL for Julia", vim.log.levels.WARN)
+					return
+				end
+				-- Split a pane and run the command
+				vim.fn.system("tmux split-window -d -h '" .. cmd .. "'")
+				-- Find the most recently created pane (highest %number)
+				local panes_output = vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_current_command}'")
+				local max_num, max_id = -1, nil
+				for line in panes_output:gmatch("[^\r\n]+") do
+					local id = line:match("^(%%[%d]+)")
+					if id then
+						local num = tonumber(id:match("%%(%d+)"))
+						if num and num > max_num then
+							max_num, max_id = num, id
+						end
+					end
+				end
+				if max_id then
+					vim.notify("Opened Julia REPL in pane " .. max_id, vim.log.levels.INFO)
+				else
+					vim.notify("Opened Julia REPL (pane id not detected)", vim.log.levels.WARN)
+				end
+			end
+
+			local matlab_pane_id = nil
+
+			local function open_matlab_repl()
+				local cmd = repls["matlab"]
+				if not cmd then
+					vim.notify("No REPL for MATLAB", vim.log.levels.WARN)
+					return
+				end
+				-- Split a pane and run MATLAB
+				vim.fn.system("tmux split-window -d -h '" .. cmd .. "'")
+
+				-- Find the most recently created pane
+				local panes_output = vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_current_command}'")
+				local max_num, max_id = -1, nil
+				for line in panes_output:gmatch("[^\r\n]+") do
+					local id = line:match("^(%%[%d]+)")
+					if id then
 						local num = tonumber(id:match("%%(%d+)"))
 						if num and num > max_num then
 							max_num, max_id = num, id
@@ -535,69 +595,80 @@ return {
 				end
 
 				if max_id then
-					last_repl_pane = max_id
-					last_repl_type = ft
-					vim.notify("Opened " .. ft .. " REPL in pane " .. max_id, vim.log.levels.INFO)
+					matlab_pane_id = max_id
+					vim.notify("Opened MATLAB REPL in pane " .. max_id, vim.log.levels.INFO)
 				else
-					-- Fallback: try to get the last pane created
-					local fallback_output = vim.fn.system("tmux display-message -p '#{pane_id}'")
-					local fallback_id = fallback_output:match("%%(%d+)")
-					if fallback_id then
-						last_repl_pane = "%" .. fallback_id
-						last_repl_type = ft
-						vim.notify("Opened " .. ft .. " REPL (fallback pane detection)", vim.log.levels.INFO)
-					else
-						vim.notify("Opened " .. ft .. " REPL (pane id not detected)", vim.log.levels.WARN)
-					end
+					vim.notify("Opened MATLAB REPL (pane id not detected)", vim.log.levels.WARN)
 				end
-			end
-
-			-- Language-specific wrappers
-			local function open_python_repl()
-				open_repl_for("python")
-			end
-			local function open_julia_repl()
-				open_repl_for("julia")
-			end
-			local function open_matlab_repl()
-				open_repl_for("matlab")
 			end
 
 			-- Generic open depending on buffer (still supported)
 			local function open_repl()
 				local ft = get_markdown_language()
-				open_repl_for(ft)
-			end
-
-			-- Close the last opened REPL regardless of buffer type
-			local function close_repl()
-				if last_repl_pane then
-					local result = vim.fn.system("tmux kill-pane -t " .. last_repl_pane)
-					if vim.v.shell_error == 0 then
-						vim.notify(
-							"Closed " .. (last_repl_type or "unknown") .. " REPL (pane " .. last_repl_pane .. ")",
-							vim.log.levels.INFO
-						)
-					else
-						vim.notify("Error closing REPL: " .. result, vim.log.levels.ERROR)
-					end
-					last_repl_pane = nil
-					last_repl_type = nil
+				if ft == "python" then
+					open_python_repl()
+				elseif ft == "julia" then
+					open_julia_repl()
+				elseif ft == "matlab" then
+					open_matlab_repl()
 				else
-					vim.notify("No REPL pane tracked to close", vim.log.levels.WARN)
+					vim.notify("No REPL for filetype: " .. ft, vim.log.levels.WARN)
 				end
 			end
+
 			-- Set cursor movement preference (0 = don't move, 1 = move)
 			vim.g.slime_move_cursor = 1 -- Set to 1 to move cursor down after sending
-
 			-- ========================================
 			-- KEYBINDINGS (centralized for easy editing)
 			-- ========================================
-			-- Global keymaps - MODIFIED: Language-specific REPL opening
+			-- Global keymaps - REPL opening
 			vim.keymap.set("n", "<leader>op", open_python_repl, { desc = "Open Python REPL" })
 			vim.keymap.set("n", "<leader>oj", open_julia_repl, { desc = "Open Julia REPL" })
 			vim.keymap.set("n", "<leader>om", open_matlab_repl, { desc = "Open MATLAB REPL" })
-			vim.keymap.set("n", "<leader>cc", close_repl, { desc = "Close REPL" })
+
+			-- Quick quit keymaps for specific REPLs
+			--
+			vim.keymap.set("n", "qp", function()
+				-- Close Python REPL specifically
+				local panes_output = vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_current_command}'")
+				for line in panes_output:gmatch("[^\r\n]+") do
+					if line:match("python3?") then
+						local pane_id = line:match("^(%%[%d]+)")
+						if pane_id then
+							vim.fn.system("tmux kill-pane -t " .. pane_id)
+							vim.notify("Closed Python REPL (pane " .. pane_id .. ")", vim.log.levels.INFO)
+							return
+						end
+					end
+				end
+				vim.notify("No Python REPL found to close", vim.log.levels.WARN)
+			end, { desc = "Quit Python REPL" })
+
+			vim.keymap.set("n", "qj", function()
+				-- Close Julia REPL specifically
+				local panes_output = vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_current_command}'")
+				for line in panes_output:gmatch("[^\r\n]+") do
+					if line:match("julia") then
+						local pane_id = line:match("^(%%[%d]+)")
+						if pane_id then
+							vim.fn.system("tmux kill-pane -t " .. pane_id)
+							vim.notify("Closed Julia REPL (pane " .. pane_id .. ")", vim.log.levels.INFO)
+							return
+						end
+					end
+				end
+				vim.notify("No Julia REPL found to close", vim.log.levels.WARN)
+			end, { desc = "Quit Julia REPL" })
+
+			vim.keymap.set("n", "qm", function()
+				if matlab_pane_id then
+					vim.fn.system("tmux kill-pane -t " .. matlab_pane_id)
+					vim.notify("Closed MATLAB REPL (pane " .. matlab_pane_id .. ")", vim.log.levels.INFO)
+					matlab_pane_id = nil
+				else
+					vim.notify("No MATLAB REPL found to close", vim.log.levels.WARN)
+				end
+			end, { desc = "Quit MATLAB REPL" })
 
 			-- Add a keymap for manual sync of directory (cd)
 			vim.keymap.set("n", "<leader>sd", sync_working_directory, { desc = "Sync REPL directory" })

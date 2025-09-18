@@ -34,7 +34,7 @@ return {
 			},
 		},
 		input = { enabled = true },
-		notifier = { enabled = false },
+		notifier = { enabled = true },
 		quickfile = { enabled = true },
 		scope = { enabled = true },
 		words = { enabled = true },
