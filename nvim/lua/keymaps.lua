@@ -8,6 +8,12 @@
 -- Escape terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
+-- navigate quickfix
+vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Left>", "<cmd>cclose<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Right>", "<cmd>copen<CR>", { noremap = true, silent = true })
+
 -- Resize windows
 vim.keymap.set("n", "<C-A-Left>", ":vertical resize +2<CR>", { silent = true, desc = "Resize vertically split window" })
 vim.keymap.set(
