@@ -44,7 +44,12 @@ vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 
 -- Show diagnostics as virtual text (disabled by default since 0.11)
-vim.diagnostic.config({ virtual_text = true })
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  update_in_insert = false,
+  severity_sort = true,
+})
 
 -- Highlight without moving
 vim.keymap.set("n", "*", "*``")
