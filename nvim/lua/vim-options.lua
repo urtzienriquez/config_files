@@ -91,3 +91,11 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.showbreak = "↳ " -- Visual indicator for wrapped lines
 	end,
 })
+
+vim.lsp.util.open_floating_preview = (function(orig)
+  return function(contents, syntax, opts, ...)
+    opts = opts or {}
+    opts.border = opts.border or "rounded"  -- "rounded", "single", "double", "shadow"
+    return orig(contents, syntax, opts, ...)
+  end
+end)(vim.lsp.util.open_floating_preview)
