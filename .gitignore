@@ -10,3 +10,5 @@ lazy-lock.json
 .histfile
 .zcompdump
 tmux*.log
+theme.sh
+theme.toml
