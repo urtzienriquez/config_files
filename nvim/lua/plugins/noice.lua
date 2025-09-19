@@ -18,14 +18,20 @@ return {
 			long_message_to_split = true,
 			inc_rename = false,
 			lsp_doc_border = true,
-      command_palette = false,
-      bottom_search = true,
+			command_palette = false,
+			bottom_search = true,
 		},
 		cmdline = {
 			enabled = true,
 			view = "cmdline", -- cmdline or cmdline_popup
 			format = {
-				cmdline = { pattern = "^:", icon = ":", lang = "vim" },
+				cmdline = false,
+				search_up = false,
+				search_down = false,
+				filter = false,
+				input = false,
+				lua = false,
+				help = false,
 			},
 		},
 	},
