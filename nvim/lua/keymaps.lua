@@ -69,6 +69,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- Visual line navigation for wrapped lines
 -- only have this behavior in markdown files
+-- j and k = gj and gk
+-- in addition arrows go down/up in wrapped lines
+-- and to next/prev words (e.g. to edit code chunk options)
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
 		"markdown",
@@ -95,6 +98,11 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.keymap.set("n", "k", "gk", vim.tbl_extend("force", opts, { desc = "Move up by visual line" }))
 		vim.keymap.set("v", "j", "gj", vim.tbl_extend("force", opts, { desc = "Move down by visual line" }))
 		vim.keymap.set("v", "k", "gk", vim.tbl_extend("force", opts, { desc = "Move up by visual line" }))
+
+    vim.keymap.set("i", "<Left>", "<C-o>b", vim.tbl_extend("force", opts, { desc = "Move down by visual line" }))
+    vim.keymap.set("i", "<Right>", "<C-o>w", vim.tbl_extend("force", opts, { desc = "Move down by visual line" }))
+    vim.keymap.set("i", "<Down>", "<C-o>gj", vim.tbl_extend("force", opts, { desc = "Move down by visual line" }))
+    vim.keymap.set("i", "<Up>", "<C-o>gk", vim.tbl_extend("force", opts, { desc = "Move up by visual line" }))
 
 		-- Keep original behavior accessible
 		vim.keymap.set("n", "gj", "j", vim.tbl_extend("force", opts, { desc = "Move down by logical line" }))
