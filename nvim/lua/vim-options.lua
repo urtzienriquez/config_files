@@ -37,9 +37,10 @@ vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to de
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 
--- Show diagnostics as virtual text (disabled by default since 0.11)
+-- Show diagnostics as virtual lines
 vim.diagnostic.config({
-  virtual_text = true,
+  -- virtual_text = true,
+  virtual_lines = true,
   signs = true,
   update_in_insert = false,
   severity_sort = true,
