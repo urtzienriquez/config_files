@@ -91,3 +91,13 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.showbreak = "↳ " -- Visual indicator for wrapped lines
 	end,
 })
+
+-- hack for apparently remaining in insert mode after selecting a file with Telescope
+vim.api.nvim_create_autocmd("WinLeave", {
+  callback = function()
+    if vim.bo.ft == "TelescopePrompt" and vim.fn.mode() == "i" then
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "i", false)
+    end
+  end,
+})
+

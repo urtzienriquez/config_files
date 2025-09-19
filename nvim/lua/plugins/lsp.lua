@@ -61,6 +61,24 @@ local servers = {
 		filetypes = { "r", "rmd", "quarto" },
 		root_patterns = { ".git" },
 	}),
+	-- MATLAB
+	matlab_language_server = vim.tbl_extend("force", default_opts, {
+		cmd = {
+			"matlab-language-server",
+			"--stdio",
+		},
+		filetypes = { "matlab" },
+		root_dir = function(fname)
+			return lspconfig.util.find_git_ancestor(fname) or vim.fn.getcwd()
+		end,
+		settings = {
+			MATLAB = {
+				indexWorkspace = true,
+				matlabConnectionTiming = "onStart",
+				telemetry = false,
+			},
+		},
+	}),
 	-- Python
 	pyright = vim.tbl_extend("force", default_opts, {
 		cmd = { "pyright-langserver", "--stdio" },
