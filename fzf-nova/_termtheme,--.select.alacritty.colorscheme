@@ -1,16 +1,11 @@
 #!/usr/bin/env sh
-# Alacritty theme switcher using fzf
-# Lists all *.toml theme files in ~/.config/alacritty/themes and replaces theme.toml with selected theme
-
-# Load theme
-. "$HOME/config_files/fzf-nova/theme.sh"
-
-export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
+# Alacritty theme switcher with fzf + dynamic FZF theme generation
 
 # Define paths
 config_dir="$HOME/.config/alacritty"
 themes_dir="$config_dir/themes"
 theme_target="$config_dir/theme.toml"
+fzf_theme_script="$HOME/config_files/fzf-nova/theme.sh"
 
 # Check directories
 if [ ! -d "$config_dir" ]; then
@@ -23,7 +18,13 @@ if [ ! -d "$themes_dir" ]; then
     exit 1
 fi
 
-# Find all theme .toml files in the themes directory
+# Load current FZF theme
+[ -f "$fzf_theme_script" ] && . "$fzf_theme_script"
+
+# Configure default FZF options
+export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
+
+# Find all theme .toml files and let user pick one
 selected=$(find "$themes_dir" -type f -name "*.toml" \
     | sed "s|$themes_dir/||" \
     | sort \
@@ -43,3 +44,63 @@ fi
 
 # Copy selected theme to theme.toml
 cp "$theme_file" "$theme_target"
+
+# Generate FZF theme from the new Alacritty theme
+python3 <<EOF
+import re
+from pathlib import Path
+
+theme_path = Path("$theme_target")
+fzf_output_path = Path("$fzf_theme_script")
+
+# Mapping of FZF roles to Alacritty keys
+mapping = {
+    "fg": "colors.primary.foreground",
+    "bg": "colors.primary.background",
+    "hl": "colors.normal.magenta",
+    "fg+": "colors.primary.foreground",
+    "bg+": "colors.primary.background",
+    "hl+": "colors.bright.magenta",
+    "info": "colors.normal.blue",
+    "prompt": "colors.normal.cyan",
+    "pointer": "colors.bright.magenta",
+    "marker": "colors.normal.green",
+    "spinner": "colors.normal.green",
+    "header": "colors.normal.green",
+}
+
+# Parse colors from theme.toml
+def parse_colors(content):
+    colors = {}
+    color_re = re.compile(r"(\\w+)\\s*=\\s*'(#?[0-9a-fA-F]{6})'")
+    section = None
+    for line in content.splitlines():
+        line = line.strip()
+        if line.startswith("[colors."):
+            section = line.strip("[]")
+            continue
+        match = color_re.search(line)
+        if match:
+            key, value = match.groups()
+            colors[f"{section}.{key}"] = value
+    return colors
+
+# Generate FZF_THEME_OPTS
+content = theme_path.read_text()
+colors = parse_colors(content)
+
+fzf_parts = []
+for fzf_key, alacritty_key in mapping.items():
+    color = colors.get(alacritty_key, "#ffffff")
+    fzf_parts.append(f"{fzf_key}:{color}")
+
+fzf_opts = " ".join([f"--color={p}" for p in fzf_parts])
+
+# Write to theme.sh
+fzf_output_path.parent.mkdir(parents=True, exist_ok=True)
+fzf_output_path.write_text(f'export FZF_THEME_OPTS="{fzf_opts}"\\n')
+EOF
+
+echo "Switched to theme: $selected"
+echo "FZF theme updated!"
+

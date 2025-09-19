@@ -1,6 +1,1 @@
-# ~/.config/fzf/theme.sh
-
-export FZF_THEME_OPTS="--color=fg:#c0caf5,bg:#1a1b26,hl:#7dcfff \
---color=fg+:#c0caf5,bg+:#35274a,hl+:#bb9af7 \
---color=info:#7aa2f7,prompt:#7dcfff,pointer:#bb9af7 \
---color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a"
+export FZF_THEME_OPTS="--color=fg:#3760bf --color=bg:#e1e2e7 --color=hl:#9854f1 --color=fg+:#3760bf --color=bg+:#e1e2e7 --color=hl+:#a463ff --color=info:#2e7de9 --color=prompt:#007197 --color=pointer:#a463ff --color=marker:#587539 --color=spinner:#587539 --color=header:#587539"
