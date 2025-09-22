@@ -9,7 +9,8 @@ return {
 		keymap = {
 			preset = "default",
 			["<CR>"] = { "accept", "fallback" },
-      ["<C-y>"] = { "show", "show_documentation", "hide_documentation" },
+      ["<C-Space>"] = {},  -- Disable the default trigger
+			["<C-j>"] = { "show", "show_documentation", "hide_documentation" },
 		},
 		appearance = {
 			use_nvim_cmp_as_default = true,
@@ -18,9 +19,17 @@ return {
 
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
+			per_filetype = {
+				rmd = { inherit_defaults = true, "thesaurus" },
+				Rmd = { inherit_defaults = true, "thesaurus" },
+				jmd = { inherit_defaults = true, "thesaurus" },
+				Jmd = { inherit_defaults = true, "thesaurus" },
+				quarto = { inherit_defaults = true, "thesaurus" },
+				markdown = { inherit_defaults = true, "thesaurus" },
+			},
 			providers = {
 				thesaurus = {
-					name = "thesaurus",
+					name = "blink-cmp-words",
 					module = "blink-cmp-words.thesaurus",
 					opts = {
 						score_offset = 0,
@@ -29,9 +38,6 @@ return {
 						similarity_depth = 2,
 					},
 				},
-			},
-			per_filetype = {
-				markdown = { "thesaurus" },
 			},
 		},
 
