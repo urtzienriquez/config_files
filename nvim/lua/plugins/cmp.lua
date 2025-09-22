@@ -11,7 +11,6 @@ local function configure_cmp()
 	}
 
 	cmp.setup({
-		-- Expand snippets with cmp_luasnip
 		snippet = {
 			expand = function(args)
 				require("luasnip").lsp_expand(args.body)
@@ -32,21 +31,20 @@ local function configure_cmp()
 		},
 		formatting = {
 			format = function(entry, vim_item)
-				vim_item.menu = source_mapping[entry.source.name] or "[Unknown]"
-
-				vim_item.menu = string.format(" %s", vim_item.menu)
-
+				vim_item.menu = string.format(" %s", source_mapping[entry.source.name] or "[Unknown]")
 				return vim_item
 			end,
 			fields = { "abbr", "kind", "menu" },
 		},
 		window = {
-			completion = cmp.config.window.bordered({
-				winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
-			}),
-			documentation = cmp.config.window.bordered({
-				winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
-			}),
+			completion = {
+				border = "none",
+				winhighlight = "Normal:CmpPmenu,CursorLine:CmpSel,Search:None",
+			},
+			documentation = {
+				border = "none",
+				winhighlight = "Normal:CmpDoc,Search:None",
+			},
 		},
 		mapping = cmp.mapping.preset.insert({
 			["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -69,11 +67,47 @@ local function configure_cmp()
 				end
 			end, { "i", "s" }),
 		}),
-		-- Add experimental features that might help
 		experimental = {
-			ghost_text = false, -- Disable if causing issues
+			ghost_text = false,
 		},
 	})
+
+	-- Sync colors between nvim-cmp and CTRL-X completion
+	local function set_completion_highlights()
+		if vim.o.background == "dark" then
+			-- Dark theme
+			vim.api.nvim_set_hl(0, "CmpPmenu", { bg = "#3E4466" })
+			vim.api.nvim_set_hl(0, "CmpSel", { bg = "#212436" })
+			vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#3E4466" })
+			vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#9854f1" })
+
+			-- Built-in popup menu (CTRL-X completions)
+			vim.api.nvim_set_hl(0, "Pmenu", { bg = "#3E4466" })
+			vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#212436" })
+			vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "#3E4466" })
+			vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#212436" })
+		else
+			-- Light theme
+			vim.api.nvim_set_hl(0, "CmpPmenu", { bg = "#CED3EB" })
+			vim.api.nvim_set_hl(0, "CmpSel", { bg = "#A6A9BA" })
+			vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#CED3EB" })
+			vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#007ea8" })
+
+			vim.api.nvim_set_hl(0, "Pmenu", { bg = "#CED3EB" })
+			vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#A6A9BA" })
+			vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "#CED3EB" })
+			vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#A6A9BA" })
+		end
+	end
+
+	-- Update highlights when colorscheme changes
+	vim.api.nvim_create_autocmd("ColorScheme", {
+		pattern = "*",
+		callback = set_completion_highlights,
+	})
+
+	-- Apply immediately
+	vim.defer_fn(set_completion_highlights, 0)
 end
 
 return {
