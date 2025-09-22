@@ -1,15 +1,22 @@
 -- Neovim LSP configuration using the new API (Neovim 0.10+)
 -- This file explicitly defines and starts LSP servers without relying on lspconfig.setup()
+-- Updated to work with blink.nvim instead of nvim-cmp
 -- -------------------------------------------------------------------
 -- Ensure the configs table exists
 -- -------------------------------------------------------------------
 vim.lsp.configs = vim.lsp.configs or {}
+
 -- -------------------------------------------------------------------
--- Default LSP capabilities (integrates with nvim-cmp)
+-- Default LSP capabilities (integrates with blink.nvim)
 -- -------------------------------------------------------------------
 local default_opts = {
-	capabilities = require("cmp_nvim_lsp").default_capabilities(),
+	capabilities = vim.tbl_deep_extend(
+		"force",
+		vim.lsp.protocol.make_client_capabilities(),
+		require('blink.cmp').get_lsp_capabilities()
+	),
 }
+
 -- -------------------------------------------------------------------
 -- Helper: Define a config if it hasn't been created yet
 -- -------------------------------------------------------------------
@@ -18,6 +25,7 @@ local function ensure_config(name, config)
 		vim.lsp.configs[name] = config
 	end
 end
+
 -- -------------------------------------------------------------------
 -- Helper: Find root directory with fallback
 -- -------------------------------------------------------------------
@@ -69,7 +77,7 @@ local servers = {
 		},
 		filetypes = { "matlab" },
 		root_dir = function(fname)
-			return lspconfig.util.find_git_ancestor(fname) or vim.fn.getcwd()
+			return find_root_dir(fname, { ".git" }) or vim.fn.getcwd()
 		end,
 		settings = {
 			MATLAB = {
