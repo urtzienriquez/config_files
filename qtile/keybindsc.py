@@ -78,7 +78,7 @@ keys = [
     Key(
         [mod],
         "w",
-        lazy.layout.next(),
+        lazy.group.next_window(),
         desc="Move window focus to other window",
     ),
     Key(
