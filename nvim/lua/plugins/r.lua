@@ -76,6 +76,17 @@ return {
 				opts.objbr_auto_start = true
 			end
 			require("r").setup(opts)
+
+			-- Fix markdown code chunk background on colorscheme change
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				pattern = "*",
+				callback = function()
+					-- Adjust these highlight groups as needed for your colorscheme
+        local bg = (vim.o.background == "dark") and "#292e42" or "#c4c8da"
+        vim.cmd("hi! link rmdChunk CodeBlock")
+        vim.cmd("hi! RCodeBlock guibg=" .. bg .. " guifg=NONE")
+				end,
+			})
 		end,
 	},
 }
