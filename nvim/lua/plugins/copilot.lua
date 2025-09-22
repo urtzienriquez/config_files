@@ -6,19 +6,17 @@ return {
 			{
 				"github/copilot.vim",
 				config = function()
-					-- Disable Copilot by default
-					vim.g.copilot_enabled = false
+					vim.g.copilot_enabled = false -- Disable Copilot by default
+					vim.g.copilot_no_tab_map = true -- Disable default Tab mapping
 
-					-- Disable default Tab mapping
-					vim.g.copilot_no_tab_map = true
-
-					-- Set custom keybinding for accept suggestion
 					vim.keymap.set("i", "<M-a>", 'copilot#Accept("\\<CR>")', {
 						expr = true,
 						replace_keycodes = false,
 					})
-
-					-- Additional Copilot keybindings
+					vim.keymap.set("i", "<M-d>", 'copilot#Reject("\\<CR>")', {
+						expr = true,
+						replace_keycodes = false,
+					})
 					vim.keymap.set("i", "<M-]>", "copilot#Next()", { expr = true })
 					vim.keymap.set("i", "<M-[>", "copilot#Previous()", { expr = true })
 					vim.keymap.set("i", "<M-d>", "copilot#Dismiss()", { expr = true })
@@ -27,7 +25,7 @@ return {
 			{ "nvim-lua/plenary.nvim" },
 		},
 		opts = {
-      model = 'claude-sonnet-4',
+			-- model = "claude-sonnet-4",
 			debug = false,
 			show_help = true,
 			auto_follow_cursor = false,
@@ -35,11 +33,7 @@ return {
 		config = function(_, opts)
 			local chat = require("CopilotChat")
 			local select = require("CopilotChat.select")
-
-			-- Set selection method
 			opts.selection = select.unnamed
-
-			-- Setup the plugin first
 			chat.setup(opts)
 
 			-- Create custom commands with explicit buffer selection
@@ -65,27 +59,25 @@ return {
 		event = "VeryLazy",
 		keys = {
 			-- Basic chat commands
-			{ "<leader>cc", "<cmd>CopilotChatToggle<cr>", desc = "Toggle CopilotChat" },
-			{ "<leader>cm", "<cmd>CopilotChatModel<cr>", desc = "Select Copilot Model" },
-			{ "<leader>cx", "<cmd>CopilotChatExplain<cr>", mode = { "n", "v" }, desc = "Explain code" },
-			{ "<leader>ct", "<cmd>CopilotChatTests<cr>", desc = "Generate tests" },
-			{ "<leader>cr", "<cmd>CopilotChatReview<cr>", desc = "Review code" },
-
+			{ "<leader>cc", mode = "n", "<cmd>CopilotChatToggle<cr>", desc = "Toggle CopilotChat" },
+			{ "<leader>cm", mode = "n", "<cmd>CopilotChatModel<cr>", desc = "Select Copilot Model" },
+			{ "<leader>cx", mode = { "n", "v" }, "<cmd>CopilotChatExplain<cr>", desc = "Explain code" },
+			{ "<leader>ct", mode = "n", "<cmd>CopilotChatTests<cr>", desc = "Generate tests" },
+			{ "<leader>cr", mode = { "n", "v" }, "<cmd>CopilotChatReview<cr>", desc = "Review code" },
+			{ "<leader>co", mode = "v", "<cmd>CopilotChatOptimize<cr>", desc = "Optimize code" },
 			-- Visual mode chat
 			{
 				"<leader>cv",
-				":CopilotChatVisual ",
 				mode = "x",
+				":CopilotChatVisual ",
 				desc = "Chat with visual selection",
 			},
-
 			-- Quick chat
 			{
 				"<leader>cq",
 				":CopilotChat ",
 				desc = "Quick ask Copilot (type after)",
 			},
-
 			-- direct buffer chat
 			{
 				"<leader>cb",
@@ -95,22 +87,17 @@ return {
 			-- inline chat
 			{
 				"<leader>ci",
-				":CopilotChatInline ", -- Remove <cr> and add space for input
 				mode = "v",
+				":CopilotChatInline ",
 				desc = "CopilotChat - Inline chat",
 			},
-      -- Accept Copilot suggestion
-			{ "M-a", "<cmd>Copilot#Accept()<cr>", desc = "Accept Copilot suggestion", expr = true, silent = true },
-
-			-- Reject Copilot suggestion
-			{ "M-d", "<cmd>Copilot#Reject()<cr>", desc = "Reject Copilot suggestion", expr = true, silent = true },
-
-			-- Copilot toggle commands
+			-- Copilot disable
 			{
 				"<leader>cd",
 				"<cmd>Copilot disable<cr>",
 				desc = "Disable Copilot",
 			},
+			-- Copilot enable
 			{
 				"<leader>ce",
 				"<cmd>Copilot enable<cr>",
