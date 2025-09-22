@@ -5,6 +5,10 @@ return {
 		file_types = { "markdown", "rmd", "Rmd", "jmd", "Jmd", "quarto" },
 		render_modes = { "n", "c", "t" },
 		anti_conceal = { enabled = false },
+    heading = {
+      enabled = true,
+      sign = false,
+    },
 		code_block = {
 			style = "full",
 			position = "left",
