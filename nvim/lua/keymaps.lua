@@ -230,11 +230,6 @@ vim.api.nvim_create_autocmd("User", {
 				Snacks.lazygit()
 			end, { desc = "Lazygit" })
 
-			-- Terminal
-			vim.keymap.set("n", "<leader>t", function()
-				Snacks.terminal()
-			end, { desc = "Toggle Terminal" })
-
 			-- Word jumping
 			vim.keymap.set({ "n", "t" }, "]]", function()
 				Snacks.words.jump(vim.v.count1)

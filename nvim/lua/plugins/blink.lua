@@ -5,6 +5,11 @@ return {
 	opts = {
 		keymap = {
 			preset = "default",
+			["<CR>"] = { "accept", "fallback" },
+			["<C-j>"] = { "select_next", "fallback" },
+			["<C-k>"] = { "select_prev", "fallback" },
+			["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
+			["<C-e>"] = { "hide", "fallback" },
 		},
 		appearance = {
 			use_nvim_cmp_as_default = true,
@@ -12,7 +17,7 @@ return {
 		},
 
 		sources = {
-			default = { "lsp", "path", "snippets", "buffer" },
+			default = { "lsp", "path", "snippets", "buffer", "omni" },
 		},
 
 		completion = {
@@ -57,16 +62,16 @@ return {
 		local function setup_highlights()
 			if vim.o.background == "dark" then
 				-- Dark theme colors
-				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = "#3d4865", fg = "#a9b1d6" })
-				vim.api.nvim_set_hl(0, "CmpSel", { bg = "#2d3149", fg = "#c0caf5", bold = true })
-				vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#3d4865", fg = "#a9b1d6" })
-				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = "#1a1b26", fg = "#a9b1d6" })
+				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = "#202233", fg = "#a9b1d6" })
+				vim.api.nvim_set_hl(0, "CmpSel", { bg = "#2B2E42", fg = "#c0caf5", bold = true })
+				vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#202233", fg = "#a9b1d6" })
+				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = "#202233", fg = "#a9b1d6" })
 				vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#a9b1d6" })
 
-				vim.api.nvim_set_hl(0, "Pmenu", { bg = "#3d4865" })
-				vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#2d3149" })
-				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "#3d4865" })
-				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#2d3149" })
+				vim.api.nvim_set_hl(0, "Pmenu", { bg = "#202233" })
+				vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#2B2E42" })
+				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "#202233" })
+				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#202233" })
 			else
 				-- Light theme colors
 				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = "#CED3EB", fg = "#3760bf" })
