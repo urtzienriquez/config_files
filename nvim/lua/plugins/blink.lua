@@ -26,10 +26,11 @@ return {
 				Jmd = { inherit_defaults = true, "thesaurus" },
 				quarto = { inherit_defaults = true, "thesaurus" },
 				markdown = { inherit_defaults = true, "thesaurus" },
+				text = { inherit_defaults = true, "thesaurus" },
 			},
 			providers = {
 				thesaurus = {
-					name = "blink-cmp-words",
+					name = "thesaurus",
 					module = "blink-cmp-words.thesaurus",
 					opts = {
 						score_offset = 0,
