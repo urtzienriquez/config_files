@@ -18,7 +18,7 @@ return {
 						replace_keycodes = false,
 					})
 
-					-- Optional: Additional Copilot keybindings
+					-- Additional Copilot keybindings
 					vim.keymap.set("i", "<M-]>", "copilot#Next()", { expr = true })
 					vim.keymap.set("i", "<M-[>", "copilot#Previous()", { expr = true })
 					vim.keymap.set("i", "<M-d>", "copilot#Dismiss()", { expr = true })
@@ -27,6 +27,7 @@ return {
 			{ "nvim-lua/plenary.nvim" },
 		},
 		opts = {
+      model = 'claude-sonnet-4',
 			debug = false,
 			show_help = true,
 			auto_follow_cursor = false,
@@ -45,11 +46,27 @@ return {
 			vim.api.nvim_create_user_command("CopilotChatVisual", function(args)
 				chat.ask(args.args, { selection = select.visual })
 			end, { nargs = "*", range = true })
+
+			-- Inline chat with Copilot
+			vim.api.nvim_create_user_command("CopilotChatInline", function(args)
+				chat.ask(args.args, {
+					selection = select.visual,
+					window = {
+						layout = "float",
+						relative = "cursor",
+						width = 0.8,
+						height = 0.4,
+						row = 1,
+						col = 0,
+					},
+				})
+			end, { nargs = "*", range = true })
 		end,
 		event = "VeryLazy",
 		keys = {
 			-- Basic chat commands
 			{ "<leader>cc", "<cmd>CopilotChatToggle<cr>", desc = "Toggle CopilotChat" },
+			{ "<leader>cm", "<cmd>CopilotChatModel<cr>", desc = "Select Copilot Model" },
 			{ "<leader>cx", "<cmd>CopilotChatExplain<cr>", mode = { "n", "v" }, desc = "Explain code" },
 			{ "<leader>ct", "<cmd>CopilotChatTests<cr>", desc = "Generate tests" },
 			{ "<leader>cr", "<cmd>CopilotChatReview<cr>", desc = "Review code" },
@@ -75,8 +92,14 @@ return {
 				":CopilotChat #buffer ",
 				desc = "Direct buffer chat command",
 			},
-
-			-- Accept Copilot suggestion
+			-- inline chat
+			{
+				"<leader>ci",
+				":CopilotChatInline ", -- Remove <cr> and add space for input
+				mode = "v",
+				desc = "CopilotChat - Inline chat",
+			},
+      -- Accept Copilot suggestion
 			{ "M-a", "<cmd>Copilot#Accept()<cr>", desc = "Accept Copilot suggestion", expr = true, silent = true },
 
 			-- Reject Copilot suggestion

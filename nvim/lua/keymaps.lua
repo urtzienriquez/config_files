@@ -315,6 +315,7 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>r", group = "R/Render" },
 				{ "<leader>s", group = "Send/Sync" },
 				{ "<leader>u", group = "UI toggle" },
+				{ "<leader>c", group = "Copilot" },
 
 				-- Specific mappings for better organization
 				{ "<leader>or", desc = "R" },
