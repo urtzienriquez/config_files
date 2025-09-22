@@ -6,10 +6,10 @@ return {
 		keymap = {
 			preset = "default",
 			["<CR>"] = { "accept", "fallback" },
-			["<C-j>"] = { "select_next", "fallback" },
-			["<C-k>"] = { "select_prev", "fallback" },
-			["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
-			["<C-e>"] = { "hide", "fallback" },
+			-- ["<C-j>"] = { "select_next", "fallback" },
+			-- ["<C-k>"] = { "select_prev", "fallback" },
+			-- ["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
+			-- ["<C-e>"] = { "hide", "fallback" },
 		},
 		appearance = {
 			use_nvim_cmp_as_default = true,

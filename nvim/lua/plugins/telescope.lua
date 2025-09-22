@@ -21,22 +21,22 @@ return {
 						prompt_position = "top",
 					},
 					sorting_strategy = "ascending",
-					mappings = {
-						i = {
-							["<C-j>"] = actions.move_selection_next,
-							["<C-k>"] = actions.move_selection_previous,
-							["<C-p>"] = action_layout.toggle_preview,
-							["<C-h>"] = actions.which_key,
-							["<C-s>"] = actions.cycle_previewers_next,
-						},
-						n = {
-							["<C-j>"] = actions.move_selection_next,
-							["<C-k>"] = actions.move_selection_previous,
-							["<C-p>"] = action_layout.toggle_preview,
-							["<C-h>"] = actions.which_key,
-							["<C-s>"] = actions.cycle_previewers_next,
-						},
-					},
+					-- mappings = {
+					-- 	i = {
+					-- 		["<C-j>"] = actions.move_selection_next,
+					-- 		["<C-k>"] = actions.move_selection_previous,
+					-- 		["<C-p>"] = action_layout.toggle_preview,
+					-- 		["<C-h>"] = actions.which_key,
+					-- 		["<C-s>"] = actions.cycle_previewers_next,
+					-- 	},
+					-- 	n = {
+					-- 		["<C-j>"] = actions.move_selection_next,
+					-- 		["<C-k>"] = actions.move_selection_previous,
+					-- 		["<C-p>"] = action_layout.toggle_preview,
+					-- 		["<C-h>"] = actions.which_key,
+					-- 		["<C-s>"] = actions.cycle_previewers_next,
+					-- 	},
+					-- },
 				},
 				pickers = {
 					buffers = {
