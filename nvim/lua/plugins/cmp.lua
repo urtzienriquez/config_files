@@ -28,7 +28,7 @@ local function configure_cmp()
 		}),
 		completion = {
 			keyword_length = 3,
-			completeopt = "menu,menuone,noselect",
+			completeopt = "menu,menuone,noselect,popup",
 		},
 		formatting = {
 			format = function(entry, vim_item)

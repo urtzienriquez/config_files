@@ -50,7 +50,7 @@ return {
 		keys = {
 			-- Basic chat commands
 			{ "<leader>cc", "<cmd>CopilotChatToggle<cr>", desc = "Toggle CopilotChat" },
-			{ "<leader>cx", "<cmd>CopilotChatExplain<cr>", desc = "Explain code" },
+			{ "<leader>cx", "<cmd>CopilotChatExplain<cr>", mode = { "n", "v" }, desc = "Explain code" },
 			{ "<leader>ct", "<cmd>CopilotChatTests<cr>", desc = "Generate tests" },
 			{ "<leader>cr", "<cmd>CopilotChatReview<cr>", desc = "Review code" },
 
