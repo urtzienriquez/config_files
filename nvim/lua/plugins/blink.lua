@@ -1,15 +1,15 @@
 return {
 	"saghen/blink.cmp",
-	dependencies = "rafamadriz/friendly-snippets",
+	dependencies = {
+		"rafamadriz/friendly-snippets",
+		"archie-judd/blink-cmp-words",
+	},
 	version = "*",
 	opts = {
 		keymap = {
 			preset = "default",
 			["<CR>"] = { "accept", "fallback" },
-			-- ["<C-j>"] = { "select_next", "fallback" },
-			-- ["<C-k>"] = { "select_prev", "fallback" },
-			-- ["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
-			-- ["<C-e>"] = { "hide", "fallback" },
+      ["<C-y>"] = { "show", "show_documentation", "hide_documentation" },
 		},
 		appearance = {
 			use_nvim_cmp_as_default = true,
@@ -17,7 +17,22 @@ return {
 		},
 
 		sources = {
-			default = { "lsp", "path", "snippets", "buffer", "omni" },
+			default = { "lsp", "path", "snippets", "buffer" },
+			providers = {
+				thesaurus = {
+					name = "thesaurus",
+					module = "blink-cmp-words.thesaurus",
+					opts = {
+						score_offset = 0,
+						definition_pointers = { "!", "&", "^" },
+						similarity_pointers = { "&", "^" },
+						similarity_depth = 2,
+					},
+				},
+			},
+			per_filetype = {
+				markdown = { "thesaurus" },
+			},
 		},
 
 		completion = {
