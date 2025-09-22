@@ -74,8 +74,8 @@ vim.api.nvim_create_autocmd("FileType", {
 		"markdown",
 		"text",
 		"quarto",
-    "rmd",
-    "Rmd",
+		"rmd",
+		"Rmd",
 		"qmd",
 		"Qmd", -- Quarto
 		"org", -- Org-mode files
