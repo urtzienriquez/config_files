@@ -7,43 +7,28 @@ return {
 			local treesitter = require("nvim-treesitter")
 			treesitter.setup({})
 			local should_install = {
-				"vim",
-				"c",
-				"xml",
-				"css",
 				"bash",
+				"c",
+				"css",
 				"diff",
-				"lua",
-				"luap",
-				"luadoc",
-				"vim",
-				"vimdoc",
-				"typescript",
-				"javascript",
-				"jsdoc",
 				"html",
-				"http",
+				"javascript",
 				"json",
-				"jsonc",
-				"sql",
-				"python",
 				"julia",
-				"matlab",
-        "r",
-        "rnoweb",
-        "latex",
-				"csv",
-				"gitignore",
-				"gitcommit",
-				"gitattributes",
-				"git_config",
-				"go",
-				"query",
-				"toml",
-				"yaml",
-				"regex",
+				"latex",
+				"lua",
+				"luadoc",
 				"markdown",
 				"markdown_inline",
+				"matlab",
+				"python",
+				"query",
+				"r",
+				"rnoweb",
+				"vim",
+				"vimdoc",
+				"yaml",
+				"regex",
 			}
 
 			local installed = treesitter.get_installed()
@@ -73,28 +58,11 @@ return {
 		config = function()
 			require("nvim-treesitter-textobjects").setup({
 				select = {
+					enable = true,
 					lookahead = true,
-					selection_modes = {
-						["@parameter.outer"] = "v",
-						["@function.outer"] = "V",
-						["@class.outer"] = "V",
-					},
-					include_surrounding_whitespace = true,
-				},
-				move = {
-					set_jumps = false,
+					disable = { "fortran" },
 				},
 			})
-			do -- move
-				vim.keymap.set({ "n", "x", "o" }, "]]", function()
-					require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
-					vim.cmd("normal! zz")
-				end)
-				vim.keymap.set({ "n", "x", "o" }, "[[", function()
-					require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
-					vim.cmd("normal! zz")
-				end)
-			end
 		end,
 	},
 }

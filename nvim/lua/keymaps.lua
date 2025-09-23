@@ -131,7 +131,7 @@ vim.api.nvim_create_autocmd("User", {
 		-- ========================================
 		local oil_ok, oil = pcall(require, "oil")
 		if oil_ok then
-			vim.keymap.set("n", "<leader>/", function()
+			vim.keymap.set("n", "<leader>;", function()
 				if vim.bo.filetype == "oil" then
 					oil.close()
 				else
@@ -184,6 +184,28 @@ vim.api.nvim_create_autocmd("User", {
 				})
 			end, { desc = "Format file or range" })
 		end
+
+		-- ========================================
+		-- treesitter textobjects
+		-- ========================================
+			vim.keymap.set({ "x", "o" }, "af", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+			end, { desc = "around function" })
+			vim.keymap.set({ "x", "o" }, "if", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+			end, { desc = "inside function" })
+			vim.keymap.set({ "x", "o" }, "al", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@loop.outer", "textobjects")
+			end, { desc = "around loop" })
+			vim.keymap.set({ "x", "o" }, "il", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@loop.inner", "textobjects")
+			end, { desc = "inside loop" })
+			vim.keymap.set({ "x", "o" }, "ac", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@conditional.outer", "textobjects")
+			end, { desc = "around conditional" })
+			vim.keymap.set({ "x", "o" }, "ic", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@conditional.inner", "textobjects")
+			end, { desc = "inside the condition" })
 
 		-- ========================================
 		-- Tmux Navigator keymaps
