@@ -217,62 +217,14 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", { desc = "Navigate previous (tmux)" })
 
 		-- ========================================
-		-- r.nvim
-		-- ========================================
-		-- Set your custom mappings
-
-		vim.api.nvim_create_autocmd("FileType", {
-			pattern = { "r", "rmd", "Rmd" },
-			callback = function()
-				local opts_keymap = { noremap = true, silent = true, buffer = true }
-
-				vim.keymap.set("n", "<Enter>", "<Plug>RDSendLine", opts_keymap)
-				vim.keymap.set("v", "<Enter>", "<Plug>RSendSelection", opts_keymap)
-
-				vim.keymap.set("n", "<leader>or", "<Plug>RStart", opts_keymap)
-				vim.keymap.set("n", "<leader>sb", "<Plug>RSendFile", opts_keymap)
-				vim.keymap.set("n", "<leader>qr", "<Plug>RClose", opts_keymap)
-				vim.keymap.set("n", "<leader>rr", "<Plug>RMakeAll", opts_keymap)
-			end,
-		})
-
-		-- ========================================
-		-- yarepl
-		-- ========================================
-		-- keymaps
-
-		vim.api.nvim_create_autocmd("FileType", {
-			pattern = { "python", "julia", "matlab" },
-			callback = function()
-				local opts_keymap = { noremap = true, silent = true, buffer = true }
-
-				vim.keymap.set("n", "<leader>rs", "<Plug>(REPLStart)", vim.tbl_extend("force", opts_keymap, { desc = "Start REPL" }))
-				vim.keymap.set("n", "<leader>op", "<CMD>REPLStartPython<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Start Python REPL" }))
-				vim.keymap.set("n", "<leader>oj", "<CMD>REPLStartJulia<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Start Julia REPL" }))
-				vim.keymap.set("n", "<leader>om", "<CMD>REPLStartMatlab<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Start MATLAB REPL" }))
-				vim.keymap.set("n", "<leader>rf", "<Plug>(REPLFocus)", vim.tbl_extend("force", opts_keymap, { desc = "Focus REPL" }))
-				vim.keymap.set("n", "<leader>rh", "<Plug>(REPLHide)", vim.tbl_extend("force", opts_keymap, { desc = "Hide REPL" }))
-				vim.keymap.set("n", "<leader>qp", "<CMD>REPLClosePython<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" }))
-				vim.keymap.set("n", "<leader>qj", "<CMD>REPLCloseJulia<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" }))
-				vim.keymap.set("n", "<leader>qm", "<CMD>REPLCloseMatlab<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" }))
-				-- Send code to REPL
-				vim.keymap.set("n", "<Return>", "<Plug>(REPLSendLine)", vim.tbl_extend("force", opts_keymap, { desc = "Send line to REPL" }))
-				vim.keymap.set("n", "<leader>s", "<Plug>(REPLSendOperator)", vim.tbl_extend("force", opts_keymap, { desc = "Send operator to REPL" }))
-				vim.keymap.set("v", "<Return>", "<Plug>(REPLSendVisual)", vim.tbl_extend("force", opts_keymap, { desc = "Send visual selection to REPL" }))
-				-- Send entire buffer
-				vim.keymap.set("n", "<leader>sb", "ggVG<Plug>(REPLSendVisual)", vim.tbl_extend("force", opts_keymap, { desc = "Send entire buffer to REPL" }))
-			end,
-		})
-
-		-- ========================================
 		-- Snacks (misc) keymaps
 		-- ========================================
 		if _G.Snacks then
 			-- Zen mode
-			vim.keymap.set("n", "<leader>z", function()
+			vim.keymap.set("n", "<leader>Z", function()
 				Snacks.zen()
 			end, { desc = "Toggle Zen Mode" })
-			vim.keymap.set("n", "<leader>Z", function()
+			vim.keymap.set("n", "<leader>z", function()
 				Snacks.zen.zoom()
 			end, { desc = "Toggle Zoom" })
 
@@ -307,6 +259,145 @@ vim.api.nvim_create_autocmd("User", {
 			vim.keymap.set({ "n", "t" }, "[[", function()
 				Snacks.words.jump(-vim.v.count1)
 			end, { desc = "Prev Reference" })
+		end
+	end,
+})
+
+-- ========================================
+-- r.nvim
+-- ========================================
+-- Set your custom mappings
+
+local function set_r_keymaps(bufnr)
+	local opts_keymap = { noremap = true, silent = true, buffer = true }
+
+	vim.keymap.set("n", "<Enter>", "<Plug>RDSendLine", opts_keymap)
+	vim.keymap.set("v", "<Enter>", "<Plug>RSendSelection", opts_keymap)
+
+	vim.keymap.set("n", "<leader>or", "<Plug>RStart", opts_keymap)
+	vim.keymap.set("n", "<leader>sb", "<Plug>RSendFile", opts_keymap)
+	vim.keymap.set("n", "<leader>qr", "<Plug>RClose", opts_keymap)
+	vim.keymap.set("n", "<leader>rr", "<Plug>RMakeAll", opts_keymap)
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "r", "rmd", "Rmd" },
+	callback = function()
+		set_r_keymaps(0)
+	end,
+})
+
+-- ========================================
+-- yarepl
+-- ========================================
+-- keymaps
+
+local function set_yarepl_keymaps(bufnr)
+	local opts_keymap = { noremap = true, silent = true, buffer = true }
+
+	vim.keymap.set(
+		"n",
+		"<leader>rs",
+		"<Plug>(REPLStart)",
+		vim.tbl_extend("force", opts_keymap, { desc = "Start REPL" })
+	)
+	vim.keymap.set(
+		"n",
+		"<leader>op",
+		"<CMD>REPLStartPython<CR>",
+		vim.tbl_extend("force", opts_keymap, { desc = "Start Python REPL" })
+	)
+	vim.keymap.set(
+		"n",
+		"<leader>oj",
+		"<CMD>REPLStartJulia<CR>",
+		vim.tbl_extend("force", opts_keymap, { desc = "Start Julia REPL" })
+	)
+	vim.keymap.set(
+		"n",
+		"<leader>om",
+		"<CMD>REPLStartMatlab<CR>",
+		vim.tbl_extend("force", opts_keymap, { desc = "Start MATLAB REPL" })
+	)
+	vim.keymap.set(
+		"n",
+		"<leader>rf",
+		"<Plug>(REPLFocus)",
+		vim.tbl_extend("force", opts_keymap, { desc = "Focus REPL" })
+	)
+	vim.keymap.set("n", "<leader>rh", "<Plug>(REPLHide)", vim.tbl_extend("force", opts_keymap, { desc = "Hide REPL" }))
+	vim.keymap.set(
+		"n",
+		"<leader>qp",
+		"<CMD>REPLClosePython<CR>",
+		vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" })
+	)
+	vim.keymap.set(
+		"n",
+		"<leader>qj",
+		"<CMD>REPLCloseJulia<CR>",
+		vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" })
+	)
+	vim.keymap.set(
+		"n",
+		"<leader>qm",
+		"<CMD>REPLCloseMatlab<CR>",
+		vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" })
+	)
+	-- Send code to REPL
+	vim.keymap.set(
+		"n",
+		"<Return>",
+		"<Plug>(REPLSendLine)",
+		vim.tbl_extend("force", opts_keymap, { desc = "Send line to REPL" })
+	)
+	vim.keymap.set(
+		"n",
+		"<leader>s",
+		"<Plug>(REPLSendOperator)",
+		vim.tbl_extend("force", opts_keymap, { desc = "Send operator to REPL" })
+	)
+	vim.keymap.set(
+		"v",
+		"<Return>",
+		"<Plug>(REPLSendVisual)",
+		vim.tbl_extend("force", opts_keymap, { desc = "Send visual selection to REPL" })
+	)
+	-- Send entire buffer
+	vim.keymap.set(
+		"n",
+		"<leader>sb",
+		"ggVG<Plug>(REPLSendVisual)",
+		vim.tbl_extend("force", opts_keymap, { desc = "Send entire buffer to REPL" })
+	)
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "python", "julia", "matlab" },
+	callback = function()
+		set_yarepl_keymaps(0)
+	end,
+})
+
+--- for quarto
+---
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "quarto" },
+	callback = function()
+		local bufnr = vim.api.nvim_get_current_buf()
+		local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 100, false)
+		local lang = nil
+		for _, line in ipairs(lines) do
+			local l = line:match("^```{(%w+)}")
+			if l then
+				lang = l:lower()
+				break
+			end
+		end
+		if lang == "r" then
+			set_r_keymaps(bufnr)
+		elseif lang == "python" or lang == "julia" or lang == "matlab" then
+			set_yarepl_keymaps(bufnr)
 		end
 	end,
 })
@@ -363,7 +454,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- WHICH-KEY GROUPS AND ORGANIZATION
 -- ========================================
 vim.api.nvim_create_autocmd("User", {
-	pattern = "VeryLazy",
+	-- pattern = "VeryLazy",
 	callback = function()
 		local wk_ok, wk = pcall(require, "which-key")
 		if wk_ok then
