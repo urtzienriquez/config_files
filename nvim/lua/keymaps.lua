@@ -188,24 +188,24 @@ vim.api.nvim_create_autocmd("User", {
 		-- ========================================
 		-- treesitter textobjects
 		-- ========================================
-			vim.keymap.set({ "x", "o" }, "af", function()
-				require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
-			end, { desc = "around function" })
-			vim.keymap.set({ "x", "o" }, "if", function()
-				require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
-			end, { desc = "inside function" })
-			vim.keymap.set({ "x", "o" }, "al", function()
-				require("nvim-treesitter-textobjects.select").select_textobject("@loop.outer", "textobjects")
-			end, { desc = "around loop" })
-			vim.keymap.set({ "x", "o" }, "il", function()
-				require("nvim-treesitter-textobjects.select").select_textobject("@loop.inner", "textobjects")
-			end, { desc = "inside loop" })
-			vim.keymap.set({ "x", "o" }, "ac", function()
-				require("nvim-treesitter-textobjects.select").select_textobject("@conditional.outer", "textobjects")
-			end, { desc = "around conditional" })
-			vim.keymap.set({ "x", "o" }, "ic", function()
-				require("nvim-treesitter-textobjects.select").select_textobject("@conditional.inner", "textobjects")
-			end, { desc = "inside the condition" })
+		vim.keymap.set({ "x", "o" }, "af", function()
+			require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+		end, { desc = "around function" })
+		vim.keymap.set({ "x", "o" }, "if", function()
+			require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+		end, { desc = "inside function" })
+		vim.keymap.set({ "x", "o" }, "al", function()
+			require("nvim-treesitter-textobjects.select").select_textobject("@loop.outer", "textobjects")
+		end, { desc = "around loop" })
+		vim.keymap.set({ "x", "o" }, "il", function()
+			require("nvim-treesitter-textobjects.select").select_textobject("@loop.inner", "textobjects")
+		end, { desc = "inside loop" })
+		vim.keymap.set({ "x", "o" }, "ac", function()
+			require("nvim-treesitter-textobjects.select").select_textobject("@conditional.outer", "textobjects")
+		end, { desc = "around conditional" })
+		vim.keymap.set({ "x", "o" }, "ic", function()
+			require("nvim-treesitter-textobjects.select").select_textobject("@conditional.inner", "textobjects")
+		end, { desc = "inside the condition" })
 
 		-- ========================================
 		-- Tmux Navigator keymaps
@@ -215,6 +215,54 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<c-k>", "<cmd>TmuxNavigateUp<cr>", { desc = "Navigate up (tmux)" })
 		vim.keymap.set("n", "<c-l>", "<cmd>TmuxNavigateRight<cr>", { desc = "Navigate right (tmux)" })
 		vim.keymap.set("n", "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", { desc = "Navigate previous (tmux)" })
+
+		-- ========================================
+		-- r.nvim
+		-- ========================================
+		-- Set your custom mappings
+
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = { "r", "rmd", "Rmd" },
+			callback = function()
+				local opts_keymap = { noremap = true, silent = true, buffer = true }
+
+				vim.keymap.set("n", "<Enter>", "<Plug>RDSendLine", opts_keymap)
+				vim.keymap.set("v", "<Enter>", "<Plug>RSendSelection", opts_keymap)
+
+				vim.keymap.set("n", "<leader>or", "<Plug>RStart", opts_keymap)
+				vim.keymap.set("n", "<leader>sb", "<Plug>RSendFile", opts_keymap)
+				vim.keymap.set("n", "<leader>qr", "<Plug>RClose", opts_keymap)
+				vim.keymap.set("n", "<leader>rr", "<Plug>RMakeAll", opts_keymap)
+			end,
+		})
+
+		-- ========================================
+		-- yarepl
+		-- ========================================
+		-- keymaps
+
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = { "python", "julia", "matlab" },
+			callback = function()
+				local opts_keymap = { noremap = true, silent = true, buffer = true }
+
+				vim.keymap.set("n", "<leader>rs", "<Plug>(REPLStart)", vim.tbl_extend("force", opts_keymap, { desc = "Start REPL" }))
+				vim.keymap.set("n", "<leader>op", "<CMD>REPLStartPython<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Start Python REPL" }))
+				vim.keymap.set("n", "<leader>oj", "<CMD>REPLStartJulia<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Start Julia REPL" }))
+				vim.keymap.set("n", "<leader>om", "<CMD>REPLStartMatlab<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Start MATLAB REPL" }))
+				vim.keymap.set("n", "<leader>rf", "<Plug>(REPLFocus)", vim.tbl_extend("force", opts_keymap, { desc = "Focus REPL" }))
+				vim.keymap.set("n", "<leader>rh", "<Plug>(REPLHide)", vim.tbl_extend("force", opts_keymap, { desc = "Hide REPL" }))
+				vim.keymap.set("n", "<leader>qp", "<CMD>REPLClosePython<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" }))
+				vim.keymap.set("n", "<leader>qj", "<CMD>REPLCloseJulia<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" }))
+				vim.keymap.set("n", "<leader>qm", "<CMD>REPLCloseMatlab<CR>", vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" }))
+				-- Send code to REPL
+				vim.keymap.set("n", "<Return>", "<Plug>(REPLSendLine)", vim.tbl_extend("force", opts_keymap, { desc = "Send line to REPL" }))
+				vim.keymap.set("n", "<leader>s", "<Plug>(REPLSendOperator)", vim.tbl_extend("force", opts_keymap, { desc = "Send operator to REPL" }))
+				vim.keymap.set("v", "<Return>", "<Plug>(REPLSendVisual)", vim.tbl_extend("force", opts_keymap, { desc = "Send visual selection to REPL" }))
+				-- Send entire buffer
+				vim.keymap.set("n", "<leader>sb", "ggVG<Plug>(REPLSendVisual)", vim.tbl_extend("force", opts_keymap, { desc = "Send entire buffer to REPL" }))
+			end,
+		})
 
 		-- ========================================
 		-- Snacks (misc) keymaps
