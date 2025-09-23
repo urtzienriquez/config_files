@@ -1,12 +1,11 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
+    branch = "master",
+    lazy = false,
 		build = ":TSUpdate",
-		main = "nvim-treesitter.configs",
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter-textobjects",
-		},
-		opts = {
+		config = function()
+			require("nvim-treesitter.configs").setup({
 			ensure_installed = {
 				"bash",
 				"c",
@@ -24,17 +23,20 @@ return {
 				"r",
 				"julia",
 				"matlab",
-				"python", -- Added for better support
-				"javascript", -- Added for web content in markdown
-				"css", -- Added for styling in markdown
-				"json", -- Added for JSON blocks in markdown
+					"python",
+					"javascript",
+					"css",
+					"json",
 				"latex",
 			},
-			auto_install = true, -- Changed to true to automatically install missing parsers
+				auto_install = true,
+				sync_install = false,
+				ignore_install = {},
+				modules = {},
 			highlight = {
 				enable = true,
 				disable = { "fortran" },
-				additional_vim_regex_highlighting = { "ruby", "markdown" }, -- Added markdown for better highlighting
+					additional_vim_regex_highlighting = { "ruby", "markdown" },
 			},
 			indent = {
 				enable = true,
@@ -55,10 +57,10 @@ return {
 					},
 				},
 			},
-		},
-	},
-	{
+			})
+		end,
+		dependencies = {
 		"nvim-treesitter/nvim-treesitter-textobjects",
-		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		},
 	},
 }

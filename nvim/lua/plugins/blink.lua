@@ -89,6 +89,7 @@ return {
 				vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#202233", fg = "#a9b1d6" })
 				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = "#202233", fg = "#a9b1d6" })
 				vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#a9b1d6" })
+				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = "#202233", fg = "#7dcfff" })
 
 				vim.api.nvim_set_hl(0, "Pmenu", { bg = "#202233" })
 				vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#2B2E42" })
@@ -100,6 +101,7 @@ return {
 				vim.api.nvim_set_hl(0, "CmpSel", { bg = "#c4c8da", fg = "#3760bf", bold = true })
 				vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#CED3EB", fg = "#3760bf" })
 				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = "#CED3EB", fg = "#3760bf" })
+				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = "#CED3EB", fg = "#3760bf" })
 
 				vim.api.nvim_set_hl(0, "Pmenu", { bg = "#CED3EB" })
 				vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#c4c8da" })
