@@ -32,20 +32,6 @@ return {
 			scroll_to_bottom_after_sending = true,
 			-- Close REPL window when process exits
 			close_on_exit = true,
-			-- Add terminal-specific options
-			term_opts = {
-				on_open = function(term)
-					-- Set up resize handling for this terminal
-					vim.api.nvim_create_autocmd("WinResized", {
-						buffer = term.bufnr,
-						callback = function()
-							if vim.b[term.bufnr].terminal_job_id then
-								vim.fn.chansend(vim.b[term.bufnr].terminal_job_id, "\x0c")
-							end
-						end,
-					})
-				end,
-			},
 		})
 
 		-- Custom commands that open/close REPL
@@ -72,5 +58,6 @@ return {
 		vim.api.nvim_create_user_command("REPLCloseMatlab", function()
 			vim.cmd("REPLExec exit()")
 		end, {})
+
 	end,
 }
