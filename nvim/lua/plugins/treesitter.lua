@@ -1,52 +1,68 @@
 return {
+	-- Main Treesitter plugin
 	{
 		"nvim-treesitter/nvim-treesitter",
-    branch = "master",
-    lazy = false,
+		branch = "main",
 		build = ":TSUpdate",
-		config = function()
-			require("nvim-treesitter.configs").setup({
+		lazy = false,
+		priority = 100, -- Load early
+		opts = {
 			ensure_installed = {
 				"bash",
 				"c",
+				"css",
 				"diff",
 				"html",
+				"javascript",
+				"json",
+				"julia",
+				"latex",
 				"lua",
 				"luadoc",
 				"markdown",
 				"markdown_inline",
+				"matlab",
+				"python",
 				"query",
+				"r",
+				"rnoweb", -- for Rmarkdown
 				"vim",
 				"vimdoc",
-				"rnoweb", -- for Rmarkdown
 				"yaml",
-				"r",
-				"julia",
-				"matlab",
-					"python",
-					"javascript",
-					"css",
-					"json",
-				"latex",
 			},
-				auto_install = true,
-				sync_install = false,
-				ignore_install = {},
-				modules = {},
+			sync_install = false,
+			auto_install = true,
+
 			highlight = {
 				enable = true,
 				disable = { "fortran" },
-					additional_vim_regex_highlighting = { "ruby", "markdown" },
+				additional_vim_regex_highlighting = false,
 			},
+
 			indent = {
 				enable = true,
-				disable = { "ruby", "fortran" },
+				disable = { "python", "fortran" },
 			},
+		},
+
+		config = function(_, opts)
+			require("nvim-treesitter.configs").setup(opts)
+		end,
+	},
+
+	-- Treesitter textobjects (depends on nvim-treesitter)
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		branch = "main",
+		dependencies = {
+			{ "nvim-treesitter/nvim-treesitter", branch = "main" },
+		},
+		event = "VeryLazy",
+		opts = {
 			textobjects = {
 				select = {
 					enable = true,
-					lookahead = true,
-					disable = { "fortran" },
+					lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
 					keymaps = {
 						["af"] = "@function.outer",
 						["if"] = "@function.inner",
@@ -57,10 +73,9 @@ return {
 					},
 				},
 			},
-			})
-		end,
-		dependencies = {
-		"nvim-treesitter/nvim-treesitter-textobjects",
 		},
+		config = function(_, opts)
+			require("nvim-treesitter.configs").setup(opts)
+		end,
 	},
 }
