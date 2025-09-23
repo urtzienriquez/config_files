@@ -2,7 +2,7 @@ return {
 	"stevearc/oil.nvim",
 	---@module 'oil'
 	---@type oil.SetupOpts
-	dependencies = { { "echasnovski/mini.icons", opts = {} } },
+	dependencies = { { "kyazdani42/nvim-web-devicons", opts = {} } },
 	lazy = false,
 	opts = {
 		default_file_explorer = true,
