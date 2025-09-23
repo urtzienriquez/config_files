@@ -50,8 +50,6 @@ floating_layout = layout.Floating(
         Match(wm_class="fzf-nova"),  # fzf-nova
         Match(wm_class="ranger"),  # ranger
         Match(wm_class="qtile-keys"),  # calendar
-        # Match(wm_class="gksqt"),  # neovim plots
-        # Match(wm_class="r_x11"),  # neovim plots
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
     ],
