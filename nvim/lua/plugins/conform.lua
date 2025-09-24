@@ -30,6 +30,7 @@ return {
         text = read(stdin, String)
         formatted = format_text(text, 
           always_for_in = true,
+          separate_kwargs_with_semicolon = true,
         )
         print(formatted)
         ]],

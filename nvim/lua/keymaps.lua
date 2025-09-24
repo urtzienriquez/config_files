@@ -323,7 +323,7 @@ local function set_slime_keymaps(bufnr)
 		slime_utils.start_tmux_repl("matlab")
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Start MATLAB REPL" }))
 
-	-- Send code using vim-slime (fixed mappings)
+	-- Send code
 	vim.keymap.set("n", "<Return>", function()
 		if slime_utils.has_active_repl() then
 			local keys = "vai" .. vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true) .. "'>j"
@@ -332,7 +332,6 @@ local function set_slime_keymaps(bufnr)
 			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
 		end
 	end, { silent = true })
-
 	vim.keymap.set("v", "<Return>", function()
 		if slime_utils.has_active_repl() then
 			vim.api.nvim_feedkeys(
@@ -345,7 +344,6 @@ local function set_slime_keymaps(bufnr)
 			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
 		end
 	end, { silent = true })
-
 	vim.keymap.set("n", "<leader>sb", function()
 		if slime_utils.has_active_repl() then
 			vim.cmd("normal! ggVG")
@@ -358,6 +356,16 @@ local function set_slime_keymaps(bufnr)
 			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
 		end
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Send entire buffer to REPL" }))
+
+	-- Instantiate julia project
+	vim.keymap.set("n", "<leader>ji", function()
+		if slime_utils.has_active_repl() then
+      local keys = "using Pkg; Pkg.activate(\".\")\nPkg.instantiate()\n"
+			vim.fn["slime#send"](keys)
+		else
+			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+		end
+	end, { silent = true, desc = "activate and instantiate julia project" })
 
 	-- Sync working directory
 	vim.keymap.set("n", "<leader>sd", function()
