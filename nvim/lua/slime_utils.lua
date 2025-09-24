@@ -15,7 +15,7 @@ function M.start_tmux_repl(repl_type)
 
 	local cmd = commands[repl_type]
 	if cmd then
-		local tmux_cmd = string.format("tmux split-window -h -c '%s' %s", vim.fn.getcwd(), cmd)
+		local tmux_cmd = string.format("tmux split-window -h -c '%s' %s && tmux select-pane -l", vim.fn.getcwd(), cmd)
 		vim.fn.system(tmux_cmd)
 		vim.notify("Started " .. repl_type .. " REPL in tmux pane", vim.log.levels.INFO)
 	end

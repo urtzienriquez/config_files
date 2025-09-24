@@ -29,7 +29,7 @@ return {
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
 			per_filetype = {
-				r = { inherit_defaults = true, "R" },
+				r = { "path", "snippets", "R" },
 				rmd = { inherit_defaults = true, "thesaurus", "R" },
 				Rmd = { inherit_defaults = true, "thesaurus", "R" },
 				jmd = { inherit_defaults = true, "thesaurus" },
