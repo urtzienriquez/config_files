@@ -86,7 +86,7 @@ return {
 		signature = {
 			enabled = true,
 			window = {
-				show_documentation = true,
+				show_documentation = false,
 				border = "none",
 				winhighlight = "Normal:CmpSignatureHelp",
 			},
@@ -100,27 +100,26 @@ return {
 		local function setup_highlights()
 			if vim.o.background == "dark" then
 				-- Dark theme colors
-				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = "#202233", fg = "#a9b1d6" })
-				vim.api.nvim_set_hl(0, "CmpSel", { bg = "#2B2E42", fg = "#c0caf5", bold = true })
-				vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#202233", fg = "#a9b1d6" })
-				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = "#202233", fg = "#a9b1d6" })
-				vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#a9b1d6" })
-				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = "#202233", fg = "#7dcfff" })
+				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = "#373C52", fg = "#a9b1d6" })
+				vim.api.nvim_set_hl(0, "CmpSel", { bg = "#4F5675", fg = "#c0caf5", bold = true })
+				vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#373C52", fg = "#a9b1d6" })
+				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = "#373C52", fg = "#a9b1d6" })
+				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = "#373C52", fg = "#7dcfff" })
 
-				vim.api.nvim_set_hl(0, "Pmenu", { bg = "#202233" })
-				vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#2B2E42" })
-				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "#202233" })
-				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#202233" })
+				vim.api.nvim_set_hl(0, "Pmenu", { bg = "#373C52" })
+				vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#4F5675" })
+				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "#373C52" })
+				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#373C52" })
 			else
 				-- Light theme colors
 				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = "#CED3EB", fg = "#3760bf" })
-				vim.api.nvim_set_hl(0, "CmpSel", { bg = "#c4c8da", fg = "#3760bf", bold = true })
+				vim.api.nvim_set_hl(0, "CmpSel", { bg = "#B4BEED", fg = "#3760bf", bold = true })
 				vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#CED3EB", fg = "#3760bf" })
 				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = "#CED3EB", fg = "#3760bf" })
 				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = "#CED3EB", fg = "#3760bf" })
 
 				vim.api.nvim_set_hl(0, "Pmenu", { bg = "#CED3EB" })
-				vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#c4c8da" })
+				vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#B4BEED" })
 				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "#CED3EB" })
 				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#A6A9BA" })
 			end
