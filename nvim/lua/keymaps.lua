@@ -1,9 +1,22 @@
--- ========================================
--- CENTRALIZED KEYMAPS CONFIGURATION
--- ========================================
+-- =========
+-- KEYMAPS
+-- =========
 
--- Basic keymaps (available immediately)
--- ========================================
+-- Basic keymaps
+-- ===============
+
+-- Disable arrow keys in normal and insert modes
+vim.api.nvim_set_keymap("n", "<Up>", "<Nop>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<Down>", "<Nop>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<Left>", "<Nop>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<Right>", "<Nop>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("i", "<Up>", "<Nop>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("i", "<Down>", "<Nop>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("i", "<Left>", "<Nop>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("i", "<Right>", "<Nop>", { noremap = true, silent = true })
+
+-- Highlight without moving
+vim.keymap.set("n", "*", "*``")
 
 -- Escape terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
@@ -266,8 +279,6 @@ vim.api.nvim_create_autocmd("User", {
 -- ========================================
 -- r.nvim
 -- ========================================
--- Set your custom mappings
-
 local function set_r_keymaps(bufnr)
 	local opts_keymap = { noremap = true, silent = true, buffer = true }
 
@@ -288,99 +299,64 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- ========================================
--- yarepl
+-- vim-slime keymaps
 -- ========================================
--- keymaps
+local slime_utils = require("slime_utils")
 
-local function set_yarepl_keymaps(bufnr)
+local function set_slime_keymaps(bufnr)
 	local opts_keymap = { noremap = true, silent = true, buffer = true }
 
-	vim.keymap.set(
-		"n",
-		"<leader>rs",
-		"<Plug>(REPLStart)",
-		vim.tbl_extend("force", opts_keymap, { desc = "Start REPL" })
-	)
-	vim.keymap.set(
-		"n",
-		"<leader>op",
-		"<CMD>REPLStartPython<CR>",
-		vim.tbl_extend("force", opts_keymap, { desc = "Start Python REPL" })
-	)
-	vim.keymap.set(
-		"n",
-		"<leader>oj",
-		"<CMD>REPLStartJulia<CR>",
-		vim.tbl_extend("force", opts_keymap, { desc = "Start Julia REPL" })
-	)
-	vim.keymap.set(
-		"n",
-		"<leader>om",
-		"<CMD>REPLStartMatlab<CR>",
-		vim.tbl_extend("force", opts_keymap, { desc = "Start MATLAB REPL" })
-	)
-	vim.keymap.set(
-		"n",
-		"<leader>rf",
-		"<Plug>(REPLFocus)",
-		vim.tbl_extend("force", opts_keymap, { desc = "Focus REPL" })
-	)
-	vim.keymap.set("n", "<leader>rh", "<Plug>(REPLHide)", vim.tbl_extend("force", opts_keymap, { desc = "Hide REPL" }))
-	vim.keymap.set(
-		"n",
-		"<leader>qp",
-		"<CMD>REPLClosePython<CR>",
-		vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" })
-	)
-	vim.keymap.set(
-		"n",
-		"<leader>qj",
-		"<CMD>REPLCloseJulia<CR>",
-		vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" })
-	)
-	vim.keymap.set(
-		"n",
-		"<leader>qm",
-		"<CMD>REPLCloseMatlab<CR>",
-		vim.tbl_extend("force", opts_keymap, { desc = "Close REPL" })
-	)
-	-- Send code to REPL
+	-- Start REPLs
+	vim.keymap.set("n", "<leader>op", function()
+		slime_utils.start_tmux_repl("python")
+	end, vim.tbl_extend("force", opts_keymap, { desc = "Start Python REPL" }))
+	vim.keymap.set("n", "<leader>oj", function()
+		slime_utils.start_tmux_repl("julia")
+	end, vim.tbl_extend("force", opts_keymap, { desc = "Start Julia REPL" }))
+	vim.keymap.set("n", "<leader>om", function()
+		slime_utils.start_tmux_repl("matlab")
+	end, vim.tbl_extend("force", opts_keymap, { desc = "Start MATLAB REPL" }))
+
+	-- Send code using vim-slime (fixed mappings)
 	vim.keymap.set(
 		"n",
 		"<Return>",
-		"<Plug>(REPLSendLine)",
+		"<Plug>SlimeLineSend\n",
 		vim.tbl_extend("force", opts_keymap, { desc = "Send line to REPL" })
 	)
-	vim.keymap.set(
-		"n",
-		"<leader>s",
-		"<Plug>(REPLSendOperator)",
-		vim.tbl_extend("force", opts_keymap, { desc = "Send operator to REPL" })
-	)
-	vim.keymap.set(
-		"v",
-		"<Return>",
-		"<Plug>(REPLSendVisual)",
-		vim.tbl_extend("force", opts_keymap, { desc = "Send visual selection to REPL" })
-	)
-	-- Send entire buffer
+	vim.keymap.set("v", "<Return>", function()
+		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true), "x", false)
+		vim.cmd("normal! '>j")
+	end, { silent = true })
 	vim.keymap.set(
 		"n",
 		"<leader>sb",
-		"ggVG<Plug>(REPLSendVisual)",
+		"ggVG<Plug>SlimeRegionSend<Esc>",
 		vim.tbl_extend("force", opts_keymap, { desc = "Send entire buffer to REPL" })
 	)
+
+	-- Close REPLs
+	vim.keymap.set("n", "<leader>qp", function()
+		slime_utils.close_tmux_repl("python")
+	end, vim.tbl_extend("force", opts_keymap, { desc = "Close Python REPL" }))
+	vim.keymap.set("n", "<leader>qj", function()
+		slime_utils.close_tmux_repl("julia")
+	end, vim.tbl_extend("force", opts_keymap, { desc = "Close Julia REPL" }))
+	vim.keymap.set("n", "<leader>qm", function()
+		slime_utils.close_tmux_repl("matlab")
+	end, vim.tbl_extend("force", opts_keymap, { desc = "Close MATLAB REPL" }))
 end
 
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "python", "julia", "matlab" },
 	callback = function()
-		set_yarepl_keymaps(0)
+		set_slime_keymaps(0)
 	end,
 })
 
---- for quarto
----
+-- ========================================
+-- for quarto
+-- ========================================
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "quarto" },
 	callback = function()
@@ -397,7 +373,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		if lang == "r" then
 			set_r_keymaps(bufnr)
 		elseif lang == "python" or lang == "julia" or lang == "matlab" then
-			set_yarepl_keymaps(bufnr)
+			set_slime_keymaps(bufnr)
 		end
 	end,
 })

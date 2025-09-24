@@ -6,16 +6,6 @@ vim.g.maplocalleader = " "
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
 
--- Disable arrow keys in normal and insert modes
-vim.api.nvim_set_keymap("n", "<Up>", "<Nop>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<Down>", "<Nop>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<Left>", "<Nop>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<Right>", "<Nop>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "<Up>", "<Nop>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "<Down>", "<Nop>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "<Left>", "<Nop>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("i", "<Right>", "<Nop>", { noremap = true, silent = true })
-
 -- Disable mouse
 vim.opt.mouse = ""
 
@@ -55,9 +45,6 @@ vim.diagnostic.config({
 		},
 	},
 })
-
--- Highlight without moving
-vim.keymap.set("n", "*", "*``")
 
 -- More natural split directions
 vim.opt.splitbelow = true
