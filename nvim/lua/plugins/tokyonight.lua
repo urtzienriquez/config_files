@@ -11,9 +11,9 @@ return {
 				hl.FloatBorder = { fg = c.blue2 }
 				hl.Pmenu = { fg = c.blue2 }
 			end,
-			style = "night",
+			style = "moon",
 		})
-		vim.cmd.colorscheme("tokyonight-night")
+		vim.cmd.colorscheme("tokyonight-moon")
 	end,
 }
 
