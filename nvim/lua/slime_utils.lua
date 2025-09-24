@@ -8,7 +8,7 @@ function M.start_tmux_repl(repl_type)
 	end
 
 	local commands = {
-		python = "ipython",
+		python = "python3",
 		julia = "julia",
 		matlab = "matlab -nodesktop -nosplash",
 	}

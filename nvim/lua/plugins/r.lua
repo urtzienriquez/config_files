@@ -4,10 +4,10 @@ return {
 		lazy = false,
 		config = function()
 			local opts = {
-				R_app = "radian",
+				R_app = "R",
 				external_term = "tmux split-window -d -h",
 				bracketed_paste = true,
-				R_args = { "--quiet", "--no-save" },
+				R_args = { "--no-save" },
 				min_editor_width = 72,
 				rconsole_width = 78,
 				objbr_mappings = { -- Object browser keymap
