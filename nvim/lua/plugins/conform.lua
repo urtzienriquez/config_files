@@ -14,10 +14,27 @@ return {
 				python = { "black" },
 				fortran = { "fprettify" },
 				r = { "styler" },
+				julia = { "juliafmt" },
 			},
 			formatters = {
 				prettier = {
 					prepend_args = { "--single-quote" },
+				},
+				juliafmt = {
+					command = "julia",
+					args = {
+						"--startup-file=no",
+						"-e",
+						[[
+        using JuliaFormatter
+        text = read(stdin, String)
+        formatted = format_text(text, 
+          always_for_in = true,
+        )
+        print(formatted)
+        ]],
+					},
+					stdin = true,
 				},
 			},
 		})
