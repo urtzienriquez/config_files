@@ -1,7 +1,16 @@
 return {
+  {
+    'saghen/blink.compat',
+    version = '*',
+    lazy = true,
+    opts = {},
+  },
+
+  {
 	"saghen/blink.cmp",
 	dependencies = {
 		"rafamadriz/friendly-snippets",
+		"R-nvim/cmp-r",
 		"archie-judd/blink-cmp-words",
 	},
 	version = "*",
@@ -20,15 +29,22 @@ return {
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
 			per_filetype = {
-				rmd = { inherit_defaults = true, "thesaurus" },
-				Rmd = { inherit_defaults = true, "thesaurus" },
+				r = { inherit_defaults = true, "R" },
+				rmd = { inherit_defaults = true, "thesaurus", "R" },
+				Rmd = { inherit_defaults = true, "thesaurus", "R" },
 				jmd = { inherit_defaults = true, "thesaurus" },
 				Jmd = { inherit_defaults = true, "thesaurus" },
-				quarto = { inherit_defaults = true, "thesaurus" },
+				quarto = { inherit_defaults = true, "thesaurus", "R" },
 				markdown = { inherit_defaults = true, "thesaurus" },
 				text = { inherit_defaults = true, "thesaurus" },
 			},
 			providers = {
+				R = {
+					name = "cmp_r",
+					module = "blink.compat.source",
+					opts = {
+					},
+				},
 				thesaurus = {
 					name = "thesaurus",
 					module = "blink-cmp-words.thesaurus",
@@ -117,4 +133,5 @@ return {
 			callback = setup_highlights,
 		})
 	end,
+  },
 }

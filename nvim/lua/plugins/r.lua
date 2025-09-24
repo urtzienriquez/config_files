@@ -7,14 +7,6 @@ return {
 				R_app = "radian",
 				external_term = "tmux split-window -d -h",
 				bracketed_paste = true,
-				hook = {
-					on_filetype = function()
-						-- Clear any existing mappings first (optional)
-						pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>rf")
-						pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>ka")
-
-					end,
-				},
 				R_args = { "--quiet", "--no-save" },
 				min_editor_width = 72,
 				rconsole_width = 78,

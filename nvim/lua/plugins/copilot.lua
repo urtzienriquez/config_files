@@ -59,47 +59,47 @@ return {
 		event = "VeryLazy",
 		keys = {
 			-- Basic chat commands
-			{ "<leader>cc", mode = "n", "<cmd>CopilotChatToggle<cr>", desc = "Toggle CopilotChat" },
-			{ "<leader>cm", mode = "n", "<cmd>CopilotChatModel<cr>", desc = "Select Copilot Model" },
-			{ "<leader>cx", mode = { "n", "v" }, "<cmd>CopilotChatExplain<cr>", desc = "Explain code" },
-			{ "<leader>ct", mode = "n", "<cmd>CopilotChatTests<cr>", desc = "Generate tests" },
-			{ "<leader>cr", mode = { "n", "v" }, "<cmd>CopilotChatReview<cr>", desc = "Review code" },
-			{ "<leader>co", mode = "v", "<cmd>CopilotChatOptimize<cr>", desc = "Optimize code" },
+			{ "<leader>gc", mode = "n", "<cmd>CopilotChatToggle<cr>", desc = "Toggle CopilotChat" },
+			{ "<leader>gm", mode = "n", "<cmd>CopilotChatModel<cr>", desc = "Select Copilot Model" },
+			{ "<leader>gx", mode = { "n", "v" }, "<cmd>CopilotChatExplain<cr>", desc = "Explain code" },
+			{ "<leader>gt", mode = "n", "<cmd>CopilotChatTests<cr>", desc = "Generate tests" },
+			{ "<leader>gr", mode = { "n", "v" }, "<cmd>CopilotChatReview<cr>", desc = "Review code" },
+			{ "<leader>go", mode = "v", "<cmd>CopilotChatOptimize<cr>", desc = "Optimize code" },
 			-- Visual mode chat
 			{
-				"<leader>cv",
+				"<leader>gv",
 				mode = "x",
 				":CopilotChatVisual ",
 				desc = "Chat with visual selection",
 			},
 			-- Quick chat
 			{
-				"<leader>cq",
+				"<leader>gq",
 				":CopilotChat ",
 				desc = "Quick ask Copilot (type after)",
 			},
 			-- direct buffer chat
 			{
-				"<leader>cb",
+				"<leader>gb",
 				":CopilotChat #buffer ",
 				desc = "Direct buffer chat command",
 			},
 			-- inline chat
 			{
-				"<leader>ci",
+				"<leader>gi",
 				mode = "v",
 				":CopilotChatInline ",
 				desc = "CopilotChat - Inline chat",
 			},
 			-- Copilot disable
 			{
-				"<leader>cd",
+				"<leader>gd",
 				"<cmd>Copilot disable<cr>",
 				desc = "Disable Copilot",
 			},
 			-- Copilot enable
 			{
-				"<leader>ce",
+				"<leader>ge",
 				"<cmd>Copilot enable<cr>",
 				desc = "Enable Copilot",
 			},

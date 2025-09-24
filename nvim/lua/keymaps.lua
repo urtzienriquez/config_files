@@ -279,7 +279,11 @@ vim.api.nvim_create_autocmd("User", {
 -- ========================================
 -- r.nvim
 -- ========================================
-local function set_r_keymaps(bufnr)
+local function set_rnvim_keymaps(bufnr)
+	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>rf")
+	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>gn")
+	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>gN")
+
 	local opts_keymap = { noremap = true, silent = true, buffer = true }
 
 	vim.keymap.set("n", "<Enter>", "<Plug>RDSendLine", opts_keymap)
@@ -289,12 +293,14 @@ local function set_r_keymaps(bufnr)
 	vim.keymap.set("n", "<leader>sb", "<Plug>RSendFile", opts_keymap)
 	vim.keymap.set("n", "<leader>qr", "<Plug>RClose", opts_keymap)
 	vim.keymap.set("n", "<leader>rr", "<Plug>RMakeAll", opts_keymap)
+	vim.keymap.set("n", "<leader>cn", "<Plug>RNextRChunk", opts_keymap)
+	vim.keymap.set("n", "<leader>cN", "<Plug>RPreviousRChunk", opts_keymap)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "r", "rmd", "Rmd" },
 	callback = function()
-		set_r_keymaps(0)
+		set_rnvim_keymaps(0)
 	end,
 })
 
@@ -318,32 +324,71 @@ local function set_slime_keymaps(bufnr)
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Start MATLAB REPL" }))
 
 	-- Send code using vim-slime (fixed mappings)
-	vim.keymap.set(
-		"n",
-		"<Return>",
-		"<Plug>SlimeLineSend\n",
-		vim.tbl_extend("force", opts_keymap, { desc = "Send line to REPL" })
-	)
-	vim.keymap.set("v", "<Return>", function()
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true), "x", false)
-		vim.cmd("normal! '>j")
+	vim.keymap.set("n", "<Return>", function()
+		if slime_utils.has_active_repl() then
+			local keys = "vai" .. vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true) .. "'>j"
+			vim.api.nvim_feedkeys(keys, "x", false)
+		else
+			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+		end
 	end, { silent = true })
-	vim.keymap.set(
-		"n",
-		"<leader>sb",
-		"ggVG<Plug>SlimeRegionSend<Esc>",
-		vim.tbl_extend("force", opts_keymap, { desc = "Send entire buffer to REPL" })
-	)
+
+	vim.keymap.set("v", "<Return>", function()
+		if slime_utils.has_active_repl() then
+			vim.api.nvim_feedkeys(
+				vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true),
+				"x",
+				false
+			)
+			vim.cmd("normal! '>j")
+		else
+			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+		end
+	end, { silent = true })
+
+	vim.keymap.set("n", "<leader>sb", function()
+		if slime_utils.has_active_repl() then
+			vim.cmd("normal! ggVG")
+			vim.api.nvim_feedkeys(
+				vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true),
+				"x",
+				false
+			)
+		else
+			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+		end
+	end, vim.tbl_extend("force", opts_keymap, { desc = "Send entire buffer to REPL" }))
+
+	-- Sync working directory
+	vim.keymap.set("n", "<leader>sd", function()
+		if slime_utils.has_active_repl() then
+			slime_utils.sync_working_directory()
+		else
+			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+		end
+	end, vim.tbl_extend("force", opts_keymap, { desc = "Sync working directory to REPL" }))
 
 	-- Close REPLs
 	vim.keymap.set("n", "<leader>qp", function()
-		slime_utils.close_tmux_repl("python")
+		if slime_utils.has_active_repl() then
+			slime_utils.close_tmux_repl("python")
+		else
+			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+		end
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Close Python REPL" }))
 	vim.keymap.set("n", "<leader>qj", function()
-		slime_utils.close_tmux_repl("julia")
+		if slime_utils.has_active_repl() then
+			slime_utils.close_tmux_repl("julia")
+		else
+			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+		end
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Close Julia REPL" }))
 	vim.keymap.set("n", "<leader>qm", function()
-		slime_utils.close_tmux_repl("matlab")
+		if slime_utils.has_active_repl() then
+			slime_utils.close_tmux_repl("matlab")
+		else
+			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+		end
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Close MATLAB REPL" }))
 end
 
@@ -371,7 +416,7 @@ vim.api.nvim_create_autocmd("FileType", {
 			end
 		end
 		if lang == "r" then
-			set_r_keymaps(bufnr)
+			set_rnvim_keymaps(bufnr)
 		elseif lang == "python" or lang == "julia" or lang == "matlab" then
 			set_slime_keymaps(bufnr)
 		end
@@ -384,7 +429,7 @@ vim.api.nvim_create_autocmd("FileType", {
 local citation = require("citation-picker")
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "markdown", "rmd", "Rmd", "qmd", "Qmd", "jmd", "Jmd", "tex", "pandoc" },
+	pattern = { "markdown", "rmd", "Rmd", "quarto", "jmd", "Jmd", "tex", "pandoc" },
 	callback = function()
 		local opts = { buffer = true, silent = true }
 		vim.keymap.set(
@@ -408,14 +453,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
-vim.api.nvim_create_user_command("CitationPicker", citation.citation_picker, { desc = "Open citation picker" })
-vim.api.nvim_create_user_command(
-	"CitationReplace",
-	citation.citation_replace,
-	{ desc = "Replace citation under cursor" }
-)
-
--- ========================================
+-- -- ========================================
 -- LSP KEYMAPS (set when LSP attaches)
 -- ========================================
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -439,15 +477,14 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>f", group = "Find" },
 				{ "<leader>fd", group = "diagnostics" },
 				{ "<leader>b", group = "Buffer" },
-				{ "<leader>c", group = "Close REPL" },
-				{ "<leader>g", group = "Git" },
+				{ "<leader>c", group = "Code chunk" },
+				{ "<leader>g", group = "GitHub" },
 				{ "<leader>l", group = "Lazygit" },
 				{ "<leader>o", group = "Open REPL" },
 				{ "<leader>q", group = "Close REPL" },
 				{ "<leader>r", group = "R/Render" },
 				{ "<leader>s", group = "Send/Sync" },
 				{ "<leader>u", group = "UI toggle" },
-				{ "<leader>c", group = "Copilot" },
 
 				-- Specific mappings for better organization
 				{ "<leader>or", desc = "R" },
