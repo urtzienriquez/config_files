@@ -37,7 +37,7 @@ return {
 		notifier = { enabled = true },
 		quickfile = { enabled = true },
 		scope = { enabled = true },
-		words = { enabled = true },
+		words = { enabled = false },
 		zen = {
 			enabled = true,
 			win = {
