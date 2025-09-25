@@ -11,7 +11,7 @@ return {
 		},
 		use_default_keymaps = true,
     keymaps = {
-      [";"] = { "actions.parent", mode = "n" },
+      ["t"] = { "actions.parent", mode = "n" },
     },
 		view_options = { show_hidden = false },
 		win_options = {

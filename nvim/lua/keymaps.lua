@@ -144,7 +144,7 @@ vim.api.nvim_create_autocmd("User", {
 		-- ========================================
 		local oil_ok, oil = pcall(require, "oil")
 		if oil_ok then
-			vim.keymap.set("n", "<leader>;", function()
+			vim.keymap.set("n", "<leader>t", function()
 				if vim.bo.filetype == "oil" then
 					oil.close()
 				else
