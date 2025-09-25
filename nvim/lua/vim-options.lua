@@ -28,9 +28,9 @@ vim.opt.termguicolors = true
 -- for julia unicode symbols
 vim.g.latex_to_unicode_auto = 1
 
--- code folding, automatic to manual
-vim.opt.foldcolumn = "0" -- '0' is not bad
-vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+-- code folding
+vim.opt.foldcolumn = "0"
+vim.opt.foldlevel = 99 
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 
