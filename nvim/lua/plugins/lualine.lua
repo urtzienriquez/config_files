@@ -33,7 +33,7 @@ return {
 					},
 				},
 				lualine_y = { "filetype" },
-				lualine_z = { "progress", "location" },
+				lualine_z = { "lsp_status", "progress", "location" },
 			},
 		})
 	end,
