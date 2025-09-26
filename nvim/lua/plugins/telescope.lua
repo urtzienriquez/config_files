@@ -11,8 +11,6 @@ return {
 		},
 		config = function()
 			local telescope = require("telescope")
-			local actions = require("telescope.actions")
-			local action_layout = require("telescope.actions.layout")
 
 			telescope.setup({
 				defaults = {
