@@ -6,6 +6,10 @@
 background = '#1a1b26'
 foreground = '#a9b1d6'
 
+[colors.cursor]
+cursor = '#222436'
+text = '#c8d3f5'
+
 # Normal colors
 [colors.normal]
 black   = '#32344a'

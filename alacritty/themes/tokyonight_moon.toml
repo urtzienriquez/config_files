@@ -9,9 +9,9 @@
 background = '#222436'
 foreground = '#c8d3f5'
 
-#[colors.cursor]
-#cursor = '#c8d3f5'
-#text = '#222436'
+[colors.cursor]
+cursor = '#c8d3f5'
+text = '#222436'
 
 # Normal colors
 [colors.normal]
