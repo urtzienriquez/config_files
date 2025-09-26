@@ -7,7 +7,7 @@ return {
 				theme = "tokyonight",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
-				disabled_filetypes = { "snacks_dashboard", "TelescopePrompt", "TelescopeResults", "oil" },
+				disabled_filetypes = { "snacks_dashboard", "TelescopePrompt", "TelescopeResults", "oil", "snacks_terminal" },
 				globalstatus = true,
 			},
 			sections = {
