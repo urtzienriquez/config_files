@@ -5,11 +5,14 @@ return {
 	config = function()
 		require("tokyonight").setup({
 			on_colors = function(colors)
-				colors.border = colors.blue2 -- change border color
+				colors.border = colors.blue2
+				colors.comment = colors.dark5
 			end,
 			on_highlights = function(hl, c)
 				hl.FloatBorder = { fg = c.blue2 }
 				hl.Pmenu = { fg = c.blue2 }
+				hl.LineNrAbove = { fg = c.dark5 }
+				hl.LineNrBelow = { fg = c.dark5 }
 			end,
 			style = "moon",
 		})
