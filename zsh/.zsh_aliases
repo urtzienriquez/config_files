@@ -39,9 +39,9 @@ alias py='python3'
 # julia
 alias jl='julia'
 
-# # qstat alias for metacentrum
-# alias qs='ssh meta qstat -u urtzien'
-# alias qs2='ssh perian qstat -u urtzien'
+# qstat alias for metacentrum
+alias qs='ssh -o RemoteCommand=none meta qstat -u urtzien'
+alias qs2='ssh -o RemoteCommand=none perian qstat -u urtzien'
 
 # image viewer
 alias iv='imv-x11'
