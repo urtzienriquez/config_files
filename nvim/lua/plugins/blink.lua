@@ -70,7 +70,7 @@ return {
 				},
 
 				documentation = {
-					auto_show = true,
+					auto_show = false,
 					treesitter_highlighting = true,
 					window = {
 						border = "none",

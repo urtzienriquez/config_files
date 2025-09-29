@@ -8,7 +8,7 @@ return {
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 				disabled_filetypes = { "snacks_dashboard", "TelescopePrompt", "TelescopeResults", "oil", "snacks_terminal" },
-				globalstatus = true,
+				globalstatus = false,
 			},
 			sections = {
 				lualine_a = {
@@ -23,7 +23,7 @@ return {
 						},
 					},
 				},
-				lualine_b = { { "branch", icon = "󰘬" }, "diff", "diagnostics" },
+				lualine_b = { { "branch", icon = "󰘬" }, "diff" },
 				lualine_c = {
 					{
 						require("noice").api.statusline.mode.get,
@@ -32,8 +32,8 @@ return {
 					},
 				},
 				lualine_x = { "filetype" },
-				lualine_y = { "lsp_status" },
-				lualine_z = { "progress", "location" },
+				lualine_y = {  },
+				lualine_z = { "lsp_status" },
 			},
 		})
 	end,
