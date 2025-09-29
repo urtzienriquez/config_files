@@ -7,7 +7,13 @@ return {
 				theme = "tokyonight",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
-				disabled_filetypes = { "snacks_dashboard", "TelescopePrompt", "TelescopeResults", "oil", "snacks_terminal" },
+				disabled_filetypes = {
+					"snacks_dashboard",
+					"TelescopePrompt",
+					"TelescopeResults",
+					"oil",
+					"snacks_terminal",
+				},
 				globalstatus = false,
 			},
 			sections = {
@@ -32,8 +38,8 @@ return {
 					},
 				},
 				lualine_x = { "filetype" },
-				lualine_y = {  },
-				lualine_z = { "lsp_status" },
+				lualine_y = {},
+				lualine_z = { "progress", "location" },
 			},
 		})
 	end,
