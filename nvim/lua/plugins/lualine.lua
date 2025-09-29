@@ -4,7 +4,7 @@ return {
 	config = function()
 		require("lualine").setup({
 			options = {
-				theme = "tokyonight",
+				-- theme = "tokyonight",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 				disabled_filetypes = {
@@ -27,19 +27,20 @@ return {
 							unnamed = "[No Name]", -- still keep unnamed buffers readable
 							newfile = "", -- remove [New]
 						},
+						color = { bg = "#82aaff" },
 					},
 				},
-				lualine_b = { { "branch", icon = "󰘬" }, "diff" },
+				lualine_b = { { "branch", icon = "󰘬", color = { fg = "#82aaff" } }, "diff" },
 				lualine_c = {
 					{
 						require("noice").api.statusline.mode.get,
 						cond = require("noice").api.statusline.mode.has,
-						color = { fg = "#ff9e64" },
+						color = { fg = "#ffc777", gui = "bold" },
 					},
 				},
 				lualine_x = { "filetype" },
 				lualine_y = {},
-				lualine_z = { "progress", "location" },
+				lualine_z = { { "progress", color = { bg = "#82aaff" } }, { "location", color = { bg = "#82aaff" } } },
 			},
 		})
 	end,
