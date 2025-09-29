@@ -4,7 +4,6 @@ return {
 	config = function()
 		require("lualine").setup({
 			options = {
-				-- theme = "tokyonight",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 				disabled_filetypes = {
@@ -22,15 +21,19 @@ return {
 						"filename",
 						path = 0,
 						symbols = {
-							modified = "", -- remove [+]
-							readonly = " ", -- remove [RO]
-							unnamed = "[No Name]", -- still keep unnamed buffers readable
-							newfile = "", -- remove [New]
+							modified = "",
+							readonly = " ",
+							unnamed = "[No Name]",
+							newfile = "",
 						},
 						color = { bg = "#82aaff" },
 					},
 				},
-				lualine_b = { { "branch", icon = "󰘬", color = { fg = "#82aaff" } }, "diff" },
+				lualine_b = {
+					{ "branch", icon = "󰘬", color = { fg = "#82aaff", bg = "#1e2030" } },
+					{ "diff", color = { bg = "#1e2030" } },
+					{ "diagnostics", color = { bg = "#1e2030" } },
+				},
 				lualine_c = {
 					{
 						require("noice").api.statusline.mode.get,
