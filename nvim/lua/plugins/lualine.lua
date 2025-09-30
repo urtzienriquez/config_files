@@ -4,6 +4,7 @@ return {
 	config = function()
 		require("lualine").setup({
 			options = {
+				theme = "tokyonight",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 				disabled_filetypes = {
@@ -26,7 +27,6 @@ return {
 							unnamed = "[No Name]",
 							newfile = "",
 						},
-						color = { bg = "#82aaff" },
 					},
 				},
 				lualine_b = {
@@ -43,7 +43,7 @@ return {
 				},
 				lualine_x = { "filetype" },
 				lualine_y = {},
-				lualine_z = { { "progress", color = { bg = "#82aaff" } }, { "location", color = { bg = "#82aaff" } } },
+				lualine_z = { { "progress" }, { "location" } },
 			},
 		})
 	end,

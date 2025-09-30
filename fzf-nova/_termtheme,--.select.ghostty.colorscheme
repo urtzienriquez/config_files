@@ -1,0 +1,42 @@
+#!/usr/bin/env sh
+# Ghostty theme switcher using fzf
+# Lists all themes from ghostty +list-themes and updates the theme line in config
+
+# Load theme
+. "$HOME/config_files/fzf-nova/theme.sh"
+export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
+
+# Define paths
+config_file="$HOME/.config/ghostty/config"
+
+# Check if config file exists
+if [ ! -f "$config_file" ]; then
+    echo "Error: Ghostty config file not found at $config_file"
+    exit 1
+fi
+
+# Check if ghostty command is available
+if ! command -v ghostty >/dev/null 2>&1; then
+    echo "Error: ghostty command not found"
+    exit 1
+fi
+
+# Get all available themes and select one with fzf
+selected=$(ghostty +list-themes | fzf --prompt='Select Ghostty theme: ')
+
+# Exit if no selection made
+[ -z "$selected" ] && exit
+
+# Remove (resources) suffix if present
+theme_name=$(echo "$selected" | sed 's/ (resources)$//')
+
+# Update or add theme line in config
+if grep -q "^theme = " "$config_file"; then
+    # Theme line exists, replace it
+    sed -i "s/^theme = .*/theme = $theme_name/" "$config_file"
+else
+    # Theme line doesn't exist, add it
+    echo "theme = $theme_name" >> "$config_file"
+fi
+
+echo "Theme switched to: $theme_name"

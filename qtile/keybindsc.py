@@ -6,7 +6,7 @@ from groupsc import groups
 
 mod = "mod4"
 alt = "mod1"
-terminal = "alacritty"
+terminal = "ghostty"
 
 
 def swap_screens():
@@ -14,22 +14,23 @@ def swap_screens():
     def __inner(qtile):
         if len(qtile.screens) < 2:
             return
-        
+
         # Get current screen index
         current_screen_index = qtile.screens.index(qtile.current_screen)
-        
+
         # Calculate other screen index (works for 2+ screens)
         other_screen_index = (current_screen_index + 1) % len(qtile.screens)
-        
+
         # Get the groups from both screens
         current_group = qtile.current_screen.group
         other_group = qtile.screens[other_screen_index].group
-        
+
         # Swap the groups without changing focus
         qtile.screens[other_screen_index].set_group(current_group)
         qtile.current_screen.set_group(other_group)
 
     return __inner
+
 
 keys = [
     Key(
@@ -170,7 +171,9 @@ keys = [
         [mod, "control", "shift"],
         "x",
         lazy.spawn(
-            'bash -c "alacritty --class=fzf-nova -e $HOME/config_files/fzf-nova/_session,--.manage.session"'
+            "ghostty --x11-instance-name='fzf-nova' \
+                    -e bash -c 'source ~/.bashrc &>/dev/null \
+                    && $HOME/config_files/fzf-nova/_session,--.manage.session'"
         ),
         desc="Manage Qtile session",
     ),
@@ -266,7 +269,9 @@ keys = [
         [alt],
         "f",
         lazy.spawn(
-            'bash -c "alacritty --class=fzf-nova -e $HOME/config_files/fzf-nova/fzf-nova"'
+            "ghostty --x11-instance-name='fzf-nova' \
+                    -e bash -c 'source ~/.bashrc &>/dev/null \
+                    && $HOME/config_files/fzf-nova/fzf-nova'"
         ),
         desc="Launch fzf-nova",
     ),
@@ -291,13 +296,15 @@ keys = [
     Key(
         [alt],
         "v",
-        lazy.spawn("alacritty -e /opt/nvim/bin/nvim"),
+        lazy.spawn("ghostty -e /opt/nvim/bin/nvim"),
         desc="Launch nvim",
     ),
     Key(
         [alt],
         "c",
-        lazy.spawn("alacritty --class='calendar' -o window.dimensions.columns=120 -o window.dimensions.lines=40 -e calcurse"),
+        lazy.spawn(
+            "ghostty --x11-instance-name='calendar' -e calcurse"
+        ),
         desc="Launch calendar",
     ),
     Key(
@@ -309,7 +316,9 @@ keys = [
     Key(
         [alt],
         "r",
-        lazy.spawn("alacritty --class='ranger' -o window.dimensions.columns=120 -o window.dimensions.lines=40 -e ranger"),
+        lazy.spawn(
+            "ghostty --x11-instance-name='ranger' -e ranger"
+        ),
         desc="Launch range file manager",
     ),
     Key(
@@ -433,7 +442,7 @@ for key in keys:
     keys_list.append(f"{keypress_str}: {key.desc}")
 
 # add helper key
-help_desc = "Show qtile keys in alacritty with fzf"
+help_desc = "Show qtile keys in ghostty with fzf"
 help_mod = "super-alt"
 help_key = "f"
 keys_list.append(f"{help_mod}-{help_key}: {help_desc}")
@@ -444,7 +453,7 @@ def get_launcher_command(key_list):
     keys_text = "\n".join(key_list)
     return {
         "shell": True,
-        "cmd": f"alacritty --class='qtile-keys' -e bash -c 'cat <<EOF | fzf --reverse --prompt=\"Qtile keys: \"\n{keys_text}\nEOF'",
+        "cmd": f"ghostty --x11-instance-name='qtile-keys' -e bash -c 'cat <<EOF | fzf --reverse --prompt=\"Qtile keys: \"\n{keys_text}\nEOF'",
     }
 
 

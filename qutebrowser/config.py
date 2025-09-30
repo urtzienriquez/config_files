@@ -104,8 +104,8 @@ config.bind("<Ctrl-n>", "completion-item-focus next", "command")
 config.bind("<Ctrl-p>", "completion-item-focus prev", "command")
 
 # navigate completion in serarch bars (insert mode) with ctrl-j / ctrl-k
-config.bind("<Ctrl-j>", "fake-key <Down>", "insert")
-config.bind("<Ctrl-k>", "fake-key <Up>", "insert")
+config.bind("<Ctrl-n>", "fake-key <Down>", "insert")
+config.bind("<Ctrl-p>", "fake-key <Up>", "insert")
 
 # navigate with j and k in passthrough mode (e.g. for protonmail)
 config.bind("j", "scroll down", "passthrough")

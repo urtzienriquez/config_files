@@ -13,17 +13,14 @@ setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 setopt INC_APPEND_HISTORY
 setopt HIST_REDUCE_BLANKS
-
 # For portability, use the `zf_rm` builtin instead of any external `rm` command.
 zmodload -Fa zsh/files b:zf_rm
-
 # -------------------------------
 # man with bat
 # -------------------------------
 export BAT_THEME=tokyonight_night
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
-
 # -------------------------------
 # Vim mode and keybindings
 # -------------------------------
@@ -33,13 +30,11 @@ bindkey "^?" backward-delete-char
 bindkey -M viins "^I" expand-or-complete
 autoload edit-command-line; zle -N edit-command-line
 bindkey -M vicmd e edit-command-line
-
 # -------------------------------
 # Editor
 # -------------------------------
 export VISUAL=nvim
 export EDITOR=nvim
-
 # -------------------------------
 # Autocompletion
 # -------------------------------
@@ -47,72 +42,59 @@ zstyle :compinstall filename '/home/urtzi/.config/zsh/.zshrc'
 zstyle ':completion:*' menu select
 ZLS_COLORS="di=34:fi=0:ex=32:ln=36"
 zstyle ':completion:*' list-colors "${(s.:.)ZLS_COLORS}"
-
 autoload -Uz compinit
 compinit
-
 # -------------------------------
 # Aliases
 # -------------------------------
 source ~/.config/zsh/.zsh_aliases
-
 # -------------------------------
 # Plugins
 # -------------------------------
-
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
 # -------------------------------
-# Terminal compatibility
+# Terminal compatibility for Ghostty + tmux
 # -------------------------------
-if [[ "$TERM_PROGRAM" == "alacritty" ]]; then
-    export TERM=screen-256color
+# Let Ghostty and tmux handle TERM automatically
+# Ghostty sets TERM=xterm-ghostty, tmux will use tmux-256color
+# Only override if we detect we're in a problematic environment
+if [[ -z "$TMUX" && "$TERM" != "xterm-ghostty" && "$TERM" != "xterm-256color" ]]; then
+    export TERM=xterm-256color
 fi
-
 # -------------------------------
 # Prompt colors
 # -------------------------------
 case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
+    xterm-color|*-256color|xterm-ghostty|tmux-256color) color_prompt=yes;;
 esac
-
 # -------------------------------
 # Misc
 # -------------------------------
 export RANGER_LOAD_DEFAULT_RC=FALSE
-[ -z "$TMUX" ] && export TERM=xterm-256color
-
 # -------------------------------
 # PATH Setup
 # -------------------------------
 if [[ -z "$PATH" || "$PATH" == "/bin:/usr/bin" ]]; then
 	export PATH="/usr/local/bin:/usr/bin:/bin:/usr/games"
 fi
-
 export PATH="/home/urtzi/.local/bin:$PATH"
-
 # Neovim path
 export PATH="/opt/nvim/bin:$PATH"
-
 # opt path (e.g. for matlab
 export PATH="/opt:$PATH"
-
 # go path export
 export PATH="/usr/local/go/bin:$PATH"
 export GOPATH=$HOME/.go
 export PATH=$PATH:$GOPATH/bin
-
 # cargo path
 export PATH=$PATH:$HOME/.cargo/bin
-
 # >>> juliaup initialize >>>
 case ":$PATH:" in
     *:/home/urtzi/.juliaup/bin:*) ;;
     *) export PATH=/home/urtzi/.juliaup/bin${PATH:+:${PATH}} ;;
 esac
 # <<< juliaup initialize <<<
-
 # -------------------------------
 # fzf
 # -------------------------------
@@ -123,7 +105,6 @@ elif [[ "$HOST" == "archlinux" ]]; then
 	source /usr/share/fzf/key-bindings.zsh
 	source /usr/share/fzf/completion.zsh
 fi
-
 export FZF_THEME_OPTS="--color=fg:#c0caf5,bg:#222436,hl:#7dcfff \
 --color=fg+:#c0caf5,bg+:#35274a,hl+:#bb9af7 \
 --color=info:#7aa2f7,prompt:#7dcfff,pointer:#bb9af7 \
@@ -141,25 +122,19 @@ export FZF_CTRL_T_OPTS="
   --bind 'ctrl-v:toggle-preview'"
 export FZF_CTRL_R_OPTS="--no-preview"
 export FZF_ALT_C_OPTS="--no-preview"
-
 # -------------------------------
 # Zoxide
 # -------------------------------
 eval "$(zoxide init --cmd cd zsh)"
-
 # -------------------------------
 # Starship prompt
 # -------------------------------
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
-
 # always start in a tmux session
 if [ -z "$TMUX" ]; then
   tty_id=$(basename "$(tty)")
   session="term_${tty_id}"
   tmux new-session -A -s "$session"
 fi
-
-
-
 export R_PROFILE_USER="$HOME/.Rprofile"
