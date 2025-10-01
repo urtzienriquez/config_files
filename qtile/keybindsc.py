@@ -35,19 +35,19 @@ def swap_screens():
 keys = [
     Key(
         [mod],
-        "space",
+        "m",
         lazy.next_screen(),
         desc="Next monitor",
     ),
     Key(
         [mod, "control"],
-        "space",
+        "m",
         swap_screens(),
         desc="Swap screens, but keep focus",
     ),
     Key(
         [mod, "control", "shift"],
-        "space",
+        "m",
         swap_screens(),
         lazy.next_screen(),
         desc="Swap screens and change focused screen",
