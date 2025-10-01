@@ -17,6 +17,19 @@ return {
 				julia = { "juliafmt" },
 			},
 			formatters = {
+				styler = {
+					command = "R",
+					args = {
+						"--slave",
+						"--no-restore",
+						"--no-save",
+						"-e",
+                        "styler::style_file(commandArgs(TRUE), transformers = styler::tidyverse_style(indent_by = 4L, strict = TRUE))",
+						"--args",
+						"$FILENAME",
+					},
+					stdin = false,
+				},
 				prettier = {
 					prepend_args = { "--single-quote" },
 				},
