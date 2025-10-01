@@ -1,6 +1,7 @@
 # theme
 theme = tokyonight_moon
 font-size = 15
+font-feature = -calt
 
 # default shell
 command = /usr/bin/zsh
