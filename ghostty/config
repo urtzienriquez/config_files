@@ -1,6 +1,6 @@
 # theme
 theme = tokyonight_moon
-font-size = 14
+font-size = 15
 
 # default shell
 command = /usr/bin/zsh
@@ -19,11 +19,14 @@ keybind = control+g=text:lazygit\r
 
 # padding
 window-padding-balance = true
+window-padding-color = extend-always
 window-padding-x = 0
 window-padding-y = 0
 
 # window decoration
 gtk-titlebar = false
+window-decoration = none
+window-theme = ghostty
 
 # no confirm when closing
 confirm-close-surface = false
