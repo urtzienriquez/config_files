@@ -19,5 +19,6 @@ require("lazy").setup({
 		{ import = "plugins" },
 	},
 	checker = { enabled = true },
+    ui = { backdrop = 40 },
 })
 

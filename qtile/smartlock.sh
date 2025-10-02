@@ -152,13 +152,13 @@ main() {
     # Lock the screen first
     if lock_screen; then
         echo "Screen locked, waiting before suspend..."
-        # Give the lock screen more time to fully activate
-        sleep 5
-        
-        # Turn off displays
-        if command -v xset >/dev/null 2>&1; then
-            xset dpms force off
-        fi
+        # # Give the lock screen more time to fully activate
+        # sleep 5
+        #
+        # # Turn off displays
+        # if command -v xset >/dev/null 2>&1; then
+        #     xset dpms force off
+        # fi
         
         # Additional wait to ensure lock is solid
         sleep 2

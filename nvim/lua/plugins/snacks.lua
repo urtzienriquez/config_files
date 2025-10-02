@@ -3,6 +3,11 @@ return {
 	priority = 1000,
 	lazy = false,
 	opts = {
+		win = {
+			backdrop = {
+				blend = 40, -- backdrop transparency (0-100)
+			},
+		},
 		picker = { enabled = false },
 		lazygit = { enabled = true },
 		bigfile = { enabled = true },
