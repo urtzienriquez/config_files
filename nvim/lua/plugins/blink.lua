@@ -27,7 +27,7 @@ return {
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
 				per_filetype = {
-					r = { "path", "snippets", "R" },
+					r = { "path", "snippets", "buffer", "R" },
 					rmd = { inherit_defaults = true, "thesaurus", "R" },
 					Rmd = { inherit_defaults = true, "thesaurus", "R" },
 					jmd = { inherit_defaults = true, "thesaurus" },
@@ -37,6 +37,12 @@ return {
 					text = { inherit_defaults = true, "thesaurus" },
 				},
 				providers = {
+                    snippets = {
+                        name = "snippets",
+						opts = {
+							score_offset = 100,
+						},
+                    },
 					R = {
 						name = "cmp_r",
 						module = "blink.compat.source",
