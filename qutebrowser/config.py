@@ -63,25 +63,11 @@ config.set("content.notifications.enabled", True)
 config.set("fileselect.handler", "external")
 config.set(
     "fileselect.single_file.command",
-    [
-        "alacritty", 
-        "--class=ranger",
-        "-o", "window.dimensions.columns=90",
-        "-o", "window.dimensions.lines=30", 
-        "-e", "ranger", 
-        "--choosefile={}"
-    ],
+    ["ghostty", "--x11-instance-name=ranger", "-e", "ranger", "--choosefile={}"],
 )
 config.set(
     "fileselect.multiple_files.command",
-    [
-        "alacritty", 
-        "--class=ranger",
-        "-o", "window.dimensions.columns=90",
-        "-o", "window.dimensions.lines=30", 
-        "-e", "ranger", 
-        "--choosefiles={}"
-    ],
+    ["ghostty", "--x11-instance-name=ranger", "-e", "ranger", "--choosefiles={}"],
 )
 
 # open neovim from qutebrowser
@@ -131,8 +117,8 @@ config.bind("ps", "set content.proxy system")
 config.bind(";p", "hint images download")
 
 # open page/link in firefox
-config.bind('pf', 'spawn --detach firefox {url}')
-config.bind('ph', 'hint links spawn --detach firefox {hint-url}')
+config.bind("pf", "spawn --detach firefox {url}")
+config.bind("ph", "hint links spawn --detach firefox {hint-url}")
 
 # switch mapping of F and ;f so that:
 # F follows a link to a new active tab
