@@ -63,11 +63,27 @@ config.set("content.notifications.enabled", True)
 config.set("fileselect.handler", "external")
 config.set(
     "fileselect.single_file.command",
-    ["ghostty", "--x11-instance-name=ranger", "-e", "ranger", "--choosefile={}"],
+    [
+        "ghostty",
+        "--x11-instance-name=ranger",
+        "--window-width=80",
+        "--window-height=25",
+        "-e",
+        "ranger",
+        "--choosefile={}",
+    ],
 )
 config.set(
     "fileselect.multiple_files.command",
-    ["ghostty", "--x11-instance-name=ranger", "-e", "ranger", "--choosefiles={}"],
+    [
+        "ghostty",
+        "--x11-instance-name=ranger",
+        "--window-width=80",
+        "--window-height=25",
+        "-e",
+        "ranger",
+        "--choosefiles={}",
+    ],
 )
 
 # open neovim from qutebrowser
