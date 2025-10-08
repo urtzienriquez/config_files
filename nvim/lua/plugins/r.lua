@@ -7,7 +7,7 @@ return {
 				R_app = "R",
 				external_term = "tmux split-window -d -h",
 				bracketed_paste = true,
-				R_args = { "--no-save" },
+				R_args = { "--no-save --silent" },
 				min_editor_width = 72,
 				rconsole_width = 78,
 				objbr_mappings = { -- Object browser keymap

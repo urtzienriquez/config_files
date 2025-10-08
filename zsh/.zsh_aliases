@@ -31,7 +31,7 @@ alias nv='nvim'
 alias lg='lazygit'
 
 # R
-alias r='radian'
+alias r='R --silent --no-save'
 
 # python
 alias py='python3'
