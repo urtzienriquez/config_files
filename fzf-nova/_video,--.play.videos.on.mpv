@@ -6,7 +6,7 @@
 
 export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=inline --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
 
-selected=$(find ~ -type f -name "*.mp4" \
+selected=$(find ~ -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" -o -name "*.mov" -o -name "*.webm" -o -name "*.flv" -o -name "*.wmv" \) \
   | fzf --prompt='select video: ')
 
 [ -z "$selected" ] && exit
