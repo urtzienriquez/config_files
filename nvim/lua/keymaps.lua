@@ -476,67 +476,23 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- WHICH-KEY GROUPS AND ORGANIZATION
 -- ========================================
 vim.api.nvim_create_autocmd("User", {
-	-- pattern = "VeryLazy",
+	pattern = "VeryLazy",
 	callback = function()
 		local wk_ok, wk = pcall(require, "which-key")
 		if wk_ok then
 			wk.add({
 				-- Main groups
-				{ "<leader>f", group = "Find" },
-				{ "<leader>fd", group = "diagnostics" },
-				{ "<leader>b", group = "Buffer" },
-				{ "<leader>c", group = "Code chunk" },
-				{ "<leader>g", group = "GitHub" },
-				{ "<leader>l", group = "Lazygit" },
-				{ "<leader>o", group = "Open REPL" },
-				{ "<leader>q", group = "Close REPL" },
-				{ "<leader>r", group = "R/Render" },
-				{ "<leader>s", group = "Send/Sync" },
-				{ "<leader>u", group = "UI toggle" },
-
-				-- Specific mappings for better organization
-				{ "<leader>or", desc = "R" },
-				{ "<leader>op", desc = "python" },
-				{ "<leader>oj", desc = "julia" },
-				{ "<leader>om", desc = "MATLAB" },
-
-				{ "<leader>qr", desc = "R" },
-				{ "<leader>qp", desc = "python" },
-				{ "<leader>qj", desc = "julia" },
-				{ "<leader>qm", desc = "MATLAB" },
-
-				{ "<leader>fp", desc = "picker" },
-				{ "<leader>ff", desc = "files" },
-				{ "<leader>f~", desc = "files in home" },
-				{ "<leader>fg", desc = "grep" },
-				{ "<leader>fb", desc = "buffers" },
-				{ "<leader>fh", desc = "help tags" },
-				{ "<leader>fk", desc = "keymaps" },
-				{ "<leader>fw", desc = "word" },
-				{ "<leader>fdg", desc = "globally" },
-				{ "<leader>fdd", desc = "in current buffer" },
-				{ "<leader>fl", desc = "lsp definitions" },
-				{ "<leader>fs", desc = "lsp symbols" },
-				{ "<leader>ft", desc = "treesitter symbols" },
-				{ "<leader>fm", desc = "(misspelled) spell suggestion" },
-				{ "<leader>f,", desc = "marks" },
-				{ "<leader>f,", desc = "resume" },
-				{ "<leader>f.", desc = "recent files" },
-				{ "<leader>fc", desc = "citation" },
-				{ "<leader>fr", desc = "replacement for citation" },
-
-				{ "<leader>bf", desc = "Format buffer" },
-				{ "<leader>bd", desc = "Delete buffer" },
-
-				{ "<leader>sd", desc = "Sync directory" },
-				{ "<leader>sx", desc = "Send cell" },
-				{ "<leader>sb", desc = "Send buffer" },
-
-				{ "<leader>rr", desc = "Render document" },
-
-				{ "<leader>lg", desc = "Lazygit" },
-				{ "<leader>ll", desc = "Lazygit log" },
-				{ "<leader>gB", desc = "Git browse" },
+				{ "<leader>f", name = "Find" },
+				{ "<leader>fd", name = "diagnostics" },
+				{ "<leader>b", name = "Buffer" },
+				{ "<leader>c", name = "Code chunk" },
+				{ "<leader>g", name = "GitHub" },
+				{ "<leader>l", name = "Lazygit" },
+				{ "<leader>o", name = "Open REPL" },
+				{ "<leader>q", name = "Close REPL" },
+				{ "<leader>r", name = "R/Render" },
+				{ "<leader>s", name = "Send/Sync" },
+				{ "<leader>u", name = "UI toggle" },
 			})
 		end
 	end,
