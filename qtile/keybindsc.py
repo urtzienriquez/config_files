@@ -317,7 +317,7 @@ keys = [
         [alt],
         "r",
         lazy.spawn(
-            "ghostty --x11-instance-name='ranger' -e ranger"
+            "ghostty --x11-instance-name='ranger --window-heigth=40 --window-width=120' -e ranger"
         ),
         desc="Launch range file manager",
     ),
