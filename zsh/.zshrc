@@ -89,6 +89,14 @@ export GOPATH=$HOME/.go
 export PATH=$PATH:$GOPATH/bin
 # cargo path
 export PATH=$PATH:$HOME/.cargo/bin
+# R path
+export R_PROFILE_USER="$HOME/.Rprofile"
+# perl paths
+export PERL_LOCAL_LIB_ROOT="$HOME/.perl5"
+export PERL_MB_OPT="--install_base $HOME/.perl5"
+export PERL_MM_OPT="INSTALL_BASE=$HOME/.perl5"
+export PERL5LIB="$HOME/.perl5/lib/perl5"
+export PATH="$HOME/.perl5/bin:$PATH"
 # >>> juliaup initialize >>>
 case ":$PATH:" in
     *:/home/urtzi/.juliaup/bin:*) ;;
@@ -131,10 +139,12 @@ eval "$(zoxide init --cmd cd zsh)"
 # -------------------------------
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
+# -------------------------------
+# tmux
+# -------------------------------
 # always start in a tmux session
 if [ -z "$TMUX" ]; then
   tty_id=$(basename "$(tty)")
   session="term_${tty_id}"
   tmux new-session -A -s "$session"
 fi
-export R_PROFILE_USER="$HOME/.Rprofile"
