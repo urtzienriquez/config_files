@@ -347,7 +347,7 @@ keys = [
         [mod, alt],
         "y",
         lazy.to_screen(0),
-        lazy.group["4"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
+        lazy.group["5"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
         lazy.spawn(
             "qutebrowser --basedir /home/urtzi/.config/quteyoutube \
                     --qt-arg class youtube --qt-arg name youtube",
@@ -358,7 +358,7 @@ keys = [
         [alt],
         "y",
         lazy.to_screen(0),
-        lazy.group["4"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
+        lazy.group["5"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
         lazy.spawn(
             "ghostty --x11-instance-name='youtube' -e yt-x"
         ),
