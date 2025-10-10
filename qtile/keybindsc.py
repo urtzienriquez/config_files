@@ -303,7 +303,7 @@ keys = [
         [alt],
         "c",
         lazy.spawn(
-            "ghostty --x11-instance-name='calendar' -e calcurse"
+            "ghostty --x11-instance-name='calendar' --window-height=30 --window-width=120 -e calcurse"
         ),
         desc="Launch calendar",
     ),
@@ -317,7 +317,7 @@ keys = [
         [alt],
         "r",
         lazy.spawn(
-            "ghostty --x11-instance-name='ranger --window-heigth=40 --window-width=120' -e ranger"
+            "ghostty --x11-instance-name='ranger' --window-height=30 --window-width=120 -e ranger"
         ),
         desc="Launch range file manager",
     ),
@@ -359,9 +359,7 @@ keys = [
         "y",
         lazy.to_screen(0),
         lazy.group["5"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
-        lazy.spawn(
-            "ghostty --x11-instance-name='youtube' -e yt-x"
-        ),
+        lazy.spawn("ghostty --x11-instance-name='youtube' -e yt-x"),
         desc="Launch yt-x youtube terminal client",
     ),
     Key(
