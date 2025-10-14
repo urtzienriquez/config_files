@@ -28,6 +28,15 @@ is_webcam_active() {
     fi
 }
 
+# Function to check if R is running
+is_r_running() {
+    if pgrep -x "R" >/dev/null 2>&1 || pgrep -x "Rscript" >/dev/null 2>&1 || pgrep -x "rsession" >/dev/null 2>&1; then
+        echo "yes"
+    else
+        echo "no"
+    fi
+}
+
 # Function to get the correct display and user info
 setup_display_env() {
     # Get the user who is actually logged into the graphical session
@@ -114,13 +123,15 @@ main() {
     # Run the checks
     audio_active=$(is_audio_playing)
     webcam_active=$(is_webcam_active)
+    r_active=$(is_r_running)
     
     echo "Audio active: $audio_active"
     echo "Webcam active: $webcam_active"
+    echo "R active: $r_active"
     
     # Suspend prevention logic
-    if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
-        echo "Audio or webcam active, not locking/suspending"
+    if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ] || [ "$r_active" = "yes" ]; then
+        echo "Audio, webcam, or R active, not locking/suspending"
         exit 0
     fi
     
