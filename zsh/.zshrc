@@ -68,6 +68,43 @@ fi
 case "$TERM" in
     xterm-color|*-256color|xterm-ghostty|tmux-256color) color_prompt=yes;;
 esac
+
+
+# -------------------------------
+# Git prompt function
+# -------------------------------
+autoload -Uz vcs_info
+precmd_vcs_info() { vcs_info }
+precmd_functions+=( precmd_vcs_info )
+setopt prompt_subst
+
+# Configure vcs_info for git
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' stagedstr '%F{green}●%f'
+zstyle ':vcs_info:*' unstagedstr '%F{white}●%f'
+zstyle ':vcs_info:git:*' formats ' %F{magenta} %b %f%c%u'
+zstyle ':vcs_info:git:*' actionformats ' %F{magenta} %b%f%F{yellow}|%a%f%c%u'
+
+# -------------------------------
+# Vi mode indicator
+# -------------------------------
+function zle-line-init zle-keymap-select {
+    VI_MODE_SYMBOL="${${KEYMAP/vicmd/}/(main|viins)/}"
+    zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+# -------------------------------
+# Custom prompt
+# -------------------------------
+# Basic two-line prompt with user@host, directory, and git info
+PROMPT='%F{magenta}%n@%m%f %F{cyan}%~%f${vcs_info_msg_0_}
+%F{%(?.green.red)}${VI_MODE_SYMBOL}%f '
+
+
+
 # -------------------------------
 # Misc
 # -------------------------------
@@ -135,11 +172,6 @@ export FZF_ALT_C_OPTS="--no-preview"
 # Zoxide
 # -------------------------------
 eval "$(zoxide init --cmd cd zsh)"
-# -------------------------------
-# Starship prompt
-# -------------------------------
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
-eval "$(starship init zsh)"
 # -------------------------------
 # tmux
 # -------------------------------
