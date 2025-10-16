@@ -28,7 +28,10 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-behind
 # Auto-fetch when entering a git repo
 chpwd_git_fetch() {
     if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-        git fetch > /dev/null 2>&1 &!
+        {
+            git fetch --quiet 2>/dev/null
+            zle && zle reset-prompt
+        } &!
     fi
 }
 chpwd_functions+=( chpwd_git_fetch )
