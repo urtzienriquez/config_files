@@ -11,7 +11,7 @@ return {
 				javascript = { "prettier" },
 				typescript = { "prettier" },
 				lua = { "stylua" },
-				python = { "ruff" },
+				python = { "black" },
 				fortran = { "fprettify" },
 				r = { "styler" },
 				julia = { "juliafmt" },
@@ -29,17 +29,6 @@ return {
 						"$FILENAME",
 					},
 					stdin = false,
-				},
-				ruff = {
-					command = "ruff",
-					args = {
-						"format",
-						"--stdin-filename",
-						"$FILENAME",
-						"--config",
-						"format.quote-style = 'single'",
-					},
-					stdin = true,
 				},
 				prettier = {
 					prepend_args = function(self, ctx)
