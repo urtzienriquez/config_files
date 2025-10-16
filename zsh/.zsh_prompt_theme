@@ -11,8 +11,19 @@ zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' stagedstr '%F{green}●%f'
 zstyle ':vcs_info:*' unstagedstr '%F{white}●%f'
-zstyle ':vcs_info:git:*' formats ' %F{magenta} %b %f%c%u'
+zstyle ':vcs_info:git:*' formats ' %F{magenta} %b %f%c%u%m'
 zstyle ':vcs_info:git:*' actionformats ' %F{magenta} %b%f%F{yellow}|%a%f%c%u'
+# Enable git hooks
+zstyle ':vcs_info:git*+set-message:*' hooks git-behind
+
+# Hook function to check if behind origin
++vi-git-behind() {
+    local behind
+    behind=$(git rev-list HEAD..@{upstream} 2>/dev/null | wc -l)
+    if [[ $behind -gt 0 ]]; then
+        hook_com[misc]="%F{yellow}↓%f"
+    fi
+}
 
 # -------------------------------
 # Vi mode indicator
@@ -30,5 +41,3 @@ zle -N zle-keymap-select
 # Basic two-line prompt with user@host, directory, and git info
 PROMPT='%F{magenta}%n@%m%f %F{cyan}%~%f${vcs_info_msg_0_}
 %F{%(?.green.red)}${VI_MODE_SYMBOL}%f '
-
-
