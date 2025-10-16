@@ -26,4 +26,3 @@ Setup for Debian/Arch with:
 ## todo
 
 Update post-installation script for latest updates
-
