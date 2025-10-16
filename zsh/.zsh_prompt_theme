@@ -30,7 +30,10 @@ chpwd_git_fetch() {
     if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
         {
             git fetch --quiet 2>/dev/null
-            zle && zle reset-prompt
+            vcs_info
+            if (( $+widgets[zle-line-init] )); then
+                zle -R
+            fi
         } &!
     fi
 }
