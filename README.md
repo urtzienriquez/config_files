@@ -5,15 +5,14 @@ Linux setup to avoid using the mouse as much as possible and trying to stay in t
 Setup for Debian/Arch with:
 
 - qtile as the window manager (with polybar)
-- alacritty as the terminal emulator
+- ghostty as the terminal emulator
   - zsh as the shell
 - tmux + neovim
   - tmux with a modified tmux-resurrect session manager to load and save session by name
   - neovim config for a repl workflow for R, julia, python, matlab and various markdown formats
 - ranger as file manager
 - qutebrowser as internet browser
-- fzf: both inside alacritty and as a flotting window for several utilities (e.g., connect to wifi)
-- keyd to remap some keys (e.g., caps-lock as escape)
+- fzf: both inside ghostty and as a flotting window for several utilities (e.g., connect to wifi)
 
 ## how to use
 
