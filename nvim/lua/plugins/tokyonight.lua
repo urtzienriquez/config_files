@@ -13,10 +13,10 @@ return {
 				hl.Pmenu = { fg = c.blue2 }
 				hl.LineNrAbove = { fg = c.dark5 }
 				hl.LineNrBelow = { fg = c.dark5 }
+				hl.DiagnosticUnnecessary = { fg = c.dark5, italic = true }
 			end,
 			style = "moon",
 		})
 		vim.cmd.colorscheme("tokyonight-moon")
 	end,
 }
-
