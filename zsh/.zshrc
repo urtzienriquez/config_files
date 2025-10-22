@@ -164,3 +164,18 @@ if [ -z "$TMUX" ]; then
   session="term_${tty_id}"
   tmux new-session -A -s "$session"
 fi
+
+# -------------------------------
+# venv
+# -------------------------------
+# Activate virtual env and save the path as a tmux variable,
+# so that new panes/windows can re-activate as necessary
+function sv() {
+    local venv_path="${1:-.}"
+    source $venv_path/bin/activate &&
+    tmux set-environment VIRTUAL_ENV $VIRTUAL_ENV &&
+    alias deactivate='\deactivate && tmux set-environment -u VIRTUAL_ENV && unalias deactivate'
+}
+if [ -n "$VIRTUAL_ENV" ]; then
+    source $VIRTUAL_ENV/bin/activate;
+fi
