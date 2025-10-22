@@ -15,12 +15,14 @@ setopt INC_APPEND_HISTORY
 setopt HIST_REDUCE_BLANKS
 # For portability, use the `zf_rm` builtin instead of any external `rm` command.
 zmodload -Fa zsh/files b:zf_rm
+
 # -------------------------------
 # man with bat
 # -------------------------------
 export BAT_THEME=tokyonight_night
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
+
 # -------------------------------
 # Vim mode and keybindings
 # -------------------------------
@@ -30,11 +32,13 @@ bindkey "^?" backward-delete-char
 bindkey -M viins "^I" expand-or-complete
 autoload edit-command-line; zle -N edit-command-line
 bindkey -M vicmd e edit-command-line
+
 # -------------------------------
 # Editor
 # -------------------------------
 export VISUAL=nvim
 export EDITOR=nvim
+
 # -------------------------------
 # Autocompletion
 # -------------------------------
@@ -44,15 +48,18 @@ ZLS_COLORS="di=34:fi=0:ex=32:ln=36"
 zstyle ':completion:*' list-colors "${(s.:.)ZLS_COLORS}"
 autoload -Uz compinit
 compinit
+
 # -------------------------------
 # Aliases
 # -------------------------------
 source ~/.config/zsh/.zsh_aliases
+
 # -------------------------------
 # Plugins
 # -------------------------------
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 # -------------------------------
 # Terminal compatibility for Ghostty + tmux
 # -------------------------------
@@ -62,20 +69,24 @@ source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 if [[ -z "$TMUX" && "$TERM" != "xterm-ghostty" && "$TERM" != "xterm-256color" ]]; then
     export TERM=xterm-256color
 fi
+
 # -------------------------------
 # Prompt colors
 # -------------------------------
 case "$TERM" in
     xterm-color|*-256color|xterm-ghostty|tmux-256color) color_prompt=yes;;
 esac
+
 # -------------------------------
 # Prompt theme
 # -------------------------------
 source ~/.config/zsh/.zsh_prompt_theme
+
 # -------------------------------
 # Misc
 # -------------------------------
 export RANGER_LOAD_DEFAULT_RC=FALSE
+
 # -------------------------------
 # PATH Setup
 # -------------------------------
@@ -94,20 +105,23 @@ export GOPATH=$HOME/.go
 export PATH=$PATH:$GOPATH/bin
 # cargo path
 export PATH=$PATH:$HOME/.cargo/bin
-# R path
-export R_PROFILE_USER="$HOME/.Rprofile"
 # perl paths
 export PERL_LOCAL_LIB_ROOT="$HOME/.perl5"
 export PERL_MB_OPT="--install_base $HOME/.perl5"
 export PERL_MM_OPT="INSTALL_BASE=$HOME/.perl5"
 export PERL5LIB="$HOME/.perl5/lib/perl5"
 export PATH="$HOME/.perl5/bin:$PATH"
-# >>> juliaup initialize >>>
+# juliaup 
 case ":$PATH:" in
     *:/home/urtzi/.juliaup/bin:*) ;;
     *) export PATH=/home/urtzi/.juliaup/bin${PATH:+:${PATH}} ;;
 esac
-# <<< juliaup initialize <<<
+
+# -------------------------------
+# R configuration
+# -------------------------------
+export RENV_CONFIG_USER_PROFILE=TRUE
+
 # -------------------------------
 # fzf
 # -------------------------------
@@ -135,10 +149,12 @@ export FZF_CTRL_T_OPTS="
   --bind 'ctrl-v:toggle-preview'"
 export FZF_CTRL_R_OPTS="--no-preview"
 export FZF_ALT_C_OPTS="--no-preview"
+
 # -------------------------------
 # Zoxide
 # -------------------------------
 eval "$(zoxide init --cmd cd zsh)"
+
 # -------------------------------
 # tmux
 # -------------------------------

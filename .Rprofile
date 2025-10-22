@@ -21,9 +21,5 @@ if (interactive() || isatty(stdout())) {
         )
     }
 }
-lintr.linter_file <- "~/.lintr"
 
-# Auto-activate renv if in a project with renv
-if (file.exists("renv/activate.R")) {
-  source("renv/activate.R")
-}
+lintr.linter_file <- "~/.lintr"
