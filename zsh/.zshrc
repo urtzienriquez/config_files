@@ -13,8 +13,9 @@ setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 setopt INC_APPEND_HISTORY
 setopt HIST_REDUCE_BLANKS
-# For portability, use the `zf_rm` builtin instead of any external `rm` command.
-zmodload -Fa zsh/files b:zf_rm
+
+# rm: for confirmation use a custom alias
+setopt RM_STAR_SILENT
 
 # -------------------------------
 # man with bat

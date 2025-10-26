@@ -3,6 +3,16 @@ alias ls='ls -F --color=auto'
 alias ll='ls -lhA'
 alias la='ls -hA'
 
+# rm alias (function) to always ask for permission
+rm() {
+  if [[ $# -eq 0 ]]; then
+    command rm
+    return
+  fi
+  echo -n "rm: remove $# item(s)? [yn] "
+  read -q && echo && command rm "$@" || echo
+}
+
 # enable/disable keyd
 alias kdon="sudo systemctl enable --now keyd "
 alias kdoff="sudo systemctl disable --now keyd "
