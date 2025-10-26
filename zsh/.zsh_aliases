@@ -9,7 +9,12 @@ rm() {
     command rm
     return
   fi
-  echo -n "rm: remove $# item(s)? [yn] "
+  # Count non-flag arguments (actual files/dirs)
+  local file_count=0
+  for arg in "$@"; do
+    [[ "$arg" != -* ]] && ((file_count++))
+  done
+  echo -n "rm: remove $file_count item(s)? [yn] "
   read -q && echo && command rm "$@" || echo
 }
 
