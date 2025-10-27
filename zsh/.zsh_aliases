@@ -71,15 +71,21 @@ alias bt='bat -p'
 #calcurse
 alias cl='clear'
 
+# fd as fdfind (in Debian it is called just with fdfind)
+alias fd='fdfind'
+
+#########
 # fzf 
-		
-# ff: find files in given path (or current directory), open appropriately
-ff() {
+
+# sf: search files in given path (or current path if not specified), open appropriately
+sf() {
   local search_path="${1:-.}"
   local ofile
-  ofile=$(find "$search_path" \
-    \( -path "$search_path/node_modules" -o -path '*/.git' -o -path "$HOME/go" \) -prune -o \
-    -type f -print | \
+  ofile=$(fd . "$search_path" \
+    --type f \
+    --exclude node_modules \
+    --exclude .git \
+    --exclude "$HOME/go" | \
     fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   local mime
@@ -98,15 +104,15 @@ ff() {
   fi
 }
 
-alias fh="ff ~"
-
-# fd: find file or dir in $HOME (or given path), and cd appropriately
-fd() {
-  local search_path="${1:-$HOME}"
+# sd: search files and dirs in given path (or current path if not specified), and cd appropriately
+sd() {
+  local search_path="${1:-.}"
   local selected
-  selected=$(find "$search_path" \
-    \( -path "$search_path/node_modules" -o -path '*/.git' -o -path "$HOME/go" \) -prune -o \
-    \( -type f -o -type d \) -print | \
+  selected=$(fd . "$search_path" \
+    --type f --type d \
+    --exclude node_modules \
+    --exclude .git \
+    --exclude "$HOME/go" | \
     fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   if [[ -d "$selected" ]]; then
@@ -116,8 +122,8 @@ fd() {
   fi
 }
 
-# ffr: like ff but searches the whole system with locate
-ffr() {
+# sfr: like sf but searches the whole system with locate
+sfr() {
   local file
   file=$(locate / | while read -r f; do [[ -f "$f" ]] && echo "$f"; done | \
     fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
@@ -138,8 +144,8 @@ ffr() {
   fi
 }
 
-# fdr: like fd but searches entire system using locate, and cd accordingly
-fdr() {
+# sdr: like sd but searches entire system using locate, and cd accordingly
+sdr() {
   local file
   file=$(locate / | fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
 
