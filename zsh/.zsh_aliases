@@ -9,12 +9,40 @@ rm() {
     command rm
     return
   fi
-  # Count non-flag arguments (actual files/dirs)
-  local file_count=0
+  
+  # Collect non-flag arguments that actually exist with indicators
+  local files=()
   for arg in "$@"; do
-    [[ "$arg" != -* ]] && ((file_count++))
+    if [[ "$arg" != -* ]]; then
+      if [[ -L "$arg" ]]; then
+        # Symlink (including broken ones)
+        files+=("'${arg}@'")
+      elif [[ -d "$arg" ]]; then
+        # Directory
+        files+=("'${arg}/'")
+      elif [[ -p "$arg" ]]; then
+        # Named pipe (FIFO)
+        files+=("'${arg}|'")
+      elif [[ -S "$arg" ]]; then
+        # Socket
+        files+=("'${arg}='")
+      elif [[ -b "$arg" || -c "$arg" ]]; then
+        # Block or character device
+        files+=("'${arg}#'")
+      elif [[ -e "$arg" ]]; then
+        # Regular file
+        files+=("'${arg}'")
+      fi
+    fi
   done
-  echo -n "rm: remove $file_count item(s)? [yn] "
+  
+  # If no actual files exist, just run rm to get the proper error message
+  if [[ ${#files[@]} -eq 0 ]]; then
+    command rm "$@"
+    return
+  fi
+  
+  echo -n "rm: remove ${files[@]}? [yn] "
   read -q && echo && command rm "$@" || echo
 }
 
