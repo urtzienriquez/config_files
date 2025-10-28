@@ -303,7 +303,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- ========================================
 -- vim-slime keymaps
 -- ========================================
-local slime_utils = require("slime_utils")
+local slime_utils = require("core.slime_utils")
 
 local function set_slime_keymaps(bufnr)
 	local opts_keymap = { noremap = true, silent = true, buffer = true }
@@ -430,7 +430,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- ========================================
 -- Citation Picker
 -- ========================================
-local citation = require("citation-picker")
+local citation = require("plugins.citation-picker")
 
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "markdown", "rmd", "Rmd", "quarto", "jmd", "Jmd", "tex", "pandoc" },
@@ -438,7 +438,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		local opts = { buffer = true, silent = true }
 		vim.keymap.set(
 			"i",
-			"<C-Space>",
+			"<C-i>",
 			citation.citation_picker,
 			vim.tbl_extend("force", opts, { desc = "Find citations (custom)" })
 		)
