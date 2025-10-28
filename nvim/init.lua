@@ -1,4 +1,4 @@
-require("config.vim-options")
+require("config.options")
 require("core.lazy")
 require("core.lsp")
 require("core.slime_utils")
