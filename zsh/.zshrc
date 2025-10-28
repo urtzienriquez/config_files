@@ -17,6 +17,9 @@ setopt HIST_REDUCE_BLANKS
 # rm: for confirmation use a custom alias
 setopt RM_STAR_SILENT
 
+# extended globing patterns
+setopt extended_glob
+
 # -------------------------------
 # man with bat
 # -------------------------------

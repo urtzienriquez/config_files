@@ -64,27 +64,27 @@ vim.api.nvim_create_autocmd("FileType", {
 		"markdown",
 		"text",
 		"rmd",
-		"Rmd", -- R Markdown
+		"Rmd",
 		"jmd",
-		"Jmd", -- Julia Markdown (Weave.jl)
+		"Jmd",
 		"quarto",
 		"qmd",
-		"Qmd", -- Quarto
-		"org", -- Org-mode files
-		"rst", -- reStructuredText
+		"Qmd",
+		"org",
+		"rst",
 		"asciidoc",
-		"adoc", -- AsciiDoc
+		"adoc",
 		"tex",
-		"latex", -- LaTeX files
-		"wiki", -- Wiki files
-		"textile", -- Textile markup
-		"mail", -- Email files
-		"gitcommit", -- Git commit messages
+		"latex",
+		"wiki",
+		"textile",
+		"mail",
+		"gitcommit",
 	},
 	callback = function()
 		vim.opt_local.wrap = true
-		vim.opt_local.linebreak = true -- Break at word boundaries
-		vim.opt_local.showbreak = "↳ " -- Visual indicator for wrapped lines
+		vim.opt_local.linebreak = true
+		vim.opt_local.showbreak = "↳ "
 	end,
 })
 

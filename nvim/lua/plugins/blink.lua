@@ -66,7 +66,6 @@ return {
 				accept = { auto_brackets = { enabled = false } },
 
 				menu = {
-					auto_show_delay_ms = 500,
 					border = "none",
 					winhighlight = "Normal:CmpPmenu,CursorLine:CmpSel,Search:None",
 
@@ -84,7 +83,7 @@ return {
 					},
 				},
 
-				ghost_text = { enabled = false },
+				ghost_text = { enabled = true },
 			},
 
 			signature = {
