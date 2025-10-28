@@ -6,10 +6,8 @@ return {
 		build = ":TSUpdate",
 		config = function()
 			local ts = require("nvim-treesitter")
-
 			-- optional: change install dir, etc.
 			ts.setup({})
-
 			local parsers = {
 				"bash",
 				"c",
@@ -33,14 +31,23 @@ return {
 				"vimdoc",
 				"yaml",
 				"regex",
+				"fortran",
 			}
-
 			-- Install asynchronously (or add :wait for sync bootstrap)
 			ts.install(parsers)
-
 			-- Start treesitter highlighting when the language is available
 			vim.api.nvim_create_autocmd("FileType", {
 				callback = function(args)
+					-- Disable treesitter completely for Fortran77 files (.f extension)
+					if args.match == "fortran" then
+						local filename = vim.api.nvim_buf_get_name(args.buf)
+						if filename:match("%.f$") then
+							-- Explicitly stop treesitter if it's running
+							pcall(vim.treesitter.stop, args.buf)
+							return
+						end
+					end
+
 					local lang = vim.treesitter.language.get_lang(args.match)
 					if not lang then
 						return
@@ -50,9 +57,18 @@ return {
 					pcall(vim.treesitter.start, args.buf)
 				end,
 			})
+
+			-- Additional safeguard: stop treesitter if it somehow starts on .f files
+			vim.api.nvim_create_autocmd("BufEnter", {
+				pattern = "*.f",
+				callback = function(args)
+					if vim.treesitter.highlighter.active[args.buf] then
+						vim.treesitter.stop(args.buf)
+					end
+				end,
+			})
 		end,
 	},
-
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
 		branch = "main",
@@ -62,7 +78,14 @@ return {
 				select = {
 					enable = true,
 					lookahead = true,
-					disable = { "fortran" },
+					-- Disable for Fortran77 files using a function
+					disable = function(lang, buf)
+						if lang == "fortran" then
+							local filename = vim.api.nvim_buf_get_name(buf)
+							return filename:match("%.f$") ~= nil
+						end
+						return false
+					end,
 				},
 			})
 		end,
