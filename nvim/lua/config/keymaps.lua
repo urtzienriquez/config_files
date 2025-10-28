@@ -430,7 +430,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- ========================================
 -- Citation Picker
 -- ========================================
-local citation = require("plugins.citation-picker")
+local citation = require("core.citation-picker")
 
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "markdown", "rmd", "Rmd", "quarto", "jmd", "Jmd", "tex", "pandoc" },

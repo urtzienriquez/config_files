@@ -13,7 +13,6 @@ vim.opt.mouse = ""
 vim.g.have_nerd_font = true
 vim.opt.number = true
 vim.opt.relativenumber = true
--- vim.opt.cursorline = true
 vim.opt.scrolloff = 5
 vim.opt.backspace = { "indent", "eol", "start" }
 vim.opt.tabstop = 4
@@ -25,6 +24,7 @@ vim.opt.autoindent = true
 vim.opt.ignorecase = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.termguicolors = true
+vim.opt.signcolumn = "yes:1"
 
 -- for julia unicode symbols
 vim.g.latex_to_unicode_auto = 1
