@@ -356,7 +356,7 @@ local function set_slime_keymaps(bufnr)
 	-- Instantiate julia project
 	vim.keymap.set("n", "<leader>ji", function()
 		if slime_utils.has_active_repl() then
-      local keys = "using Pkg; Pkg.activate(\".\")\nPkg.instantiate()\n"
+			local keys = 'using Pkg; Pkg.activate(".")\nPkg.instantiate()\n'
 			vim.fn["slime#send"](keys)
 		else
 			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
@@ -465,6 +465,30 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(event)
 		local opts = { buffer = event.buf, silent = true }
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Information hover" }))
+	end,
+})
+
+-- Attach texlab to markdown-like files with LaTeX content
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "rmd", "Rmd", "quarto", "qmd", "Qmd", "jmd", "Jmd", "markdown" },
+	callback = function(args)
+		-- Only attach if file contains LaTeX commands
+		local lines = vim.api.nvim_buf_get_lines(args.buf, 0, 100, false)
+		local has_latex = false
+		for _, line in ipairs(lines) do
+			if line:match("\\%w+") or line:match("%$%$") then
+				has_latex = true
+				break
+			end
+		end
+
+		if has_latex then
+			vim.lsp.start({
+				name = "texlab",
+				cmd = { "texlab" },
+				root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]),
+			})
+		end
 	end,
 })
 
