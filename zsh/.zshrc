@@ -109,6 +109,11 @@ export GOPATH=$HOME/.go
 export PATH=$PATH:$GOPATH/bin
 # cargo path
 export PATH=$PATH:$HOME/.cargo/bin
+. "$HOME/.cargo/env"
+# ZVM
+export ZVM_INSTALL="$HOME/.zvm/self"
+export PATH="$PATH:$HOME/.zvm/bin"
+export PATH="$PATH:$ZVM_INSTALL/"
 # perl paths
 export PERL_LOCAL_LIB_ROOT="$HOME/.perl5"
 export PERL_MB_OPT="--install_base $HOME/.perl5"

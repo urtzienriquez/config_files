@@ -61,9 +61,10 @@ return {
 				pattern = "*",
 				callback = function()
 					-- Adjust these highlight groups as needed for your colorscheme
-        local bg = (vim.o.background == "dark") and "#292e42" or "#c4c8da"
-        vim.cmd("hi! link rmdChunk CodeBlock")
-        vim.cmd("hi! RCodeBlock guibg=" .. bg .. " guifg=NONE")
+					local bg = (vim.o.background == "dark") and "#292e42" or "#c4c8da"
+					vim.cmd("hi! link rmdChunk CodeBlock")
+					vim.cmd("hi! link rmdChunk CodeBlock")
+					vim.cmd("hi! RCodeBlock guibg=" .. bg .. " guifg=NONE")
 				end,
 			})
 		end,

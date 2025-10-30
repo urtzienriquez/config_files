@@ -88,6 +88,17 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- Set pandoc syntax for markdown files to get LaTeX highlighting
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "rmd", "Rmd", "quarto", "qmd", "Qmd", "jmd", "Jmd" },
+	callback = function()
+		-- Delay to let R.nvim set its syntax first, then override
+		vim.defer_fn(function()
+			vim.cmd("set syntax=pandoc")
+		end, 100)
+	end,
+})
+
 -- hack for apparently remaining in insert mode after selecting a file with Telescope
 vim.api.nvim_create_autocmd("WinLeave", {
 	callback = function()
