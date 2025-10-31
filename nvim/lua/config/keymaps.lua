@@ -292,8 +292,16 @@ local function set_rnvim_keymaps(bufnr)
 	vim.keymap.set("n", "<leader>cn", "<Plug>RNextRChunk", opts_keymap)
 	vim.keymap.set("n", "<leader>cN", "<Plug>RPreviousRChunk", opts_keymap)
 
-    -- extra to add images
-	vim.keymap.set("n", "<leader>pi", "i```{r }<Esc>maoknitr::include_graphics( <Esc>mb`i)<CR>```<Esc>`a", opts_keymap)
+	-- extra to add:
+	-- images
+	vim.keymap.set(
+		"n",
+		"<leader>ai",
+		'i```{r }<Esc>maoknitr::include_graphics(" <Esc>mbi")<CR>```<Esc>`ai',
+		opts_keymap
+	)
+	-- code-chunk
+	vim.keymap.set("n", "<leader>ac", "i```{}<Esc>mao```<Esc>`ai", opts_keymap)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -397,6 +405,9 @@ local function set_slime_keymaps(bufnr)
 			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
 		end
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Close MATLAB REPL" }))
+
+	-- extra to add code-chunk
+	vim.keymap.set("n", "<leader>ac", "i```{}<Esc>mao```<Esc>`ai", opts_keymap)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -506,7 +517,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Information hover" }))
 	end,
 })
-
 
 -- ========================================
 -- WHICH-KEY GROUPS AND ORGANIZATION
