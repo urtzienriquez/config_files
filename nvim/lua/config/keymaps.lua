@@ -294,7 +294,7 @@ local function set_rnvim_keymaps(bufnr)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "r", "rmd", "Rmd" },
+	pattern = { "r", "rmd", "Rmd", "rnoweb" },
 	callback = function()
 		set_rnvim_keymaps(0)
 	end,

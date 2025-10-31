@@ -99,6 +99,17 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- Set rnoweb syntax for Rnw files to get LaTeX and R highlighting
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "rnoweb" },
+	callback = function()
+		vim.defer_fn(function()
+			vim.cmd("set syntax=rnoweb")
+		end, 100)
+	end,
+})
+
+
 -- hack for apparently remaining in insert mode after selecting a file with Telescope
 vim.api.nvim_create_autocmd("WinLeave", {
 	callback = function()
