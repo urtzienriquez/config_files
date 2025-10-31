@@ -37,12 +37,12 @@ return {
 					text = { inherit_defaults = true, "thesaurus" },
 				},
 				providers = {
-                    snippets = {
-                        name = "snippets",
+					snippets = {
+						name = "snippets",
 						opts = {
 							score_offset = 100,
 						},
-                    },
+					},
 					R = {
 						name = "cmp_r",
 						module = "blink.compat.source",

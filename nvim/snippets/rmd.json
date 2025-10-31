@@ -1,0 +1,33 @@
+{
+  "Code Chunk": {
+    "prefix": "code",
+    "body": [
+      "```{${1:r}}",
+      "${3:# your code here}",
+      "```",
+      "$0"
+    ],
+    "description": "add code chunk"
+  },
+  "Image Code Chunk": {
+    "prefix": "image",
+    "body": [
+      "```{r fig-${1:name}}",
+      "knitr::include_graphics(\"${2:path/goes/here}\")",
+      "```",
+      "$0"
+    ],
+    "description": "add code chunk"
+  },
+  "yaml header": {
+    "prefix": "head",
+    "body": [
+      "---",
+      "title: ${1:title}",
+      "author: ${2:author}",
+      "$0",
+      "---"
+    ],
+    "description": "add yaml header"
+  }
+}
