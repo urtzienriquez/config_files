@@ -33,6 +33,30 @@ local function format_chunk_display(chunk)
 end
 
 ---------------------------------------------------------------------
+-- Helper functions for cursor management (matching citation picker)
+---------------------------------------------------------------------
+local function set_cursor_after_inserted_text(buf, win, row, start_col, inserted_text)
+	if not vim.api.nvim_buf_is_valid(buf) then
+		return nil
+	end
+	local winid = (win and vim.api.nvim_win_is_valid(win)) and win or 0
+	local target_col = start_col + #inserted_text
+	pcall(vim.api.nvim_set_current_win, winid)
+	pcall(vim.api.nvim_set_current_buf, buf)
+	pcall(vim.api.nvim_win_set_cursor, winid, { row, target_col })
+	return target_col
+end
+
+local function reenter_insert_mode_at_cursor_for_buffer(win, buf, row, col, inserted_text_len)
+	local winid = (win and vim.api.nvim_win_is_valid(win)) and win or 0
+	pcall(vim.api.nvim_set_current_win, winid)
+	pcall(vim.api.nvim_set_current_buf, buf)
+	pcall(vim.api.nvim_win_set_cursor, winid, { row, col + inserted_text_len })
+	local key = vim.api.nvim_replace_termcodes("a", true, false, true)
+	pcall(vim.api.nvim_feedkeys, key, "n", true)
+end
+
+---------------------------------------------------------------------
 -- Insert crossref at cursor
 ---------------------------------------------------------------------
 local function insert_crossref(ref_type, label, saved_context)
@@ -54,8 +78,13 @@ local function insert_crossref(ref_type, label, saved_context)
 	local row, col = saved_context.row, saved_context.col
 
 	-- In normal mode, move cursor position one character to the right
+	-- so text is inserted after the cursor character, not before it
+	-- BUT only if we're not on an empty line or at the end of a line
 	if not saved_context.was_insert_mode then
-		col = col + 1
+		local line = vim.api.nvim_buf_get_lines(saved_context.buf, row - 1, row, false)[1] or ""
+		if col < #line then
+			col = col + 1
+		end
 	end
 
 	local ok = pcall(function()
@@ -63,21 +92,10 @@ local function insert_crossref(ref_type, label, saved_context)
 	end)
 
 	if ok then
-		-- Set cursor after inserted text
-		local target_col = col + #crossref
-		pcall(vim.api.nvim_win_set_cursor, saved_context.win or 0, { row, target_col })
-
-		-- Re-enter insert mode if we were in insert mode
+		set_cursor_after_inserted_text(saved_context.buf, saved_context.win, row, col, crossref)
 		if saved_context.was_insert_mode then
-			vim.schedule(function()
-				pcall(vim.api.nvim_set_current_win, saved_context.win or 0)
-				pcall(vim.api.nvim_set_current_buf, saved_context.buf)
-				pcall(vim.api.nvim_win_set_cursor, saved_context.win or 0, { row, target_col })
-				local key = vim.api.nvim_replace_termcodes("a", true, false, true)
-				pcall(vim.api.nvim_feedkeys, key, "n", true)
-			end)
+			reenter_insert_mode_at_cursor_for_buffer(saved_context.win, saved_context.buf, row, col, #crossref)
 		end
-
 		vim.notify("Inserted crossref: " .. crossref, vim.log.levels.INFO)
 	else
 		vim.notify("Failed to insert crossref", vim.log.levels.ERROR)

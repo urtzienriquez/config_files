@@ -291,6 +291,9 @@ local function set_rnvim_keymaps(bufnr)
 	vim.keymap.set("n", "<leader>rr", "<Plug>RMakeAll", opts_keymap)
 	vim.keymap.set("n", "<leader>cn", "<Plug>RNextRChunk", opts_keymap)
 	vim.keymap.set("n", "<leader>cN", "<Plug>RPreviousRChunk", opts_keymap)
+
+    -- extra to add images
+	vim.keymap.set("n", "<leader>pi", "i```{r }<Esc>maoknitr::include_graphics( <Esc>mb`i)<CR>```<Esc>`a", opts_keymap)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -504,29 +507,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
--- Attach texlab to markdown-like files with LaTeX content
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "rmd", "Rmd", "quarto", "qmd", "Qmd", "jmd", "Jmd", "markdown" },
-	callback = function(args)
-		-- Only attach if file contains LaTeX commands
-		local lines = vim.api.nvim_buf_get_lines(args.buf, 0, 100, false)
-		local has_latex = false
-		for _, line in ipairs(lines) do
-			if line:match("\\%w+") or line:match("%$%$") then
-				has_latex = true
-				break
-			end
-		end
-
-		if has_latex then
-			vim.lsp.start({
-				name = "texlab",
-				cmd = { "texlab" },
-				root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]),
-			})
-		end
-	end,
-})
 
 -- ========================================
 -- WHICH-KEY GROUPS AND ORGANIZATION

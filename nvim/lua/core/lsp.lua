@@ -9,7 +9,7 @@ local servers = {
 	"lua_ls",
 	"marksman",
 	"yamlls",
-    "texlab",
+    -- "texlab",
 }
 
 vim.lsp.enable(servers)
