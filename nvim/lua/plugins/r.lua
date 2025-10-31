@@ -56,15 +56,53 @@ return {
 			end
 			require("r").setup(opts)
 
-			-- Fix markdown code chunk background on colorscheme change
+			-- Unified chunk highlighting for both rmarkdown and rnoweb
+			local function set_chunk_highlights()
+				local bg = (vim.o.background == "dark") and "#292e42" or "#c4c8da"
+				local delimiter_fg = (vim.o.background == "dark") and "#7aa2f7" or "#5555ff"
+
+				-- RMarkdown chunks
+				vim.cmd("hi! link rmdChunk CodeBlock")
+				vim.cmd("hi! RCodeBlock guibg=" .. bg .. " guifg=NONE")
+
+				-- Rnoweb delimiter styling
+				vim.cmd("hi! rnowebDelimiter guifg=" .. delimiter_fg .. " gui=bold guibg=" .. bg)
+			end
+
 			vim.api.nvim_create_autocmd("ColorScheme", {
 				pattern = "*",
+				callback = set_chunk_highlights,
+			})
+
+			vim.defer_fn(set_chunk_highlights, 100)
+
+			-- Add this to your R.nvim config function
+			vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged", "TextChangedI" }, {
+				pattern = "*.Rnw",
 				callback = function()
-					-- Adjust these highlight groups as needed for your colorscheme
-					local bg = (vim.o.background == "dark") and "#292e42" or "#c4c8da"
-					vim.cmd("hi! link rmdChunk CodeBlock")
-					vim.cmd("hi! link rmdChunk CodeBlock")
-					vim.cmd("hi! RCodeBlock guibg=" .. bg .. " guifg=NONE")
+					local ns = vim.api.nvim_create_namespace("rnoweb_chunk_bg")
+					local buf = vim.api.nvim_get_current_buf()
+					vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+
+					local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+					local in_chunk = false
+
+					for i, line in ipairs(lines) do
+						if line:match("^<<.*>>=") then
+							in_chunk = true
+						end
+
+						if in_chunk then
+							-- Set the entire line background
+							vim.api.nvim_buf_set_extmark(buf, ns, i - 1, 0, {
+								line_hl_group = "RCodeBlock",
+							})
+						end
+
+						if line:match("^@%s*$") then
+							in_chunk = false
+						end
+					end
 				end,
 			})
 		end,

@@ -3,7 +3,7 @@
 
 return {
 	cmd = { "texlab" },
-	filetypes = { "tex", "plaintex", "bib" },
+	filetypes = { "tex", "plaintex", "bib", "rnoweb", "rmd", "Rmd" },
 	root_markers = {
 		".latexmkrc",
 		".git",
@@ -22,7 +22,7 @@ return {
 				onOpenAndSave = true,
 			},
 			forwardSearch = {
-				executable = nil, -- Set to your PDF viewer
+				executable = "zathura", -- Set to your PDF viewer
 				args = {},
 			},
 		},
