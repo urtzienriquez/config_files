@@ -10,7 +10,6 @@ return {
 		dependencies = {
 			"rafamadriz/friendly-snippets",
 			"R-nvim/cmp-r",
-			"archie-judd/blink-cmp-words",
 		},
 		version = "*",
 		opts = {
@@ -28,13 +27,13 @@ return {
 				default = { "lsp", "path", "snippets", "buffer" },
 				per_filetype = {
 					r = { "path", "snippets", "buffer", "R" },
-					rmd = { inherit_defaults = true, "thesaurus", "R" },
-					Rmd = { inherit_defaults = true, "thesaurus", "R" },
-					jmd = { inherit_defaults = true, "thesaurus" },
-					Jmd = { inherit_defaults = true, "thesaurus" },
-					quarto = { inherit_defaults = true, "thesaurus", "R" },
-					markdown = { inherit_defaults = true, "thesaurus" },
-					text = { inherit_defaults = true, "thesaurus" },
+					rmd = { inherit_defaults = true },
+					Rmd = { inherit_defaults = true },
+					jmd = { inherit_defaults = true },
+					Jmd = { inherit_defaults = true },
+					quarto = { inherit_defaults = true, "R" },
+					markdown = { inherit_defaults = true },
+					text = { inherit_defaults = true },
 				},
 				providers = {
 					snippets = {
@@ -47,16 +46,6 @@ return {
 						name = "cmp_r",
 						module = "blink.compat.source",
 						opts = {},
-					},
-					thesaurus = {
-						name = "thesaurus",
-						module = "blink-cmp-words.thesaurus",
-						opts = {
-							score_offset = 0,
-							definition_pointers = { "!", "&", "^" },
-							similarity_pointers = { "&", "^" },
-							similarity_depth = 2,
-						},
 					},
 				},
 			},
