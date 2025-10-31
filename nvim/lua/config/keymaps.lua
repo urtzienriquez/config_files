@@ -438,21 +438,57 @@ vim.api.nvim_create_autocmd("FileType", {
 		local opts = { buffer = true, silent = true }
 		vim.keymap.set(
 			"i",
-			"<C-i>",
+			"<C-c>",
 			citation.citation_picker,
-			vim.tbl_extend("force", opts, { desc = "Find citations (custom)" })
+			vim.tbl_extend("force", opts, { desc = "Insert citations" })
 		)
 		vim.keymap.set(
 			"n",
-			"<leader>fc",
+			"<leader>ic",
 			citation.citation_picker,
-			vim.tbl_extend("force", opts, { desc = "Find citations (custom)" })
+			vim.tbl_extend("force", opts, { desc = "Insert citations" })
 		)
 		vim.keymap.set(
 			"n",
-			"<leader>fr",
+			"<leader>ir",
 			citation.citation_replace,
-			vim.tbl_extend("force", opts, { desc = "Find replacement citation under cursor (custom)" })
+			vim.tbl_extend("force", opts, { desc = "Insert replacement citation under cursor" })
+		)
+	end,
+})
+
+-- ========================================
+-- Cross-reference Picker
+-- ========================================
+local crossref = require("core.crossref-picker")
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "rmd", "Rmd", "quarto" },
+	callback = function()
+		local opts = { buffer = true, silent = true }
+		vim.keymap.set(
+			"i",
+			"<C-f>",
+			crossref.figure_picker,
+			vim.tbl_extend("force", opts, { desc = "Insert figure crossref" })
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>if",
+			crossref.figure_picker,
+			vim.tbl_extend("force", opts, { desc = "Insert figure crossref" })
+		)
+		vim.keymap.set(
+			"i",
+			"<C-t>",
+			crossref.table_picker,
+			vim.tbl_extend("force", opts, { desc = "Insert table crossref" })
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>it",
+			crossref.table_picker,
+			vim.tbl_extend("force", opts, { desc = "Insert table crossref" })
 		)
 	end,
 })

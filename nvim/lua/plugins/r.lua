@@ -76,7 +76,6 @@ return {
 
 			vim.defer_fn(set_chunk_highlights, 100)
 
-			-- Add this to your R.nvim config function
 			vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged", "TextChangedI" }, {
 				pattern = "*.Rnw",
 				callback = function()
