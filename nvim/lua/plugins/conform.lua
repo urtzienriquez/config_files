@@ -14,7 +14,6 @@ return {
 				python = { "black" },
 				fortran = { "fprettify" },
 				r = { "styler" },
-				rnoweb = { "styler", "latexindent", "injected" },
 				julia = { "juliafmt" },
 			},
 			formatters = {

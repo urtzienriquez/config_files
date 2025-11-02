@@ -99,40 +99,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- Set rnoweb syntax for Rnw files to get LaTeX and R highlighting
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "rnoweb" },
-	callback = function()
-		vim.defer_fn(function()
-			vim.cmd("set syntax=rnoweb")
-		end, 100)
-	end,
-})
-
--- -- Attach texlab to markdown-like files with LaTeX content
--- vim.api.nvim_create_autocmd("FileType", {
--- 	pattern = { "rmd", "Rmd", "quarto", "qmd", "Qmd", "jmd", "Jmd", "markdown" },
--- 	callback = function(args)
--- 		-- Only attach if file contains LaTeX commands
--- 		local lines = vim.api.nvim_buf_get_lines(args.buf, 0, 100, false)
--- 		local has_latex = false
--- 		for _, line in ipairs(lines) do
--- 			if line:match("\\%w+") or line:match("%$%$") then
--- 				has_latex = true
--- 				break
--- 			end
--- 		end
---
--- 		if has_latex then
--- 			vim.lsp.start({
--- 				name = "texlab",
--- 				cmd = { "texlab" },
--- 				root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]),
--- 			})
--- 		end
--- 	end,
--- })
-
 -- hack for apparently remaining in insert mode after selecting a file with Telescope
 vim.api.nvim_create_autocmd("WinLeave", {
 	callback = function()
