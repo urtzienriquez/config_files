@@ -9,12 +9,13 @@ setopt prompt_subst
 # Configure vcs_info for git
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' get-unapplied true
 zstyle ':vcs_info:*' stagedstr '%F{green}●%f'
-zstyle ':vcs_info:*' unstagedstr '%F{white}●%f'
+zstyle ':vcs_info:*' unstagedstr '%F{208}●%f' # orange color
 zstyle ':vcs_info:git:*' formats ' %F{magenta} %b %f%c%u%m'
 zstyle ':vcs_info:git:*' actionformats ' %F{magenta} %b%f%F{yellow}|%a%f%c%u'
 # Enable git hooks
-zstyle ':vcs_info:git*+set-message:*' hooks git-behind
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-behind
 
 # Hook function to check if behind origin
 +vi-git-behind() {
@@ -22,6 +23,14 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-behind
     behind=$(git rev-list HEAD..@{upstream} 2>/dev/null | wc -l)
     if [[ $behind -gt 0 ]]; then
         hook_com[misc]="%F{yellow}↓%f"
+    fi
+}
+
+# Hook function to show untracked files
++vi-git-untracked() {
+    if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == 'true' ]] && \
+       git status --porcelain 2>/dev/null | grep -q '^??'; then
+        hook_com[staged]="%F{white}●%f${hook_com[staged]}"
     fi
 }
 
