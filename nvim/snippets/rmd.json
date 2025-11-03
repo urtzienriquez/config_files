@@ -1,6 +1,6 @@
 {
     "Code Chunk": {
-        "prefix": "code",
+        "prefix": "rco",
         "body": [
             "```{${1:r}}",
             "${2:# your code here}",

@@ -27,13 +27,13 @@ return {
 				default = { "lsp", "path", "snippets", "buffer" },
 				per_filetype = {
 					r = { "path", "snippets", "buffer", "R" },
-					rmd = { inherit_defaults = true },
-					Rmd = { inherit_defaults = true },
-					jmd = { inherit_defaults = true },
-					Jmd = { inherit_defaults = true },
-					quarto = { inherit_defaults = true, "R" },
-					markdown = { inherit_defaults = true },
-					text = { inherit_defaults = true },
+					-- rmd = { inherit_defaults = true },
+					-- Rmd = { inherit_defaults = true },
+					-- jmd = { inherit_defaults = true },
+					-- Jmd = { inherit_defaults = true },
+					-- quarto = { inherit_defaults = true},
+					-- markdown = { inherit_defaults = true },
+					-- text = { inherit_defaults = true },
 				},
 				providers = {
 					snippets = {

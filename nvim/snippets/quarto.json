@@ -1,0 +1,43 @@
+{
+    "python code": {
+        "prefix": [
+            "pco"
+        ],
+        "body": [
+            "```{python} ",
+            "$1",
+            "```"
+        ]
+    },
+    "julia code": {
+        "prefix": [
+            "jco"
+        ],
+        "body": [
+            "```{julia} ",
+            "$1",
+            "```"
+        ]
+    },
+    "r code": {
+        "prefix": [
+            "rco"
+        ],
+        "body": [
+            "```{r} ",
+            "$1",
+            "```"
+        ]
+    },
+    "yaml header": {
+        "prefix": "head",
+        "body": [
+            "---",
+            "title: ${1:title}",
+            "author: ${2:author}",
+            "$0",
+            "---"
+        ],
+        "description": "add yaml header"
+    }
+}
