@@ -21,6 +21,9 @@ vim.keymap.set("n", "*", "*``")
 -- Escape terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
+-- remap C-k to C-d to insert digraphs
+vim.keymap.set('i', '<C-d>', '<C-k>', { noremap = true })
+
 -- navigate quickfix
 vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
