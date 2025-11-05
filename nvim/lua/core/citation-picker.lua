@@ -1,5 +1,18 @@
 -- Citation picker with Telescope integration
-local bib_file = vim.fn.expand("~/Documents/zotero.bib")
+
+-- Path to main zotero.bib
+local zotero_bib = vim.fn.expand("~/Documents/zotero.bib")
+
+-- Find local .bib files (in current working directory)
+local local_bibs = vim.fn.globpath(vim.fn.getcwd(), "*.bib", false, true)
+
+-- Combine all bib files into one list
+local bib_file = { zotero_bib }
+for _, b in ipairs(local_bibs) do
+	if b ~= zotero_bib then
+		table.insert(bib_file, b)
+	end
+end
 
 ---------------------------------------------------------------------
 -- Parse .bib file and extract citation keys with titles
@@ -100,25 +113,25 @@ end
 ---------------------------------------------------------------------
 local function format_citation_display(entry)
 	local display = entry.key
-	
+
 	-- Add title if available
 	if entry.title and entry.title ~= "" then
 		local title = entry.title
-		if #title > 40 then  -- Reduced from 50 to make room for authors
+		if #title > 40 then -- Reduced from 50 to make room for authors
 			title = title:sub(1, 37) .. "..."
 		end
 		display = display .. " │ " .. title
 	end
-	
+
 	-- Add authors if available
 	if entry.author and entry.author ~= "" then
 		local authors = entry.author
-		if #authors > 30 then  -- Truncate long author lists
+		if #authors > 30 then -- Truncate long author lists
 			authors = authors:sub(1, 27) .. "..."
 		end
 		display = display .. " │ " .. authors
 	end
-	
+
 	return display
 end
 
@@ -285,13 +298,13 @@ local function apply_insert_at_saved_context(saved, citation_keys)
 	pcall(vim.api.nvim_set_current_buf, saved.buf)
 
 	local row, col = saved.row, saved.col
-	
+
 	-- In normal mode, move cursor position one character to the right
 	-- so text is inserted after the cursor character, not before it
 	if not saved.was_insert_mode then
 		col = col + 1
 	end
-	
+
 	local ok = false
 	if vim.api.nvim_buf_set_text then
 		ok = pcall(function()
@@ -347,7 +360,12 @@ end
 -- Telescope picker for inserting new citations with multi-select
 ---------------------------------------------------------------------
 local function citation_picker()
-	local citations = parse_bib_file(bib_file)
+	-- Support multiple bib files
+	local citations = {}
+	for _, path in ipairs(bib_file) do
+		local parsed = parse_bib_file(path)
+		vim.list_extend(citations, parsed)
+	end
 	if #citations == 0 then
 		vim.notify("No citations found in " .. bib_file, vim.log.levels.WARN)
 		return
@@ -380,7 +398,7 @@ local function citation_picker()
 		if not entry or not entry.value then
 			return original_scoring_function(self, prompt, line, entry)
 		end
-		
+
 		-- If no prompt (empty search), sort alphabetically by citation key
 		if not prompt or prompt == "" then
 			-- Create a numeric score based on alphabetical order
@@ -390,11 +408,11 @@ local function citation_picker()
 			-- Use first few characters to create ordering
 			for i = 1, math.min(#key, 8) do
 				local char_code = key:byte(i)
-				score = score + (char_code * math.pow(256, 8-i))
+				score = score + (char_code * math.pow(256, 8 - i))
 			end
 			return score
 		end
-		
+
 		-- Otherwise use our custom scoring
 		return -calculate_match_score(entry.value, prompt)
 	end
@@ -492,7 +510,7 @@ local function citation_replace()
 		if not entry or not entry.value then
 			return original_scoring_function(self, prompt, line, entry)
 		end
-		
+
 		-- If no prompt (empty search), sort alphabetically by citation key
 		if not prompt or prompt == "" then
 			-- Create a numeric score based on alphabetical order
@@ -501,11 +519,11 @@ local function citation_replace()
 			-- Use first few characters to create ordering
 			for i = 1, math.min(#key, 8) do
 				local char_code = key:byte(i)
-				score = score - (char_code * math.pow(256, 8-i))
+				score = score - (char_code * math.pow(256, 8 - i))
 			end
 			return score
 		end
-		
+
 		-- Otherwise use our custom scoring
 		return -calculate_match_score(entry.value, prompt)
 	end
