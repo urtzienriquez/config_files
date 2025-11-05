@@ -284,7 +284,8 @@ local function apply_insert_at_saved_context(saved, citation_keys)
 	end
 	local insert_text = table.concat(
 		vim.tbl_map(function(k)
-			return "@" .. k
+			-- return "@" .. k
+			return "\\cite{" .. k .. "}"
 		end, citation_keys),
 		"; "
 	)

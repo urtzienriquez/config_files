@@ -456,7 +456,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		local opts = { buffer = true, silent = true }
 		vim.keymap.set(
 			"i",
-			"<C-c>",
+			"<C-c>m",
 			citation.citation_picker,
 			vim.tbl_extend("force", opts, { desc = "Insert citations" })
 		)
