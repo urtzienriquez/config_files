@@ -278,17 +278,26 @@ local function reenter_insert_mode_at_cursor_for_buffer(win, buf, row, col, inse
 	pcall(vim.api.nvim_feedkeys, key, "n", true)
 end
 
-local function apply_insert_at_saved_context(saved, citation_keys)
+-- Modified function with format parameter
+local function apply_insert_at_saved_context(saved, citation_keys, format)
 	if not saved or not citation_keys or #citation_keys == 0 then
 		return
 	end
-	local insert_text = table.concat(
-		vim.tbl_map(function(k)
-			-- return "@" .. k
-			return "\\cite{" .. k .. "}"
-		end, citation_keys),
-		"; "
-	)
+
+	-- Default to markdown format if not specified
+	format = format or "markdown"
+
+	local insert_text
+	if format == "latex" then
+		insert_text = "\\nptextcite{" .. table.concat(citation_keys, ", ") .. "}"
+	else -- markdown format
+		insert_text = table.concat(
+			vim.tbl_map(function(k)
+				return "@" .. k
+			end, citation_keys),
+			"; "
+		)
+	end
 
 	if not vim.api.nvim_buf_is_valid(saved.buf) then
 		return
@@ -359,8 +368,9 @@ end
 
 ---------------------------------------------------------------------
 -- Telescope picker for inserting new citations with multi-select
+-- Modified to accept format parameter
 ---------------------------------------------------------------------
-local function citation_picker()
+local function citation_picker(format)
 	-- Support multiple bib files
 	local citations = {}
 	for _, path in ipairs(bib_file) do
@@ -377,6 +387,14 @@ local function citation_picker()
 	local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
 	local was_insert = vim.api.nvim_get_mode().mode:find("i") ~= nil
 	local saved = { win = cur_win, buf = cur_buf, row = cur_row, col = cur_col, was_insert_mode = was_insert }
+
+	-- Determine prompt title based on format
+	local prompt_title
+	if format == "latex" then
+		prompt_title = "Citations 󱔗 [LaTeX]"
+	else
+		prompt_title = "Citations 󱔗 [Markdown]"
+	end
 
 	local pickers = require("telescope.pickers")
 	local finders = require("telescope.finders")
@@ -430,7 +448,7 @@ local function citation_picker()
 
 	pickers
 		.new({}, {
-			prompt_title = "Citations 󱔗",
+			prompt_title = prompt_title,
 			finder = finders.new_table({
 				results = citations,
 				entry_maker = function(entry)
@@ -462,13 +480,24 @@ local function citation_picker()
 					actions.close(prompt_bufnr)
 					if #selections > 0 then
 						table.sort(selections)
-						apply_insert_at_saved_context(saved, selections)
+						apply_insert_at_saved_context(saved, selections, format)
 					end
 				end)
 				return true
 			end,
 		})
 		:find()
+end
+
+---------------------------------------------------------------------
+-- Wrapper functions for different formats
+---------------------------------------------------------------------
+local function citation_picker_markdown()
+	citation_picker("markdown")
+end
+
+local function citation_picker_latex()
+	citation_picker("latex")
 end
 
 ---------------------------------------------------------------------
@@ -578,7 +607,9 @@ end
 -- Exports
 ---------------------------------------------------------------------
 return {
-	citation_picker = citation_picker,
+	citation_picker = citation_picker_markdown, -- default to markdown
+	citation_picker_markdown = citation_picker_markdown,
+	citation_picker_latex = citation_picker_latex,
 	citation_replace = citation_replace,
 	parse_bib_file = parse_bib_file,
 }

@@ -22,7 +22,7 @@ vim.keymap.set("n", "*", "*``")
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- remap C-k to C-d to insert digraphs
-vim.keymap.set('i', '<C-d>', '<C-k>', { noremap = true })
+vim.keymap.set("i", "<C-d>", "<C-k>", { noremap = true })
 
 -- navigate quickfix
 vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
@@ -454,21 +454,35 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "markdown", "rmd", "Rmd", "quarto", "jmd", "Jmd", "tex", "pandoc" },
 	callback = function()
 		local opts = { buffer = true, silent = true }
+		-- Markdown format (@key)
 		vim.keymap.set(
 			"i",
-			"<C-c>m",
-			citation.citation_picker,
-			vim.tbl_extend("force", opts, { desc = "Insert citations" })
+			"<C-a>m",
+			citation.citation_picker_markdown,
+			vim.tbl_extend("force", opts, { desc = "Add citations (markdown)" })
+		)
+		-- LaTeX format (\cite{key})
+		vim.keymap.set(
+			"i",
+			"<C-a>l",
+			citation.citation_picker_latex,
+			vim.tbl_extend("force", opts, { desc = "Add citations (latex)" })
 		)
 		vim.keymap.set(
 			"n",
-			"<leader>ic",
-			citation.citation_picker,
-			vim.tbl_extend("force", opts, { desc = "Insert citations" })
+			"<leader>acm",
+			citation.citation_picker_markdown,
+			vim.tbl_extend("force", opts, { desc = "Add citations (markdown)" })
 		)
 		vim.keymap.set(
 			"n",
-			"<leader>ir",
+			"<leader>acl",
+			citation.citation_picker_latex,
+			vim.tbl_extend("force", opts, { desc = "Add citations (latex)" })
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>ar",
 			citation.citation_replace,
 			vim.tbl_extend("force", opts, { desc = "Insert replacement citation under cursor" })
 		)
@@ -488,25 +502,25 @@ vim.api.nvim_create_autocmd("FileType", {
 			"i",
 			"<C-f>",
 			crossref.figure_picker,
-			vim.tbl_extend("force", opts, { desc = "Insert figure crossref" })
+			vim.tbl_extend("force", opts, { desc = "Add figure crossref" })
 		)
 		vim.keymap.set(
 			"n",
-			"<leader>if",
+			"<leader>af",
 			crossref.figure_picker,
-			vim.tbl_extend("force", opts, { desc = "Insert figure crossref" })
+			vim.tbl_extend("force", opts, { desc = "Add figure crossref" })
 		)
 		vim.keymap.set(
 			"i",
 			"<C-t>",
 			crossref.table_picker,
-			vim.tbl_extend("force", opts, { desc = "Insert table crossref" })
+			vim.tbl_extend("force", opts, { desc = "Add table crossref" })
 		)
 		vim.keymap.set(
 			"n",
-			"<leader>it",
+			"<leader>at",
 			crossref.table_picker,
-			vim.tbl_extend("force", opts, { desc = "Insert table crossref" })
+			vim.tbl_extend("force", opts, { desc = "Add table crossref" })
 		)
 	end,
 })
