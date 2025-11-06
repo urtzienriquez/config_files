@@ -470,13 +470,13 @@ vim.api.nvim_create_autocmd("FileType", {
 		)
 		vim.keymap.set(
 			"n",
-			"<leader>acm",
+			"<leader>am",
 			citation.citation_picker_markdown,
 			vim.tbl_extend("force", opts, { desc = "Add citations (markdown)" })
 		)
 		vim.keymap.set(
 			"n",
-			"<leader>acl",
+			"<leader>al",
 			citation.citation_picker_latex,
 			vim.tbl_extend("force", opts, { desc = "Add citations (latex)" })
 		)
@@ -484,7 +484,7 @@ vim.api.nvim_create_autocmd("FileType", {
 			"n",
 			"<leader>ar",
 			citation.citation_replace,
-			vim.tbl_extend("force", opts, { desc = "Insert replacement citation under cursor" })
+			vim.tbl_extend("force", opts, { desc = "Add replacement citation under cursor" })
 		)
 	end,
 })
@@ -500,7 +500,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		local opts = { buffer = true, silent = true }
 		vim.keymap.set(
 			"i",
-			"<C-f>",
+			"<C-a>f",
 			crossref.figure_picker,
 			vim.tbl_extend("force", opts, { desc = "Add figure crossref" })
 		)
@@ -512,7 +512,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		)
 		vim.keymap.set(
 			"i",
-			"<C-t>",
+			"<C-a>t",
 			crossref.table_picker,
 			vim.tbl_extend("force", opts, { desc = "Add table crossref" })
 		)
@@ -557,6 +557,7 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>r", name = "R/Render" },
 				{ "<leader>s", name = "Send/Sync" },
 				{ "<leader>u", name = "UI toggle" },
+				{ "<leader>a", name = "Add citation/crossref" },
 			})
 		end
 	end,

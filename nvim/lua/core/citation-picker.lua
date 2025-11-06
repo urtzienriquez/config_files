@@ -15,97 +15,107 @@ for _, b in ipairs(local_bibs) do
 end
 
 ---------------------------------------------------------------------
--- Parse .bib file and extract citation keys with titles
+-- Parse one or more .bib files and extract citation keys with titles
 ---------------------------------------------------------------------
-local function parse_bib_file(file_path)
-	local citations = {}
-	local file = io.open(file_path, "r")
-	if not file then
-		return citations
+local function parse_bib_file(file_paths)
+	-- Allow either a string or a table
+	if type(file_paths) == "string" then
+		file_paths = { file_paths }
 	end
 
-	local current_entry = {}
-	local in_entry = false
-	local current_field = nil
+	local all_citations = {}
 
-	for line in file:lines() do
-		-- Detect new entry
-		local entry_type, key = line:match("^%s*@(%w+)%s*{%s*([^,%s]+)")
-		if entry_type and key then
-			-- save previous entry
+	for _, file_path in ipairs(file_paths) do
+		local file = io.open(file_path, "r")
+		if not file then
+			vim.notify("Could not open bib file: " .. file_path, vim.log.levels.WARN)
+		else
+			local citations = {}
+			local current_entry = {}
+			local in_entry = false
+			local current_field = nil
+
+			for line in file:lines() do
+				-- Detect new entry
+				local entry_type, key = line:match("^%s*@(%w+)%s*{%s*([^,%s]+)")
+				if entry_type and key then
+					if current_entry.key then
+						table.insert(citations, current_entry)
+					end
+					current_entry = {
+						key = key,
+						type = entry_type,
+						title = "",
+						shorttitle = "",
+						author = "",
+						year = "",
+						journaltitle = "",
+						abstract = "",
+					}
+					in_entry = true
+					current_field = nil
+				elseif in_entry then
+					-- Field assignment
+					local field, value = line:match('%s*(%w+)%s*=%s*[{"](.-)[}",]*$')
+					if field and value then
+						field = field:lower()
+						value = value:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
+						if field == "title" then
+							current_entry.title = value
+							current_field = "title"
+						elseif field == "shorttitle" then
+							current_entry.shorttitle = value
+							current_field = "shorttitle"
+						elseif field == "author" then
+							current_entry.author = value:gsub("%s+and%s+", "; ")
+							current_field = "author"
+						elseif field == "year" then
+							current_entry.year = value
+							current_field = "year"
+						elseif field == "date" and current_entry.year == "" then
+							current_entry.year = value
+							current_field = "date"
+						elseif field == "journaltitle" then
+							current_entry.journaltitle = value
+							current_field = "journaltitle"
+						elseif field == "abstract" then
+							current_entry.abstract = value
+							current_field = "abstract"
+						else
+							current_field = nil
+						end
+					else
+						-- Handle multiline continuation
+						if current_field and line:match("^[^%s]+") == nil then
+							local continued = line:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
+							if current_field == "author" then
+								continued = continued:gsub("%s+and%s+", "; ")
+							end
+							current_entry[current_field] = current_entry[current_field] .. " " .. continued
+						end
+					end
+
+					-- End of entry
+					if line:match("^%s*}%s*$") then
+						in_entry = false
+						current_field = nil
+					end
+				end
+			end
+
+			-- Save last entry
 			if current_entry.key then
 				table.insert(citations, current_entry)
 			end
-			current_entry = {
-				key = key,
-				type = entry_type,
-				title = "",
-				shorttitle = "",
-				author = "",
-				year = "",
-				journaltitle = "",
-				abstract = "",
-			}
-			in_entry = true
-			current_field = nil
-		elseif in_entry then
-			-- Check if line is a field assignment
-			local field, value = line:match('%s*(%w+)%s*=%s*[{"](.-)[}",]*$')
-			if field and value then
-				field = field:lower()
-				value = value:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
-				if field == "title" then
-					current_entry.title = value
-					current_field = "title"
-				elseif field == "shorttitle" then
-					current_entry.shorttitle = value
-					current_field = "shorttitle"
-				elseif field == "author" then
-					-- Replace " and " with "; " for better display
-					current_entry.author = value:gsub("%s+and%s+", "; ")
-					current_field = "author"
-				elseif field == "year" then
-					current_entry.year = value
-					current_field = "year"
-				elseif field == "date" and current_entry.year == "" then
-					current_entry.year = value
-					current_field = "date"
-				elseif field == "journaltitle" then
-					current_entry.journaltitle = value
-					current_field = "journaltitle"
-				elseif field == "abstract" then
-					current_entry.abstract = value
-					current_field = "abstract"
-				else
-					current_field = nil
-				end
-			else
-				-- Handle multiline field continuation
-				if current_field and line:match("^[^%s]+") == nil then
-					local continued = line:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
-					if current_field == "author" then
-						-- For author field, also handle "and" replacement in continuation lines
-						continued = continued:gsub("%s+and%s+", "; ")
-					end
-					current_entry[current_field] = current_entry[current_field] .. " " .. continued
-				end
-			end
 
-			-- Detect end of entry
-			if line:match("^%s*}%s*$") then
-				in_entry = false
-				current_field = nil
-			end
+			file:close()
+
+			-- Merge citations from this file
+			vim.list_extend(all_citations, citations)
 		end
 	end
 
-	-- save last entry
-	if current_entry.key then
-		table.insert(citations, current_entry)
-	end
-
-	file:close()
-	return citations
+	return all_citations
 end
 
 ---------------------------------------------------------------------
@@ -243,17 +253,93 @@ end
 ---------------------------------------------------------------------
 -- Helpers for inserting/replacing citations
 ---------------------------------------------------------------------
+
+-- Detect citation under cursor (Markdown @key or LaTeX \cite{key,...})
 local function get_citation_under_cursor()
 	local line = vim.api.nvim_get_current_line()
-	local col = vim.api.nvim_win_get_cursor(0)[2]
+	local col = vim.api.nvim_win_get_cursor(0)[2] -- 0-based
+
+	-- --- Markdown-style: @key ---
 	local pos = 1
-	for citation in line:gmatch("@([%w_%-:%.]+)") do
-		local start_pos, end_pos = line:find("@" .. citation, pos, true)
-		if start_pos and col >= start_pos - 1 and col <= end_pos then
-			return { key = citation, start_col = start_pos - 1, end_col = end_pos, full_match = "@" .. citation }
+	while true do
+		local s, e = line:find("@[%w_%-:%.]+", pos)
+		if not s then
+			break
 		end
-		pos = end_pos and end_pos + 1 or pos + 1
+		local key = line:sub(s + 1, e) -- without the @
+		local start0 = s - 1 -- convert to 0-based
+		local end0 = e - 1 -- convert to 0-based
+		if col >= start0 and col <= end0 then
+			return {
+				key = key,
+				start_col = start0,
+				end_col = end0,
+				full_match = "@" .. key,
+				style = "markdown",
+			}
+		end
+		pos = e + 1
 	end
+
+	-- --- LaTeX-style: \cmd{...} (may contain multiple comma-separated keys) ---
+	local search_pos = 1
+	while true do
+		-- find next \cmd{...} block (simple pattern matching)
+		local s, e = line:find("\\%a+%s*{%s*[^{}]-%s*}", search_pos)
+		if not s then
+			break
+		end
+		local capture = line:sub(s, e)
+		local cmd, inside = capture:match("\\(%a+)%s*{%s*([^{}]-)%s*}")
+		if cmd and inside then
+			-- find positions of the braces
+			local brace_open = line:find("{", s, true)
+			local brace_close = line:find("}", brace_open, true)
+			if brace_open and brace_close then
+				-- iterate keys inside the braces and locate their absolute positions
+				local inner_search_pos = 1
+				while true do
+					local ks, ke = inside:find("[^,%s]+", inner_search_pos)
+					if not ks then
+						break
+					end
+					-- absolute 1-based positions on the line for this key:
+					local abs_start_1 = brace_open + ks -- brace_open is pos of '{', inside starts at brace_open+1
+					local abs_end_1 = brace_open + ke
+					local abs_start0 = abs_start_1 - 1
+					local abs_end0 = abs_end_1 - 1
+					local key = inside:sub(ks, ke)
+
+					if col >= abs_start0 and col <= abs_end0 then
+						-- Found the key under cursor
+						return {
+							key = key,
+							start_col = abs_start0,
+							end_col = abs_end0,
+							full_match = key,
+							cmd = cmd,
+							style = "latex",
+							all_keys = (function()
+								local t = {}
+								for k in inside:gmatch("[^,%s]+") do
+									table.insert(t, k)
+								end
+								return t
+							end)(),
+							cmd_start = s - 1,
+							cmd_end = e - 1,
+							brace_open = brace_open - 1,
+							brace_close = brace_close - 1,
+						}
+					end
+
+					inner_search_pos = ke + 1
+				end
+			end
+		end
+		search_pos = e + 1
+	end
+
 	return nil
 end
 
@@ -332,38 +418,55 @@ local function apply_insert_at_saved_context(saved, citation_keys, format)
 	vim.notify("Inserted citation" .. (#citation_keys > 1 and "s" or "") .. ": " .. insert_text, vim.log.levels.INFO)
 end
 
+-- Replace citation under cursor (Markdown or LaTeX)
 local function replace_citation_at_cursor(saved, new_citation_key, citation_info)
-	if not saved or not new_citation_key or not citation_info then
-		return
-	end
-	local new_text = "@" .. new_citation_key
-	if not vim.api.nvim_buf_is_valid(saved.buf) then
-		return
-	end
-	if saved.win and vim.api.nvim_win_is_valid(saved.win) then
-		pcall(vim.api.nvim_set_current_win, saved.win)
-	end
-	pcall(vim.api.nvim_set_current_buf, saved.buf)
-	local row = saved.row
-	local ok = pcall(function()
-		vim.api.nvim_buf_set_text(
-			saved.buf,
-			row - 1,
-			citation_info.start_col,
-			row - 1,
-			citation_info.end_col,
-			{ new_text }
-		)
-	end)
-	if ok then
-		set_cursor_after_inserted_text(saved.buf, saved.win, row, citation_info.start_col, new_text)
-		if saved.was_insert_mode then
-			reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, citation_info.start_col, #new_text)
-		end
-		vim.notify("Replaced citation: " .. citation_info.key .. " → " .. new_citation_key, vim.log.levels.INFO)
-	else
-		vim.notify("Failed to replace citation", vim.log.levels.ERROR)
-	end
+  if not saved or not new_citation_key or not citation_info then
+    return
+  end
+
+  -- replacement string depends on style:
+  -- - LaTeX: replace only the key inside the braces (keep commas/spaces)
+  -- - Markdown: replace whole "@key" with "@newkey"
+  local replacement
+  if citation_info.style == "latex" then
+    replacement = new_citation_key
+  else
+    replacement = "@" .. new_citation_key
+  end
+
+  if not vim.api.nvim_buf_is_valid(saved.buf) then
+    return
+  end
+  if saved.win and vim.api.nvim_win_is_valid(saved.win) then
+    pcall(vim.api.nvim_set_current_win, saved.win)
+  end
+  pcall(vim.api.nvim_set_current_buf, saved.buf)
+
+  local row = saved.row
+  -- nvim_buf_set_text uses end column as *exclusive*, so add 1 to the inclusive end_col
+  local end_col_exclusive = citation_info.end_col + 1
+
+  local ok = pcall(function()
+    vim.api.nvim_buf_set_text(
+      saved.buf,
+      row - 1,
+      citation_info.start_col,
+      row - 1,
+      end_col_exclusive,
+      { replacement }
+    )
+  end)
+
+  if ok then
+    -- Move cursor after inserted text. set_cursor_after_inserted_text expects inserted_text (string).
+    set_cursor_after_inserted_text(saved.buf, saved.win, row, citation_info.start_col, replacement)
+    if saved.was_insert_mode then
+      reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, citation_info.start_col, #replacement)
+    end
+    vim.notify("Replaced citation: " .. citation_info.key .. " → " .. new_citation_key, vim.log.levels.INFO)
+  else
+    vim.notify("Failed to replace citation", vim.log.levels.ERROR)
+  end
 end
 
 ---------------------------------------------------------------------
@@ -545,11 +648,11 @@ local function citation_replace()
 		if not prompt or prompt == "" then
 			-- Create a numeric score based on alphabetical order
 			local key = entry.value.key:lower()
-			local score = 10000
+			local score = 0
 			-- Use first few characters to create ordering
 			for i = 1, math.min(#key, 8) do
 				local char_code = key:byte(i)
-				score = score - (char_code * math.pow(256, 8 - i))
+				score = score + (char_code * math.pow(256, 8 - i))
 			end
 			return score
 		end
@@ -587,7 +690,7 @@ local function citation_replace()
 			}),
 			sorter = custom_sorter,
 			previewer = previewer,
-			attach_mappings = function(prompt_bufnr, map)
+			attach_mappings = function(prompt_bufnr)
 				actions.select_default:replace(function()
 					actions.close(prompt_bufnr)
 					local selection = action_state.get_selected_entry()

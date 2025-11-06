@@ -5,12 +5,12 @@ return {
 		require("nvim-surround").setup({
 			move_cursor = false,
 			surrounds = {
-				["m"] = {
+				["c"] = {
 					add = { "*", "*" },
 					find = "%*.-%*",
 					delete = "^(%*)(.-)(%*)$",
 				},
-				["M"] = {
+				["n"] = {
 					add = { "**", "**" },
 					find = "%*%*.-%*%*",
 					delete = "^(%*%*)(.-)(%*%*)$",
