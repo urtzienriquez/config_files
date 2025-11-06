@@ -289,7 +289,7 @@ local function apply_insert_at_saved_context(saved, citation_keys, format)
 
 	local insert_text
 	if format == "latex" then
-		insert_text = "\\nptextcite{" .. table.concat(citation_keys, ", ") .. "}"
+		insert_text = "\\cite{" .. table.concat(citation_keys, ", ") .. "}"
 	else -- markdown format
 		insert_text = table.concat(
 			vim.tbl_map(function(k)
