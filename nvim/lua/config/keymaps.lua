@@ -294,7 +294,6 @@ local function set_rnvim_keymaps(bufnr)
 	vim.keymap.set("n", "<leader>or", "<Plug>RStart", opts_keymap)
 	vim.keymap.set("n", "<leader>sb", "<Plug>RSendFile", opts_keymap)
 	vim.keymap.set("n", "<leader>qr", "<Plug>RClose", opts_keymap)
-	vim.keymap.set("n", "<leader>rr", "<Plug>RMakeAll", opts_keymap)
 	vim.keymap.set("n", "<leader>cn", "<Plug>RNextRChunk", opts_keymap)
 	vim.keymap.set("n", "<leader>cN", "<Plug>RPreviousRChunk", opts_keymap)
 	-- Keymap: Render current Rmd book in R via Nvim-R
@@ -310,9 +309,23 @@ local function set_rnvim_keymaps(bufnr)
 		vim.cmd("RSend " .. rcmd)
 	end, { noremap = true, silent = true, desc = "Render and open Bookdown (Linux)" })
 
+	vim.keymap.set("n", "<leader>rr", function()
+		vim.ui.input({ prompt = "Output filename (without .pdf): " }, function(filename)
+			if filename == nil then
+				return -- user canceled
+			end
+			local file = vim.fn.expand("%")
+			if filename ~= "" then
+				vim.cmd('RSend rmarkdown::render("' .. file .. '", output_file = "' .. filename .. '.pdf")')
+			else
+				vim.cmd('RSend rmarkdown::render("' .. file .. '")')
+			end
+		end)
+	end, { desc = "Render R Markdown with custom output name" })
+
 	-- add inline r code in insert and normal modes
-	vim.keymap.set("i", "<C-r>", "`r<Space>`<Esc>i", opts_keymap)
-	vim.keymap.set("n", "<C-r>", "i`r<Space>`<Esc>i", opts_keymap)
+	vim.keymap.set("i", "<C-i>", "`r<Space>`<Esc>i", opts_keymap)
+	vim.keymap.set("n", "<C-i>", "i`r<Space>`<Esc>i", opts_keymap)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
