@@ -296,19 +296,26 @@ local function set_rnvim_keymaps(bufnr)
 	vim.keymap.set("n", "<leader>qr", "<Plug>RClose", opts_keymap)
 	vim.keymap.set("n", "<leader>cn", "<Plug>RNextRChunk", opts_keymap)
 	vim.keymap.set("n", "<leader>cN", "<Plug>RPreviousRChunk", opts_keymap)
-	-- Keymap: Render current Rmd book in R via Nvim-R
+
+	-- Render bookdown book
 	vim.keymap.set("n", "<leader>rb", function()
 		local file = vim.fn.expand("%:t")
 		file = file:gsub('"', '\\"') -- escape any double quotes in filename
 		local rcmd = string.format(
-			'out <- tryCatch(bookdown::render_book("%s"), error=function(e){ message("BOOKDOWN RENDER ERROR: ", e$message); NULL });'
+			'out <- tryCatch(bookdown::render_book("%s"), error=function(e){'
+				.. 'message("BOOKDOWN RENDER ERROR: ", e$message); NULL });'
 				.. "if(!is.null(out)){ if(is.list(out)) out <- unlist(out)[1];"
-				.. 'if(length(out) >= 1 && file.exists(out[1])){ out <- normalizePath(out[1]); system2("xdg-open", out); message("Opened: ", out) } else message("Render completed but output file not found: ", paste(out, collapse=", ")) }',
+				.. "if(length(out) >= 1 && file.exists(out[1])){ out <- "
+				.. 'normalizePath(out[1]); system2("xdg-open", out);'
+				.. 'message("Opened: ", out) } else message("Render completed'
+				.. 'but output file not found: ", paste(out, collapse=", ")) }',
 			file
 		)
 		vim.cmd("RSend " .. rcmd)
-	end, { noremap = true, silent = true, desc = "Render and open Bookdown (Linux)" })
+	end, { noremap = true, silent = true, desc = "Render and open Bookdown" })
 
+	-- Render markdown with output name
+	-- none entered: filename, else: provided name
 	vim.keymap.set("n", "<leader>rr", function()
 		vim.ui.input({ prompt = "Output filename (without .pdf): " }, function(filename)
 			if filename == nil then
@@ -321,7 +328,7 @@ local function set_rnvim_keymaps(bufnr)
 				vim.cmd('RSend rmarkdown::render("' .. file .. '")')
 			end
 		end)
-	end, { desc = "Render R Markdown with custom output name" })
+	end, { desc = "Render R Markdown with output name" })
 
 	-- add inline r code in insert and normal modes
 	vim.keymap.set("i", "<C-i>", "`r<Space>`<Esc>i", opts_keymap)
