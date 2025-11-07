@@ -298,17 +298,18 @@ local function set_rnvim_keymaps(bufnr)
 	vim.keymap.set("n", "<leader>rb", function()
 		local file = vim.fn.expand("%:t")
 		file = file:gsub('"', '\\"') -- escape any double quotes in filename
-
 		local rcmd = string.format(
 			'out <- tryCatch(bookdown::render_book("%s"), error=function(e){ message("BOOKDOWN RENDER ERROR: ", e$message); NULL });'
 				.. "if(!is.null(out)){ if(is.list(out)) out <- unlist(out)[1];"
 				.. 'if(length(out) >= 1 && file.exists(out[1])){ out <- normalizePath(out[1]); system2("xdg-open", out); message("Opened: ", out) } else message("Render completed but output file not found: ", paste(out, collapse=", ")) }',
 			file
 		)
-
-		-- send a single-line command to R via R-nvim
 		vim.cmd("RSend " .. rcmd)
 	end, { noremap = true, silent = true, desc = "Render and open Bookdown (Linux)" })
+
+	-- add inline r code in insert and normal modes
+	vim.keymap.set("i", "<C-r>", "`r<Space>`<Esc>i", opts_keymap)
+	vim.keymap.set("n", "<C-r>", "i`r<Space>`<Esc>i", opts_keymap)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
