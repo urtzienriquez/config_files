@@ -28,14 +28,29 @@ is_webcam_active() {
     fi
 }
 
-# Function to check if R is running
-is_r_running() {
-    if pgrep -x "R" >/dev/null 2>&1 || pgrep -x "Rscript" >/dev/null 2>&1 || pgrep -x "rsession" >/dev/null 2>&1; then
-        echo "yes"
-    else
-        echo "no"
-    fi
-}
+# # Function to check if R is running (actual R console, not LSP/nvim processes)
+# is_r_running() {
+#     # Get all R-related processes for current user with full command line
+#     local r_cmds
+#     r_cmds=$(ps -u "$(whoami)" | rg R)
+#
+#     if [ -z "$r_cmds" ]; then
+#         echo "no"
+#         return
+#     fi
+#
+#     # Filter out LSP servers and automation
+#     # Exclude processes with --slave flag (used by R.nvim LSP server)
+#     # Exclude processes running languageserver::run
+#     local interactive
+#     interactive=$(echo "$r_cmds" | grep -v -E '(--slave|languageserver::run)')
+#
+#     if [ -n "$r_cmds" ]; then
+#         echo "yes"
+#     else
+#         echo "no"
+#     fi
+# }
 
 # Function to get the correct display and user info
 setup_display_env() {
@@ -123,15 +138,16 @@ main() {
     # Run the checks
     audio_active=$(is_audio_playing)
     webcam_active=$(is_webcam_active)
-    r_active=$(is_r_running)
+    # r_active=$(is_r_running)
     
     echo "Audio active: $audio_active"
     echo "Webcam active: $webcam_active"
-    echo "R active: $r_active"
+    # echo "R active: $r_active"
     
     # Suspend prevention logic
-    if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ] || [ "$r_active" = "yes" ]; then
-        echo "Audio, webcam, or R active, not locking/suspending"
+    # if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ] || [ "$r_active" = "yes" ]; then
+    if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
+        echo "not locking/suspending"
         exit 0
     fi
     
