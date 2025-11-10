@@ -5,6 +5,7 @@ vim.g.maplocalleader = " "
 -- spelling language
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
+vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
 
 -- Disable mouse
 vim.opt.mouse = ""
