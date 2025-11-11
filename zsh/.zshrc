@@ -35,7 +35,14 @@ bindkey "^H" backward-delete-char
 bindkey "^?" backward-delete-char
 bindkey -M viins "^I" expand-or-complete
 autoload edit-command-line; zle -N edit-command-line
-bindkey -M vicmd e edit-command-line
+autoload -Uz edit-command-line
+edit-command-line-at-end() {
+  zle edit-command-line
+  zle end-of-line
+}
+zle -N edit-command-line-at-end
+bindkey -M vicmd '^E' edit-command-line-at-end
+bindkey -M viins '^E' edit-command-line-at-end
 
 # -------------------------------
 # Editor
