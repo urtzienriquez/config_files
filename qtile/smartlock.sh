@@ -32,26 +32,21 @@ main() {
     audio_active=$(is_audio_playing)
     webcam_active=$(is_webcam_active)
 
-    echo "Audio active: $audio_active"
-    echo "Webcam active: $webcam_active"
+    echo "Audio active: $audio_active, Webcam active: $webcam_active"
 
     # Prevent suspend/lock if media is active
     if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
         echo "Skipping suspend: audio or webcam in use"
-        # Prevent screen from blanking (avoids frozen image)
-        xset s off
-        xset -dpms
+        # Reset the screensaver to deactivate it, so xss-lock will trigger again
+        xset s reset
+        xset s activate  # Force reactivation to reset xss-lock's state
+        xset s reset     # Then reset again to start the timer fresh
         exit 0
     fi
 
-    # Restore screen saver/DPMS so xss-lock continues working
-    xset s on
-    xset +dpms
-
-    # Suspend (betterlockscreen daemon will handle lock on wake)
+    # Media is not active, proceed with suspend
     echo "Suspending system..."
     systemctl suspend
 }
 
 main "$@"
-
