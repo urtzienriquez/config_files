@@ -32,7 +32,7 @@ vim.g.latex_to_unicode_auto = 1
 
 -- code folding
 vim.opt.foldcolumn = "0"
-vim.opt.foldlevel = 99 
+vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 
