@@ -218,13 +218,25 @@ keys = [
     Key(
         [],
         "XF86MonBrightnessUp",
-        lazy.spawn("brightnessctl -c backlight set 2%+"),
+        lazy.spawn("brightnessctl -c backlight set 5%+"),
         desc="Increase brightness",
     ),
     Key(
         [],
         "XF86MonBrightnessDown",
-        lazy.spawn("brightnessctl -c backlight set 2%-"),
+        lazy.spawn("brightnessctl -c backlight set 5%-"),
+        desc="Decrease brightness",
+    ),
+    Key(
+        [mod, alt],
+        "i",
+        lazy.spawn("brightnessctl -c backlight set 5%+"),
+        desc="Increase brightness",
+    ),
+    Key(
+        [mod, alt],
+        "u",
+        lazy.spawn("brightnessctl -c backlight set 5%-"),
         desc="Decrease brightness",
     ),
     # # mouseless pointer
