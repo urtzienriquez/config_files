@@ -35,6 +35,15 @@ vim.opt.foldcolumn = "0"
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
+function _G.custom_foldtext()
+    local start_line = vim.fn.getline(vim.v.foldstart)
+    local end_line = vim.fn.getline(vim.v.foldend)
+    local line_count = vim.v.foldend - vim.v.foldstart + 1
+    start_line = start_line:gsub("%s*$", "")
+    end_line = end_line:gsub("^%s*(.-)%s*$", "%1")  -- Still trim end_line fully
+    return string.format("%s ⋯ %s  %d lines", start_line, end_line, line_count)
+end
+vim.opt.foldtext = 'v:lua.custom_foldtext()'
 
 -- Show diagnostics as virtual text
 vim.diagnostic.config({
