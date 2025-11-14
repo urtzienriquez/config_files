@@ -56,9 +56,9 @@ return {
 					-- Safely attempt to start treesitter; if parser missing, no error
 					pcall(vim.treesitter.start, args.buf)
 
-                    -- folding based on treesitter
-                    vim.wo.foldmethod = 'expr'
-                    vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+					-- folding based on treesitter
+					vim.wo.foldmethod = "expr"
+					vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 				end,
 			})
 
@@ -82,6 +82,14 @@ return {
 				select = {
 					enable = true,
 					lookahead = true,
+					keymaps = {
+						["af"] = "@function.outer",
+						["if"] = "@function.inner",
+						["ac"] = "@class.outer",
+						["ic"] = "@class.inner",
+						["ab"] = "@block.outer",
+						["ib"] = "@block.inner",
+					},
 					-- Disable for Fortran77 files using a function
 					disable = function(lang, buf)
 						if lang == "fortran" then

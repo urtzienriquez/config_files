@@ -229,49 +229,86 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", { desc = "Navigate previous (tmux)" })
 
 		-- ========================================
-		-- Snacks (misc) keymaps
+		-- Notifications
 		-- ========================================
-		if _G.Snacks then
-			-- Zen mode
-			vim.keymap.set("n", "<leader>Z", function()
-				Snacks.zen()
-			end, { desc = "Toggle Zen Mode" })
-			vim.keymap.set("n", "<leader>z", function()
-				Snacks.zen.zoom()
-			end, { desc = "Toggle Zoom" })
+		vim.keymap.set("n", "<leader>n", function()
+			require("telescope").extensions.notify.notify()
+		end, { desc = "Notification History" })
+		vim.keymap.set("n", "<leader>un", function()
+			require("notify").dismiss({ silent = true, pending = true })
+		end, { desc = "Dismiss All Notifications" })
 
-			-- Notifications
-			vim.keymap.set("n", "<leader>n", function()
-				Snacks.notifier.show_history()
-			end, { desc = "Notification History" })
-			vim.keymap.set("n", "<leader>un", function()
-				Snacks.notifier.hide()
-			end, { desc = "Dismiss All Notifications" })
+		-- ========================================
+		-- Buffer management
+		-- ========================================
+		vim.keymap.set("n", "<leader>bd", function()
+			vim.cmd("bd")
+		end, { desc = "Delete Buffer" })
 
-			-- Buffer management
-			vim.keymap.set("n", "<leader>bd", function()
-				Snacks.bufdelete()
-			end, { desc = "Delete Buffer" })
-
-			-- Git
-			vim.keymap.set({ "n", "v" }, "<leader>gB", function()
-				Snacks.gitbrowse()
-			end, { desc = "Git Browse" })
-			vim.keymap.set("n", "<leader>ll", function()
-				Snacks.lazygit.log()
-			end, { desc = "Lazygit log" })
-			vim.keymap.set("n", "<leader>lg", function()
-				Snacks.lazygit()
-			end, { desc = "Lazygit" })
-
-			-- Word jumping
-			vim.keymap.set({ "n", "t" }, "]]", function()
-				Snacks.words.jump(vim.v.count1)
-			end, { desc = "Next Reference" })
-			vim.keymap.set({ "n", "t" }, "[[", function()
-				Snacks.words.jump(-vim.v.count1)
-			end, { desc = "Prev Reference" })
+		-- ========================================
+		-- Toggles
+		-- ========================================
+		local function toggle_option(option, on_val, off_val)
+			return function()
+				if vim.o[option] == off_val then
+					vim.o[option] = on_val
+					vim.notify(option .. " enabled", vim.log.levels.INFO)
+				else
+					vim.o[option] = off_val
+					vim.notify(option .. " disabled", vim.log.levels.INFO)
+				end
+			end
 		end
+
+		vim.keymap.set("n", "<leader>us", toggle_option("spell", true, false), { desc = "Toggle Spelling" })
+		vim.keymap.set("n", "<leader>uw", toggle_option("wrap", true, false), { desc = "Toggle Wrap" })
+		vim.keymap.set(
+			"n",
+			"<leader>ul",
+			toggle_option("relativenumber", true, false),
+			{ desc = "Toggle Line Numbers" }
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>uL",
+			toggle_option("relativenumber", true, false),
+			{ desc = "Toggle Relative Number" }
+		)
+		vim.keymap.set("n", "<leader>ub", toggle_option("background", "dark", "light"), { desc = "Toggle Background" })
+
+		vim.keymap.set("n", "<leader>uc", function()
+			if vim.o.conceallevel > 0 then
+				vim.o.conceallevel = 0
+				vim.notify("Conceal disabled", vim.log.levels.INFO)
+			else
+				vim.o.conceallevel = 2
+				vim.notify("Conceal enabled", vim.log.levels.INFO)
+			end
+		end, { desc = "Toggle Conceal" })
+
+		vim.keymap.set("n", "<leader>ud", function()
+			vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+			vim.notify("Diagnostics " .. (vim.diagnostic.is_enabled() and "enabled" or "disabled"), vim.log.levels.INFO)
+		end, { desc = "Toggle Diagnostics" })
+
+		vim.keymap.set("n", "<leader>uh", function()
+			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+			vim.notify(
+				"Inlay hints " .. (vim.lsp.inlay_hint.is_enabled() and "enabled" or "disabled"),
+				vim.log.levels.INFO
+			)
+		end, { desc = "Toggle Inlay Hints" })
+
+		vim.keymap.set("n", "<leader>uT", function()
+			local buf = vim.api.nvim_get_current_buf()
+			if vim.treesitter.highlighter.active[buf] then
+				vim.treesitter.stop(buf)
+				vim.notify("Treesitter disabled", vim.log.levels.INFO)
+			else
+				vim.treesitter.start(buf)
+				vim.notify("Treesitter enabled", vim.log.levels.INFO)
+			end
+		end, { desc = "Toggle Treesitter" })
 	end,
 })
 
@@ -317,19 +354,18 @@ local function set_rnvim_keymaps(bufnr)
 
 	-- Render markdown with output name
 	-- none entered: filename, else: provided name
+
 	vim.keymap.set("n", "<leader>rr", function()
-		vim.ui.input({ prompt = "Output filename (without .pdf): " }, function(filename)
-			if filename == nil then
-				return -- user canceled
-			end
-			local file = vim.fn.expand("%")
-			if filename ~= "" then
-				vim.cmd('RSend rmarkdown::render("' .. file .. '", output_file = "' .. filename .. '.pdf"' .. ', envir = new.env())')
-			else
-				vim.cmd('RSend rmarkdown::render("' .. file .. '", envir = new.env())')
-			end
-		end)
-	end, { desc = "Render R Markdown with output name" })
+		local noice = require("noice")
+		noice.disable()
+		local filename = vim.fn.input("Output filename (without extension): ")
+		noice.enable()
+		if filename ~= "" then
+			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", output_file = "' .. filename .. '")')
+		else
+			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '")')
+		end
+	end, { desc = "Render R Markdown with custom output name" })
 
 	-- add inline r code in insert and normal modes
 	vim.keymap.set("i", "<C-i>", "`r<Space>`<Esc>i", opts_keymap)
