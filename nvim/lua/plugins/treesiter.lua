@@ -56,9 +56,9 @@ return {
 					-- Safely attempt to start treesitter; if parser missing, no error
 					pcall(vim.treesitter.start, args.buf)
 
-                    -- folding based on treesitter
-                    vim.wo.foldmethod = 'expr'
-                    vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+					-- folding based on treesitter
+					vim.wo.foldmethod = "expr"
+					vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 				end,
 			})
 

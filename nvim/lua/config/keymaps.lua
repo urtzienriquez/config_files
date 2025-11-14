@@ -218,9 +218,6 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set({ "x", "o" }, "ic", function()
 			require("nvim-treesitter-textobjects.select").select_textobject("@conditional.inner", "textobjects")
 		end, { desc = "inside the condition" })
-		vim.keymap.set({ "x", "o" }, "ai", function()
-			require("nvim-treesitter-textobjects.select").select_textobject("@scope.inner", "textobjects")
-		end, { desc = "inside scope" })
 
 		-- ========================================
 		-- Tmux Navigator keymaps
@@ -404,7 +401,7 @@ local function set_slime_keymaps(bufnr)
 	-- Send code
 	vim.keymap.set("n", "<Return>", function()
 		if slime_utils.has_active_repl() then
-			local keys = "vai" .. vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true) .. "'>j"
+			local keys = "vap" .. vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true) .. "'>j"
 			vim.api.nvim_feedkeys(keys, "x", false)
 		else
 			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
