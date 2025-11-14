@@ -1,5 +1,5 @@
 --------------------------------------------------------------
--- TOKYONIGHT ASYNC GIT STATUSLINE + FILETYPE (NO PLUGINS)
+-- ASYNC GIT STATUSLINE + FILETYPE
 --------------------------------------------------------------
 
 local colors = {
@@ -95,16 +95,11 @@ function _G.st_filetype() return vim.bo.filetype ~= "" and vim.bo.filetype or ""
 vim.o.laststatus = 3
 vim.o.statusline = table.concat({
   " %f %m ",
-  -- Branch
   "%#SLGitBranch#%{v:lua.st_branch()}%*  ",
-  -- Added
   "%#SLGitAdd#%{v:lua.st_added()}%* ",
-  -- Changed
   "%#SLGitChange#%{v:lua.st_changed()}%* ",
-  -- Removed
   "%#SLGitDelete#%{v:lua.st_removed()}%*  ",
   "%=",
-  -- Filetype
   "%#SLFileType#%{v:lua.st_filetype()}%*  ",
   " %l:%c ",
 })
