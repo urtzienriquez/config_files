@@ -218,6 +218,9 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set({ "x", "o" }, "ic", function()
 			require("nvim-treesitter-textobjects.select").select_textobject("@conditional.inner", "textobjects")
 		end, { desc = "inside the condition" })
+		vim.keymap.set({ "x", "o" }, "ai", function()
+			require("nvim-treesitter-textobjects.select").select_textobject("@scope.inner", "textobjects")
+		end, { desc = "inside scope" })
 
 		-- ========================================
 		-- Tmux Navigator keymaps

@@ -1,4 +1,3 @@
--- nvim/lua/plugins/notify.lua (replaces snacks.notifier)
 return {
     "rcarriga/nvim-notify",
     config = function()
@@ -8,6 +7,7 @@ return {
             timeout = 3000,
             stages = "static",
             render = "wrapped-compact",
+            max_width = 40
 		})
 		vim.notify = notify
 	end,

@@ -8,7 +8,7 @@ return {
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 				disabled_filetypes = {
-					"snacks_dashboard",
+					"",
 					"TelescopePrompt",
 					"TelescopeResults",
 					"oil",
