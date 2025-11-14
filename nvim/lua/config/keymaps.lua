@@ -130,6 +130,15 @@ end, {})
 
 vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 
+-- toggle file explorer
+vim.keymap.set('n', '<leader>t', function()
+  if vim.bo.filetype == 'netrw' then
+    vim.cmd('bd')  -- Close netrw buffer
+  else
+    vim.cmd('Ex')  -- Open file explorer
+  end
+end, { desc = 'Toggle file explorer' })
+
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
 -- ========================================
@@ -138,20 +147,6 @@ vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 vim.api.nvim_create_autocmd("User", {
 	pattern = "VeryLazy",
 	callback = function()
-		-- ========================================
-		-- Oil file explorer keymaps
-		-- ========================================
-		local oil_ok, oil = pcall(require, "oil")
-		if oil_ok then
-			vim.keymap.set("n", "<leader>t", function()
-				if vim.bo.filetype == "oil" then
-					oil.close()
-				else
-					oil.open()
-				end
-			end, { desc = "Toggle Oil file explorer" })
-		end
-
 		-- ========================================
 		-- Telescope (fuzzy finding) keymaps
 		-- ========================================

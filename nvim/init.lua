@@ -1,4 +1,5 @@
 require("config.options")
+require("core.statusline")
 require("core.lazy")
 require("core.lsp")
 require("core.slime_utils")
