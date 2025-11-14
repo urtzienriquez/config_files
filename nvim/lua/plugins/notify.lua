@@ -6,8 +6,8 @@ return {
             background_colour = "#000000",
             timeout = 3000,
             stages = "static",
-            render = "wrapped-compact",
-            max_width = 40
+            render = "wrapped-default",
+            max_width = 40,
 		})
 		vim.notify = notify
 	end,
