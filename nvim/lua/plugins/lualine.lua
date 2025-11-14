@@ -15,7 +15,7 @@ return {
 					"oil",
 					"snacks_terminal",
 				},
-				globalstatus = false,
+				globalstatus = true,
 			},
 			sections = {
 				lualine_a = {
