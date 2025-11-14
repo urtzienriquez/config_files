@@ -94,7 +94,7 @@ function _G.st_filetype() return vim.bo.filetype ~= "" and vim.bo.filetype or ""
 -- Final statusline
 vim.o.laststatus = 3
 vim.o.statusline = table.concat({
-  " %f %m ",
+  " %t %m ",
   "%#SLGitBranch#%{v:lua.st_branch()}%*  ",
   "%#SLGitAdd#%{v:lua.st_added()}%* ",
   "%#SLGitChange#%{v:lua.st_changed()}%* ",
