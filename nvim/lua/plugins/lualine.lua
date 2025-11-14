@@ -34,11 +34,6 @@ return {
 					{ "branch", icon = "󰘬", },
 					{ "diff"},
 					{ "diagnostics"},
-					{
-						require("noice").api.statusline.mode.get,
-						cond = require("noice").api.statusline.mode.has,
-						color = { gui = "bold" },
-					},
 				},
 				lualine_x = { "filetype" },
 				lualine_y = {},
