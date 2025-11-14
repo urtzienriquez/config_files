@@ -28,7 +28,11 @@ local function parse_bib_file(file_paths)
 	for _, file_path in ipairs(file_paths) do
 		local file = io.open(file_path, "r")
 		if not file then
-			vim.notify("Could not open bib file: " .. file_path, vim.log.levels.WARN)
+			vim.cmd(
+				'echohl WarningMsg | echom "Could not open bib file: '
+					.. file_path:gsub('"', '\\"')
+					.. '" | echohl None'
+			)
 		else
 			local citations = {}
 			local current_entry = {}
@@ -415,58 +419,69 @@ local function apply_insert_at_saved_context(saved, citation_keys, format)
 	if saved.was_insert_mode then
 		reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, col, #insert_text)
 	end
-	vim.notify("Inserted citation" .. (#citation_keys > 1 and "s" or "") .. ": " .. insert_text, vim.log.levels.INFO)
+	vim.schedule(function()
+		local msg = "Inserted citation" .. (#citation_keys > 1 and "s" or "") .. ": " .. insert_text
+		vim.cmd('echom "' .. msg:gsub('"', '\\"'):gsub("\\", "\\\\") .. '"')
+	end)
 end
 
 -- Replace citation under cursor (Markdown or LaTeX)
 local function replace_citation_at_cursor(saved, new_citation_key, citation_info)
-  if not saved or not new_citation_key or not citation_info then
-    return
-  end
+	if not saved or not new_citation_key or not citation_info then
+		return
+	end
 
-  -- replacement string depends on style:
-  -- - LaTeX: replace only the key inside the braces (keep commas/spaces)
-  -- - Markdown: replace whole "@key" with "@newkey"
-  local replacement
-  if citation_info.style == "latex" then
-    replacement = new_citation_key
-  else
-    replacement = "@" .. new_citation_key
-  end
+	-- replacement string depends on style:
+	-- - LaTeX: replace only the key inside the braces (keep commas/spaces)
+	-- - Markdown: replace whole "@key" with "@newkey"
+	local replacement
+	if citation_info.style == "latex" then
+		replacement = new_citation_key
+	else
+		replacement = "@" .. new_citation_key
+	end
 
-  if not vim.api.nvim_buf_is_valid(saved.buf) then
-    return
-  end
-  if saved.win and vim.api.nvim_win_is_valid(saved.win) then
-    pcall(vim.api.nvim_set_current_win, saved.win)
-  end
-  pcall(vim.api.nvim_set_current_buf, saved.buf)
+	if not vim.api.nvim_buf_is_valid(saved.buf) then
+		return
+	end
+	if saved.win and vim.api.nvim_win_is_valid(saved.win) then
+		pcall(vim.api.nvim_set_current_win, saved.win)
+	end
+	pcall(vim.api.nvim_set_current_buf, saved.buf)
 
-  local row = saved.row
-  -- nvim_buf_set_text uses end column as *exclusive*, so add 1 to the inclusive end_col
-  local end_col_exclusive = citation_info.end_col + 1
+	local row = saved.row
+	-- nvim_buf_set_text uses end column as *exclusive*, so add 1 to the inclusive end_col
+	local end_col_exclusive = citation_info.end_col + 1
 
-  local ok = pcall(function()
-    vim.api.nvim_buf_set_text(
-      saved.buf,
-      row - 1,
-      citation_info.start_col,
-      row - 1,
-      end_col_exclusive,
-      { replacement }
-    )
-  end)
+	local ok = pcall(function()
+		vim.api.nvim_buf_set_text(
+			saved.buf,
+			row - 1,
+			citation_info.start_col,
+			row - 1,
+			end_col_exclusive,
+			{ replacement }
+		)
+	end)
 
-  if ok then
-    -- Move cursor after inserted text. set_cursor_after_inserted_text expects inserted_text (string).
-    set_cursor_after_inserted_text(saved.buf, saved.win, row, citation_info.start_col, replacement)
-    if saved.was_insert_mode then
-      reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, citation_info.start_col, #replacement)
-    end
-    vim.notify("Replaced citation: " .. citation_info.key .. " → " .. new_citation_key, vim.log.levels.INFO)
-  else
-    vim.notify("Failed to replace citation", vim.log.levels.ERROR)
-  end
+	if ok then
+		-- Move cursor after inserted text. set_cursor_after_inserted_text expects inserted_text (string).
+		set_cursor_after_inserted_text(saved.buf, saved.win, row, citation_info.start_col, replacement)
+		if saved.was_insert_mode then
+			reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, citation_info.start_col, #replacement)
+		end
+		vim.schedule(function()
+			vim.cmd(
+				'echom "Replaced citation: '
+					.. citation_info.key:gsub('"', '\\"')
+					.. " → "
+					.. new_citation_key:gsub('"', '\\"')
+					.. '"'
+			)
+		end)
+	else
+		vim.api.nvim_echo({ { "Failed to replace citation", "ErrorMsg" } }, true, {})
+	end
 end
 
 ---------------------------------------------------------------------
@@ -481,7 +496,7 @@ local function citation_picker(format)
 		vim.list_extend(citations, parsed)
 	end
 	if #citations == 0 then
-		vim.notify("No citations found in " .. bib_file, vim.log.levels.WARN)
+		vim.cmd('echohl WarningMsg | echom "No citations found in bib files" | echohl None')
 		return
 	end
 
@@ -609,13 +624,13 @@ end
 local function citation_replace()
 	local citation_info = get_citation_under_cursor()
 	if not citation_info then
-		vim.notify("Cursor is not on a citation", vim.log.levels.WARN)
+		vim.cmd('echohl WarningMsg | echom "Cursor is not on a citation" | echohl None')
 		return
 	end
 
 	local citations = parse_bib_file(bib_file)
 	if #citations == 0 then
-		vim.notify("No citations found in " .. bib_file, vim.log.levels.WARN)
+		vim.cmd('echohl WarningMsg | echom "No citations found in bib files" | echohl None')
 		return
 	end
 
@@ -697,7 +712,9 @@ local function citation_replace()
 					if selection and selection.value.key ~= citation_info.key then
 						replace_citation_at_cursor(saved, selection.value.key, citation_info)
 					else
-						vim.notify("Same citation selected, no replacement needed", vim.log.levels.INFO)
+						vim.schedule(function()
+							vim.cmd('echom "Same citation selected, no replacement needed"')
+						end)
 					end
 				end)
 				return true

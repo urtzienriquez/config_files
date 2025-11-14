@@ -237,16 +237,6 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", { desc = "Navigate previous (tmux)" })
 
 		-- ========================================
-		-- Notifications
-		-- ========================================
-		vim.keymap.set("n", "<leader>n", function()
-			require("telescope").extensions.notify.notify()
-		end, { desc = "Notification History" })
-		vim.keymap.set("n", "<leader>un", function()
-			require("notify").dismiss({ silent = true, pending = true })
-		end, { desc = "Dismiss All Notifications" })
-
-		-- ========================================
 		-- Buffer management
 		-- ========================================
 		vim.keymap.set("n", "<leader>bd", function()

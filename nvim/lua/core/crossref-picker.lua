@@ -96,9 +96,12 @@ local function insert_crossref(ref_type, label, saved_context)
 		if saved_context.was_insert_mode then
 			reenter_insert_mode_at_cursor_for_buffer(saved_context.win, saved_context.buf, row, col, #crossref)
 		end
-		vim.notify("Inserted crossref: " .. crossref, vim.log.levels.INFO)
+		vim.schedule(function()
+			local msg = "Inserted crossref: " .. crossref
+			vim.cmd('echom "' .. msg:gsub('"', '\\"'):gsub("\\", "\\\\") .. '"')
+		end)
 	else
-		vim.notify("Failed to insert crossref", vim.log.levels.ERROR)
+		vim.api.nvim_echo({ { "Failed to insert crossref", "ErrorMsg" } }, true, {})
 	end
 end
 
@@ -107,7 +110,7 @@ end
 ---------------------------------------------------------------------
 local function create_crossref_picker(ref_type, chunks)
 	if #chunks == 0 then
-		vim.notify("No " .. ref_type .. " chunks found in current file", vim.log.levels.WARN)
+		vim.cmd('echohl WarningMsg | echom "No ' .. ref_type .. ' chunks found in current file" | echohl None')
 		return
 	end
 
