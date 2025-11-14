@@ -85,7 +85,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
 })
 
 -- Functions return only text
-function _G.st_branch()  return git_cache.branch ~= "" and " " .. git_cache.branch or "" end
+function _G.st_branch()  return git_cache.branch ~= "" and " " .. git_cache.branch or "" end
 function _G.st_added()   return git_cache.added end
 function _G.st_changed() return git_cache.changed end
 function _G.st_removed() return git_cache.removed end
