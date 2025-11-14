@@ -16,7 +16,6 @@ keybind = shift+control+k=scroll_page_lines:-1
 keybind = shift+control+j=scroll_page_lines:1
 keybind = shift+control+h=scroll_to_top
 keybind = shift+control+l=scroll_to_bottom
-keybind = control+g=text:lazygit\r
 
 # padding
 window-padding-balance = true
