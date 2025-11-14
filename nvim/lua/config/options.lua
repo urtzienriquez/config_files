@@ -116,7 +116,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function()
 		vim.defer_fn(function()
 			vim.cmd("set syntax=netrw")
-		end, 100)
+		end, 50)
 	end,
 })
 
