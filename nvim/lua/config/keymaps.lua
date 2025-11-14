@@ -353,13 +353,15 @@ local function set_rnvim_keymaps(bufnr)
 	end, { noremap = true, silent = true, desc = "Render and open Bookdown" })
 
 	-- Render markdown with output name
-	-- none entered: filename, else: provided name
-
+	-- none entered: filename, else: provided name, esc: cancel
 	vim.keymap.set("n", "<leader>rr", function()
-		local noice = require("noice")
-		noice.disable()
-		local filename = vim.fn.input("Output filename (without extension): ")
-		noice.enable()
+		local filename = vim.fn.input({
+			prompt = "Output filename (without extension): ",
+			cancelreturn = "__CANCEL__",
+		})
+		if filename == "__CANCEL__" then
+			return
+		end
 		if filename ~= "" then
 			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", output_file = "' .. filename .. '")')
 		else
