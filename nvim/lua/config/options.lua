@@ -101,17 +101,17 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Set pandoc syntax for markdown files to get LaTeX highlighting
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "markdown", "rmd", "Rmd", "quarto", "qmd", "Qmd", "jmd", "Jmd" },
-	callback = function()
-		vim.defer_fn(function()
-			vim.cmd("set syntax=pandoc")
-		end, 100)
-	end,
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = { "*.Rmd", "*.rmd", "*.qmd", "*.Qmd", "*.jmd", "*.Jmd", "*.md" },
+  callback = function()
+    vim.defer_fn(function()
+      vim.cmd("setlocal syntax=pandoc")
+    end, 50)
+  end,
 })
 
 -- Ensure netrw syntax
-vim.api.nvim_create_autocmd("FileType", {
+vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = { "netrw" },
 	callback = function()
 		vim.defer_fn(function()
