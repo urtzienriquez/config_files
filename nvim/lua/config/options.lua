@@ -104,9 +104,18 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "markdown", "rmd", "Rmd", "quarto", "qmd", "Qmd", "jmd", "Jmd" },
 	callback = function()
-		-- Delay to let R.nvim set its syntax first, then override
 		vim.defer_fn(function()
 			vim.cmd("set syntax=pandoc")
+		end, 100)
+	end,
+})
+
+-- Ensure netrw syntax
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "netrw" },
+	callback = function()
+		vim.defer_fn(function()
+			vim.cmd("set syntax=netrw")
 		end, 100)
 	end,
 })
