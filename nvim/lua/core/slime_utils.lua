@@ -3,7 +3,7 @@ local M = {}
 -- Helper function to start REPL in tmux pane
 function M.start_tmux_repl(repl_type)
 	if not vim.env.TMUX then
-		vim.notify("Not in tmux session", vim.log.levels.ERROR)
+		vim.cmd('echohl ErrorMsg | echom "Not in tmux session" | echohl None')
 		return
 	end
 
@@ -17,7 +17,10 @@ function M.start_tmux_repl(repl_type)
 	if cmd then
 		local tmux_cmd = string.format("tmux split-window -h -c '%s' %s && tmux select-pane -l", vim.fn.getcwd(), cmd)
 		vim.fn.system(tmux_cmd)
-		vim.notify("Started " .. repl_type .. " REPL in tmux pane", vim.log.levels.INFO)
+		vim.schedule(function()
+			vim.cmd('redraw')
+			vim.cmd('echom "Started ' .. repl_type .. ' REPL in tmux pane"')
+		end)
 	end
 end
 
@@ -37,7 +40,10 @@ function M.close_tmux_repl(repl_type)
 	if exit_cmd then
 		-- Send exit command to last pane
 		vim.fn.system(string.format("tmux send-keys -t '{last}' %s Enter", vim.fn.shellescape(exit_cmd)))
-		vim.notify("Closed " .. repl_type .. " REPL", vim.log.levels.INFO)
+		vim.schedule(function()
+			vim.cmd('redraw')
+			vim.cmd('echom "Closed ' .. repl_type .. ' REPL"')
+		end)
 	end
 end
 
@@ -77,12 +83,12 @@ end
 -- Helper function to syncronize nvim-repl working directories
 function M.sync_working_directory()
 	if not vim.env.TMUX then
-		vim.notify("Not in tmux session", vim.log.levels.ERROR)
+		vim.cmd('echohl ErrorMsg | echom "Not in tmux session" | echohl None')
 		return
 	end
 
 	if not M.has_active_repl() then
-		vim.notify("No active REPL found", vim.log.levels.WARN)
+		vim.cmd('echohl WarningMsg | echom "No active REPL found" | echohl None')
 		return
 	end
 
@@ -92,7 +98,7 @@ function M.sync_working_directory()
 	-- Get the command running in the target pane to detect REPL type
 	local handle = io.popen("tmux display-message -t '" .. target_pane .. "' -p '#{pane_current_command}' 2>/dev/null")
 	if not handle then
-		vim.notify("Could not detect REPL type", vim.log.levels.ERROR)
+		vim.cmd('echohl ErrorMsg | echom "Could not detect REPL type" | echohl None')
 		return
 	end
 
@@ -100,7 +106,7 @@ function M.sync_working_directory()
 	handle:close()
 
 	if not current_command then
-		vim.notify("Could not detect REPL type", vim.log.levels.ERROR)
+		vim.cmd('echohl ErrorMsg | echom "Could not detect REPL type" | echohl None')
 		return
 	end
 
@@ -117,13 +123,16 @@ function M.sync_working_directory()
 		cd_command = string.format("cd '%s'", cwd)
 		repl_type = "MATLAB"
 	else
-		vim.notify("Unknown REPL type: " .. current_command, vim.log.levels.ERROR)
+		vim.cmd('echohl ErrorMsg | echom "Unknown REPL type: ' .. current_command:gsub('"', '\\"') .. '" | echohl None')
 		return
 	end
 
 	-- Send the change directory command
 	vim.fn.system(string.format("tmux send-keys -t '%s' %s Enter", target_pane, vim.fn.shellescape(cd_command)))
-	vim.notify(string.format("Synced %s REPL to: %s", repl_type, cwd), vim.log.levels.INFO)
+	vim.schedule(function()
+		vim.cmd('redraw')
+		vim.cmd('echom "Synced ' .. repl_type .. ' REPL to: ' .. cwd:gsub('"', '\\"') .. '"')
+	end)
 end
 
 return M
