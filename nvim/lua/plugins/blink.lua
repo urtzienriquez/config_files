@@ -26,7 +26,7 @@ return {
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
 				per_filetype = {
-					r = { "path", "snippets", "buffer", "R" },
+					r = { inherit_defaults = true, "R" },
 					-- rmd = { inherit_defaults = true },
 					-- Rmd = { inherit_defaults = true },
 					-- jmd = { inherit_defaults = true },
