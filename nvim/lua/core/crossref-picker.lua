@@ -6,12 +6,10 @@ local M = {}
 ---------------------------------------------------------------------
 local function parse_chunks(bufnr)
 	local chunks = {}
-
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
 	for line_num, line in ipairs(lines) do
-		-- Match R Markdown chunk headers with labels, e.g. ```{r label, ...} or ```{r, label, ...}
 		local label = line:match("^```{r%s+([^,}%s]+)") or line:match("^```{r,%s*([^,}%s]+)")
 		if label then
 			table.insert(chunks, {
@@ -26,14 +24,14 @@ local function parse_chunks(bufnr)
 end
 
 ---------------------------------------------------------------------
--- Format chunk for display in picker
+-- Format chunk for display
 ---------------------------------------------------------------------
 local function format_chunk_display(chunk)
 	return string.format("%-30s │ Line %d", chunk.label, chunk.line)
 end
 
 ---------------------------------------------------------------------
--- Helper functions for cursor management (matching citation picker)
+-- Cursor management helpers
 ---------------------------------------------------------------------
 local function set_cursor_after_inserted_text(buf, win, row, start_col, inserted_text)
 	if not vim.api.nvim_buf_is_valid(buf) then
@@ -77,9 +75,6 @@ local function insert_crossref(ref_type, label, saved_context)
 
 	local row, col = saved_context.row, saved_context.col
 
-	-- In normal mode, move cursor position one character to the right
-	-- so text is inserted after the cursor character, not before it
-	-- BUT only if we're not on an empty line or at the end of a line
 	if not saved_context.was_insert_mode then
 		local line = vim.api.nvim_buf_get_lines(saved_context.buf, row - 1, row, false)[1] or ""
 		if col < #line then
@@ -97,11 +92,10 @@ local function insert_crossref(ref_type, label, saved_context)
 			reenter_insert_mode_at_cursor_for_buffer(saved_context.win, saved_context.buf, row, col, #crossref)
 		end
 		vim.schedule(function()
-			local msg = "Inserted crossref: " .. crossref
-			vim.cmd('echom "' .. msg:gsub('"', '\\"'):gsub("\\", "\\\\") .. '"')
+			vim.notify("Inserted crossref: " .. crossref, vim.log.levels.INFO)
 		end)
 	else
-		vim.api.nvim_echo({ { "Failed to insert crossref", "ErrorMsg" } }, true, {})
+		vim.notify("Failed to insert crossref", vim.log.levels.ERROR)
 	end
 end
 
@@ -110,11 +104,10 @@ end
 ---------------------------------------------------------------------
 local function create_crossref_picker(ref_type, chunks)
 	if #chunks == 0 then
-		vim.cmd('echohl WarningMsg | echom "No ' .. ref_type .. ' chunks found in current file" | echohl None')
+		vim.notify("No " .. ref_type .. " chunks found in current file", vim.log.levels.WARN)
 		return
 	end
 
-	-- Save context
 	local cur_win = vim.api.nvim_get_current_win()
 	local cur_buf = vim.api.nvim_get_current_buf()
 	local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -134,27 +127,23 @@ local function create_crossref_picker(ref_type, chunks)
 	local action_state = require("telescope.actions.state")
 	local previewers = require("telescope.previewers")
 
-	-- Create previewer that shows the chunk location
 	local previewer = previewers.new_buffer_previewer({
 		title = "Chunk Location",
 		define_preview = function(self, entry)
 			local bufnr = saved.buf
 			local chunk = entry.value
 
-			-- Get lines around the chunk for context
 			local start_line = math.max(0, chunk.line - 5)
 			local end_line = math.min(vim.api.nvim_buf_line_count(bufnr), chunk.line + 10)
 			local lines = vim.api.nvim_buf_get_lines(bufnr, start_line, end_line, false)
 
 			vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
 
-			-- Highlight the chunk header line
 			local highlight_line = chunk.line - start_line - 1
 			if highlight_line >= 0 and highlight_line < #lines then
 				vim.api.nvim_buf_add_highlight(self.state.bufnr, -1, "TelescopePreviewMatch", highlight_line, 0, -1)
 			end
 
-			-- Set filetype for syntax highlighting
 			vim.api.nvim_buf_set_option(self.state.bufnr, "filetype", "rmd")
 		end,
 	})
@@ -204,7 +193,4 @@ function M.table_picker()
 	create_crossref_picker("tab", chunks)
 end
 
----------------------------------------------------------------------
--- Exports
----------------------------------------------------------------------
 return M

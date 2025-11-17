@@ -1,12 +1,8 @@
 -- Citation picker with Telescope integration
 
--- Path to main zotero.bib
 local zotero_bib = vim.fn.expand("~/Documents/zotero.bib")
-
--- Find local .bib files (in current working directory)
 local local_bibs = vim.fn.globpath(vim.fn.getcwd(), "*.bib", false, true)
 
--- Combine all bib files into one list
 local bib_file = { zotero_bib }
 for _, b in ipairs(local_bibs) do
 	if b ~= zotero_bib then
@@ -15,10 +11,9 @@ for _, b in ipairs(local_bibs) do
 end
 
 ---------------------------------------------------------------------
--- Parse one or more .bib files and extract citation keys with titles
+-- Parse .bib files and extract citation keys with metadata
 ---------------------------------------------------------------------
 local function parse_bib_file(file_paths)
-	-- Allow either a string or a table
 	if type(file_paths) == "string" then
 		file_paths = { file_paths }
 	end
@@ -28,11 +23,7 @@ local function parse_bib_file(file_paths)
 	for _, file_path in ipairs(file_paths) do
 		local file = io.open(file_path, "r")
 		if not file then
-			vim.cmd(
-				'echohl WarningMsg | echom "Could not open bib file: '
-					.. file_path:gsub('"', '\\"')
-					.. '" | echohl None'
-			)
+			vim.notify("Could not open bib file: " .. file_path, vim.log.levels.WARN)
 		else
 			local citations = {}
 			local current_entry = {}
@@ -40,7 +31,6 @@ local function parse_bib_file(file_paths)
 			local current_field = nil
 
 			for line in file:lines() do
-				-- Detect new entry
 				local entry_type, key = line:match("^%s*@(%w+)%s*{%s*([^,%s]+)")
 				if entry_type and key then
 					if current_entry.key then
@@ -59,7 +49,6 @@ local function parse_bib_file(file_paths)
 					in_entry = true
 					current_field = nil
 				elseif in_entry then
-					-- Field assignment
 					local field, value = line:match('%s*(%w+)%s*=%s*[{"](.-)[}",]*$')
 					if field and value then
 						field = field:lower()
@@ -89,7 +78,6 @@ local function parse_bib_file(file_paths)
 							current_field = nil
 						end
 					else
-						-- Handle multiline continuation
 						if current_field and line:match("^[^%s]+") == nil then
 							local continued = line:gsub("[{}]", ""):gsub("^%s+", ""):gsub("%s+$", "")
 							if current_field == "author" then
@@ -99,7 +87,6 @@ local function parse_bib_file(file_paths)
 						end
 					end
 
-					-- End of entry
 					if line:match("^%s*}%s*$") then
 						in_entry = false
 						current_field = nil
@@ -107,14 +94,11 @@ local function parse_bib_file(file_paths)
 				end
 			end
 
-			-- Save last entry
 			if current_entry.key then
 				table.insert(citations, current_entry)
 			end
 
 			file:close()
-
-			-- Merge citations from this file
 			vim.list_extend(all_citations, citations)
 		end
 	end
@@ -123,24 +107,22 @@ local function parse_bib_file(file_paths)
 end
 
 ---------------------------------------------------------------------
--- Format citation for display in main picker
+-- Format citation for display
 ---------------------------------------------------------------------
 local function format_citation_display(entry)
 	local display = entry.key
 
-	-- Add title if available
 	if entry.title and entry.title ~= "" then
 		local title = entry.title
-		if #title > 40 then -- Reduced from 50 to make room for authors
+		if #title > 40 then
 			title = title:sub(1, 37) .. "..."
 		end
 		display = display .. " │ " .. title
 	end
 
-	-- Add authors if available
 	if entry.author and entry.author ~= "" then
 		local authors = entry.author
-		if #authors > 30 then -- Truncate long author lists
+		if #authors > 30 then
 			authors = authors:sub(1, 27) .. "..."
 		end
 		display = display .. " │ " .. authors
@@ -167,11 +149,10 @@ local function wrap_text_to_width(text, width)
 end
 
 ---------------------------------------------------------------------
--- Create preview content (compact single-line labels)
+-- Create preview content
 ---------------------------------------------------------------------
 local function create_preview_content(entry, winid)
 	local lines = {}
-
 	local width = 80
 	if winid and vim.api.nvim_win_is_valid(winid) then
 		width = vim.api.nvim_win_get_width(winid) - 10
@@ -206,8 +187,6 @@ end
 ---------------------------------------------------------------------
 local function calculate_match_score(entry, query)
 	if not query or query == "" then
-		-- When no query, return 0 so all entries have the same score
-		-- We'll handle default sorting in the sorter setup
 		return 0
 	end
 	local score = 0
@@ -255,24 +234,22 @@ local function calculate_match_score(entry, query)
 end
 
 ---------------------------------------------------------------------
--- Helpers for inserting/replacing citations
+-- Detect citation under cursor
 ---------------------------------------------------------------------
-
--- Detect citation under cursor (Markdown @key or LaTeX \cite{key,...})
 local function get_citation_under_cursor()
 	local line = vim.api.nvim_get_current_line()
-	local col = vim.api.nvim_win_get_cursor(0)[2] -- 0-based
+	local col = vim.api.nvim_win_get_cursor(0)[2]
 
-	-- --- Markdown-style: @key ---
+	-- Markdown-style: @key
 	local pos = 1
 	while true do
 		local s, e = line:find("@[%w_%-:%.]+", pos)
 		if not s then
 			break
 		end
-		local key = line:sub(s + 1, e) -- without the @
-		local start0 = s - 1 -- convert to 0-based
-		local end0 = e - 1 -- convert to 0-based
+		local key = line:sub(s + 1, e)
+		local start0 = s - 1
+		local end0 = e - 1
 		if col >= start0 and col <= end0 then
 			return {
 				key = key,
@@ -285,10 +262,9 @@ local function get_citation_under_cursor()
 		pos = e + 1
 	end
 
-	-- --- LaTeX-style: \cmd{...} (may contain multiple comma-separated keys) ---
+	-- LaTeX-style: \cmd{...}
 	local search_pos = 1
 	while true do
-		-- find next \cmd{...} block (simple pattern matching)
 		local s, e = line:find("\\%a+%s*{%s*[^{}]-%s*}", search_pos)
 		if not s then
 			break
@@ -296,26 +272,22 @@ local function get_citation_under_cursor()
 		local capture = line:sub(s, e)
 		local cmd, inside = capture:match("\\(%a+)%s*{%s*([^{}]-)%s*}")
 		if cmd and inside then
-			-- find positions of the braces
 			local brace_open = line:find("{", s, true)
 			local brace_close = line:find("}", brace_open, true)
 			if brace_open and brace_close then
-				-- iterate keys inside the braces and locate their absolute positions
 				local inner_search_pos = 1
 				while true do
 					local ks, ke = inside:find("[^,%s]+", inner_search_pos)
 					if not ks then
 						break
 					end
-					-- absolute 1-based positions on the line for this key:
-					local abs_start_1 = brace_open + ks -- brace_open is pos of '{', inside starts at brace_open+1
+					local abs_start_1 = brace_open + ks
 					local abs_end_1 = brace_open + ke
 					local abs_start0 = abs_start_1 - 1
 					local abs_end0 = abs_end_1 - 1
 					local key = inside:sub(ks, ke)
 
 					if col >= abs_start0 and col <= abs_end0 then
-						-- Found the key under cursor
 						return {
 							key = key,
 							start_col = abs_start0,
@@ -347,6 +319,9 @@ local function get_citation_under_cursor()
 	return nil
 end
 
+---------------------------------------------------------------------
+-- Cursor management helpers
+---------------------------------------------------------------------
 local function set_cursor_after_inserted_text(buf, win, row, start_col, inserted_text)
 	if not vim.api.nvim_buf_is_valid(buf) then
 		return nil
@@ -368,19 +343,20 @@ local function reenter_insert_mode_at_cursor_for_buffer(win, buf, row, col, inse
 	pcall(vim.api.nvim_feedkeys, key, "n", true)
 end
 
--- Modified function with format parameter
+---------------------------------------------------------------------
+-- Insert citation
+---------------------------------------------------------------------
 local function apply_insert_at_saved_context(saved, citation_keys, format)
 	if not saved or not citation_keys or #citation_keys == 0 then
 		return
 	end
 
-	-- Default to markdown format if not specified
 	format = format or "markdown"
 
 	local insert_text
 	if format == "latex" then
 		insert_text = "\\cite{" .. table.concat(citation_keys, ", ") .. "}"
-	else -- markdown format
+	else
 		insert_text = table.concat(
 			vim.tbl_map(function(k)
 				return "@" .. k
@@ -399,8 +375,6 @@ local function apply_insert_at_saved_context(saved, citation_keys, format)
 
 	local row, col = saved.row, saved.col
 
-	-- In normal mode, move cursor position one character to the right
-	-- so text is inserted after the cursor character, not before it
 	if not saved.was_insert_mode then
 		col = col + 1
 	end
@@ -419,21 +393,21 @@ local function apply_insert_at_saved_context(saved, citation_keys, format)
 	if saved.was_insert_mode then
 		reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, col, #insert_text)
 	end
+
 	vim.schedule(function()
 		local msg = "Inserted citation" .. (#citation_keys > 1 and "s" or "") .. ": " .. insert_text
-		vim.cmd('echom "' .. msg:gsub('"', '\\"'):gsub("\\", "\\\\") .. '"')
+		vim.notify(msg, vim.log.levels.INFO)
 	end)
 end
 
--- Replace citation under cursor (Markdown or LaTeX)
+---------------------------------------------------------------------
+-- Replace citation under cursor
+---------------------------------------------------------------------
 local function replace_citation_at_cursor(saved, new_citation_key, citation_info)
 	if not saved or not new_citation_key or not citation_info then
 		return
 	end
 
-	-- replacement string depends on style:
-	-- - LaTeX: replace only the key inside the braces (keep commas/spaces)
-	-- - Markdown: replace whole "@key" with "@newkey"
 	local replacement
 	if citation_info.style == "latex" then
 		replacement = new_citation_key
@@ -450,7 +424,6 @@ local function replace_citation_at_cursor(saved, new_citation_key, citation_info
 	pcall(vim.api.nvim_set_current_buf, saved.buf)
 
 	local row = saved.row
-	-- nvim_buf_set_text uses end column as *exclusive*, so add 1 to the inclusive end_col
 	local end_col_exclusive = citation_info.end_col + 1
 
 	local ok = pcall(function()
@@ -465,38 +438,29 @@ local function replace_citation_at_cursor(saved, new_citation_key, citation_info
 	end)
 
 	if ok then
-		-- Move cursor after inserted text. set_cursor_after_inserted_text expects inserted_text (string).
 		set_cursor_after_inserted_text(saved.buf, saved.win, row, citation_info.start_col, replacement)
 		if saved.was_insert_mode then
 			reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, citation_info.start_col, #replacement)
 		end
 		vim.schedule(function()
-			vim.cmd(
-				'echom "Replaced citation: '
-					.. citation_info.key:gsub('"', '\\"')
-					.. " → "
-					.. new_citation_key:gsub('"', '\\"')
-					.. '"'
-			)
+			vim.notify("Replaced citation: " .. citation_info.key .. " → " .. new_citation_key, vim.log.levels.INFO)
 		end)
 	else
-		vim.api.nvim_echo({ { "Failed to replace citation", "ErrorMsg" } }, true, {})
+		vim.notify("Failed to replace citation", vim.log.levels.ERROR)
 	end
 end
 
 ---------------------------------------------------------------------
--- Telescope picker for inserting new citations with multi-select
--- Modified to accept format parameter
+-- Telescope picker for inserting citations
 ---------------------------------------------------------------------
 local function citation_picker(format)
-	-- Support multiple bib files
 	local citations = {}
 	for _, path in ipairs(bib_file) do
 		local parsed = parse_bib_file(path)
 		vim.list_extend(citations, parsed)
 	end
 	if #citations == 0 then
-		vim.cmd('echohl WarningMsg | echom "No citations found in bib files" | echohl None')
+		vim.notify("No citations found in bib files", vim.log.levels.WARN)
 		return
 	end
 
@@ -506,13 +470,7 @@ local function citation_picker(format)
 	local was_insert = vim.api.nvim_get_mode().mode:find("i") ~= nil
 	local saved = { win = cur_win, buf = cur_buf, row = cur_row, col = cur_col, was_insert_mode = was_insert }
 
-	-- Determine prompt title based on format
-	local prompt_title
-	if format == "latex" then
-		prompt_title = "Citations 󱔗 [LaTeX]"
-	else
-		prompt_title = "Citations 󱔗 [Markdown]"
-	end
+	local prompt_title = format == "latex" and "Citations 󱔗 [LaTeX]" or "Citations 󱔗 [Markdown]"
 
 	local pickers = require("telescope.pickers")
 	local finders = require("telescope.finders")
@@ -536,13 +494,9 @@ local function citation_picker(format)
 			return original_scoring_function(self, prompt, line, entry)
 		end
 
-		-- If no prompt (empty search), sort alphabetically by citation key
 		if not prompt or prompt == "" then
-			-- Create a numeric score based on alphabetical order
-			-- Use character codes to create proper alphabetical ordering
 			local key = entry.value.key:lower()
 			local score = 0
-			-- Use first few characters to create ordering
 			for i = 1, math.min(#key, 8) do
 				local char_code = key:byte(i)
 				score = score + (char_code * math.pow(256, 8 - i))
@@ -550,7 +504,6 @@ local function citation_picker(format)
 			return score
 		end
 
-		-- Otherwise use our custom scoring
 		return -calculate_match_score(entry.value, prompt)
 	end
 
@@ -608,7 +561,7 @@ local function citation_picker(format)
 end
 
 ---------------------------------------------------------------------
--- Wrapper functions for different formats
+-- Wrapper functions
 ---------------------------------------------------------------------
 local function citation_picker_markdown()
 	citation_picker("markdown")
@@ -619,18 +572,18 @@ local function citation_picker_latex()
 end
 
 ---------------------------------------------------------------------
--- Telescope picker for replacing citations (single selection)
+-- Replace citation
 ---------------------------------------------------------------------
 local function citation_replace()
 	local citation_info = get_citation_under_cursor()
 	if not citation_info then
-		vim.cmd('echohl WarningMsg | echom "Cursor is not on a citation" | echohl None')
+		vim.notify("Cursor is not on a citation", vim.log.levels.WARN)
 		return
 	end
 
 	local citations = parse_bib_file(bib_file)
 	if #citations == 0 then
-		vim.cmd('echohl WarningMsg | echom "No citations found in bib files" | echohl None')
+		vim.notify("No citations found in bib files", vim.log.levels.WARN)
 		return
 	end
 
@@ -659,12 +612,9 @@ local function citation_replace()
 			return original_scoring_function(self, prompt, line, entry)
 		end
 
-		-- If no prompt (empty search), sort alphabetically by citation key
 		if not prompt or prompt == "" then
-			-- Create a numeric score based on alphabetical order
 			local key = entry.value.key:lower()
 			local score = 0
-			-- Use first few characters to create ordering
 			for i = 1, math.min(#key, 8) do
 				local char_code = key:byte(i)
 				score = score + (char_code * math.pow(256, 8 - i))
@@ -672,7 +622,6 @@ local function citation_replace()
 			return score
 		end
 
-		-- Otherwise use our custom scoring
 		return -calculate_match_score(entry.value, prompt)
 	end
 
@@ -713,7 +662,7 @@ local function citation_replace()
 						replace_citation_at_cursor(saved, selection.value.key, citation_info)
 					else
 						vim.schedule(function()
-							vim.cmd('echom "Same citation selected, no replacement needed"')
+							vim.notify("Same citation selected, no replacement needed", vim.log.levels.INFO)
 						end)
 					end
 				end)
@@ -727,7 +676,7 @@ end
 -- Exports
 ---------------------------------------------------------------------
 return {
-	citation_picker = citation_picker_markdown, -- default to markdown
+	citation_picker = citation_picker_markdown,
 	citation_picker_markdown = citation_picker_markdown,
 	citation_picker_latex = citation_picker_latex,
 	citation_replace = citation_replace,

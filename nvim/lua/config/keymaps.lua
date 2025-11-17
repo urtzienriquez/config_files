@@ -119,7 +119,7 @@ vim.api.nvim_create_user_command("ZgVariants", function()
 	for _, v in ipairs(variants) do
 		vim.cmd("silent spellgood " .. v)
 	end
-	print("Added variants of '" .. word .. "' to spellfile")
+	vim.notify("Added variants of '" .. word .. "' to spellfile", vim.log.levels.INFO)
 end, {})
 
 vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
@@ -148,34 +148,34 @@ end, { desc = "Toggle file explorer" })
 
 -- show notification history
 vim.keymap.set("n", "<leader>n", function()
-  local result = vim.api.nvim_exec2("messages", { output = true })
-  local lines = vim.split(result.output, "\n")
-  local buf = vim.api.nvim_create_buf(false, true) -- (listed=false, scratch=true)
+	local result = vim.api.nvim_exec2("messages", { output = true })
+	local lines = vim.split(result.output, "\n")
+	local buf = vim.api.nvim_create_buf(false, true) -- (listed=false, scratch=true)
 
-  vim.bo[buf].buftype = "nofile"
-  vim.bo[buf].bufhidden = "wipe"
-  vim.bo[buf].swapfile = false
+	vim.bo[buf].buftype = "nofile"
+	vim.bo[buf].bufhidden = "wipe"
+	vim.bo[buf].swapfile = false
 
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
-  local width  = math.floor(vim.o.columns * 0.6)
-  local height = math.floor(vim.o.lines * 0.6)
-  local opts = {
-    relative = "editor",
-    width = width,
-    height = height,
-    row = (vim.o.lines - height) * 0.5,
-    col = (vim.o.columns - width) * 0.5,
-    style = "minimal",
-    border = "rounded",
-    title = " Notification history ",
-    title_pos = "center",
-    footer = " q to quit ",
-  }
+	local width = math.floor(vim.o.columns * 0.6)
+	local height = math.floor(vim.o.lines * 0.6)
+	local opts = {
+		relative = "editor",
+		width = width,
+		height = height,
+		row = (vim.o.lines - height) * 0.5,
+		col = (vim.o.columns - width) * 0.5,
+		style = "minimal",
+		border = "rounded",
+		title = " Notification history ",
+		title_pos = "center",
+		footer = " q to quit ",
+	}
 
-  vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+	vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
 
-  vim.api.nvim_open_win(buf, true, opts)
+	vim.api.nvim_open_win(buf, true, opts)
 end, { noremap = true, silent = true, desc = "show notification history" })
 
 -- ========================================
