@@ -126,25 +126,25 @@ vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 
 -- toggle file explorer
 local prev_buf = nil
-vim.keymap.set('n', '<leader>t', function()
-  local cur_buf = vim.api.nvim_get_current_buf()
-  if vim.bo.filetype == 'netrw' then
-    if prev_buf and vim.api.nvim_buf_is_valid(prev_buf) then
-      vim.api.nvim_set_current_buf(prev_buf)
-    else
-      local listed = vim.fn.getbufinfo({buflisted = 1})
-      if #listed > 0 then
-        vim.api.nvim_set_current_buf(listed[1].bufnr)
-      end
-    end
-    if vim.api.nvim_buf_is_valid(cur_buf) then
-      vim.api.nvim_buf_delete(cur_buf, { force = true })
-    end
-  else
-    prev_buf = cur_buf
-    vim.cmd('Ex')
-  end
-end, { desc = 'Toggle file explorer' })
+vim.keymap.set("n", "<leader>t", function()
+	local cur_buf = vim.api.nvim_get_current_buf()
+	if vim.bo.filetype == "netrw" then
+		if prev_buf and vim.api.nvim_buf_is_valid(prev_buf) then
+			vim.api.nvim_set_current_buf(prev_buf)
+		else
+			local listed = vim.fn.getbufinfo({ buflisted = 1 })
+			if #listed > 0 then
+				vim.api.nvim_set_current_buf(listed[1].bufnr)
+			end
+		end
+		if vim.api.nvim_buf_is_valid(cur_buf) then
+			vim.api.nvim_buf_delete(cur_buf, { force = true })
+		end
+	else
+		prev_buf = cur_buf
+		vim.cmd("Ex")
+	end
+end, { desc = "Toggle file explorer" })
 
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
@@ -587,7 +587,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("lsp-attach-keymaps", { clear = true }),
 	callback = function(event)
 		local opts = { buffer = event.buf, silent = true }
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Information hover" }))
+		vim.keymap.set("n", "K", function()
+			vim.lsp.buf.hover({ border = "single" })
+		end, vim.tbl_extend("force", opts, { desc = "Information hover" }))
 	end,
 })
 
