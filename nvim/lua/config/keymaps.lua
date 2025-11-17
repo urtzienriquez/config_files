@@ -149,7 +149,7 @@ end, { desc = "Toggle file explorer" })
 -- show notification history
 vim.keymap.set("n", "<leader>n", function()
   vim.cmd("vnew")
-  vim.bo.buftype = "messages"
+  vim.bo.buftype = "nofile"
   vim.bo.bufhidden = "wipe"
   vim.bo.swapfile = false
   vim.bo.modifiable = true
