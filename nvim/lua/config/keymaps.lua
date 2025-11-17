@@ -148,14 +148,21 @@ end, { desc = "Toggle file explorer" })
 
 -- show notification history
 vim.keymap.set("n", "<leader>n", function()
-  vim.cmd("vnew")
-  vim.bo.buftype = "nofile"
-  vim.bo.bufhidden = "wipe"
-  vim.bo.swapfile = false
-  vim.bo.modifiable = true
+  local result = vim.api.nvim_exec2("messages", { output = true })
 
-  vim.cmd("put =execute('messages')")
-  vim.bo.modifiable = false  -- prevent accidental edits
+  vim.cmd("vnew")
+  local buf = vim.api.nvim_get_current_buf()
+
+  vim.bo[buf].buftype = "nofile"
+  vim.bo[buf].bufhidden = "wipe"
+  vim.bo[buf].swapfile = false
+  vim.bo[buf].modifiable = true
+
+  local lines = vim.split(result.output, "\n")
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = true })
+
+  vim.bo[buf].modifiable = false
 end, { noremap = true, silent = true, desc = "show notification history" })
 
 -- ========================================
