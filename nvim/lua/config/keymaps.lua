@@ -146,6 +146,18 @@ vim.keymap.set("n", "<leader>t", function()
 	end
 end, { desc = "Toggle file explorer" })
 
+-- show notification history
+vim.keymap.set("n", "<leader>n", function()
+  vim.cmd("vnew")
+  vim.bo.buftype = "messages"
+  vim.bo.bufhidden = "wipe"
+  vim.bo.swapfile = false
+  vim.bo.modifiable = true
+
+  vim.cmd("put =execute('messages')")
+  vim.bo.modifiable = false  -- prevent accidental edits
+end, { noremap = true, silent = true, desc = "show notification history" })
+
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
 -- ========================================
