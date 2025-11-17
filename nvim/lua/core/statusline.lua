@@ -7,7 +7,10 @@ local colors = {
 	green = "#9ece6a",
 	red = "#f7768e",
 	blue = "#7aa2f7",
-	purple = "#bb9af7",
+	purple = "#c099ff",
+	blue2 = "#0db9d7",
+	teal = "#4fd6be",
+	yellow = "#ffc777",
 	fg = "#c0caf5",
 }
 
@@ -18,6 +21,12 @@ local function define_highlights()
 	vim.api.nvim_set_hl(0, "SLGitDelete", { fg = colors.red })
 	vim.api.nvim_set_hl(0, "SLGitBranch", { fg = colors.purple })
 	vim.api.nvim_set_hl(0, "SLFileType", { fg = colors.fg, bold = true })
+
+	-- Diagnostics
+	vim.api.nvim_set_hl(0, "SLDiagError", { fg = colors.red })
+	vim.api.nvim_set_hl(0, "SLDiagWarn", { fg = colors.yellow })
+	vim.api.nvim_set_hl(0, "SLDiagInfo", { fg = colors.blue2 })
+	vim.api.nvim_set_hl(0, "SLDiagHint", { fg = colors.teal })
 end
 
 define_highlights()
@@ -100,6 +109,8 @@ end
 -- --------------------------
 -- Statusline functions
 -- --------------------------
+
+-- Git
 function _G.st_branch()
 	local buf = vim.api.nvim_get_current_buf()
 	local g = git_cache[buf] or {}
@@ -124,8 +135,36 @@ function _G.st_removed()
 	return g.removed or ""
 end
 
+-- Filetype
 function _G.st_filetype()
 	return vim.bo.filetype ~= "" and vim.bo.filetype or ""
+end
+
+-- --------------------------
+-- Diagnostics
+-- --------------------------
+local function diag_count(sev)
+	return #vim.diagnostic.get(0, { severity = sev })
+end
+
+function _G.st_err()
+	local c = diag_count(vim.diagnostic.severity.ERROR)
+	return c > 0 and (" " .. c) or ""
+end
+
+function _G.st_warn()
+	local c = diag_count(vim.diagnostic.severity.WARN)
+	return c > 0 and (" " .. c) or ""
+end
+
+function _G.st_info()
+	local c = diag_count(vim.diagnostic.severity.INFO)
+	return c > 0 and ("󰋽 " .. c) or ""
+end
+
+function _G.st_hint()
+	local c = diag_count(vim.diagnostic.severity.HINT)
+	return c > 0 and (" " .. c) or ""
 end
 
 -- --------------------------
@@ -147,6 +186,13 @@ vim.o.statusline = table.concat({
 	"%#SLGitAdd#%{v:lua.st_added()}%* ",
 	"%#SLGitChange#%{v:lua.st_changed()}%* ",
 	"%#SLGitDelete#%{v:lua.st_removed()}%*  ",
+
+	-- Diagnostics
+	"%#SLDiagError#%{v:lua.st_err()}%* ",
+	"%#SLDiagWarn#%{v:lua.st_warn()}%* ",
+	"%#SLDiagInfo#%{v:lua.st_info()}%* ",
+	"%#SLDiagHint#%{v:lua.st_hint()}%*  ",
+
 	"%=",
 	"%#SLFileType#%{v:lua.st_filetype()}%*  ",
 	" %l:%c ",
