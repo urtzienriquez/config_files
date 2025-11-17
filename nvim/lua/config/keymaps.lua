@@ -590,6 +590,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "K", function()
 			vim.lsp.buf.hover({ border = "single" })
 		end, vim.tbl_extend("force", opts, { desc = "Information hover" }))
+
+		vim.keymap.set("n", "<leader>k", function()
+			vim.diagnostic.open_float({ border = "single" })
+		end, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
 	end,
 })
 
