@@ -57,12 +57,6 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete to black hol
 vim.keymap.set("n", "<leader>D", [["_D]], { desc = "Delete line to black hole register" })
 vim.keymap.set("n", "<leader>x", [["_x]], { desc = "Delete char to black hole register" })
 
--- Better line movement (move lines up/down)
-vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
-vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
-vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
-
 -- Better search centering and n/N behavior
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
@@ -70,7 +64,7 @@ vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" }
 -- Better Y behavior (yank to end of line like C and D)
 vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 
--- Highlight when yanking (copying) text
+-- Highlight when yanking text
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight when yanking (copying) text",
 	group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
@@ -89,17 +83,17 @@ vim.api.nvim_create_autocmd("FileType", {
 		"rmd",
 		"Rmd",
 		"qmd",
-		"Qmd", -- Quarto
-		"org", -- Org-mode files
-		"rst", -- reStructuredText
+		"Qmd",
+		"org",
+		"rst",
 		"asciidoc",
-		"adoc", -- AsciiDoc
+		"adoc",
 		"tex",
-		"latex", -- LaTeX files
-		"wiki", -- Wiki files
-		"textile", -- Textile markup
-		"mail", -- Email files
-		"gitcommit", -- Git commit messages
+		"latex",
+		"wiki",
+		"textile",
+		"mail",
+		"gitcommit",
 	},
 	callback = function()
 		local opts = { buffer = true }
@@ -123,7 +117,7 @@ vim.api.nvim_create_user_command("ZgVariants", function()
 		word:upper(),
 	}
 	for _, v in ipairs(variants) do
-		vim.cmd("silent spellgood " .. v) -- <- suppress messages
+		vim.cmd("silent spellgood " .. v)
 	end
 	print("Added variants of '" .. word .. "' to spellfile")
 end, {})

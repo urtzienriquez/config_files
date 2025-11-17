@@ -43,32 +43,20 @@ function _G.custom_foldtext()
 	if #start_line > 80 then
 		start_line = start_line:sub(1, 80) .. "..."
 	end
-	return string.format("%s  ···%d lines", start_line, line_count)
+	return string.format("%s ···%d lines", start_line, line_count)
 end
 vim.opt.foldtext = "v:lua.custom_foldtext()"
-
--- Show diagnostics as virtual text
-vim.diagnostic.config({
-	virtual_text = true,
-	update_in_insert = false,
-	severity_sort = true,
-	signs = {
-		text = {
-			[vim.diagnostic.severity.ERROR] = "",
-			[vim.diagnostic.severity.WARN] = "",
-			[vim.diagnostic.severity.INFO] = "󰋽",
-			[vim.diagnostic.severity.HINT] = "",
-		},
-	},
-})
 
 -- More natural split directions
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 
 -- Auto-resize splits when terminal window changes size
--- (e.g. when splitting or zooming with tmux)
-vim.api.nvim_create_autocmd({ "VimResized" }, { pattern = "*", command = "wincmd =" })
+vim.api.nvim_create_autocmd({ "VimResized" }, {
+	pattern = "*",
+	command = "wincmd =",
+	desc = "Auto-resize windows on terminal resize",
+})
 
 -- Better line wrapping for text files
 vim.api.nvim_create_autocmd("FileType", {
@@ -98,16 +86,18 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.linebreak = true
 		vim.opt_local.showbreak = "↳ "
 	end,
+	desc = "Better wrapping for prose files",
 })
 
--- Set pandoc syntax for markdown files to get LaTeX highlighting
+-- Set pandoc syntax for markdown files
 vim.api.nvim_create_autocmd("BufEnter", {
-  pattern = { "*.Rmd", "*.rmd", "*.qmd", "*.Qmd", "*.jmd", "*.Jmd", "*.md" },
-  callback = function()
-    vim.defer_fn(function()
-      vim.cmd("setlocal syntax=pandoc")
-    end, 50)
-  end,
+	pattern = { "*.Rmd", "*.rmd", "*.qmd", "*.Qmd", "*.jmd", "*.Jmd", "*.md" },
+	callback = function()
+		vim.defer_fn(function()
+			vim.cmd("setlocal syntax=pandoc")
+		end, 50)
+	end,
+	desc = "Set pandoc syntax for markdown-like files",
 })
 
 -- Ensure netrw syntax
@@ -118,6 +108,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 			vim.cmd("set syntax=netrw")
 		end, 50)
 	end,
+	desc = "Ensure netrw syntax is set",
 })
 
 -- hack for apparently remaining in insert mode after selecting a file with Telescope
@@ -127,4 +118,25 @@ vim.api.nvim_create_autocmd("WinLeave", {
 			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "i", false)
 		end
 	end,
+	desc = "Fix for Telescope leaving insert mode",
+})
+
+-- Diagnostics
+vim.api.nvim_create_autocmd("VimEnter", {
+	callback = function()
+		vim.diagnostic.config({
+			virtual_text = true,
+			update_in_insert = false,
+			severity_sort = true,
+			signs = {
+				text = {
+					[vim.diagnostic.severity.ERROR] = "",
+					[vim.diagnostic.severity.WARN] = "",
+					[vim.diagnostic.severity.INFO] = "󰋽",
+					[vim.diagnostic.severity.HINT] = "",
+				},
+			},
+		})
+	end,
+	desc = "Deferred: Configure diagnostics signs and virtual text",
 })
