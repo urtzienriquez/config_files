@@ -3,7 +3,8 @@
 -- Enable LSP servers
 local servers = {
 	"gopls",
-	-- "r_language_server", -- now provided by R-nvim's rnvimserver
+	"r_language_server",
+    "r_ls",
 	"matlab_language_server",
 	"pyright",
 	"ts_ls",

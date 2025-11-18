@@ -1,6 +1,42 @@
 return {
 	{
 		"nvim-telescope/telescope.nvim",
+		cmd = "Telescope",
+		keys = {
+			{ "<leader>fp", "<cmd>Telescope builtin<cr>", desc = "Find picker" },
+			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+			{
+				"<leader>f~",
+				function()
+					require("telescope.builtin").find_files({
+						cwd = vim.fn.expand("~"),
+						prompt_title = "Find files in home directory",
+						hidden = true,
+					})
+				end,
+				desc = "Find files in home directory",
+			},
+			{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Find with grep" },
+			{ "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Find buffers" },
+			{ "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Find help tags" },
+			{ "<leader>fk", "<cmd>Telescope keymaps<cr>", desc = "Find keymaps" },
+			{ "<leader>fw", "<cmd>Telescope grep_string<cr>", desc = "Find word" },
+			{ "<leader>fdg", "<cmd>Telescope diagnostics<cr>", desc = "Find diagnostics globally" },
+			{
+				"<leader>fdd",
+				function()
+					require("telescope.builtin").diagnostics({ bufnr = 0 })
+				end,
+				desc = "Find diagnostics in current buffer",
+			},
+			{ "<leader>fl", "<cmd>Telescope lsp_definitions<cr>", desc = "Find lsp definitions" },
+			{ "<leader>fs", "<cmd>Telescope lsp_document_symbols<cr>", desc = "Find lsp document symbols" },
+			{ "<leader>ft", "<cmd>Telescope treesitter<cr>", desc = "Find treesitter symbols" },
+			{ "<leader>fm", "<cmd>Telescope spell_suggest<cr>", desc = "Find spell suggestion" },
+			{ "<leader>f'", "<cmd>Telescope marks<cr>", desc = "Find marks" },
+			{ "<leader>f,", "<cmd>Telescope resume<cr>", desc = "Find resume" },
+			{ "<leader>f.", "<cmd>Telescope oldfiles<cr>", desc = "Find recent files" },
+		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			{
@@ -21,15 +57,12 @@ return {
 					return
 				end
 
-				-- Create backdrop buffer
 				backdrop_bufnr = vim.api.nvim_create_buf(false, true)
 				vim.bo[backdrop_bufnr].bufhidden = "wipe"
 
-				-- Get screen dimensions
 				local width = vim.o.columns
 				local height = vim.o.lines
 
-				-- Create fullscreen backdrop window
 				backdrop_winid = vim.api.nvim_open_win(backdrop_bufnr, false, {
 					relative = "editor",
 					width = width,
@@ -38,12 +71,11 @@ return {
 					row = 0,
 					style = "minimal",
 					focusable = false,
-					zindex = 1, -- Below Telescope windows
+					zindex = 1,
 				})
 
-				-- Set backdrop highlight
 				vim.wo[backdrop_winid].winhl = "Normal:TelescopeBackdrop"
-				vim.wo[backdrop_winid].winblend = 40 -- Transparency level (0-100)
+				vim.wo[backdrop_winid].winblend = 40
 			end
 
 			local function remove_backdrop()
@@ -97,10 +129,8 @@ return {
 			telescope.load_extension("ui-select")
 			telescope.load_extension("fzf")
 
-			-- Set up backdrop highlight
 			vim.api.nvim_set_hl(0, "TelescopeBackdrop", { bg = "#000000" })
 
-			-- Auto-create backdrop when Telescope opens
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "TelescopePrompt",
 				callback = function()
@@ -108,7 +138,6 @@ return {
 				end,
 			})
 
-			-- Auto-remove backdrop when Telescope closes
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "TelescopePrompt",
 				callback = function(args)
