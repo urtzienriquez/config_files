@@ -3,6 +3,6 @@
 
 return {
 	cmd = { vim.fn.stdpath('data') .. '/mason/bin/marksman', 'server' },
-	filetypes = { 'markdown', 'markdown.mdx', 'quarto' },
+	filetypes = { 'rmd', 'markdown', 'markdown.mdx', 'quarto' },
 	root_markers = { '.marksman.toml', '_quarto.yml', '.git' },
 }

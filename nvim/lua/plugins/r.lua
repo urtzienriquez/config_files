@@ -1,7 +1,8 @@
 return {
 	{
 		"R-nvim/R.nvim",
-		lazy = false,
+		-- lazy = false,
+        ft = {"r", "rmd", "rnoweb", "quarto"},
 		config = function()
 			local opts = {
 				R_app = "R",
