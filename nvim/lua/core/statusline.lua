@@ -1,4 +1,4 @@
--- Statusline
+-- Statusline with colored filetype icons
 
 -- --------------------------
 -- Colors
@@ -14,7 +14,7 @@ local colors = {
 	fg = "#c0caf5",
 }
 
-local devicons = require('nvim-web-devicons')
+local devicons = require("nvim-web-devicons")
 
 -- Highlight groups
 local function define_highlights()
@@ -22,13 +22,15 @@ local function define_highlights()
 	vim.api.nvim_set_hl(0, "SLGitChange", { fg = colors.blue })
 	vim.api.nvim_set_hl(0, "SLGitDelete", { fg = colors.red })
 	vim.api.nvim_set_hl(0, "SLGitBranch", { fg = colors.purple })
-	vim.api.nvim_set_hl(0, "SLFileType", { fg = colors.fg, bold = true })
 
 	-- Diagnostics
 	vim.api.nvim_set_hl(0, "SLDiagError", { fg = colors.red })
 	vim.api.nvim_set_hl(0, "SLDiagWarn", { fg = colors.yellow })
 	vim.api.nvim_set_hl(0, "SLDiagInfo", { fg = colors.blue2 })
 	vim.api.nvim_set_hl(0, "SLDiagHint", { fg = colors.teal })
+
+	-- Filetype text (non-icon part)
+	vim.api.nvim_set_hl(0, "SLFileType", { fg = colors.fg, bold = true })
 end
 
 define_highlights()
@@ -116,7 +118,7 @@ end
 function _G.st_branch()
 	local buf = vim.api.nvim_get_current_buf()
 	local g = git_cache[buf] or {}
-	return (g.branch or "") ~= "" and " " .. g.branch or ""
+	return (g.branch or "") ~= "" and "  " .. g.branch or ""
 end
 
 function _G.st_added()
@@ -137,31 +139,34 @@ function _G.st_removed()
 	return g.removed or ""
 end
 
--- Filetype
-function _G.st_filetype()
-    -- Get the full file path of the current buffer
-    local path = vim.api.nvim_buf_get_name(0)
+-- Cache for icon highlight groups to avoid recreating them
+local icon_hl_cache = {}
 
-    -- Get filename and extension for the devicons function
-    -- :t extracts the tail (filename), :e extracts the extension
-    local filename = vim.fn.fnamemodify(path, ":t")
-    local extension = vim.fn.fnamemodify(path, ":e")
+-- Filetype with colored icon - returns just the text parts
+function _G.st_filetype_text()
+	local path = vim.api.nvim_buf_get_name(0)
+	local filename = vim.fn.fnamemodify(path, ":t")
+	local extension = vim.fn.fnamemodify(path, ":e")
 
-    -- Get the icon for the file, and fall back to the default icon if none is found
-    -- We pass true for the `default` option to ensure an icon is always returned
-    local icon = devicons.get_icon(filename, extension, { default = true })
+	local icon, icon_color = devicons.get_icon_color(filename, extension, { default = true })
+	local filetype = vim.bo.filetype ~= "" and vim.bo.filetype or ""
 
-    -- Get the filetype
-    local filetype = vim.bo.filetype ~= "" and vim.bo.filetype or ""
+	if filetype == "" then
+		return ""
+	end
 
-    -- If the icon is available, prepend it to the filetype.
-    -- We add an extra space for separation.
-    if filetype ~= "" then
-        return (icon or "") .. " " .. filetype
-    else
-        -- Return filetype only if it's the only thing available (e.g., [No Name])
-        return filetype
-    end
+	-- Create/cache highlight group for this icon
+	if icon and icon_color then
+		local hl_name = "SLFileIcon_" .. icon_color:gsub("#", "")
+		if not icon_hl_cache[hl_name] then
+			vim.api.nvim_set_hl(0, hl_name, { fg = icon_color })
+			icon_hl_cache[hl_name] = true
+		end
+		-- Return in a format that statusline can parse
+		return string.format("%%#%s#%s %%#SLFileType#%s%%*", hl_name, icon, filetype)
+	else
+		return filetype
+	end
 end
 
 -- --------------------------
@@ -218,6 +223,6 @@ vim.o.statusline = table.concat({
 	"%#SLDiagHint#%{v:lua.st_hint()}%*  ",
 
 	"%=",
-	"%#SLFileType#%{v:lua.st_filetype()}%*  ",
+	"%{%v:lua.st_filetype_text()%}  ",
 	" %l:%c ",
 })
