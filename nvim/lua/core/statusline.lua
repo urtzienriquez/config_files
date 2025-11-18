@@ -118,7 +118,7 @@ end
 function _G.st_branch()
 	local buf = vim.api.nvim_get_current_buf()
 	local g = git_cache[buf] or {}
-	return (g.branch or "") ~= "" and "  " .. g.branch or ""
+	return (g.branch or "") ~= "" and " " .. g.branch or ""
 end
 
 function _G.st_added()
