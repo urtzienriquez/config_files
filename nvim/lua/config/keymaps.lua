@@ -380,39 +380,96 @@ local slime_utils = require("core.slime_utils")
 
 local function set_slime_keymaps(bufnr)
 	local opts_keymap = { noremap = true, silent = true, buffer = true }
+	local repl_utils = require("core.repl_utils")
+	local has_smart_blocks = repl_utils.has_smart_blocks()
 
 	-- Start REPLs
 	vim.keymap.set("n", "<leader>op", function()
 		slime_utils.start_tmux_repl("python")
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Start Python REPL" }))
+
 	vim.keymap.set("n", "<leader>oj", function()
 		slime_utils.start_tmux_repl("julia")
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Start Julia REPL" }))
+
 	vim.keymap.set("n", "<leader>om", function()
 		slime_utils.start_tmux_repl("matlab")
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Start MATLAB REPL" }))
 
-	-- Send code
-	vim.keymap.set("n", "<Return>", function()
-		if slime_utils.has_active_repl() then
-			local keys = "vap" .. vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true) .. "'>j"
-			vim.api.nvim_feedkeys(keys, "x", false)
-		else
-			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
-		end
-	end, { silent = true })
-	vim.keymap.set("v", "<Return>", function()
-		if slime_utils.has_active_repl() then
-			vim.api.nvim_feedkeys(
-				vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true),
-				"x",
-				false
-			)
-			vim.cmd("normal! '>j")
-		else
-			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
-		end
-	end, { silent = true })
+	-- Send code - smart block detection for Julia/Python, paragraph for others
+	if has_smart_blocks then
+		-- Smart block sending (Julia/Python)
+		vim.keymap.set("n", "<Return>", function()
+			if slime_utils.has_active_repl() then
+				local text, start_line, end_line = repl_utils.get_send_text()
+				if text then
+					vim.fn["slime#send"](text .. "\n")
+					-- Move cursor to line after the block, or stay on last line if at end of buffer
+					local total_lines = vim.api.nvim_buf_line_count(0)
+					local next_line = math.min(end_line + 1, total_lines)
+					vim.api.nvim_win_set_cursor(0, { next_line, 0 })
+
+					-- If we're not at the last line, skip following empty lines
+					if next_line < total_lines then
+						local lines = vim.api.nvim_buf_get_lines(0, next_line - 1, total_lines, false)
+						local skip_count = 0
+						for _, line in ipairs(lines) do
+							if line:match("^%s*$") then
+								skip_count = skip_count + 1
+							else
+								break
+							end
+						end
+						if skip_count > 0 then
+							vim.api.nvim_win_set_cursor(0, { math.min(next_line + skip_count, total_lines), 0 })
+						end
+					end
+				end
+			else
+				vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+			end
+		end, vim.tbl_extend("force", opts_keymap, { desc = "Send block to REPL" }))
+
+		vim.keymap.set("v", "<Return>", function()
+			if slime_utils.has_active_repl() then
+				vim.api.nvim_feedkeys(
+					vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true),
+					"x",
+					false
+				)
+				vim.cmd("normal! '>j")
+			else
+				vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+			end
+		end, vim.tbl_extend("force", opts_keymap, { desc = "Send selection to REPL" }))
+	else
+		-- Paragraph-based sending (MATLAB, etc.)
+		vim.keymap.set("n", "<Return>", function()
+			if slime_utils.has_active_repl() then
+				local keys = "vap"
+					.. vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true)
+					.. "'>j"
+				vim.api.nvim_feedkeys(keys, "x", false)
+			else
+				vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+			end
+		end, { silent = true })
+
+		vim.keymap.set("v", "<Return>", function()
+			if slime_utils.has_active_repl() then
+				vim.api.nvim_feedkeys(
+					vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true),
+					"x",
+					false
+				)
+				vim.cmd("normal! '>j")
+			else
+				vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+			end
+		end, { silent = true })
+	end
+
+	-- Send entire buffer
 	vim.keymap.set("n", "<leader>sb", function()
 		if slime_utils.has_active_repl() then
 			vim.cmd("normal! ggVG")
@@ -432,9 +489,9 @@ local function set_slime_keymaps(bufnr)
 			local keys = 'using Pkg; Pkg.activate(".")\nPkg.instantiate()\n'
 			vim.fn["slime#send"](keys)
 		else
-			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
+			vim.notify("No active REPL. Start one with <leader>oj", vim.log.levels.WARN)
 		end
-	end, { silent = true, desc = "activate and instantiate julia project" })
+	end, vim.tbl_extend("force", opts_keymap, { desc = "Activate and instantiate Julia project" }))
 
 	-- Sync working directory
 	vim.keymap.set("n", "<leader>sd", function()
@@ -453,6 +510,7 @@ local function set_slime_keymaps(bufnr)
 			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
 		end
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Close Python REPL" }))
+
 	vim.keymap.set("n", "<leader>qj", function()
 		if slime_utils.has_active_repl() then
 			slime_utils.close_tmux_repl("julia")
@@ -460,6 +518,7 @@ local function set_slime_keymaps(bufnr)
 			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
 		end
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Close Julia REPL" }))
+
 	vim.keymap.set("n", "<leader>qm", function()
 		if slime_utils.has_active_repl() then
 			slime_utils.close_tmux_repl("matlab")
@@ -467,6 +526,13 @@ local function set_slime_keymaps(bufnr)
 			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
 		end
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Close MATLAB REPL" }))
+
+	-- Debug block detection (unified for all languages with smart blocks)
+	if has_smart_blocks then
+		vim.keymap.set("n", "<leader>bc", function()
+			repl_utils.debug_block_detection()
+		end, vim.tbl_extend("force", opts_keymap, { desc = "Debug block detection" }))
+	end
 end
 
 vim.api.nvim_create_autocmd("FileType", {
