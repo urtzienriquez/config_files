@@ -1,15 +1,7 @@
 return {
-	{
-		"saghen/blink.compat",
-		version = "*",
-		lazy = true,
-		opts = {},
-	},
-	{
 		"saghen/blink.cmp",
 		dependencies = {
 			"rafamadriz/friendly-snippets",
-			"R-nvim/cmp-r",
 		},
 		version = "*",
 		opts = {
@@ -25,27 +17,12 @@ return {
 
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
-				per_filetype = {
-					r = { inherit_defaults = true, "R" },
-					-- rmd = { inherit_defaults = true },
-					-- Rmd = { inherit_defaults = true },
-					-- jmd = { inherit_defaults = true },
-					-- Jmd = { inherit_defaults = true },
-					-- quarto = { inherit_defaults = true},
-					-- markdown = { inherit_defaults = true },
-					-- text = { inherit_defaults = true },
-				},
 				providers = {
 					snippets = {
 						name = "snippets",
 						opts = {
 							score_offset = 100,
 						},
-					},
-					R = {
-						name = "cmp_r",
-						module = "blink.compat.source",
-						opts = {},
 					},
 				},
 			},
@@ -124,5 +101,4 @@ return {
 				callback = setup_highlights,
 			})
 		end,
-	},
 }
