@@ -55,18 +55,15 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
 	desc = "Auto-resize windows on terminal resize",
 })
 
--- Better line wrapping for text files
+-- Better line wrapping for text files (use FileType instead of BufEnter)
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
 		"markdown",
 		"text",
 		"rmd",
-		"Rmd",
 		"jmd",
-		"Jmd",
 		"quarto",
 		"qmd",
-		"Qmd",
 		"org",
 		"rst",
 		"asciidoc",
@@ -90,20 +87,20 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = { "*.Rmd", "*.rmd", "*.qmd", "*.Qmd", "*.jmd", "*.Jmd", "*.md" },
 	callback = function()
-		vim.defer_fn(function()
-			vim.cmd("setlocal syntax=pandoc")
-		end, 50)
+		vim.schedule(function()
+			if vim.bo.filetype == "rmd" or vim.bo.filetype == "quarto" or vim.bo.filetype == "markdown" then
+				vim.cmd("setlocal syntax=pandoc")
+			end
+		end)
 	end,
 	desc = "Set pandoc syntax for markdown-like files",
 })
 
--- Ensure netrw syntax
-vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = { "netrw" },
+-- Ensure netrw syntax (use FileType)
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "netrw",
 	callback = function()
-		vim.defer_fn(function()
-			vim.cmd("set syntax=netrw")
-		end, 50)
+		vim.cmd("set syntax=netrw")
 	end,
 	desc = "Ensure netrw syntax is set",
 })
@@ -135,5 +132,5 @@ vim.api.nvim_create_autocmd("VimEnter", {
 			},
 		})
 	end,
-	desc = "Deferred: Configure diagnostics signs and virtual text",
+	desc = "Configure diagnostics signs and virtual text",
 })
