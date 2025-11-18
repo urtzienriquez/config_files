@@ -145,6 +145,14 @@ vim.keymap.set("n", "<leader>t", function()
 	end
 end, { desc = "Toggle file explorer" })
 
+-- change working directory to current directory in netrw
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "netrw",
+	callback = function()
+		vim.keymap.set("n", "<leader>~", ":cd %<CR>:pwd<CR>", { buffer = true, desc = "change working directory" })
+	end,
+})
+
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
 -- ========================================
