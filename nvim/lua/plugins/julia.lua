@@ -3,6 +3,8 @@ return {
 	"JuliaEditorSupport/julia-vim",
 	lazy = false,
 	init = function()
+		-- for julia unicode symbols
+		vim.g.latex_to_unicode_auto = 1
 		-- Enable matchit for block-wise movements BEFORE plugin loads
 		vim.cmd("runtime macros/matchit.vim")
 	end,
