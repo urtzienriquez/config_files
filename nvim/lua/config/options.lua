@@ -84,9 +84,12 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Set pandoc syntax for markdown files
+-- BufEnter ensures syntax is restored even after netrw clears it
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = { "*.Rmd", "*.rmd", "*.qmd", "*.Qmd", "*.jmd", "*.Jmd", "*.md" },
 	callback = function()
+		-- Always set syntax on BufEnter since netrw clears it
+		-- Use schedule to ensure it runs after netrw's cleanup
 		vim.schedule(function()
 			if vim.bo.filetype == "rmd" or vim.bo.filetype == "quarto" or vim.bo.filetype == "markdown" then
 				vim.cmd("setlocal syntax=pandoc")
@@ -115,7 +118,7 @@ vim.api.nvim_create_autocmd("WinLeave", {
 	desc = "Fix for Telescope leaving insert mode",
 })
 
--- Diagnostics
+-- Diagnostics (lazy load on VimEnter since it's not needed immediately)
 vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()
 		vim.diagnostic.config({
@@ -124,10 +127,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
 			severity_sort = true,
 			signs = {
 				text = {
-					[vim.diagnostic.severity.ERROR] = "",
-					[vim.diagnostic.severity.WARN] = "",
+					[vim.diagnostic.severity.ERROR] = "",
+					[vim.diagnostic.severity.WARN] = "",
 					[vim.diagnostic.severity.INFO] = "󰋽",
-					[vim.diagnostic.severity.HINT] = "",
+					[vim.diagnostic.severity.HINT] = "",
 				},
 			},
 		})
