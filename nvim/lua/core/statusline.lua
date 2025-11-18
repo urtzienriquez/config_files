@@ -14,6 +14,8 @@ local colors = {
 	fg = "#c0caf5",
 }
 
+local devicons = require('nvim-web-devicons')
+
 -- Highlight groups
 local function define_highlights()
 	vim.api.nvim_set_hl(0, "SLGitAdd", { fg = colors.green })
@@ -137,7 +139,29 @@ end
 
 -- Filetype
 function _G.st_filetype()
-	return vim.bo.filetype ~= "" and vim.bo.filetype or ""
+    -- Get the full file path of the current buffer
+    local path = vim.api.nvim_buf_get_name(0)
+
+    -- Get filename and extension for the devicons function
+    -- :t extracts the tail (filename), :e extracts the extension
+    local filename = vim.fn.fnamemodify(path, ":t")
+    local extension = vim.fn.fnamemodify(path, ":e")
+
+    -- Get the icon for the file, and fall back to the default icon if none is found
+    -- We pass true for the `default` option to ensure an icon is always returned
+    local icon = devicons.get_icon(filename, extension, { default = true })
+
+    -- Get the filetype
+    local filetype = vim.bo.filetype ~= "" and vim.bo.filetype or ""
+
+    -- If the icon is available, prepend it to the filetype.
+    -- We add an extra space for separation.
+    if filetype ~= "" then
+        return (icon or "") .. " " .. filetype
+    else
+        -- Return filetype only if it's the only thing available (e.g., [No Name])
+        return filetype
+    end
 end
 
 -- --------------------------
