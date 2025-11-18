@@ -149,7 +149,7 @@ end, { desc = "Toggle file explorer" })
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "netrw",
 	callback = function()
-		vim.keymap.set("n", "<leader>~", ":cd %<CR>:pwd<CR>", { buffer = true, desc = "change working directory" })
+		vim.keymap.set("n", "~", ":cd %<CR>:pwd<CR>", { buffer = true, desc = "change working directory" })
 	end,
 })
 
