@@ -221,12 +221,39 @@ function _G.st_filetype_text()
 	local path = vim.api.nvim_buf_get_name(0)
 	local filename = vim.fn.fnamemodify(path, ":t")
 	local extension = vim.fn.fnamemodify(path, ":e")
-
-	local icon, icon_color = devicons.get_icon_color(filename, extension, { default = true })
 	local filetype = vim.bo.filetype ~= "" and vim.bo.filetype or ""
 
 	if filetype == "" then
 		return ""
+	end
+
+	-- Hard-coded filetype icon override for Telescope prompt (guaranteed)
+	if filetype == "TelescopePrompt" then
+		local icon = ""
+		local icon_color = "#7aa2f7"
+
+		local hl_name = "SLFileIcon_" .. icon_color:gsub("#", "")
+		if not icon_hl_cache[hl_name] then
+			vim.api.nvim_set_hl(0, hl_name, { fg = icon_color })
+			icon_hl_cache[hl_name] = true
+		end
+
+		return string.format("%%#%s#%s %%#SLFileType#%s%%*", hl_name, icon, filetype)
+	end
+
+	-- Otherwise, try to get the icon via nvim-web-devicons.
+	-- Try filename+ext first (normal), then try using the filetype as the "extension" key.
+	local icon, icon_color = devicons.get_icon_color(filename, extension, { default = true })
+
+	-- If not found, try using the filetype as the extension/key
+	if not icon then
+		-- get_icon_color can accept filename and ext; pass empty filename and filetype as ext
+		icon, icon_color = devicons.get_icon_color("", filetype, { default = true })
+	end
+
+	-- also try lowercase filetype
+	if not icon then
+		icon, icon_color = devicons.get_icon_color("", string.lower(filetype), { default = true })
 	end
 
 	if icon and icon_color then
@@ -235,8 +262,10 @@ function _G.st_filetype_text()
 			vim.api.nvim_set_hl(0, hl_name, { fg = icon_color })
 			icon_hl_cache[hl_name] = true
 		end
+		-- keep original filetype text (not the filename) next to icon
 		return string.format("%%#%s#%s %%#SLFileType#%s%%*", hl_name, icon, filetype)
 	else
+		-- fallback: just show the filetype text
 		return filetype
 	end
 end
@@ -297,15 +326,11 @@ end, {})
 -- --------------------------
 vim.o.laststatus = 3
 
--- Hide statusline for certain buffer types
 vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 	callback = function()
-		-- local ft = vim.bo.filetype
 		local bt = vim.bo.buftype
 		local bufname = vim.api.nvim_buf_get_name(0)
-
-		-- Hide for noname buffers, and other special buffers
-		if bufname == "" or bt ~= "" then
+		if bufname == "" and bt == "" and vim.bo.filetype == "" then
 			vim.wo.statusline = " "
 		else
 			vim.wo.statusline = "" -- Use global statusline
