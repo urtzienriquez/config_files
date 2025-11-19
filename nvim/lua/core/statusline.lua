@@ -1,4 +1,4 @@
--- Statusline with colored filetype icons and improved git refresh
+-- Statusline with colored filetype icons and reliable git status
 
 -- --------------------------
 -- Colors
@@ -37,127 +37,118 @@ define_highlights()
 vim.api.nvim_create_autocmd("ColorScheme", { callback = define_highlights })
 
 -- --------------------------
--- Git cache and root cache
+-- Git cache
 -- --------------------------
-local git_cache = {} -- cache per buffer
-local git_root_cache = {} -- store .git root per buffer
-local pending_updates = {} -- track pending async updates to avoid duplicate calls
+local git_cache = {}
 
--- Get git root for buffer (cached)
-local function get_git_root(buf)
-	local path = vim.api.nvim_buf_get_name(buf)
+-- Get git root for buffer
+local function get_git_root(bufnr)
+	local path = vim.api.nvim_buf_get_name(bufnr)
 	if path == "" then
 		return nil
 	end
-	if git_root_cache[path] then
-		return git_root_cache[path]
-	end
 	local dir = vim.fn.fnamemodify(path, ":p:h")
-	local root = vim.fn.finddir(".git", dir .. ";")
-	git_root_cache[path] = root ~= "" and vim.fn.fnamemodify(root, ":h") or nil
-	return git_root_cache[path]
+	local cmd = string.format("git -C %s rev-parse --show-toplevel 2>/dev/null", vim.fn.shellescape(dir))
+	local root = vim.fn.system(cmd):gsub("\n", "")
+	return root ~= "" and root or nil
 end
 
 -- --------------------------
--- Async Git runner
+-- Simple synchronous git status update
 -- --------------------------
-local function run_async(cmd, cwd, callback)
-	local stdout = vim.loop.new_pipe(false)
-	local handle
-
-	handle = vim.loop.spawn("bash", {
-		args = { "-c", cmd },
-		stdio = { nil, stdout, nil },
-		cwd = cwd,
-	}, function()
-		stdout:close()
-		handle:close()
-	end)
-
-	if not handle then
+local function update_git(bufnr)
+	bufnr = bufnr or vim.api.nvim_get_current_buf()
+	
+	if not vim.api.nvim_buf_is_valid(bufnr) or vim.bo[bufnr].buftype ~= "" then
 		return
 	end
 
-	stdout:read_start(function(err, data)
-		if err or not data then
-			return
-		end
-		vim.schedule_wrap(callback)(data)
-	end)
-end
-
--- --------------------------
--- Update Git info with debouncing
--- --------------------------
-local function update_git(buf, force)
-	local root = get_git_root(buf)
+	local root = get_git_root(bufnr)
 	if not root then
-		git_cache[buf] = { branch = "", added = "", changed = "", removed = "" }
+		git_cache[bufnr] = { branch = "", added = 0, modified = 0, removed = 0 }
 		return
 	end
 
-	-- Prevent duplicate updates unless forced
-	if not force and pending_updates[buf] then
-		return
-	end
-	pending_updates[buf] = true
+	-- Get branch name
+	local branch_cmd = string.format("git -C %s rev-parse --abbrev-ref HEAD 2>/dev/null", vim.fn.shellescape(root))
+	local branch = vim.fn.system(branch_cmd):gsub("\n", "")
 
-	git_cache[buf] = git_cache[buf] or {}
+	-- Get git status using porcelain format (like lualine does)
+	local status_cmd = string.format("git -C %s status --porcelain 2>/dev/null", vim.fn.shellescape(root))
+	local status_output = vim.fn.system(status_cmd)
 
-	-- Branch
-	run_async("git rev-parse --abbrev-ref HEAD 2>/dev/null", root, function(data)
-		git_cache[buf].branch = data:gsub("\n", "")
-		pending_updates[buf] = nil
-		vim.api.nvim_command("redrawstatus")
-	end)
+	local added = 0
+	local modified = 0
+	local removed = 0
 
-	-- Diff stats (both staged and unstaged)
-	run_async("git diff --numstat HEAD 2>/dev/null", root, function(data)
-		local added, removed = 0, 0
-		for a, r in data:gmatch("(%d+)%s+(%d+)") do
-			added = added + tonumber(a)
-			removed = removed + tonumber(r)
+	-- Parse porcelain output
+	for line in status_output:gmatch("[^\r\n]+") do
+		local index_status = line:sub(1, 1)
+		local work_status = line:sub(2, 2)
+		
+		-- Check both index and working tree status
+		for _, status in ipairs({index_status, work_status}) do
+			if status == "A" or status == "?" then
+				added = added + 1
+			elseif status == "M" then
+				modified = modified + 1
+			elseif status == "D" then
+				removed = removed + 1
+			end
 		end
-		git_cache[buf].added = added > 0 and ("+" .. added) or ""
-		git_cache[buf].changed = (added + removed) > 0 and ("~" .. (added + removed)) or ""
-		git_cache[buf].removed = removed > 0 and ("-" .. removed) or ""
-		vim.api.nvim_command("redrawstatus")
-	end)
+	end
+
+	git_cache[bufnr] = {
+		branch = branch,
+		added = added,
+		modified = modified,
+		removed = removed,
+	}
 end
 
 -- --------------------------
 -- Statusline functions
 -- --------------------------
 
--- Git
 function _G.st_branch()
 	local buf = vim.api.nvim_get_current_buf()
-	local g = git_cache[buf] or {}
-	return (g.branch or "") ~= "" and " " .. g.branch or ""
+	local g = git_cache[buf]
+	if not g or g.branch == "" then
+		return ""
+	end
+	return " " .. g.branch
 end
 
 function _G.st_added()
 	local buf = vim.api.nvim_get_current_buf()
-	local g = git_cache[buf] or {}
-	return g.added or ""
+	local g = git_cache[buf]
+	if not g or g.added == 0 then
+		return ""
+	end
+	return "+" .. g.added
 end
 
 function _G.st_changed()
 	local buf = vim.api.nvim_get_current_buf()
-	local g = git_cache[buf] or {}
-	return g.changed or ""
+	local g = git_cache[buf]
+	if not g or g.modified == 0 then
+		return ""
+	end
+	return "~" .. g.modified
 end
 
 function _G.st_removed()
 	local buf = vim.api.nvim_get_current_buf()
-	local g = git_cache[buf] or {}
-	return g.removed or ""
+	local g = git_cache[buf]
+	if not g or g.removed == 0 then
+		return ""
+	end
+	return "-" .. g.removed
 end
 
--- Cache for icon highlight groups to avoid recreating them
+-- Cache for icon highlight groups
 local icon_hl_cache = {}
 
--- Filetype with colored icon - returns just the text parts
 function _G.st_filetype_text()
 	local path = vim.api.nvim_buf_get_name(0)
 	local filename = vim.fn.fnamemodify(path, ":t")
@@ -170,14 +161,12 @@ function _G.st_filetype_text()
 		return ""
 	end
 
-	-- Create/cache highlight group for this icon
 	if icon and icon_color then
 		local hl_name = "SLFileIcon_" .. icon_color:gsub("#", "")
 		if not icon_hl_cache[hl_name] then
 			vim.api.nvim_set_hl(0, hl_name, { fg = icon_color })
 			icon_hl_cache[hl_name] = true
 		end
-		-- Return in a format that statusline can parse
 		return string.format("%%#%s#%s %%#SLFileType#%s%%*", hl_name, icon, filetype)
 	else
 		return filetype
@@ -212,78 +201,31 @@ function _G.st_hint()
 end
 
 -- --------------------------
--- Autocmd to refresh Git info
+-- Refresh triggers
 -- --------------------------
 
--- Update on buffer events
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
-	callback = function()
-		update_git(vim.api.nvim_get_current_buf())
+-- Update on buffer enter and after writing
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "FocusGained" }, {
+	callback = function(args)
+		update_git(args.buf)
+		vim.cmd("redrawstatus")
 	end,
 })
 
--- Watch for git directory changes (commits, checkouts, pushes, etc.)
-vim.api.nvim_create_autocmd("FocusGained", {
-	callback = function()
-		-- Force refresh when window regains focus (e.g., after git commands in terminal)
-		update_git(vim.api.nvim_get_current_buf(), true)
-	end,
-})
-
--- Detect tmux pane focus changes (for lazygit popup workflows)
-if vim.env.TMUX then
-	local last_check_time = 0
-	local check_interval = 500 -- Check every 500ms
-
-	local function check_tmux_focus()
-		local current_time = vim.loop.now()
-		if current_time - last_check_time < check_interval then
-			return
-		end
-		last_check_time = current_time
-
-		-- Check if we're the active pane
-		local handle = io.popen("tmux display-message -p '#{pane_active}'")
-		if handle then
-			local is_active = handle:read("*l")
-			handle:close()
-			
-			if is_active == "1" then
-				-- We just became active, refresh git status
-				local buf = vim.api.nvim_get_current_buf()
-				if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
-					update_git(buf, true)
-				end
-			end
-		end
-	end
-
-	-- Check on cursor movement (lightweight check)
-	vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-		callback = check_tmux_focus,
-	})
-
-	-- Also check on mode changes
-	vim.api.nvim_create_autocmd("ModeChanged", {
-		callback = check_tmux_focus,
-	})
-end
-
--- Fallback periodic refresh (every 3 seconds when idle)
+-- Periodic refresh every 2 seconds
 local timer = vim.loop.new_timer()
-timer:start(3000, 3000, vim.schedule_wrap(function()
+timer:start(2000, 2000, vim.schedule_wrap(function()
 	local buf = vim.api.nvim_get_current_buf()
 	if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
-		update_git(buf, true)
+		update_git(buf)
+		vim.cmd("redrawstatus")
 	end
 end))
 
--- Add a user command to manually refresh git status
+-- Manual refresh command
 vim.api.nvim_create_user_command("GitStatusRefresh", function()
-	local buf = vim.api.nvim_get_current_buf()
-	pending_updates[buf] = nil -- Clear pending flag
-	git_cache[buf] = nil -- Clear cache
-	update_git(buf, true)
+	update_git(vim.api.nvim_get_current_buf())
+	vim.cmd("redrawstatus")
 	vim.notify("Git status refreshed", vim.log.levels.INFO)
 end, {})
 
