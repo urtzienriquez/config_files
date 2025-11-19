@@ -58,7 +58,7 @@ end
 -- --------------------------
 local function update_git(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
-
+	
 	if not vim.api.nvim_buf_is_valid(bufnr) or vim.bo[bufnr].buftype ~= "" then
 		return
 	end
@@ -219,19 +219,17 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "FocusGained" }, {
 	end,
 })
 
--- Periodic refresh every 2 seconds
-local timer = vim.loop.new_timer()
-timer:start(
-	2000,
-	2000,
-	vim.schedule_wrap(function()
+-- Only refresh on CursorHold (when idle for 'updatetime' ms)
+-- This is much less aggressive than a timer
+vim.api.nvim_create_autocmd("CursorHold", {
+	callback = function()
 		local buf = vim.api.nvim_get_current_buf()
 		if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
 			update_git(buf)
 			vim.cmd("redrawstatus")
 		end
-	end)
-)
+	end,
+})
 
 -- Manual refresh command
 vim.api.nvim_create_user_command("GitStatusRefresh", function()
