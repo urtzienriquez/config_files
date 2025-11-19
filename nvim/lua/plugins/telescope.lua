@@ -30,6 +30,7 @@ return {
 				desc = "Find diagnostics in current buffer",
 			},
 			{ "<leader>fl", "<cmd>Telescope lsp_definitions<cr>", desc = "Find lsp definitions" },
+			{ "<leader>fr", "<cmd>Telescope lsp_references<cr>", desc = "Find lsp references" },
 			{ "<leader>fs", "<cmd>Telescope lsp_document_symbols<cr>", desc = "Find lsp document symbols" },
 			{ "<leader>ft", "<cmd>Telescope treesitter<cr>", desc = "Find treesitter symbols" },
 			{ "<leader>fm", "<cmd>Telescope spell_suggest<cr>", desc = "Find spell suggestion" },
