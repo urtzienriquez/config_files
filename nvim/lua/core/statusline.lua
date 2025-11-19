@@ -211,23 +211,11 @@ end
 -- Refresh triggers
 -- --------------------------
 
--- Update on buffer enter and after writing
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "FocusGained" }, {
+-- Update only on buffer write
+vim.api.nvim_create_autocmd({"BufEnter", "BufWritePost"}, {
 	callback = function(args)
 		update_git(args.buf)
 		vim.cmd("redrawstatus")
-	end,
-})
-
--- Only refresh on CursorHold (when idle for 'updatetime' ms)
--- This is much less aggressive than a timer
-vim.api.nvim_create_autocmd("CursorHold", {
-	callback = function()
-		local buf = vim.api.nvim_get_current_buf()
-		if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
-			update_git(buf)
-			vim.cmd("redrawstatus")
-		end
 	end,
 })
 
