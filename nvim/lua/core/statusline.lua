@@ -1,4 +1,4 @@
--- Statusline with colored filetype icons
+-- Statusline with colored filetype icons and improved git refresh
 
 -- --------------------------
 -- Colors
@@ -41,16 +41,20 @@ vim.api.nvim_create_autocmd("ColorScheme", { callback = define_highlights })
 -- --------------------------
 local git_cache = {} -- cache per buffer
 local git_root_cache = {} -- store .git root per buffer
+local pending_updates = {} -- track pending async updates to avoid duplicate calls
 
 -- Get git root for buffer (cached)
 local function get_git_root(buf)
 	local path = vim.api.nvim_buf_get_name(buf)
+	if path == "" then
+		return nil
+	end
 	if git_root_cache[path] then
 		return git_root_cache[path]
 	end
 	local dir = vim.fn.fnamemodify(path, ":p:h")
 	local root = vim.fn.finddir(".git", dir .. ";")
-	git_root_cache[path] = root ~= "" and dir or nil
+	git_root_cache[path] = root ~= "" and vim.fn.fnamemodify(root, ":h") or nil
 	return git_root_cache[path]
 end
 
@@ -70,6 +74,10 @@ local function run_async(cmd, cwd, callback)
 		handle:close()
 	end)
 
+	if not handle then
+		return
+	end
+
 	stdout:read_start(function(err, data)
 		if err or not data then
 			return
@@ -79,25 +87,32 @@ local function run_async(cmd, cwd, callback)
 end
 
 -- --------------------------
--- Update Git info
+-- Update Git info with debouncing
 -- --------------------------
-local function update_git(buf)
+local function update_git(buf, force)
 	local root = get_git_root(buf)
 	if not root then
 		git_cache[buf] = { branch = "", added = "", changed = "", removed = "" }
 		return
 	end
 
+	-- Prevent duplicate updates unless forced
+	if not force and pending_updates[buf] then
+		return
+	end
+	pending_updates[buf] = true
+
 	git_cache[buf] = git_cache[buf] or {}
 
 	-- Branch
 	run_async("git rev-parse --abbrev-ref HEAD 2>/dev/null", root, function(data)
 		git_cache[buf].branch = data:gsub("\n", "")
+		pending_updates[buf] = nil
 		vim.api.nvim_command("redrawstatus")
 	end)
 
-	-- Diff
-	run_async("git diff --numstat 2>/dev/null", root, function(data)
+	-- Diff stats (both staged and unstaged)
+	run_async("git diff --numstat HEAD 2>/dev/null", root, function(data)
 		local added, removed = 0, 0
 		for a, r in data:gmatch("(%d+)%s+(%d+)") do
 			added = added + tonumber(a)
@@ -118,7 +133,7 @@ end
 function _G.st_branch()
 	local buf = vim.api.nvim_get_current_buf()
 	local g = git_cache[buf] or {}
-	return (g.branch or "") ~= "" and " " .. g.branch or ""
+	return (g.branch or "") ~= "" and " " .. g.branch or ""
 end
 
 function _G.st_added()
@@ -178,12 +193,12 @@ end
 
 function _G.st_err()
 	local c = diag_count(vim.diagnostic.severity.ERROR)
-	return c > 0 and (" " .. c) or ""
+	return c > 0 and (" " .. c) or ""
 end
 
 function _G.st_warn()
 	local c = diag_count(vim.diagnostic.severity.WARN)
-	return c > 0 and (" " .. c) or ""
+	return c > 0 and (" " .. c) or ""
 end
 
 function _G.st_info()
@@ -193,17 +208,49 @@ end
 
 function _G.st_hint()
 	local c = diag_count(vim.diagnostic.severity.HINT)
-	return c > 0 and (" " .. c) or ""
+	return c > 0 and (" " .. c) or ""
 end
 
 -- --------------------------
 -- Autocmd to refresh Git info
 -- --------------------------
+
+-- Update on buffer events
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
 	callback = function()
 		update_git(vim.api.nvim_get_current_buf())
 	end,
 })
+
+-- Watch for git directory changes (commits, checkouts, pushes, etc.)
+vim.api.nvim_create_autocmd("FocusGained", {
+	callback = function()
+		-- Force refresh when window regains focus (e.g., after git commands in terminal)
+		update_git(vim.api.nvim_get_current_buf(), true)
+	end,
+})
+
+-- Periodic refresh for current buffer (every 5 seconds when idle)
+local timer = vim.loop.new_timer()
+timer:start(
+	5000,
+	5000,
+	vim.schedule_wrap(function()
+		local buf = vim.api.nvim_get_current_buf()
+		if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
+			update_git(buf, true)
+		end
+	end)
+)
+
+-- Add a user command to manually refresh git status
+vim.api.nvim_create_user_command("GitStatusRefresh", function()
+	local buf = vim.api.nvim_get_current_buf()
+	pending_updates[buf] = nil -- Clear pending flag
+	git_cache[buf] = nil -- Clear cache
+	update_git(buf, true)
+	vim.notify("Git status refreshed", vim.log.levels.INFO)
+end, {})
 
 -- --------------------------
 -- Final statusline
