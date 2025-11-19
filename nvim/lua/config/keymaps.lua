@@ -345,8 +345,8 @@ local function set_rnvim_keymaps(bufnr)
 	end, { desc = "Render R Markdown with custom output name" })
 
 	-- add inline r code in insert and normal modes
-	vim.keymap.set("i", "<C-i>", "`r<Space>`<Esc>i", opts_keymap)
-	vim.keymap.set("n", "<C-i>", "i`r<Space>`<Esc>i", opts_keymap)
+	vim.keymap.set("i", "<C-s>", "`r<Space>`<Esc>i", opts_keymap)
+	vim.keymap.set("n", "<C-s>", "i`r<Space>`<Esc>i", opts_keymap)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
