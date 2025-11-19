@@ -158,7 +158,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- refresh git status
-vim.keymap.set("n", "<leader>g", ":GitStatusRefresh<CR>", { silent = true, desc = "refresh git status"})
+vim.keymap.set("n", "<leader>g", ":GitStatusRefresh<CR>", { silent = true, desc = "refresh git status" })
 
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
