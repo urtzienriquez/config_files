@@ -58,7 +58,7 @@ end
 -- --------------------------
 local function update_git(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	
+
 	if not vim.api.nvim_buf_is_valid(bufnr) or vim.bo[bufnr].buftype ~= "" then
 		return
 	end
@@ -73,35 +73,38 @@ local function update_git(bufnr)
 	local branch_cmd = string.format("git -C %s rev-parse --abbrev-ref HEAD 2>/dev/null", vim.fn.shellescape(root))
 	local branch = vim.fn.system(branch_cmd):gsub("\n", "")
 
-	-- Get git status using porcelain format (like lualine does)
-	local status_cmd = string.format("git -C %s status --porcelain 2>/dev/null", vim.fn.shellescape(root))
-	local status_output = vim.fn.system(status_cmd)
+	-- Get diff stats for uncommitted changes (staged + unstaged)
+	-- This shows line insertions/deletions, not file counts
+	local diff_cmd = string.format("git -C %s diff --numstat HEAD 2>/dev/null", vim.fn.shellescape(root))
+	local diff_output = vim.fn.system(diff_cmd)
 
 	local added = 0
-	local modified = 0
 	local removed = 0
 
-	-- Parse porcelain output
-	for line in status_output:gmatch("[^\r\n]+") do
-		local index_status = line:sub(1, 1)
-		local work_status = line:sub(2, 2)
-		
-		-- Check both index and working tree status
-		for _, status in ipairs({index_status, work_status}) do
-			if status == "A" or status == "?" then
-				added = added + 1
-			elseif status == "M" then
-				modified = modified + 1
-			elseif status == "D" then
-				removed = removed + 1
-			end
+	-- Parse numstat output: "additions deletions filename"
+	for line in diff_output:gmatch("[^\r\n]+") do
+		local adds, dels = line:match("^(%d+)%s+(%d+)")
+		if adds and dels then
+			added = added + tonumber(adds)
+			removed = removed + tonumber(dels)
 		end
+	end
+
+	-- Check if there are any uncommitted changes at all
+	local status_cmd = string.format("git -C %s status --porcelain 2>/dev/null", vim.fn.shellescape(root))
+	local status_output = vim.fn.system(status_cmd)
+	local has_changes = status_output ~= ""
+
+	-- If no changes reported by status, zero out the counts
+	-- This handles the case where diff might show stale data
+	if not has_changes then
+		added = 0
+		removed = 0
 	end
 
 	git_cache[bufnr] = {
 		branch = branch,
 		added = added,
-		modified = modified,
 		removed = removed,
 	}
 end
@@ -131,10 +134,14 @@ end
 function _G.st_changed()
 	local buf = vim.api.nvim_get_current_buf()
 	local g = git_cache[buf]
-	if not g or g.modified == 0 then
+	if not g then
 		return ""
 	end
-	return "~" .. g.modified
+	local total = g.added + g.removed
+	if total == 0 then
+		return ""
+	end
+	return "~" .. total
 end
 
 function _G.st_removed()
@@ -214,13 +221,17 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "FocusGained" }, {
 
 -- Periodic refresh every 2 seconds
 local timer = vim.loop.new_timer()
-timer:start(2000, 2000, vim.schedule_wrap(function()
-	local buf = vim.api.nvim_get_current_buf()
-	if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
-		update_git(buf)
-		vim.cmd("redrawstatus")
-	end
-end))
+timer:start(
+	2000,
+	2000,
+	vim.schedule_wrap(function()
+		local buf = vim.api.nvim_get_current_buf()
+		if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
+			update_git(buf)
+			vim.cmd("redrawstatus")
+		end
+	end)
+)
 
 -- Manual refresh command
 vim.api.nvim_create_user_command("GitStatusRefresh", function()
