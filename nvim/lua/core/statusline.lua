@@ -289,7 +289,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 -- Manual refresh command
 vim.api.nvim_create_user_command("GitStatusRefresh", function()
 	update_git_debounced(vim.api.nvim_get_current_buf(), 0)
-	-- vim.notify("Git status refreshing...", vim.log.levels.INFO)
+	vim.notify("Git status refreshing...", vim.log.levels.INFO)
 end, {})
 
 -- --------------------------
@@ -300,7 +300,7 @@ vim.o.laststatus = 3
 -- Hide statusline for certain buffer types
 vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 	callback = function()
-		local ft = vim.bo.filetype
+		-- local ft = vim.bo.filetype
 		local bt = vim.bo.buftype
 		local bufname = vim.api.nvim_buf_get_name(0)
 
@@ -314,8 +314,8 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 })
 
 vim.o.statusline = table.concat({
-	" %t %m ",
-	"%#SLGitBranch#%{v:lua.st_branch()}%*  ",
+	" %t %m  ",
+	"%#SLGitBranch#%{v:lua.st_branch()}%* ",
 	"%#SLGitAdd#%{v:lua.st_added()}%* ",
 	"%#SLGitChange#%{v:lua.st_changed()}%* ",
 	"%#SLGitDelete#%{v:lua.st_removed()}%*  ",
@@ -324,7 +324,7 @@ vim.o.statusline = table.concat({
 	"%#SLDiagError#%{v:lua.st_err()}%* ",
 	"%#SLDiagWarn#%{v:lua.st_warn()}%* ",
 	"%#SLDiagInfo#%{v:lua.st_info()}%* ",
-	"%#SLDiagHint#%{v:lua.st_hint()}%*  ",
+	"%#SLDiagHint#%{v:lua.st_hint()}%* ",
 
 	"%=",
 	"%{%v:lua.st_filetype_text()%}  ",

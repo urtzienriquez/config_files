@@ -1,4 +1,4 @@
--- =========
+-- =========key
 -- KEYMAPS
 -- =========
 
@@ -149,17 +149,16 @@ end, { desc = "Toggle file explorer" })
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "netrw",
 	callback = function()
-		vim.keymap.set("n", "~", ":cd %<CR>:pwd<CR>", { buffer = true, desc = "change working directory" })
+		vim.keymap.set("n", "~", function()
+			local dir = vim.fn.expand("%:p:h")
+			vim.cmd("cd " .. vim.fn.fnameescape(dir))
+			vim.notify("cd'd to " .. dir, vim.log.levels.INFO)
+		end, { buffer = true, desc = "change working directory" })
 	end,
 })
 
 -- refresh git status
 vim.keymap.set("n", "<leader>g", ":GitStatusRefresh<CR>", { silent = true, desc = "refresh git status"})
-vim.api.nvim_create_autocmd("BufEnter", {
-	callback = function()
-		vim.cmd("GitStatusRefresh")
-	end,
-})
 
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
