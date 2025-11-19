@@ -119,7 +119,7 @@ function _G.st_branch()
 	if not g or g.branch == "" then
 		return ""
 	end
-	return " " .. g.branch
+	return " " .. g.branch
 end
 
 function _G.st_added()
@@ -189,12 +189,12 @@ end
 
 function _G.st_err()
 	local c = diag_count(vim.diagnostic.severity.ERROR)
-	return c > 0 and (" " .. c) or ""
+	return c > 0 and (" " .. c) or ""
 end
 
 function _G.st_warn()
 	local c = diag_count(vim.diagnostic.severity.WARN)
-	return c > 0 and (" " .. c) or ""
+	return c > 0 and (" " .. c) or ""
 end
 
 function _G.st_info()
@@ -204,7 +204,7 @@ end
 
 function _G.st_hint()
 	local c = diag_count(vim.diagnostic.severity.HINT)
-	return c > 0 and (" " .. c) or ""
+	return c > 0 and (" " .. c) or ""
 end
 
 -- --------------------------
