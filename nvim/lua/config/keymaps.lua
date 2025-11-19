@@ -338,9 +338,9 @@ local function set_rnvim_keymaps(bufnr)
 			return
 		end
 		if filename ~= "" then
-			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", output_file = "' .. filename .. '")')
+			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", output_file = "' .. filename .. '", envir = new.env())')
 		else
-			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '")')
+			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", envir = new.env())')
 		end
 	end, { desc = "Render R Markdown with custom output name" })
 
