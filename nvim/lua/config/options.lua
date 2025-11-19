@@ -12,6 +12,7 @@ vim.opt.mouse = ""
 
 -- misc options
 vim.g.have_nerd_font = true
+vim.g.netrw_banner = 0
 vim.opt.cursorline = true
 vim.opt.number = true
 vim.opt.relativenumber = true

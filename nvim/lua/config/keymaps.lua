@@ -5,15 +5,16 @@
 -- Basic keymaps
 -- ===============
 
--- Disable arrow keys in normal and insert modes
-vim.api.nvim_set_keymap("n", "<Up>", "<Nop>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<Down>", "<Nop>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<Left>", "<Nop>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<Right>", "<Nop>", { noremap = true, silent = true })
+-- Disable arrow keys in insert mode
 vim.api.nvim_set_keymap("i", "<Up>", "<Nop>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("i", "<Down>", "<Nop>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("i", "<Left>", "<Nop>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("i", "<Right>", "<Nop>", { noremap = true, silent = true })
+-- arrows in normal mode to navigate quickfix
+vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Left>", "<cmd>cclose<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<Right>", "<cmd>copen<CR>", { noremap = true, silent = true })
 
 -- Highlight without moving
 vim.keymap.set("n", "*", "*``")
@@ -24,22 +25,11 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 -- remap C-k to C-d to insert digraphs
 vim.keymap.set("i", "<C-d>", "<C-k>", { noremap = true })
 
--- navigate quickfix
-vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Left>", "<cmd>cclose<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Right>", "<cmd>copen<CR>", { noremap = true, silent = true })
-
 -- Resize windows
-vim.keymap.set("n", "<C-A-Left>", ":vertical resize +2<CR>", { silent = true, desc = "Resize vertically split window" })
-vim.keymap.set(
-	"n",
-	"<C-A-Right>",
-	":vertical resize -2<CR>",
-	{ silent = true, desc = "Resize vertically split window" }
-)
-vim.keymap.set("n", "<C-A-Up>", ":resize +2<CR>", { silent = true, desc = "Resize horizontally split window" })
-vim.keymap.set("n", "<C-A-Down>", ":resize -2<CR>", { silent = true, desc = "Resize horizontally split window" })
+vim.keymap.set("n", "<C-A-Left>", ":vertical resize +2<CR>", { silent = true, desc = "Resize vertically" })
+vim.keymap.set("n", "<C-A-Right>", ":vertical resize -2<CR>", { silent = true, desc = "Resize vertically" })
+vim.keymap.set("n", "<C-A-Up>", ":resize +2<CR>", { silent = true, desc = "Resize horizontally" })
+vim.keymap.set("n", "<C-A-Down>", ":resize -2<CR>", { silent = true, desc = "Resize horizontally" })
 
 -- Remap half page up/down to center cursor
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, desc = "Jump half page down" })
@@ -124,12 +114,15 @@ end, {})
 vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 
 -- toggle file explorer
-local prev_buf = nil
-vim.keymap.set("n", "<leader>t", function()
+_G.toggle_ex_state = _G.toggle_ex_state or {}
+
+vim.api.nvim_create_user_command("ToggleEx", function()
+	local state = _G.toggle_ex_state
 	local cur_buf = vim.api.nvim_get_current_buf()
+
 	if vim.bo.filetype == "netrw" then
-		if prev_buf and vim.api.nvim_buf_is_valid(prev_buf) then
-			vim.api.nvim_set_current_buf(prev_buf)
+		if state.prev_buf and vim.api.nvim_buf_is_valid(state.prev_buf) then
+			vim.api.nvim_set_current_buf(state.prev_buf)
 		else
 			local listed = vim.fn.getbufinfo({ buflisted = 1 })
 			if #listed > 0 then
@@ -140,10 +133,12 @@ vim.keymap.set("n", "<leader>t", function()
 			vim.api.nvim_buf_delete(cur_buf, { force = true })
 		end
 	else
-		prev_buf = cur_buf
+		state.prev_buf = cur_buf
 		vim.cmd("Ex")
 	end
-end, { desc = "Toggle file explorer" })
+end, {})
+
+vim.keymap.set("n", "<leader>t", "<cmd>ToggleEx<CR>", { desc = "Toggle file explorer" })
 
 -- change working directory to current directory in netrw
 vim.api.nvim_create_autocmd("FileType", {
@@ -338,7 +333,13 @@ local function set_rnvim_keymaps(bufnr)
 			return
 		end
 		if filename ~= "" then
-			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", output_file = "' .. filename .. '", envir = new.env())')
+			vim.cmd(
+				'RSend rmarkdown::render("'
+					.. vim.fn.expand("%")
+					.. '", output_file = "'
+					.. filename
+					.. '", envir = new.env())'
+			)
 		else
 			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", envir = new.env())')
 		end
