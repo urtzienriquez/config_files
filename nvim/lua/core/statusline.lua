@@ -227,31 +227,22 @@ function _G.st_filetype_text()
 		return ""
 	end
 
-	-- Hard-coded filetype icon override for Telescope prompt (guaranteed)
 	if filetype == "TelescopePrompt" then
 		local icon = ""
 		local icon_color = "#7aa2f7"
-
 		local hl_name = "SLFileIcon_" .. icon_color:gsub("#", "")
 		if not icon_hl_cache[hl_name] then
 			vim.api.nvim_set_hl(0, hl_name, { fg = icon_color })
 			icon_hl_cache[hl_name] = true
 		end
-
 		return string.format("%%#%s#%s %%#SLFileType#%s%%*", hl_name, icon, filetype)
 	end
 
-	-- Otherwise, try to get the icon via nvim-web-devicons.
-	-- Try filename+ext first (normal), then try using the filetype as the "extension" key.
 	local icon, icon_color = devicons.get_icon_color(filename, extension, { default = true })
 
-	-- If not found, try using the filetype as the extension/key
 	if not icon then
-		-- get_icon_color can accept filename and ext; pass empty filename and filetype as ext
 		icon, icon_color = devicons.get_icon_color("", filetype, { default = true })
 	end
-
-	-- also try lowercase filetype
 	if not icon then
 		icon, icon_color = devicons.get_icon_color("", string.lower(filetype), { default = true })
 	end
@@ -262,10 +253,8 @@ function _G.st_filetype_text()
 			vim.api.nvim_set_hl(0, hl_name, { fg = icon_color })
 			icon_hl_cache[hl_name] = true
 		end
-		-- keep original filetype text (not the filename) next to icon
 		return string.format("%%#%s#%s %%#SLFileType#%s%%*", hl_name, icon, filetype)
 	else
-		-- fallback: just show the filetype text
 		return filetype
 	end
 end
