@@ -289,7 +289,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 -- Manual refresh command
 vim.api.nvim_create_user_command("GitStatusRefresh", function()
 	update_git_debounced(vim.api.nvim_get_current_buf(), 0)
-	vim.notify("Git status refreshing...", vim.log.levels.INFO)
+	vim.notify("Git status refreshed", vim.log.levels.INFO)
 end, {})
 
 -- --------------------------
