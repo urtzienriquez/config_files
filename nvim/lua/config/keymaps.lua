@@ -155,6 +155,11 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- refresh git status
 vim.keymap.set("n", "<leader>g", ":GitStatusRefresh<CR>", { silent = true, desc = "refresh git status"})
+vim.api.nvim_create_autocmd("BufEnter", {
+	callback = function()
+		vim.cmd("GitStatusRefresh")
+	end,
+})
 
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
@@ -175,7 +180,7 @@ vim.api.nvim_create_autocmd("User", {
 					async = false,
 					timeout_ms = 50000,
 				})
-			end, { desc = "Format file or range" })
+			end, { desc = "Format buffer or range" })
 		end
 
 		-- ========================================
@@ -656,7 +661,6 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>fd", name = "diagnostics" },
 				{ "<leader>b", name = "Buffer" },
 				{ "<leader>c", name = "Code chunk" },
-				{ "<leader>g", name = "GitHub" },
 				{ "<leader>l", name = "Lazygit" },
 				{ "<leader>o", name = "Open REPL" },
 				{ "<leader>q", name = "Close REPL" },

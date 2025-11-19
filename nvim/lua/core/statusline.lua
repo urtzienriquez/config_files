@@ -1,4 +1,4 @@
--- Statusline with colored filetype icons and reliable git status
+-- Statusline with colored filetype icons and async git status
 
 -- --------------------------
 -- Colors
@@ -37,76 +37,137 @@ define_highlights()
 vim.api.nvim_create_autocmd("ColorScheme", { callback = define_highlights })
 
 -- --------------------------
--- Git cache
+-- Git cache and pending updates
 -- --------------------------
 local git_cache = {}
+local pending_updates = {}
+local update_timers = {}
 
--- Get git root for buffer
+-- Get git root for buffer (cached per buffer)
+local git_root_cache = {}
 local function get_git_root(bufnr)
+	if git_root_cache[bufnr] then
+		return git_root_cache[bufnr]
+	end
+
 	local path = vim.api.nvim_buf_get_name(bufnr)
 	if path == "" then
 		return nil
 	end
+
 	local dir = vim.fn.fnamemodify(path, ":p:h")
-	local cmd = string.format("git -C %s rev-parse --show-toplevel 2>/dev/null", vim.fn.shellescape(dir))
-	local root = vim.fn.system(cmd):gsub("\n", "")
-	return root ~= "" and root or nil
+	local handle = io.popen(string.format("git -C %s rev-parse --show-toplevel 2>/dev/null", vim.fn.shellescape(dir)))
+	if not handle then
+		return nil
+	end
+
+	local root = handle:read("*l")
+	handle:close()
+
+	git_root_cache[bufnr] = (root and root ~= "") and root or nil
+	return git_root_cache[bufnr]
 end
 
 -- --------------------------
--- Simple synchronous git status update
+-- Async git status update
 -- --------------------------
-local function update_git(bufnr)
+local function update_git_async(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	
+
 	if not vim.api.nvim_buf_is_valid(bufnr) or vim.bo[bufnr].buftype ~= "" then
 		return
 	end
 
+	-- Prevent duplicate updates
+	if pending_updates[bufnr] then
+		return
+	end
+	pending_updates[bufnr] = true
+
 	local root = get_git_root(bufnr)
 	if not root then
-		git_cache[bufnr] = { branch = "", added = 0, modified = 0, removed = 0 }
+		git_cache[bufnr] = { branch = "", added = 0, removed = 0 }
+		pending_updates[bufnr] = nil
 		return
 	end
 
-	-- Get branch name
-	local branch_cmd = string.format("git -C %s rev-parse --abbrev-ref HEAD 2>/dev/null", vim.fn.shellescape(root))
-	local branch = vim.fn.system(branch_cmd):gsub("\n", "")
+	-- Run all git commands in a single async shell command
+	local cmd = string.format(
+		[[cd %s 2>/dev/null && {
+			git rev-parse --abbrev-ref HEAD 2>/dev/null
+			echo "---"
+			git diff --numstat HEAD 2>/dev/null
+			echo "---"
+			git status --porcelain 2>/dev/null
+		}]],
+		vim.fn.shellescape(root)
+	)
 
-	-- Get diff stats for uncommitted changes (staged + unstaged)
-	-- This shows line insertions/deletions, not file counts
-	local diff_cmd = string.format("git -C %s diff --numstat HEAD 2>/dev/null", vim.fn.shellescape(root))
-	local diff_output = vim.fn.system(diff_cmd)
+	vim.fn.jobstart(cmd, {
+		stdout_buffered = true,
+		on_stdout = function(_, data)
+			if not data or not vim.api.nvim_buf_is_valid(bufnr) then
+				pending_updates[bufnr] = nil
+				return
+			end
 
-	local added = 0
-	local removed = 0
+			local output = table.concat(data, "\n")
+			local parts = vim.split(output, "---", { plain = true })
 
-	-- Parse numstat output: "additions deletions filename"
-	for line in diff_output:gmatch("[^\r\n]+") do
-		local adds, dels = line:match("^(%d+)%s+(%d+)")
-		if adds and dels then
-			added = added + tonumber(adds)
-			removed = removed + tonumber(dels)
-		end
+			-- Parse branch
+			local branch = (parts[1] or ""):match("^%s*(.-)%s*$")
+
+			-- Parse diff stats
+			local added = 0
+			local removed = 0
+			if parts[2] then
+				for line in parts[2]:gmatch("[^\r\n]+") do
+					local adds, dels = line:match("^(%d+)%s+(%d+)")
+					if adds and dels then
+						added = added + tonumber(adds)
+						removed = removed + tonumber(dels)
+					end
+				end
+			end
+
+			-- Check if there are actual changes
+			local has_changes = parts[3] and parts[3]:match("%S") ~= nil
+			if not has_changes then
+				added = 0
+				removed = 0
+			end
+
+			git_cache[bufnr] = {
+				branch = branch,
+				added = added,
+				removed = removed,
+			}
+
+			pending_updates[bufnr] = nil
+			vim.schedule(function()
+				vim.cmd("redrawstatus")
+			end)
+		end,
+		on_exit = function()
+			pending_updates[bufnr] = nil
+		end,
+	})
+end
+
+-- Debounced update function
+local function update_git_debounced(bufnr, delay)
+	delay = delay or 100
+
+	-- Cancel existing timer
+	if update_timers[bufnr] then
+		update_timers[bufnr]:stop()
 	end
 
-	-- Check if there are any uncommitted changes at all
-	local status_cmd = string.format("git -C %s status --porcelain 2>/dev/null", vim.fn.shellescape(root))
-	local status_output = vim.fn.system(status_cmd)
-	local has_changes = status_output ~= ""
-
-	-- If no changes reported by status, zero out the counts
-	-- This handles the case where diff might show stale data
-	if not has_changes then
-		added = 0
-		removed = 0
-	end
-
-	git_cache[bufnr] = {
-		branch = branch,
-		added = added,
-		removed = removed,
-	}
+	-- Create new timer
+	update_timers[bufnr] = vim.defer_fn(function()
+		update_git_async(bufnr)
+		update_timers[bufnr] = nil
+	end, delay)
 end
 
 -- --------------------------
@@ -211,25 +272,47 @@ end
 -- Refresh triggers
 -- --------------------------
 
--- Update only on buffer write
-vim.api.nvim_create_autocmd({"BufEnter", "BufWritePost"}, {
+-- Debounced update on BufEnter (doesn't block)
+vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function(args)
-		update_git(args.buf)
-		vim.cmd("redrawstatus")
+		update_git_debounced(args.buf, 100)
+	end,
+})
+
+-- Immediate update on buffer write
+vim.api.nvim_create_autocmd("BufWritePost", {
+	callback = function(args)
+		update_git_debounced(args.buf, 0)
 	end,
 })
 
 -- Manual refresh command
 vim.api.nvim_create_user_command("GitStatusRefresh", function()
-	update_git(vim.api.nvim_get_current_buf())
-	vim.cmd("redrawstatus")
-	vim.notify("Git status refreshed", vim.log.levels.INFO)
+	update_git_debounced(vim.api.nvim_get_current_buf(), 0)
+	-- vim.notify("Git status refreshing...", vim.log.levels.INFO)
 end, {})
 
 -- --------------------------
 -- Final statusline
 -- --------------------------
 vim.o.laststatus = 3
+
+-- Hide statusline for certain buffer types
+vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
+	callback = function()
+		local ft = vim.bo.filetype
+		local bt = vim.bo.buftype
+		local bufname = vim.api.nvim_buf_get_name(0)
+
+		-- Hide for noname buffers, and other special buffers
+		if bufname == "" or bt ~= "" then
+			vim.wo.statusline = " "
+		else
+			vim.wo.statusline = "" -- Use global statusline
+		end
+	end,
+})
+
 vim.o.statusline = table.concat({
 	" %t %m ",
 	"%#SLGitBranch#%{v:lua.st_branch()}%*  ",
