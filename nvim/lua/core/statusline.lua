@@ -230,18 +230,53 @@ vim.api.nvim_create_autocmd("FocusGained", {
 	end,
 })
 
--- Periodic refresh for current buffer (every 5 seconds when idle)
-local timer = vim.loop.new_timer()
-timer:start(
-	5000,
-	5000,
-	vim.schedule_wrap(function()
-		local buf = vim.api.nvim_get_current_buf()
-		if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
-			update_git(buf, true)
+-- Detect tmux pane focus changes (for lazygit popup workflows)
+if vim.env.TMUX then
+	local last_check_time = 0
+	local check_interval = 500 -- Check every 500ms
+
+	local function check_tmux_focus()
+		local current_time = vim.loop.now()
+		if current_time - last_check_time < check_interval then
+			return
 		end
-	end)
-)
+		last_check_time = current_time
+
+		-- Check if we're the active pane
+		local handle = io.popen("tmux display-message -p '#{pane_active}'")
+		if handle then
+			local is_active = handle:read("*l")
+			handle:close()
+			
+			if is_active == "1" then
+				-- We just became active, refresh git status
+				local buf = vim.api.nvim_get_current_buf()
+				if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
+					update_git(buf, true)
+				end
+			end
+		end
+	end
+
+	-- Check on cursor movement (lightweight check)
+	vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+		callback = check_tmux_focus,
+	})
+
+	-- Also check on mode changes
+	vim.api.nvim_create_autocmd("ModeChanged", {
+		callback = check_tmux_focus,
+	})
+end
+
+-- Fallback periodic refresh (every 3 seconds when idle)
+local timer = vim.loop.new_timer()
+timer:start(3000, 3000, vim.schedule_wrap(function()
+	local buf = vim.api.nvim_get_current_buf()
+	if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
+		update_git(buf, true)
+	end
+end))
 
 -- Add a user command to manually refresh git status
 vim.api.nvim_create_user_command("GitStatusRefresh", function()
