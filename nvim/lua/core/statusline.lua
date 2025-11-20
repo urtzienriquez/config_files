@@ -360,7 +360,7 @@ vim.o.statusline = table.concat({
 	"%#SLDiagHint#%{v:lua.st_hint()}%* ",
 
 	"%=",
-	"%{%v:lua.st_filetype_text()%}  ",
-	"%{v:lua.st_position()} ",
-	" %l:%c ",
+	"%{%v:lua.st_filetype_text()%} ",
+	"%4{v:lua.st_position()} ",
+	"%5l:%-3c ",
 })
