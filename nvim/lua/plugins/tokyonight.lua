@@ -15,8 +15,8 @@ return {
 				hl.LineNrBelow = { fg = c.dark5 }
 				hl.DiagnosticUnnecessary = { fg = c.dark5, italic = true }
 				hl.StatusLine = { fg = c.dark5, bg = c.bg_dark1 }
-				-- hl.NormalNC = { bg = c.bg_dark1 }
-				-- hl.SignColumn = { bg = "none" }
+				hl.NormalNC = { bg = c.bg_dark1 }
+				hl.SignColumn = { bg = "none" }
 			end,
 			style = "moon",
 		})
