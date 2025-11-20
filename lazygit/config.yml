@@ -19,4 +19,3 @@ gui:
       - '#283457'
 git:
   paging:
-    useConfig: true
