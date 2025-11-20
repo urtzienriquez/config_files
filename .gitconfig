@@ -10,5 +10,3 @@
 	helper = store
 [init]
 	defaultBranch = main
-[safe]
-	directory = /home/urtzi/.keyd
