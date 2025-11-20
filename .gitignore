@@ -8,7 +8,7 @@ autoconfig.yml
 */spell
 lazy-lock.json
 .histfile
-.zcompdump
+.zcompdump*
 tmux*.log
 theme.sh
 theme.toml
