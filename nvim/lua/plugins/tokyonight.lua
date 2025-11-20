@@ -14,8 +14,8 @@ return {
 				hl.LineNrAbove = { fg = c.dark5 }
 				hl.LineNrBelow = { fg = c.dark5 }
 				hl.DiagnosticUnnecessary = { fg = c.dark5, italic = true }
-				hl.StatusLine = { fg = c.dark5, bg = c.bg_dark1 } -- normal statusline
-				hl.StatusLineNC = { fg = c.dark5, bg = c.bg_dark1 } -- inactive windows
+				hl.StatusLine = { fg = c.dark5, bg = c.bg_dark1 }
+				hl.NormalNC = { bg = c.bg_dark1 }
 			end,
 			style = "moon",
 		})
