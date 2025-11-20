@@ -1,12 +1,6 @@
 # -------------------------------
 # Load async library
 # -------------------------------
-if [[ ! -f ~/.config/zsh/plugins/zsh-async/async.zsh ]]; then
-    echo "Error: zsh-async not found. Please install it:"
-    echo "git clone https://github.com/mafredri/zsh-async.git ~/.config/zsh/plugins/zsh-async"
-    return 1
-fi
-
 source ~/.config/zsh/plugins/zsh-async/async.zsh
 
 # -------------------------------
@@ -101,7 +95,6 @@ _git_prompt_callback() {
     local job=$1
     local return_code=$2
     local stdout=$3
-    local stderr=$4
     
     # Only update if job succeeded and returned data
     if [[ $return_code -eq 0 ]] && [[ -n "$stdout" ]]; then
