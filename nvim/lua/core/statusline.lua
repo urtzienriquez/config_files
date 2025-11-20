@@ -270,22 +270,22 @@ end
 
 function _G.st_err()
 	local c = diag_count(vim.diagnostic.severity.ERROR)
-	return c > 0 and (" " .. c) or ""
+	return c > 0 and (" " .. c .. " ") or ""
 end
 
 function _G.st_warn()
 	local c = diag_count(vim.diagnostic.severity.WARN)
-	return c > 0 and (" " .. c) or ""
+	return c > 0 and (" " .. c .. " ") or ""
 end
 
 function _G.st_info()
 	local c = diag_count(vim.diagnostic.severity.INFO)
-	return c > 0 and ("󰋽 " .. c) or ""
+	return c > 0 and ("󰋽 " .. c .. " ") or ""
 end
 
 function _G.st_hint()
 	local c = diag_count(vim.diagnostic.severity.HINT)
-	return c > 0 and (" " .. c) or ""
+	return c > 0 and (" " .. c .. " ") or ""
 end
 
 -- --------------------------
@@ -352,13 +352,10 @@ vim.o.statusline = table.concat({
 	"%#SLGitAdd#%{v:lua.st_added()}%* ",
 	"%#SLGitChange#%{v:lua.st_changed()}%* ",
 	"%#SLGitDelete#%{v:lua.st_removed()}%*  ",
-
-	-- Diagnostics
-	"%#SLDiagError#%{v:lua.st_err()}%* ",
-	"%#SLDiagWarn#%{v:lua.st_warn()}%* ",
-	"%#SLDiagInfo#%{v:lua.st_info()}%* ",
-	"%#SLDiagHint#%{v:lua.st_hint()}%* ",
-
+	"%#SLDiagError#%{v:lua.st_err()}%*",
+	"%#SLDiagWarn#%{v:lua.st_warn()}%*",
+	"%#SLDiagInfo#%{v:lua.st_info()}%*",
+	"%#SLDiagHint#%{v:lua.st_hint()}%*",
 	"%=",
 	"%{%v:lua.st_filetype_text()%} ",
 	"%4{v:lua.st_position()} ",
