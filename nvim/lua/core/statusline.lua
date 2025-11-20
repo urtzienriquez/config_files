@@ -180,7 +180,7 @@ function _G.st_branch()
 	if not g or g.branch == "" then
 		return ""
 	end
-	return " " .. g.branch .. " "
+	return " " .. g.branch .. "  "
 end
 
 function _G.st_added()
