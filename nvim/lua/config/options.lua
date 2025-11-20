@@ -13,7 +13,6 @@ vim.opt.mouse = ""
 -- misc options
 vim.g.have_nerd_font = true
 vim.g.netrw_banner = 0
-vim.opt.cursorline = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 5
@@ -28,6 +27,18 @@ vim.opt.ignorecase = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes:1"
+
+-- cursorline conditional
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+    callback = function()
+        vim.opt.cursorline = true
+    end,
+})
+vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+    callback = function()
+        vim.opt.cursorline = false
+    end,
+})
 
 -- code folding
 vim.opt.foldcolumn = "0"
