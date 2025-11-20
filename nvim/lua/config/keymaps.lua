@@ -285,7 +285,7 @@ vim.api.nvim_create_autocmd("User", {
 -- ========================================
 -- r.nvim
 -- ========================================
-local function set_rnvim_keymaps(bufnr)
+local function set_rnvim_keymaps()
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>rf")
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>gn")
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>gN")
@@ -353,7 +353,7 @@ end
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "r", "rmd", "Rmd", "rnoweb" },
 	callback = function()
-		set_rnvim_keymaps(0)
+		set_rnvim_keymaps()
 	end,
 })
 
@@ -362,7 +362,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- ========================================
 local slime_utils = require("core.slime_utils")
 
-local function set_slime_keymaps(bufnr)
+local function set_slime_keymaps()
 	local opts_keymap = { noremap = true, silent = true, buffer = true }
 	local repl_utils = require("core.repl_utils")
 	local has_smart_blocks = repl_utils.has_smart_blocks()
@@ -385,7 +385,7 @@ local function set_slime_keymaps(bufnr)
 		-- Smart block sending (Julia/Python)
 		vim.keymap.set("n", "<Return>", function()
 			if slime_utils.has_active_repl() then
-				local text, start_line, end_line = repl_utils.get_send_text()
+				local text, _, end_line = repl_utils.get_send_text()
 				if text then
 					vim.fn["slime#send"](text .. "\n")
 					-- Move cursor to line after the block, or stay on last line if at end of buffer
@@ -522,7 +522,7 @@ end
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "python", "julia", "matlab" },
 	callback = function()
-		set_slime_keymaps(0)
+		set_slime_keymaps()
 	end,
 })
 
@@ -543,9 +543,9 @@ vim.api.nvim_create_autocmd("FileType", {
 			end
 		end
 		if lang == "r" then
-			set_rnvim_keymaps(bufnr)
+			set_rnvim_keymaps()
 		elseif lang == "python" or lang == "julia" or lang == "matlab" then
-			set_slime_keymaps(bufnr)
+			set_slime_keymaps()
 		end
 	end,
 })
