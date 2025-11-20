@@ -180,7 +180,7 @@ function _G.st_branch()
 	if not g or g.branch == "" then
 		return ""
 	end
-	return " " .. g.branch
+	return " " .. g.branch .. " "
 end
 
 function _G.st_added()
@@ -189,7 +189,7 @@ function _G.st_added()
 	if not g or g.added == 0 then
 		return ""
 	end
-	return "+" .. g.added
+	return "+" .. g.added .. " "
 end
 
 function _G.st_removed()
@@ -198,7 +198,7 @@ function _G.st_removed()
 	if not g or g.removed == 0 then
 		return ""
 	end
-	return "-" .. g.removed
+	return "-" .. g.removed .. "  "
 end
 
 -- Cache for icon highlight groups
@@ -333,9 +333,9 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 
 vim.o.statusline = table.concat({
 	" %t %m ",
-	"%#SLGitBranch#%{v:lua.st_branch()}%* ",
-	"%#SLGitAdd#%{v:lua.st_added()}%* ",
-	"%#SLGitDelete#%{v:lua.st_removed()}%*  ",
+	"%#SLGitBranch#%{v:lua.st_branch()}%*",
+	"%#SLGitAdd#%{v:lua.st_added()}%*",
+	"%#SLGitDelete#%{v:lua.st_removed()}%*",
 	"%#SLDiagError#%{v:lua.st_err()}%*",
 	"%#SLDiagWarn#%{v:lua.st_warn()}%*",
 	"%#SLDiagInfo#%{v:lua.st_info()}%*",
