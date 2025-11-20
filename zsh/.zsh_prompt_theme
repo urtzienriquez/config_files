@@ -57,7 +57,7 @@ _git_prompt_async_compute() {
     fi
     
     # Start building output
-    output=" %F{magenta} ${branch}%f"
+    output=" %F{magenta} ${branch}%f"
     [[ -n "$action" ]] && output="${output}%F{yellow}${action}%f"
     
     # Get diff stats
@@ -196,7 +196,7 @@ grefresh() {
 # Vi mode indicator
 # -------------------------------
 function zle-line-init zle-keymap-select {
-    VI_MODE_SYMBOL="${${KEYMAP/vicmd/}/(main|viins)/}"
+    VI_MODE_SYMBOL="${${KEYMAP/vicmd/}/(main|viins)/}"
     zle reset-prompt
 }
 zle -N zle-line-init
