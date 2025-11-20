@@ -8,7 +8,6 @@
 local colors = {
 	green = "#9ece6a",
 	red = "#f7768e",
-	blue = "#7aa2f7",
 	purple = "#c099ff",
 	blue2 = "#0db9d7",
 	teal = "#4fd6be",
@@ -21,7 +20,6 @@ local devicons = require("nvim-web-devicons")
 -- Highlight groups
 local function define_highlights()
 	vim.api.nvim_set_hl(0, "SLGitAdd", { fg = colors.green })
-	vim.api.nvim_set_hl(0, "SLGitChange", { fg = colors.blue })
 	vim.api.nvim_set_hl(0, "SLGitDelete", { fg = colors.red })
 	vim.api.nvim_set_hl(0, "SLGitBranch", { fg = colors.purple })
 
@@ -194,19 +192,6 @@ function _G.st_added()
 	return "+" .. g.added
 end
 
-function _G.st_changed()
-	local buf = vim.api.nvim_get_current_buf()
-	local g = git_cache[buf]
-	if not g then
-		return ""
-	end
-	local total = g.added + g.removed
-	if total == 0 then
-		return ""
-	end
-	return "~" .. total
-end
-
 function _G.st_removed()
 	local buf = vim.api.nvim_get_current_buf()
 	local g = git_cache[buf]
@@ -350,7 +335,6 @@ vim.o.statusline = table.concat({
 	" %t %m  ",
 	"%#SLGitBranch#%{v:lua.st_branch()}%* ",
 	"%#SLGitAdd#%{v:lua.st_added()}%* ",
-	"%#SLGitChange#%{v:lua.st_changed()}%* ",
 	"%#SLGitDelete#%{v:lua.st_removed()}%*  ",
 	"%#SLDiagError#%{v:lua.st_err()}%*",
 	"%#SLDiagWarn#%{v:lua.st_warn()}%*",

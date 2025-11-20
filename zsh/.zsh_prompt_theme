@@ -25,7 +25,7 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind
         return
     fi
 
-    local stats_output added removed total untracked stats_str
+    local stats_output added removed untracked stats_str
 
     # Get diff stats for tracked files
     stats_output=$(git diff --numstat HEAD 2>/dev/null)
@@ -39,8 +39,6 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind
         done <<< "$stats_output"
     fi
 
-    total=$((added + removed))
-    
     # Check for untracked files
     untracked=$(git status --porcelain 2>/dev/null | grep -c '^??')
     
@@ -49,10 +47,6 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind
     
     if [[ $added -gt 0 ]]; then
         stats_str="${stats_str} %F{green}+${added}%f"
-    fi
-    
-    if [[ $total -gt 0 ]]; then
-        stats_str="${stats_str} %F{blue}~${total}%f"
     fi
     
     if [[ $removed -gt 0 ]]; then
