@@ -5,32 +5,18 @@
 -- --------------------------
 -- Colors
 -- --------------------------
-local colors = {
-	green = "#9ece6a",
-	red = "#f7768e",
-	purple = "#c099ff",
-	blue2 = "#0db9d7",
-	teal = "#4fd6be",
-	yellow = "#ffc777",
-	fg = "#c0caf5",
-}
-
 local devicons = require("nvim-web-devicons")
+local tokyonight = require("tokyonight.colors").setup()
 
--- Highlight groups
 local function define_highlights()
-	vim.api.nvim_set_hl(0, "SLGitAdd", { fg = colors.green })
-	vim.api.nvim_set_hl(0, "SLGitDelete", { fg = colors.red })
-	vim.api.nvim_set_hl(0, "SLGitBranch", { fg = colors.purple })
-
-	-- Diagnostics
-	vim.api.nvim_set_hl(0, "SLDiagError", { fg = colors.red })
-	vim.api.nvim_set_hl(0, "SLDiagWarn", { fg = colors.yellow })
-	vim.api.nvim_set_hl(0, "SLDiagInfo", { fg = colors.blue2 })
-	vim.api.nvim_set_hl(0, "SLDiagHint", { fg = colors.teal })
-
-	-- Filetype text (non-icon part)
-	vim.api.nvim_set_hl(0, "SLFileType", { fg = colors.fg, bold = true })
+	vim.api.nvim_set_hl(0, "SLGitAdd", { fg = tokyonight.git.add })
+	vim.api.nvim_set_hl(0, "SLGitDelete", { fg = tokyonight.git.delete })
+	vim.api.nvim_set_hl(0, "SLGitBranch", { fg = tokyonight.magenta })
+	vim.api.nvim_set_hl(0, "SLDiagError", { fg = tokyonight.red1 })
+	vim.api.nvim_set_hl(0, "SLDiagWarn", { fg = tokyonight.yellow })
+	vim.api.nvim_set_hl(0, "SLDiagInfo", { fg = tokyonight.blue2 })
+	vim.api.nvim_set_hl(0, "SLDiagHint", { fg = tokyonight.teal })
+	vim.api.nvim_set_hl(0, "SLFileType", { fg = tokyonight.fg, bold = true })
 end
 
 define_highlights()
