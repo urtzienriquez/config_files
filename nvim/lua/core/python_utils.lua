@@ -1,4 +1,4 @@
--- lua/core/python_utils.lua
+
 local M = {}
 
 -- Python block start patterns (lines that start blocks with colons)

@@ -1,4 +1,6 @@
--- Statusline with colored filetype icons and async git status
+-- Statusline
+
+---@diagnostic disable: duplicate-set-field
 
 -- --------------------------
 -- Colors
@@ -287,6 +289,23 @@ function _G.st_hint()
 end
 
 -- --------------------------
+-- Position
+-- --------------------------
+function _G.st_position()
+	local line = vim.fn.line(".")
+	local total = vim.fn.line("$")
+
+	if line == 1 then
+		return "Top"
+	elseif line == total then
+		return "Bot"
+	else
+		local percent = math.floor((line / total) * 100)
+		return string.format("%2d%%", percent)
+	end
+end
+
+-- --------------------------
 -- Refresh triggers
 -- --------------------------
 
@@ -342,5 +361,6 @@ vim.o.statusline = table.concat({
 
 	"%=",
 	"%{%v:lua.st_filetype_text()%}  ",
+	"%{v:lua.st_position()} ",
 	" %l:%c ",
 })

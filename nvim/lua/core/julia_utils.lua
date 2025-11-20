@@ -1,4 +1,4 @@
--- lua/core/julia_utils.lua
+
 local M = {}
 
 -- Julia block patterns

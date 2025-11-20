@@ -1,6 +1,3 @@
--- nvim/lsp/fortls.lua
--- Fortran language server configuration
-
 return {
 	cmd = {
 		'fortls',

@@ -1,6 +1,3 @@
--- nvim/lsp/lua_ls.lua
--- Lua language server configuration (for Neovim config development)
-
 return {
 	cmd = { 'lua-language-server' },
 	filetypes = { 'lua' },

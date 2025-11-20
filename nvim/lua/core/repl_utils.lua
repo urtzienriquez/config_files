@@ -1,5 +1,3 @@
--- lua/core/repl_utils.lua
--- Unified REPL utilities that dispatch to language-specific implementations
 
 local M = {}
 

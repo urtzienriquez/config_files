@@ -1,6 +1,3 @@
--- nvim/lsp/julials.lua
--- Julia language server configuration
-
 return {
 	cmd = {
 		'julia',

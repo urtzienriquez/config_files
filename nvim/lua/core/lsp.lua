@@ -1,5 +1,3 @@
--- nvim/lua/core/lsp.lua
-
 -- Enable LSP servers
 local servers = {
 	"gopls",

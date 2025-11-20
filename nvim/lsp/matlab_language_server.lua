@@ -1,6 +1,3 @@
--- nvim/lsp/matlab_language_server.lua
--- MATLAB language server configuration
-
 return {
 	cmd = { 'matlab-language-server', '--stdio' },
 	filetypes = { 'matlab' },

@@ -1,21 +1,18 @@
--- nvim/lsp/pyright.lua
--- Python language server configuration
-
 return {
-	cmd = { 'pyright-langserver', '--stdio' },
-	filetypes = { 'python' },
-	root_markers = { 
-		'pyproject.toml', 
-		'setup.py', 
-		'setup.cfg', 
-		'requirements.txt', 
-		'.git' 
+	cmd = { "pyright-langserver", "--stdio" },
+	filetypes = { "python" },
+	root_markers = {
+		"pyproject.toml",
+		"setup.py",
+		"setup.cfg",
+		"requirements.txt",
+		".git",
 	},
 	settings = {
 		python = {
 			analysis = {
 				autoSearchPaths = true,
-				diagnosticMode = 'openFilesOnly',
+				diagnosticMode = "openFilesOnly",
 				useLibraryCodeForTypes = true,
 			},
 		},
