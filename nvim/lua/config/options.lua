@@ -27,18 +27,7 @@ vim.opt.ignorecase = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes:1"
-
--- cursorline conditional
-vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-    callback = function()
-        vim.opt.cursorline = true
-    end,
-})
-vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-    callback = function()
-        vim.opt.cursorline = false
-    end,
-})
+vim.opt.cursorline = true
 
 -- code folding
 vim.opt.foldcolumn = "0"
