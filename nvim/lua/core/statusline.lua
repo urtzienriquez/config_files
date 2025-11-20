@@ -343,5 +343,5 @@ vim.o.statusline = table.concat({
 	"%=",
 	"%{%v:lua.st_filetype_text()%} ",
 	"%4{v:lua.st_position()} ",
-	"%5l:%-3c ",
+	"%5l:%-5c ",
 })
