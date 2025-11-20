@@ -332,7 +332,7 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 })
 
 vim.o.statusline = table.concat({
-	" %t %m  ",
+	" %t %m ",
 	"%#SLGitBranch#%{v:lua.st_branch()}%* ",
 	"%#SLGitAdd#%{v:lua.st_added()}%* ",
 	"%#SLGitDelete#%{v:lua.st_removed()}%*  ",
