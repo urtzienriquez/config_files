@@ -62,7 +62,7 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind-ahead
     behind=$(git rev-list HEAD..@{upstream} 2>/dev/null | wc -l)
     ahead=$(git rev-list @{upstream}..HEAD 2>/dev/null | wc -l)
     local arrow_str=""
-    [[ $behind -gt 0 ]] && arrow_str="%F{yellow}↓${behind}%f"
+    [[ $behind -gt 0 ]] && arrow_str=" %F{yellow}↓${behind}%f"
     [[ $ahead -gt 0 ]] && arrow_str="${arrow_str} %F{blue}↑${ahead}%f"
 
     hook_com[misc]="${arrow_str} ${hook_com[misc]}"
