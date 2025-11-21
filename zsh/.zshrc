@@ -70,10 +70,6 @@ source ~/.config/zsh/.zsh_aliases
 # -------------------------------
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.config/zsh/plugins/git-auto-fetch/git-auto-fetch.plugin.zsh
-
-# auto-fetch
-export GIT_AUTO_FETCH_INTERVAL=1
 
 # -------------------------------
 # Terminal compatibility for Ghostty + tmux
