@@ -17,57 +17,58 @@ zstyle ':vcs_info:git:*' formats ' %F{magenta} %b%f%m'
 zstyle ':vcs_info:git:*' actionformats ' %F{magenta} %b%f%F{yellow}|%a%f%m'
 
 # Enable git hooks
-zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind
+zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind-ahead
 
 # Hook function to get git diff stats (like Neovim statusline)
+# Hook function to get git diff stats (staged, unstaged, untracked)
 +vi-git-stats() {
     if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != 'true' ]]; then
         return
     fi
 
-    local stats_output added removed untracked stats_str
+    local added removed staged unstaged untracked stats_str
 
-    # Get diff stats for tracked files
-    stats_output=$(git diff --numstat HEAD 2>/dev/null)
-    added=0
-    removed=0
-    
-    if [[ -n "$stats_output" ]]; then
-        while IFS=$'\t' read -r add del file; do
-            added=$((added + add))
-            removed=$((removed + del))
-        done <<< "$stats_output"
-    fi
+    # Get diff stats for staged changes
+    staged=0
+    unstaged=0
+    while IFS=$'\t' read -r add del file; do
+        unstaged=$((unstaged + add + del))
+    done < <(git diff --numstat 2>/dev/null)
 
-    # Check for untracked files
+    while IFS=$'\t' read -r add del file; do
+        staged=$((staged + add + del))
+    done < <(git diff --cached --numstat 2>/dev/null)
+
+    # Count untracked files
     untracked=$(git status --porcelain 2>/dev/null | grep -c '^??')
-    
-    # Build the stats string (matching Neovim statusline format)
+
+    # Build stats string
     stats_str=""
-    
-    if [[ $added -gt 0 ]]; then
-        stats_str="${stats_str} %F{green}+${added}%f"
+    if [[ $staged -gt 0 ]]; then
+        stats_str="%F{green}+${staged}%f"
     fi
-    
-    if [[ $removed -gt 0 ]]; then
-        stats_str="${stats_str} %F{red}-${removed}%f"
+    if [[ $unstaged -gt 0 ]]; then
+        stats_str="${stats_str} %F{red}-${unstaged}%f"
     fi
-    
     if [[ $untracked -gt 0 ]]; then
-        stats_str="${stats_str} %F{white}+${untracked}?%f"
+        stats_str="${stats_str} %F{white}?${untracked}%f"
     fi
-    
+
     hook_com[misc]="$stats_str"
 }
 
-# Hook function to check if behind origin
-+vi-git-behind() {
-    local behind
+# Hook function to check ahead/behind remote
++vi-git-behind-ahead() {
+    local behind ahead
     behind=$(git rev-list HEAD..@{upstream} 2>/dev/null | wc -l)
-    if [[ $behind -gt 0 ]]; then
-        hook_com[misc]="${hook_com[misc]} %F{yellow}↓${behind}%f"
-    fi
+    ahead=$(git rev-list @{upstream}..HEAD 2>/dev/null | wc -l)
+    local arrow_str=""
+    [[ $behind -gt 0 ]] && arrow_str="%F{yellow}↓${behind}%f"
+    [[ $ahead -gt 0 ]] && arrow_str="${arrow_str} %F{blue}↑${ahead}%f"
+
+    hook_com[misc]="${arrow_str} ${hook_com[misc]}"
 }
+
 
 # Auto-fetch when entering a git repo
 chpwd_git_fetch() {
