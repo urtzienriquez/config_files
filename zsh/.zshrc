@@ -14,6 +14,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Plugins
 plugins=(
     git
+    git-auto-fetch
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
@@ -40,6 +41,9 @@ setopt INC_APPEND_HISTORY
 setopt HIST_REDUCE_BLANKS
 setopt RM_STAR_SILENT
 setopt extended_glob
+
+# autofetch interval
+GIT_AUTO_FETCH_INTERVAL=1
 
 # Vim mode
 bindkey -v

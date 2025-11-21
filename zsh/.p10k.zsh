@@ -191,14 +191,16 @@
     if (( $1 )); then
       # Styling for up-to-date Git status.
       local       meta='%f'   # default foreground
-      local      clean='%5F'  # green foreground
+      local      clean='%5F'  # magenta foreground
+      local       diff='%2F'  # green foreground
       local   modified='%3F'  # yellow foreground
-      local  untracked='%f'  # blue foreground
+      local  untracked='%f'   # default foreground
       local conflicted='%1F'  # red foreground
     else
       # Styling for incomplete and stale Git status.
       local       meta='%f'  # default foreground
       local      clean='%f'  # default foreground
+      local       diff='%f'  # default foreground
       local   modified='%f'  # default foreground
       local  untracked='%f'  # default foreground
       local conflicted='%f'  # default foreground
@@ -245,7 +247,7 @@
 
     if (( VCS_STATUS_COMMITS_AHEAD || VCS_STATUS_COMMITS_BEHIND )); then
       # ⇣42 if behind the remote.
-      (( VCS_STATUS_COMMITS_BEHIND )) && res+=" ${clean}⇣${VCS_STATUS_COMMITS_BEHIND}"
+      (( VCS_STATUS_COMMITS_BEHIND )) && res+=" ${modified}⇣${VCS_STATUS_COMMITS_BEHIND}"
       # ⇡42 if ahead of the remote; no leading space if also behind the remote: ⇣42⇡42.
       (( VCS_STATUS_COMMITS_AHEAD && !VCS_STATUS_COMMITS_BEHIND )) && res+=" "
       (( VCS_STATUS_COMMITS_AHEAD  )) && res+="${clean}⇡${VCS_STATUS_COMMITS_AHEAD}"
@@ -266,9 +268,9 @@
     # ~42 if have merge conflicts.
     (( VCS_STATUS_NUM_CONFLICTED )) && res+=" ${conflicted}~${VCS_STATUS_NUM_CONFLICTED}"
     # +42 if have staged changes.
-    (( VCS_STATUS_NUM_STAGED     )) && res+=" ${modified}+${VCS_STATUS_NUM_STAGED}"
+    (( VCS_STATUS_NUM_STAGED     )) && res+=" ${diff}+${VCS_STATUS_NUM_STAGED}"
     # !42 if have unstaged changes.
-    (( VCS_STATUS_NUM_UNSTAGED   )) && res+=" ${modified}!${VCS_STATUS_NUM_UNSTAGED}"
+    (( VCS_STATUS_NUM_UNSTAGED   )) && res+=" ${conflicted}!${VCS_STATUS_NUM_UNSTAGED}"
     # ?42 if have untracked files. It's really a question mark, your font isn't broken.
     # See POWERLEVEL9K_VCS_UNTRACKED_ICON above if you want to use a different icon.
     # Remove the next line if you don't want to see untracked files at all.
