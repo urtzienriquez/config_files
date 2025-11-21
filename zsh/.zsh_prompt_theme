@@ -19,7 +19,6 @@ zstyle ':vcs_info:git:*' actionformats ' %F{magenta} %b%f%F{yellow}|%a%f%m'
 # Enable git hooks
 zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind-ahead
 
-# Hook function to get git diff stats (like Neovim statusline)
 # Hook function to get git diff stats (staged, unstaged, untracked)
 +vi-git-stats() {
     if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != 'true' ]]; then
