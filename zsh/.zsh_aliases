@@ -1,6 +1,14 @@
 # reload zsh
 alias zr='source ~/.config/zsh/.zshrc'
 
+# dot aliases
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias .......='cd ../../../../../..'
+
 # ls aliases
 alias ls='ls -F --color=auto'
 alias ll='ls -lhA'
