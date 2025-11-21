@@ -1,0 +1,66 @@
+# -------------------------------
+# zsh-auto-fetch (git-auto-fetch plugin)
+# -------------------------------
+# Make sure this plugin is enabled in your ~/.zshrc via Oh My Zsh
+# Set fetch interval (optional)
+export GIT_AUTO_FETCH_INTERVAL=${GIT_AUTO_FETCH_INTERVAL:-60}
+
+# -------------------------------
+# Git prompt via vcs_info
+# -------------------------------
+autoload -Uz vcs_info
+precmd_vcs_info() { vcs_info }
+precmd_functions+=( precmd_vcs_info )
+setopt prompt_subst
+
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' get-unapplied true
+zstyle ':vcs_info:*' stagedstr ''
+zstyle ':vcs_info:*' unstagedstr ''
+zstyle ':vcs_info:git:*' formats ' %F{magenta} %b%f%m'
+zstyle ':vcs_info:git:*' actionformats ' %F{magenta}%b%f%F{yellow}|%a%f%m'
+
+zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind
+
++vi-git-stats() {
+  if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != 'true' ]]; then
+    return
+  fi
+  local staged unstaged untracked stats_str
+  staged=$(git diff --cached --name-only 2>/dev/null | wc -l)
+  unstaged=$(git diff --name-only 2>/dev/null | wc -l)
+  untracked=$(git ls-files --others --exclude-standard 2>/dev/null | wc -l)
+
+  stats_str=""
+  [[ $staged -gt 0 ]] && stats_str="${stats_str} %F{green}+${staged}%f"
+  [[ $unstaged -gt 0 ]] && stats_str="${stats_str} %F{red}-${unstaged}%f"
+  [[ $untracked -gt 0 ]] && stats_str="${stats_str} %F{white}?${untracked}%f"
+
+  hook_com[misc]="$stats_str"
+}
+
++vi-git-behind() {
+  local behind
+  behind=$(git rev-list HEAD..@{upstream} 2>/dev/null | wc -l)
+  if [[ $behind -gt 0 ]]; then
+    hook_com[misc]="${hook_com[misc]} %F{yellow}↓${behind}%f"
+  fi
+}
+
+# -------------------------------
+# Vi mode indicator
+# -------------------------------
+function zle-line-init zle-keymap-select {
+  VI_MODE_SYMBOL="${${KEYMAP/vicmd/}/(main|viins)/}"
+  zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+# -------------------------------
+# Prompt
+# -------------------------------
+PROMPT='%F{magenta}%n@%m%f %F{cyan}%~%f${vcs_info_msg_0_}
+%F{%(?.green.red)}${VI_MODE_SYMBOL}%f '
+

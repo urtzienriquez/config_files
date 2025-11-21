@@ -95,7 +95,8 @@ esac
 # -------------------------------
 # Prompt theme
 # -------------------------------
-source ~/.config/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme
+# source ~/.config/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme
+source ~/.config/zsh/.zsh_prompt_theme
 
 # -------------------------------
 # Misc
