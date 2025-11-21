@@ -12,3 +12,4 @@ lazy-lock.json
 tmux*.log
 theme.sh
 theme.toml
+*/zsh/plugins
