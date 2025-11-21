@@ -1,31 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
-
-# Path to your oh-my-zsh installation (in .config!)
-export ZSH="$HOME/.config/zsh/oh-my-zsh"
-
-# Set theme to Powerlevel10k
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-# Plugins
-plugins=(
-    git
-    git-auto-fetch
-    zsh-autosuggestions
-    zsh-syntax-highlighting
-)
-
-source $ZSH/oh-my-zsh.sh
-
-# -------------------------------
-# Your custom configurations from old .zshrc
-# Copy everything AFTER the "source $ZSH/oh-my-zsh.sh" line
-# -------------------------------
-
 # History configuration
 HISTFILE=~/.config/zsh/.histfile
 HISTSIZE=10000
@@ -42,8 +14,18 @@ setopt HIST_REDUCE_BLANKS
 setopt RM_STAR_SILENT
 setopt extended_glob
 
-# autofetch interval
-GIT_AUTO_FETCH_INTERVAL=1
+# Load plugins
+source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Load Pure prompt configuration
+source ~/.config/zsh/.pure_theme
+
+# Load git-auto-fetch if you want it
+if [[ -f ~/.config/zsh/plugins/git-auto-fetch/git-auto-fetch.plugin.zsh ]]; then
+    GIT_AUTO_FETCH_INTERVAL=1
+    source ~/.config/zsh/plugins/git-auto-fetch/git-auto-fetch.plugin.zsh
+fi
 
 # Vim mode
 bindkey -v
@@ -77,7 +59,7 @@ if [[ -z "$TMUX" && "$TERM" != "xterm-ghostty" && "$TERM" != "xterm-256color" ]]
     export TERM=xterm-256color
 fi
 
-# PATH Setup (all your PATH exports)
+# PATH Setup
 export PATH="/home/urtzi/.local/bin:$PATH"
 export PATH="/opt/nvim/bin:$PATH"
 export PATH="/opt:$PATH"
@@ -150,6 +132,3 @@ function sv() {
 if [ -n "$VIRTUAL_ENV" ]; then
     source $VIRTUAL_ENV/bin/activate;
 fi
-
-# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
-[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh

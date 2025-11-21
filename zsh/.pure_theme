@@ -1,0 +1,94 @@
+############################################################
+# Pure Prompt – FULL CUSTOM CONFIG (Latest Pure Compatible)
+############################################################
+
+###############
+# Pure Options
+###############
+PURE_PROMPT_SYMBOL="❯"
+PURE_PROMPT_VICMD_SYMBOL="❮"
+
+PURE_CMD_MAX_EXEC_TIME=5
+PURE_GIT_UP_ARROW="⇡"
+PURE_GIT_DOWN_ARROW="⇣"
+PURE_GIT_UNTRACKED_DIRTY=1
+
+########################
+# Load & Initialize Pure
+########################
+fpath+=(~/.config/zsh/plugins/pure)
+autoload -U promptinit; promptinit
+prompt pure
+
+############################################################
+# ALWAYS SHOW user@host (works on latest Pure)
+############################################################
+
+# Pure exposes `prompt_pure_state[username]`
+# so we set it manually to force display always.
+
+typeset -gA prompt_pure_state
+prompt_pure_state[username]="%F{magenta}%n%f@%F{cyan}%m%f"
+
+# Reapply after Pure's setup if needed
+if (( $+functions[prompt_pure_setup] )); then
+    prompt_pure_setup
+    prompt_pure_state[username]="%F{magenta}%n%f@%F{cyan}%m%f"
+fi
+
+############################################################
+# REMOVE EMPTY LINE BETWEEN PROMPTS
+############################################################
+# Pure calls `print` inside precmd with no arguments -> blank line.
+# Suppress ONLY that call.
+print() {
+  [[ $# -eq 0 && ${funcstack[-1]} = prompt_pure_precmd ]] \
+    || builtin print "$@"
+}
+
+############################################################
+# GIT COLOR CUSTOMIZATION (via zstyle – official API)
+############################################################
+# Show stash symbol
+zstyle :prompt:pure:git:stash show yes
+
+# Git color styles
+zstyle ':prompt:pure:git:branch'        color 'bright-green'
+zstyle ':prompt:pure:git:branch:cached' color 'yellow'
+zstyle ':prompt:pure:git:dirty'         color 'red'
+zstyle ':prompt:pure:git:arrow'         color 'cyan'
+zstyle ':prompt:pure:git:stash'         color 'magenta'
+
+############################################################
+# BRANCH ICON (Pure 1.26+ uses prompt_pure_render_git)
+############################################################
+# We override the git renderer safely.
+# Pure stores its async git results in prompt_pure_state[*].
+
+prompt_pure_render_git() {
+    local branch="${prompt_pure_state[current_branch]}"
+    local dirty="${prompt_pure_state[git_dirty]}"
+    local arrows="${prompt_pure_state[git_arrows]}"
+    local stash="${prompt_pure_state[git_stash]}"
+
+    local icon=""   # Your custom branch icon
+
+    # Branch name (Pure applies zstyle colors)
+    if [[ -n $branch ]]; then
+        print -nP "${icon} ${branch}"
+    fi
+
+    # Dirty marker ( *, applied by Pure )
+    [[ -n $dirty ]]  && print -nP " ${dirty}"
+
+    # Up/down arrows
+    [[ -n $arrows ]] && print -nP " ${arrows}"
+
+    # Stash indicator
+    [[ -n $stash ]]  && print -nP " ${stash}"
+}
+
+############################################################
+# END OF FILE
+############################################################
+
