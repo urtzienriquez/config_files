@@ -44,7 +44,6 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind-ahead
     # Build stats string
     stats_str=""
     if [[ $staged -gt 0 ]]; then
-        stats_str="%F{green}+${staged}%f"
     fi
     if [[ $unstaged -gt 0 ]]; then
         stats_str="${stats_str} %F{red}-${unstaged}%f"
