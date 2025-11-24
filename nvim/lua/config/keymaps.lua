@@ -114,26 +114,10 @@ end, {})
 vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 
 -- toggle file explorer
-_G.toggle_ex_state = _G.toggle_ex_state or {}
-
 vim.api.nvim_create_user_command("ToggleEx", function()
-	local state = _G.toggle_ex_state
-	local cur_buf = vim.api.nvim_get_current_buf()
-
 	if vim.bo.filetype == "netrw" then
-		if state.prev_buf and vim.api.nvim_buf_is_valid(state.prev_buf) then
-			vim.api.nvim_set_current_buf(state.prev_buf)
-		else
-			local listed = vim.fn.getbufinfo({ buflisted = 1 })
-			if #listed > 0 then
-				vim.api.nvim_set_current_buf(listed[1].bufnr)
-			end
-		end
-		if vim.api.nvim_buf_is_valid(cur_buf) then
-			vim.api.nvim_buf_delete(cur_buf, { force = true })
-		end
+		vim.cmd("Rex")
 	else
-		state.prev_buf = cur_buf
 		vim.cmd("Ex")
 	end
 end, {})
