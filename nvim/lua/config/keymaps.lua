@@ -124,18 +124,6 @@ end, {})
 
 vim.keymap.set("n", "<leader>t", "<cmd>ToggleEx<CR>", { desc = "Toggle file explorer" })
 
--- change working directory to current directory in netrw
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "netrw",
-	callback = function()
-		vim.keymap.set("n", "~", function()
-			local dir = vim.fn.expand("%:p:h")
-			vim.cmd("cd " .. vim.fn.fnameescape(dir))
-			vim.notify("cd'd to " .. dir, vim.log.levels.INFO)
-		end, { buffer = true, desc = "change working directory" })
-	end,
-})
-
 -- refresh git status
 vim.keymap.set("n", "<leader>g", ":GitStatusRefresh<CR>", { silent = true, desc = "refresh git status" })
 
@@ -277,6 +265,7 @@ local function set_rnvim_keymaps()
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>ka")
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>kn")
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>d")
+	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>rd")
 
 	local opts_keymap = { noremap = true, silent = true, buffer = true }
 
@@ -288,6 +277,7 @@ local function set_rnvim_keymaps()
 	vim.keymap.set("n", "<leader>qr", "<Plug>RClose", opts_keymap)
 	vim.keymap.set("n", "<leader>cn", "<Plug>RNextRChunk", opts_keymap)
 	vim.keymap.set("n", "<leader>cN", "<Plug>RPreviousRChunk", opts_keymap)
+	vim.keymap.set("n", "<leader>cd", "<Plug>RSetwd", opts_keymap)
 
 	-- Render bookdown book
 	vim.keymap.set("n", "<leader>rb", function()
@@ -461,14 +451,14 @@ local function set_slime_keymaps()
 		end
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Activate and instantiate Julia project" }))
 
-	-- Sync working directory
-	vim.keymap.set("n", "<leader>sd", function()
+	-- Change working directory
+	vim.keymap.set("n", "<leader>cd", function()
 		if slime_utils.has_active_repl() then
 			slime_utils.sync_working_directory()
 		else
 			vim.notify("No active REPL. Start one with <leader>op/oj/om", vim.log.levels.WARN)
 		end
-	end, vim.tbl_extend("force", opts_keymap, { desc = "Sync working directory to REPL" }))
+	end, vim.tbl_extend("force", opts_keymap, { desc = "Change working directory to cwd in REPL" }))
 
 	-- Close REPLs
 	vim.keymap.set("n", "<leader>qp", function()
@@ -644,12 +634,12 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>f", name = "Find" },
 				{ "<leader>fd", name = "diagnostics" },
 				{ "<leader>b", name = "Buffer" },
-				{ "<leader>c", name = "Code chunk" },
+				{ "<leader>c", name = "cd/code block" },
 				{ "<leader>l", name = "Lazygit" },
 				{ "<leader>o", name = "Open REPL" },
 				{ "<leader>q", name = "Close REPL" },
 				{ "<leader>r", name = "R/Render" },
-				{ "<leader>s", name = "Send/Sync" },
+				{ "<leader>s", name = "Send" },
 				{ "<leader>u", name = "UI toggle" },
 				{ "<leader>a", name = "Add citation/crossref" },
 			})
