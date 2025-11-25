@@ -638,7 +638,6 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>fd", name = "diagnostics" },
 				{ "<leader>b", name = "Buffer" },
 				{ "<leader>c", name = "cd/code block" },
-				{ "<leader>l", name = "Lazygit" },
 				{ "<leader>o", name = "Open REPL" },
 				{ "<leader>q", name = "Close REPL" },
 				{ "<leader>r", name = "R/Render" },
