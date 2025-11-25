@@ -113,17 +113,6 @@ end, {})
 
 vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 
--- toggle file explorer
-vim.api.nvim_create_user_command("ToggleEx", function()
-	if vim.bo.filetype == "netrw" then
-		vim.cmd("Rex")
-	else
-		vim.cmd("Ex")
-	end
-end, {})
-
-vim.keymap.set("n", "<leader>t", "<cmd>ToggleEx<CR>", { desc = "Toggle file explorer" })
-
 -- refresh git status
 vim.keymap.set("n", "<leader>g", ":GitStatusRefresh<CR>", { silent = true, desc = "refresh git status" })
 
@@ -135,6 +124,20 @@ vim.keymap.set("n", "<leader>g", ":GitStatusRefresh<CR>", { silent = true, desc 
 vim.api.nvim_create_autocmd("User", {
 	pattern = "VeryLazy",
 	callback = function()
+		-- ========================================
+		-- Oil file explorer keymaps
+		-- ========================================
+		local oil_ok, oil = pcall(require, "oil")
+		if oil_ok then
+			vim.keymap.set("n", "<leader>t", function()
+				if vim.bo.filetype == "oil" then
+					oil.close()
+				else
+					oil.open()
+				end
+			end, { desc = "Toggle Oil file explorer" })
+		end
+
 		-- ========================================
 		-- Conform (formatting) keymaps
 		-- ========================================

@@ -309,7 +309,7 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 	callback = function()
 		local bt = vim.bo.buftype
 		local bufname = vim.api.nvim_buf_get_name(0)
-		if bufname == "" and bt == "" and vim.bo.filetype == "" then
+		if bufname == "" and bt == "" and vim.bo.filetype == "" or vim.bo.filetype  == "oil" then
 			vim.wo.statusline = " "
 		else
 			vim.wo.statusline = "" -- Use global statusline

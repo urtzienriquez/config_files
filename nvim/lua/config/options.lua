@@ -12,7 +12,6 @@ vim.opt.mouse = ""
 
 -- misc options
 vim.g.have_nerd_font = true
-vim.g.netrw_banner = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 10
@@ -85,12 +84,9 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Set pandoc syntax for markdown files
--- BufEnter ensures syntax is restored even after netrw clears it
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = { "*.Rmd", "*.rmd", "*.qmd", "*.Qmd", "*.jmd", "*.Jmd", "*.md" },
 	callback = function()
-		-- Always set syntax on BufEnter since netrw clears it
-		-- Use schedule to ensure it runs after netrw's cleanup
 		vim.schedule(function()
 			if vim.bo.filetype == "rmd" or vim.bo.filetype == "quarto" or vim.bo.filetype == "markdown" then
 				vim.cmd("setlocal syntax=pandoc")
@@ -98,15 +94,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
 		end)
 	end,
 	desc = "Set pandoc syntax for markdown-like files",
-})
-
--- Ensure netrw syntax (use FileType)
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "netrw",
-	callback = function()
-		vim.cmd("set syntax=netrw")
-	end,
-	desc = "Ensure netrw syntax is set",
 })
 
 -- hack for apparently remaining in insert mode after selecting a file with Telescope
