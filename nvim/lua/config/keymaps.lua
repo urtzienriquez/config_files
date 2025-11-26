@@ -139,6 +139,50 @@ vim.api.nvim_create_autocmd("User", {
 		end
 
 		-- ========================================
+		-- Telescope (fuzzy finding) keymaps
+		-- ========================================
+		local fzf = require("fzf-lua")
+
+        vim.keymap.set("n", "<leader>fp", fzf.builtin, { desc = "Find picker" })
+		vim.keymap.set("n", "<leader>ff", fzf.files, { desc = "Find files" })
+
+		-- Find files in home directory (Telescope → fzf-lua)
+		vim.keymap.set("n", "<leader>f~", function()
+			fzf.files({
+				cwd = vim.fn.expand("~"),
+				prompt = "Home files❯ ",
+				hidden = true,
+			})
+		end, { desc = "Find files in home directory" })
+
+		vim.keymap.set("n", "<leader>fg", fzf.live_grep, { desc = "Find with grep" })
+		vim.keymap.set("n", "<leader>fb", fzf.buffers, { desc = "Find buffers" })
+		vim.keymap.set("n", "<leader>fh", fzf.help_tags, { desc = "Find help tags" })
+		vim.keymap.set("n", "<leader>fk", fzf.keymaps, { desc = "Find keymaps" })
+
+		-- grep_string = grep word under cursor, so keep as-is
+		vim.keymap.set("n", "<leader>fw", fzf.grep_cword, { desc = "Find current word" })
+
+		vim.keymap.set(
+			"n",
+			"<leader>fdg",
+			fzf.diagnostics_workspace,
+			{ desc = "Find diagnostics globally (workspace)" }
+		)
+
+		vim.keymap.set("n", "<leader>fdd", function()
+			fzf.diagnostics_document()
+		end, { desc = "Find diagnostics in current buffer" })
+
+		vim.keymap.set("n", "<leader>fl", fzf.lsp_definitions, { desc = "Find LSP definitions" })
+		vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols, { desc = "Find LSP document symbols" })
+		vim.keymap.set("n", "<leader>ft", fzf.treesitter, { desc = "Find Treesitter symbols" })
+		vim.keymap.set("n", "<leader>fm", fzf.spell_suggest, { desc = "Find spell suggestions" })
+		vim.keymap.set("n", "<leader>f'", fzf.marks, { desc = "Find marks" })
+		vim.keymap.set("n", "<leader>f,", fzf.resume, { desc = "Resume last picker" })
+		vim.keymap.set("n", "<leader>f.", fzf.oldfiles, { desc = "Find recent files" })
+
+		-- ========================================
 		-- Conform (formatting) keymaps
 		-- ========================================
 		local conform_ok, conform = pcall(require, "conform")
