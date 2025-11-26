@@ -139,14 +139,14 @@ vim.api.nvim_create_autocmd("User", {
 		end
 
 		-- ========================================
-		-- Telescope (fuzzy finding) keymaps
+		-- fzf-lua (fuzzy finding) keymaps
 		-- ========================================
 		local fzf = require("fzf-lua")
 
         vim.keymap.set("n", "<leader>fp", fzf.builtin, { desc = "Find picker" })
 		vim.keymap.set("n", "<leader>ff", fzf.files, { desc = "Find files" })
 
-		-- Find files in home directory (Telescope → fzf-lua)
+		-- Find files in home directory
 		vim.keymap.set("n", "<leader>f~", function()
 			fzf.files({
 				cwd = vim.fn.expand("~"),
@@ -159,8 +159,6 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<leader>fb", fzf.buffers, { desc = "Find buffers" })
 		vim.keymap.set("n", "<leader>fh", fzf.help_tags, { desc = "Find help tags" })
 		vim.keymap.set("n", "<leader>fk", fzf.keymaps, { desc = "Find keymaps" })
-
-		-- grep_string = grep word under cursor, so keep as-is
 		vim.keymap.set("n", "<leader>fw", fzf.grep_cword, { desc = "Find current word" })
 
 		vim.keymap.set(

@@ -200,17 +200,6 @@ function _G.st_filetype_text()
 		return ""
 	end
 
-	if filetype == "TelescopePrompt" then
-		local icon = ""
-		local icon_color = "#7aa2f7"
-		local hl_name = "SLFileIcon_" .. icon_color:gsub("#", "")
-		if not icon_hl_cache[hl_name] then
-			vim.api.nvim_set_hl(0, hl_name, { fg = icon_color })
-			icon_hl_cache[hl_name] = true
-		end
-		return string.format("%%#%s#%s %%#SLFileType#%s%%*", hl_name, icon, filetype)
-	end
-
 	local icon, icon_color = devicons.get_icon_color(filename, extension, { default = true })
 
 	if not icon then

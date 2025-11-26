@@ -1,4 +1,4 @@
--- Citation picker with Telescope integration
+-- Citation picker with fzf-lua integration
 
 local zotero_bib = vim.fn.expand("~/Documents/zotero.bib")
 local local_bibs = vim.fn.globpath(vim.fn.getcwd(), "*.bib", false, true)
@@ -146,91 +146,6 @@ local function wrap_text_to_width(text, width)
 		text = text:sub(break_point + 1):gsub("^%s+", "")
 	end
 	return lines
-end
-
----------------------------------------------------------------------
--- Create preview content
----------------------------------------------------------------------
-local function create_preview_content(entry, winid)
-	local lines = {}
-	local width = 80
-	if winid and vim.api.nvim_win_is_valid(winid) then
-		width = vim.api.nvim_win_get_width(winid) - 10
-	end
-
-	local function wrap_field(label, text)
-		if not text or text == "" then
-			return
-		end
-		local line_prefix = label .. ": "
-		local first_line_width = width - #line_prefix
-		local wrapped = wrap_text_to_width(text, first_line_width)
-		if #wrapped > 0 then
-			lines[#lines + 1] = line_prefix .. table.remove(wrapped, 1)
-			for _, l in ipairs(wrapped) do
-				lines[#lines + 1] = string.rep(" ", #line_prefix) .. l
-			end
-		end
-	end
-
-	wrap_field("Title", entry.title)
-	wrap_field("Author", entry.author)
-	wrap_field("Year", entry.date ~= "" and entry.date or entry.year)
-	wrap_field("Journal", entry.journaltitle)
-	wrap_field("Abstract", entry.abstract)
-
-	return lines
-end
-
----------------------------------------------------------------------
--- Calculate match score
----------------------------------------------------------------------
-local function calculate_match_score(entry, query)
-	if not query or query == "" then
-		return 0
-	end
-	local score = 0
-	local query_lower = query:lower()
-	local searchable_text = (entry.key .. " " .. (entry.title or "") .. " " .. (entry.author or "")):lower()
-
-	if entry.key:lower() == query_lower then
-		score = score + 1000
-	end
-	if entry.key:lower():find("^" .. vim.pesc(query_lower)) then
-		score = score + 500
-	end
-	local key_match = entry.key:lower():find(vim.pesc(query_lower))
-	if key_match then
-		score = score + 300 - key_match
-	end
-	if entry.title and entry.title:lower() == query_lower then
-		score = score + 800
-	end
-	if entry.title and entry.title:lower():find("^" .. vim.pesc(query_lower)) then
-		score = score + 400
-	end
-	if entry.title then
-		local title_match = entry.title:lower():find(vim.pesc(query_lower))
-		if title_match then
-			score = score + 200 - (title_match / 2)
-		end
-	end
-	if entry.author then
-		local author_match = entry.author:lower():find(vim.pesc(query_lower))
-		if author_match then
-			score = score + 100 - (author_match / 2)
-		end
-	end
-
-	local longest_match = 0
-	for word in query_lower:gmatch("%S+") do
-		local match_start, match_end = searchable_text:find(vim.pesc(word))
-		if match_start then
-			longest_match = math.max(longest_match, match_end - match_start + 1)
-		end
-	end
-	score = score + longest_match * 10
-	return score
 end
 
 ---------------------------------------------------------------------
@@ -451,7 +366,7 @@ local function replace_citation_at_cursor(saved, new_citation_key, citation_info
 end
 
 ---------------------------------------------------------------------
--- Telescope picker for inserting citations
+-- fzf-lua picker for inserting citations
 ---------------------------------------------------------------------
 local function citation_picker(format)
 	local citations = {}
@@ -472,92 +387,86 @@ local function citation_picker(format)
 
 	local prompt_title = format == "latex" and "Citations 󱔗 [LaTeX]" or "Citations 󱔗 [Markdown]"
 
-	local pickers = require("telescope.pickers")
-	local finders = require("telescope.finders")
-	local conf = require("telescope.config").values
-	local actions = require("telescope.actions")
-	local action_state = require("telescope.actions.state")
-	local previewers = require("telescope.previewers")
-	local multi_select = require("telescope.actions.mt").transform_mod({
-		toggle_selection = function(prompt_bufnr)
-			actions.toggle_selection(prompt_bufnr)
-			local picker = action_state.get_current_picker(prompt_bufnr)
-			picker:reset_prompt()
-			actions.move_selection_next(prompt_bufnr)
-		end,
-	})
-
-	local custom_sorter = conf.generic_sorter({})
-	local original_scoring_function = custom_sorter.scoring_function
-	custom_sorter.scoring_function = function(self, prompt, line, entry)
-		if not entry or not entry.value then
-			return original_scoring_function(self, prompt, line, entry)
-		end
-
-		if not prompt or prompt == "" then
-			local key = entry.value.key:lower()
-			local score = 0
-			for i = 1, math.min(#key, 8) do
-				local char_code = key:byte(i)
-				score = score + (char_code * math.pow(256, 8 - i))
-			end
-			return score
-		end
-
-		return -calculate_match_score(entry.value, prompt)
+	-- Create a lookup table for citations
+	local citation_lookup = {}
+	for _, entry in ipairs(citations) do
+		citation_lookup[format_citation_display(entry)] = entry
 	end
 
-	local previewer = previewers.new_buffer_previewer({
-		title = "Citation Details",
-		define_preview = function(self, entry)
-			local content = create_preview_content(entry.value, self.state.winid)
-			vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, content)
-			vim.api.nvim_buf_set_option(self.state.bufnr, "filetype", "text")
-			vim.api.nvim_buf_set_option(self.state.bufnr, "wrap", true)
-		end,
-	})
+	local fzf = require("fzf-lua")
 
-	pickers
-		.new({}, {
-			prompt_title = prompt_title,
-			finder = finders.new_table({
-				results = citations,
-				entry_maker = function(entry)
-					return {
-						value = entry,
-						display = format_citation_display(entry),
-						ordinal = entry.key .. " " .. (entry.title or "") .. " " .. (entry.author or ""),
-					}
-				end,
-			}),
-			sorter = custom_sorter,
-			previewer = previewer,
-			attach_mappings = function(prompt_bufnr, map)
-				map({ "i", "n" }, "<Tab>", multi_select.toggle_selection)
-				actions.select_default:replace(function()
-					local selections = {}
-					local picker = action_state.get_current_picker(prompt_bufnr)
-					for entry in picker.manager:iter() do
-						if picker:is_multi_selected(entry) then
-							table.insert(selections, entry.value.key)
-						end
+	-- Create a temporary preview function
+	local function get_preview(entry)
+		local lines = {}
+		local width = 80
+
+		local function wrap_field(label, text)
+			if not text or text == "" then
+				return
+			end
+			local line_prefix = label .. ": "
+			local first_line_width = width - #line_prefix
+			local wrapped = wrap_text_to_width(text, first_line_width)
+			if #wrapped > 0 then
+				lines[#lines + 1] = line_prefix .. table.remove(wrapped, 1)
+				for _, l in ipairs(wrapped) do
+					lines[#lines + 1] = string.rep(" ", #line_prefix) .. l
+				end
+			end
+		end
+
+		wrap_field("Title", entry.title)
+		wrap_field("Author", entry.author)
+		wrap_field("Year", entry.year)
+		wrap_field("Journal", entry.journaltitle)
+		wrap_field("Abstract", entry.abstract)
+
+		return table.concat(lines, "\n")
+	end
+
+	fzf.fzf_exec(function(fzf_cb)
+		for _, entry in ipairs(citations) do
+			fzf_cb(format_citation_display(entry))
+		end
+		fzf_cb()
+	end, {
+		prompt = prompt_title .. "> ",
+		fzf_opts = {
+			["--preview-window"] = "right:50%",
+			["--preview"] = "echo {}",
+		},
+		preview = function(selected)
+			local entry = citation_lookup[selected[1]]
+			if entry then
+				return get_preview(entry)
+			end
+			return "No preview available"
+		end,
+		actions = {
+			["default"] = function(selected)
+				if #selected == 0 then
+					return
+				end
+				local keys = {}
+				for _, line in ipairs(selected) do
+					local entry = citation_lookup[line]
+					if entry then
+						table.insert(keys, entry.key)
 					end
-					if #selections == 0 then
-						local current_entry = action_state.get_selected_entry()
-						if current_entry then
-							table.insert(selections, current_entry.value.key)
-						end
-					end
-					actions.close(prompt_bufnr)
-					if #selections > 0 then
-						table.sort(selections)
-						apply_insert_at_saved_context(saved, selections, format)
-					end
-				end)
-				return true
+				end
+				if #keys > 0 then
+					table.sort(keys)
+					apply_insert_at_saved_context(saved, keys, format)
+				end
 			end,
-		})
-		:find()
+		},
+		winopts = {
+			height = 0.85,
+			width = 0.80,
+			row = 0.35,
+			col = 0.50,
+		},
+	})
 end
 
 ---------------------------------------------------------------------
@@ -598,78 +507,88 @@ local function citation_replace()
 		was_insert_mode = vim.api.nvim_get_mode().mode:find("i") ~= nil,
 	}
 
-	local pickers = require("telescope.pickers")
-	local finders = require("telescope.finders")
-	local conf = require("telescope.config").values
-	local actions = require("telescope.actions")
-	local action_state = require("telescope.actions.state")
-	local previewers = require("telescope.previewers")
+	local fzf = require("fzf-lua")
 
-	local custom_sorter = conf.generic_sorter({})
-	local original_scoring_function = custom_sorter.scoring_function
-	custom_sorter.scoring_function = function(self, prompt, line, entry)
-		if not entry or not entry.value then
-			return original_scoring_function(self, prompt, line, entry)
-		end
+	-- Create a temporary preview function
+	local function get_preview(entry)
+		local lines = {}
+		local width = 80
 
-		if not prompt or prompt == "" then
-			local key = entry.value.key:lower()
-			local score = 0
-			for i = 1, math.min(#key, 8) do
-				local char_code = key:byte(i)
-				score = score + (char_code * math.pow(256, 8 - i))
+		local function wrap_field(label, text)
+			if not text or text == "" then
+				return
 			end
-			return score
+			local line_prefix = label .. ": "
+			local first_line_width = width - #line_prefix
+			local wrapped = wrap_text_to_width(text, first_line_width)
+			if #wrapped > 0 then
+				lines[#lines + 1] = line_prefix .. table.remove(wrapped, 1)
+				for _, l in ipairs(wrapped) do
+					lines[#lines + 1] = string.rep(" ", #line_prefix) .. l
+				end
+			end
 		end
 
-		return -calculate_match_score(entry.value, prompt)
+		wrap_field("Title", entry.title)
+		wrap_field("Author", entry.author)
+		wrap_field("Year", entry.year)
+		wrap_field("Journal", entry.journaltitle)
+		wrap_field("Abstract", entry.abstract)
+
+		return table.concat(lines, "\n")
 	end
 
-	local previewer = previewers.new_buffer_previewer({
-		title = "Citation Details",
-		define_preview = function(self, entry)
-			local content = create_preview_content(entry.value, self.state.winid)
-			vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, content)
-			vim.api.nvim_buf_set_option(self.state.bufnr, "filetype", "text")
-			vim.api.nvim_buf_set_option(self.state.bufnr, "wrap", true)
+	fzf.fzf_exec(function(fzf_cb)
+		for _, entry in ipairs(citations) do
+			local display = format_citation_display(entry)
+			if entry.key == citation_info.key then
+				display = display .. " (current)"
+			end
+			fzf_cb(display)
+		end
+		fzf_cb()
+	end, {
+		prompt = "Replace citation @" .. citation_info.key .. " with> ",
+		fzf_opts = {
+			["--preview-window"] = "right:50%",
+			["--preview"] = "echo {}",
+		},
+		preview = function(selected)
+			local selected_line = selected[1]:gsub(" %(current%)$", "")
+			for _, entry in ipairs(citations) do
+				if format_citation_display(entry) == selected_line then
+					return get_preview(entry)
+				end
+			end
+			return "No preview available"
 		end,
-	})
-
-	pickers
-		.new({}, {
-			prompt_title = "Replace citation @" .. citation_info.key .. " with:",
-			finder = finders.new_table({
-				results = citations,
-				entry_maker = function(entry)
-					local display = format_citation_display(entry)
-					if entry.key == citation_info.key then
-						display = display .. " (current)"
+		actions = {
+			["default"] = function(selected)
+				if #selected == 0 then
+					return
+				end
+				local selected_line = selected[1]:gsub(" %(current%)$", "")
+				for _, entry in ipairs(citations) do
+					if format_citation_display(entry) == selected_line then
+						if entry.key ~= citation_info.key then
+							replace_citation_at_cursor(saved, entry.key, citation_info)
+						else
+							vim.schedule(function()
+								vim.notify("Same citation selected, no replacement needed", vim.log.levels.INFO)
+							end)
+						end
+						break
 					end
-					return {
-						value = entry,
-						display = display,
-						ordinal = entry.key .. " " .. (entry.title or "") .. " " .. (entry.author or ""),
-					}
-				end,
-			}),
-			sorter = custom_sorter,
-			previewer = previewer,
-			attach_mappings = function(prompt_bufnr)
-				actions.select_default:replace(function()
-					actions.close(prompt_bufnr)
-					local selection = action_state.get_selected_entry()
-					if selection and selection.value.key ~= citation_info.key then
-						replace_citation_at_cursor(saved, selection.value.key, citation_info)
-					else
-						vim.schedule(function()
-							vim.notify("Same citation selected, no replacement needed", vim.log.levels.INFO)
-						end)
-					end
-				end)
-				return true
+				end
 			end,
-		})
-		:find()
+		},
+		winopts = {
+			height = 0.85,
+			width = 0.80,
+			row = 0.35,
+			col = 0.50,
+		},
+	})
 end
 
 ---------------------------------------------------------------------

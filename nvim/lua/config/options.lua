@@ -96,16 +96,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	desc = "Set pandoc syntax for markdown-like files",
 })
 
--- hack for apparently remaining in insert mode after selecting a file with Telescope
-vim.api.nvim_create_autocmd("WinLeave", {
-	callback = function()
-		if vim.bo.ft == "TelescopePrompt" and vim.fn.mode() == "i" then
-			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "i", false)
-		end
-	end,
-	desc = "Fix for Telescope leaving insert mode",
-})
-
 -- Diagnostics (lazy load on VimEnter since it's not needed immediately)
 vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()

@@ -1,4 +1,4 @@
--- Crossref picker with Telescope integration
+-- Crossref picker with fzf-lua integration
 
 local M = {}
 
@@ -121,61 +121,64 @@ local function create_crossref_picker(ref_type, chunks)
 		was_insert_mode = was_insert,
 	}
 
-	local pickers = require("telescope.pickers")
-	local finders = require("telescope.finders")
-	local conf = require("telescope.config").values
-	local actions = require("telescope.actions")
-	local action_state = require("telescope.actions.state")
-	local previewers = require("telescope.previewers")
+	-- Create lookup table for chunks
+	local chunk_lookup = {}
+	for _, chunk in ipairs(chunks) do
+		chunk_lookup[format_chunk_display(chunk)] = chunk
+	end
 
-	local previewer = previewers.new_buffer_previewer({
-		title = "Chunk Location",
-		define_preview = function(self, entry)
-			local bufnr = saved.buf
-			local chunk = entry.value
+	local fzf = require("fzf-lua")
 
-			local start_line = math.max(0, chunk.line - 5)
-			local end_line = math.min(vim.api.nvim_buf_line_count(bufnr), chunk.line + 10)
-			local lines = vim.api.nvim_buf_get_lines(bufnr, start_line, end_line, false)
+	fzf.fzf_exec(function(fzf_cb)
+		for _, chunk in ipairs(chunks) do
+			fzf_cb(format_chunk_display(chunk))
+		end
+		fzf_cb()
+	end, {
+		prompt = "Select " .. ref_type:gsub("^%l", string.upper) .. " Reference> ",
+		fzf_opts = {
+			["--preview-window"] = "right:50%",
+			["--preview"] = "echo {}"
+		},
+		preview = function(selected)
+			local selected_line = selected[1]
+			local chunk = chunk_lookup[selected_line]
 
-			vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
-
-			local highlight_line = chunk.line - start_line - 1
-			if highlight_line >= 0 and highlight_line < #lines then
-				vim.api.nvim_buf_add_highlight(self.state.bufnr, -1, "TelescopePreviewMatch", highlight_line, 0, -1)
+			if not chunk then
+				return "No preview available"
 			end
 
-			vim.api.nvim_buf_set_option(self.state.bufnr, "filetype", "rmd")
-		end,
-	})
+			local start_line = math.max(0, chunk.line - 5)
+			local end_line = math.min(vim.api.nvim_buf_line_count(saved.buf), chunk.line + 10)
+			local lines = vim.api.nvim_buf_get_lines(saved.buf, start_line, end_line, false)
 
-	pickers
-		.new({}, {
-			prompt_title = "Select " .. ref_type:gsub("^%l", string.upper) .. " Reference",
-			finder = finders.new_table({
-				results = chunks,
-				entry_maker = function(chunk)
-					return {
-						value = chunk,
-						display = format_chunk_display(chunk),
-						ordinal = chunk.label,
-					}
-				end,
-			}),
-			sorter = conf.generic_sorter({}),
-			previewer = previewer,
-			attach_mappings = function(prompt_bufnr, map)
-				actions.select_default:replace(function()
-					actions.close(prompt_bufnr)
-					local selection = action_state.get_selected_entry()
-					if selection then
-						insert_crossref(ref_type, selection.value.label, saved)
-					end
-				end)
-				return true
+			-- Highlight the target line
+			local highlight_line = chunk.line - start_line
+			if highlight_line > 0 and highlight_line <= #lines then
+				lines[highlight_line] = ">>> " .. lines[highlight_line] .. " <<<"
+			end
+
+			return table.concat(lines, "\n")
+		end,
+		actions = {
+			["default"] = function(selected)
+				if #selected == 0 then
+					return
+				end
+				local selected_line = selected[1]
+				local chunk = chunk_lookup[selected_line]
+				if chunk then
+					insert_crossref(ref_type, chunk.label, saved)
+				end
 			end,
-		})
-		:find()
+		},
+		winopts = {
+			height = 0.85,
+			width = 0.80,
+			row = 0.35,
+			col = 0.50,
+		},
+	})
 end
 
 ---------------------------------------------------------------------
