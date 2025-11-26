@@ -30,7 +30,7 @@ return {
 					["ctrl-u"] = "unix-line-discard",
 					["ctrl-a"] = "toggle-all",
 					["ctrl-t"] = "first",
-					["ctrl-e"] = "last",
+					["ctrl-b"] = "last",
 				},
 			},
 			actions = {
