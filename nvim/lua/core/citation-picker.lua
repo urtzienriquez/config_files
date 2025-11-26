@@ -114,17 +114,17 @@ local function format_citation_display(entry)
 
 	if entry.title and entry.title ~= "" then
 		local title = entry.title
-		if #title > 40 then
-			title = title:sub(1, 37) .. "..."
-		end
+		-- if #title > 40 then
+		-- 	title = title:sub(1, 37) .. "..."
+		-- end
 		display = display .. " │ " .. title
 	end
 
 	if entry.author and entry.author ~= "" then
 		local authors = entry.author
-		if #authors > 30 then
-			authors = authors:sub(1, 27) .. "..."
-		end
+		-- if #authors > 30 then
+		-- 	authors = authors:sub(1, 27) .. "..."
+		-- end
 		display = display .. " │ " .. authors
 	end
 
@@ -398,7 +398,7 @@ local function citation_picker(format)
 	-- Create a temporary preview function
 	local function get_preview(entry)
 		local lines = {}
-		local width = 80
+		local width = 100
 
 		local function wrap_field(label, text)
 			if not text or text == "" then
@@ -432,7 +432,7 @@ local function citation_picker(format)
 	end, {
 		prompt = prompt_title .. "> ",
 		fzf_opts = {
-			["--preview-window"] = "right:50%",
+			["--preview-window"] = "down:50%",
 			["--preview"] = "echo {}",
 		},
 		preview = function(selected)
