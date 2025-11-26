@@ -173,6 +173,7 @@ vim.api.nvim_create_autocmd("User", {
 		end, { desc = "Find diagnostics in current buffer" })
 
 		vim.keymap.set("n", "<leader>fl", fzf.lsp_definitions, { desc = "Find LSP definitions" })
+		vim.keymap.set("n", "<leader>fr", fzf.lsp_references, { desc = "Find LSP references" })
 		vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols, { desc = "Find LSP document symbols" })
 		vim.keymap.set("n", "<leader>ft", fzf.treesitter, { desc = "Find Treesitter symbols" })
 		vim.keymap.set("n", "<leader>fm", fzf.spell_suggest, { desc = "Find spell suggestions" })
