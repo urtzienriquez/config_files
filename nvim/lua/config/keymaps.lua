@@ -114,7 +114,7 @@ end, {})
 vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 
 -- refresh git status
-vim.keymap.set("n", "<leader>g", ":GitStatusRefresh<CR>", { silent = true, desc = "refresh git status" })
+vim.keymap.set("n", "<leader>gg", ":GitStatusRefresh<CR>", { silent = true, desc = "refresh git status" })
 
 -- ========================================
 -- PLUGIN-DEPENDENT KEYMAPS
