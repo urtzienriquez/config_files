@@ -76,12 +76,15 @@ return {
 			map("n", "<leader>gD", function()
 				gs.diffthis("~")
 			end, { desc = "Diff this ~" })
-			map("n", "<leader>ugg", function()
+			map("n", "<leader>ugb", function()
+				gs.toggle_current_line_blame()
+			end, { desc = "Toggle git blame" })
+			map("n", "<leader>ugl", function()
 				gs.toggle_linehl()
-			end, { desc = "Toggle gitsigns line highlight" })
+			end, { desc = "Toggle line highlight" })
 			map("n", "<leader>ugw", function()
 				gs.toggle_word_diff()
-			end, { desc = "Toggle gitsigns word highlight" })
+			end, { desc = "Toggle word highlight" })
 		end,
 	},
 }

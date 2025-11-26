@@ -644,6 +644,7 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>s", name = "Send" },
 				{ "<leader>u", name = "UI toggle" },
 				{ "<leader>a", name = "Add citation/crossref" },
+				{ "<leader>ug", name = "git toggle" },
 			})
 		end
 	end,
