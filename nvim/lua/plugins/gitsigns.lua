@@ -12,13 +12,13 @@ return {
 		},
 		signcolumn = true,
 		numhl = false,
-		linehl = true, -- Enable line highlighting
-		word_diff = true,
+		linehl = false,
+		word_diff = false,
 		watch_gitdir = {
 			follow_files = true,
 		},
 		attach_to_untracked = false,
-		current_line_blame = false, -- Toggle with <leader>gb
+		current_line_blame = false,
 		current_line_blame_opts = {
 			virt_text = true,
 			virt_text_pos = "eol",
@@ -68,18 +68,7 @@ return {
 			end, { expr = true, desc = "Previous git hunk" })
 
 			-- Actions
-			map("n", "<leader>gs", gs.stage_hunk, { desc = "Stage hunk" })
-			map("n", "<leader>gr", gs.reset_hunk, { desc = "Reset hunk" })
-			map("v", "<leader>gs", function()
-				gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-			end, { desc = "Stage hunk (visual)" })
-			map("v", "<leader>gr", function()
-				gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-			end, { desc = "Reset hunk (visual)" })
 			map("n", "<leader>gp", gs.preview_hunk, { desc = "Preview hunk" })
-			map("n", "<leader>gB", function()
-				gs.toggle_current_line_blame()
-			end, { desc = "Toggle git blame" })
 			map("n", "<leader>gb", function()
 				gs.blame_line({ full = true })
 			end, { desc = "Show full git blame" })
@@ -87,9 +76,12 @@ return {
 			map("n", "<leader>gD", function()
 				gs.diffthis("~")
 			end, { desc = "Diff this ~" })
-
-			-- Text object
-			map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select git hunk" })
+			map("n", "<leader>ugg", function()
+				gs.toggle_linehl()
+			end, { desc = "Toggle gitsigns line highlight" })
+			map("n", "<leader>ugw", function()
+				gs.toggle_word_diff()
+			end, { desc = "Toggle gitsigns word highlight" })
 		end,
 	},
 }
