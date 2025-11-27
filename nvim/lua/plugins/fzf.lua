@@ -42,7 +42,6 @@ return {
 					["ctrl-s"] = actions.file_split,
 					["ctrl-v"] = actions.file_vsplit,
 					["ctrl-q"] = { fn = actions.file_sel_to_qf, prefix = "select-all" },
-					["ctrl-Q"] = actions.file_sel_to_ll,
 					["ctrl-j"] = actions.toggle_ignore,
 					["ctrl-h"] = actions.toggle_hidden,
 					["ctrl-f"] = actions.toggle_follow,
