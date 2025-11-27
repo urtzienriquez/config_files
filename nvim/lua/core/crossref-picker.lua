@@ -11,23 +11,18 @@ local function parse_chunks(bufnr)
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
 	for line_num, line in ipairs(lines) do
-		-- Detect labels in ```{r label} or ```{r, label}
-		local label = line:match("^```{r%s+([^,}%s]+)") or line:match("^```{r,%s*([^,}%s]+)")
-		if label then
-			-- Find the end of this chunk (next line starting with ```)
-			local chunk_end = line_num
-			for i = line_num + 1, #lines do
-				if lines[i]:match("^```%s*$") then
-					chunk_end = i
-					break
-				end
-			end
+		-- Detect labels in ```{r label, ...} format (label comes right after r)
+		local label = line:match("^```{r%s+([^,}%s]+)")
 
+		-- If no label found but it's an r chunk with comma, mark as unnamed
+		if not label and line:match("^```{r,%s*") then
+			label = "unnamed"
+		end
+
+		if label then
 			table.insert(chunks, {
 				label = label,
 				line = line_num,
-				chunk_end = chunk_end,
-				preview = line:gsub("^%s+", ""):gsub("%s+$", ""),
 			})
 		end
 	end
@@ -36,11 +31,71 @@ local function parse_chunks(bufnr)
 end
 
 ---------------------------------------------------------------------
--- Format chunk for display with line number embedded for preview
+-- Parse chunks from a file path
 ---------------------------------------------------------------------
-local function format_chunk_display(chunk, filename)
-	-- Embed the filename and line number in a format fzf-lua can parse
-	return string.format("%s:%d: %-20s", filename, chunk.line, chunk.label)
+local function parse_chunks_from_file(filepath)
+	local chunks = {}
+	local file = io.open(filepath, "r")
+	if not file then
+		return chunks
+	end
+
+	local line_num = 0
+	for line in file:lines() do
+		line_num = line_num + 1
+		-- Detect labels in ```{r label, ...} format (label comes right after r)
+		local label = line:match("^```{r%s+([^,}%s]+)")
+
+		-- If no label found but it's an r chunk with comma, mark as unnamed
+		if not label and line:match("^```{r,%s*") then
+			label = "unnamed"
+		end
+
+		if label then
+			table.insert(chunks, {
+				label = label,
+				line = line_num,
+				file = filepath,
+			})
+		end
+	end
+
+	file:close()
+	return chunks
+end
+
+---------------------------------------------------------------------
+-- Get all chunks from current file and other Rmd files in directory
+---------------------------------------------------------------------
+local function get_all_chunks()
+	local all_chunks = {}
+	local cur_buf = vim.api.nvim_get_current_buf()
+	local cur_file = vim.api.nvim_buf_get_name(cur_buf)
+	local cur_dir = vim.fn.fnamemodify(cur_file, ":h")
+
+	-- Parse current buffer first
+	local cur_chunks = parse_chunks(cur_buf)
+	for _, chunk in ipairs(cur_chunks) do
+		chunk.file = cur_file
+		chunk.is_current = true
+		table.insert(all_chunks, chunk)
+	end
+
+	-- Find all Rmd/qmd files in the same directory
+	local rmd_files = vim.fn.globpath(cur_dir, "*.{rmd,Rmd,qmd,Qmd}", false, true)
+
+	for _, file in ipairs(rmd_files) do
+		-- Skip current file (already parsed from buffer)
+		if file ~= cur_file then
+			local chunks = parse_chunks_from_file(file)
+			for _, chunk in ipairs(chunks) do
+				chunk.is_current = false
+				table.insert(all_chunks, chunk)
+			end
+		end
+	end
+
+	return all_chunks
 end
 
 ---------------------------------------------------------------------
@@ -113,11 +168,45 @@ local function insert_crossref(ref_type, label, saved_context)
 end
 
 ---------------------------------------------------------------------
+-- Custom previewer for chunks
+---------------------------------------------------------------------
+local function create_chunk_previewer(chunks)
+	local Previewer = require("fzf-lua.previewer.builtin")
+
+	local ChunkPreviewer = Previewer.buffer_or_file:extend()
+
+	function ChunkPreviewer:new(o, opts, fzf_win)
+		ChunkPreviewer.super.new(self, o, opts, fzf_win)
+		setmetatable(self, ChunkPreviewer)
+		return self
+	end
+
+	function ChunkPreviewer:parse_entry(entry_str)
+		-- Extract label (everything before the optional file indicator)
+		local label = entry_str:match("^(.-)%s*%(") or entry_str
+
+		-- Find the chunk by label
+		for _, chunk in ipairs(chunks) do
+			if chunk.label == label then
+				return {
+					path = chunk.file,
+					line = chunk.line,
+					col = 1,
+				}
+			end
+		end
+		return { path = "" }
+	end
+
+	return ChunkPreviewer
+end
+
+---------------------------------------------------------------------
 -- Generic crossref picker
 ---------------------------------------------------------------------
 local function create_crossref_picker(ref_type, chunks)
 	if #chunks == 0 then
-		vim.notify("No " .. ref_type .. " chunks found in current file", vim.log.levels.WARN)
+		vim.notify("No " .. ref_type .. " chunks found in current file or directory", vim.log.levels.WARN)
 		return
 	end
 
@@ -125,7 +214,6 @@ local function create_crossref_picker(ref_type, chunks)
 	local cur_buf = vim.api.nvim_get_current_buf()
 	local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
 	local was_insert = vim.api.nvim_get_mode().mode:find("i") ~= nil
-	local filename = vim.api.nvim_buf_get_name(cur_buf)
 
 	local saved = {
 		win = cur_win,
@@ -137,8 +225,7 @@ local function create_crossref_picker(ref_type, chunks)
 
 	local chunk_lookup = {}
 	for _, chunk in ipairs(chunks) do
-		local display = format_chunk_display(chunk, filename)
-		chunk_lookup[display] = chunk
+		chunk_lookup[chunk.label] = chunk
 	end
 
 	local fzf = require("fzf-lua")
@@ -147,18 +234,23 @@ local function create_crossref_picker(ref_type, chunks)
 
 	fzf.fzf_exec(function(cb)
 		for _, chunk in ipairs(chunks) do
-			cb(format_chunk_display(chunk, filename))
+			-- Show label with file indicator for non-current files
+			local display = chunk.label
+			if not chunk.is_current then
+				local filename = vim.fn.fnamemodify(chunk.file, ":t")
+				display = display .. " (" .. filename .. ")"
+			end
+			cb(display)
 		end
 		cb()
 	end, {
 		prompt = "Code Chunk> ",
-		-- Use builtin previewer which handles file:line format automatically
-		previewer = "builtin",
+		previewer = create_chunk_previewer(chunks),
 		winopts = {
 			title = title_str .. " Crossref",
 			preview = {
 				layout = "vertical",
-				vertical = "right:70%",
+				vertical = "right:65%",
 				wrap = "wrap",
 			},
 		},
@@ -168,7 +260,9 @@ local function create_crossref_picker(ref_type, chunks)
 				if #selected == 0 then
 					return
 				end
-				local chunk = chunk_lookup[selected[1]]
+				-- Extract just the label (before any file indicator)
+				local label = selected[1]:match("^(.-)%s*%(") or selected[1]
+				local chunk = chunk_lookup[label]
 				if chunk then
 					insert_crossref(ref_type, chunk.label, saved)
 				end
@@ -181,7 +275,7 @@ end
 -- Figure crossref picker
 ---------------------------------------------------------------------
 function M.figure_picker()
-	local chunks = parse_chunks()
+	local chunks = get_all_chunks()
 	create_crossref_picker("fig", chunks)
 end
 
@@ -189,7 +283,7 @@ end
 -- Table crossref picker
 ---------------------------------------------------------------------
 function M.table_picker()
-	local chunks = parse_chunks()
+	local chunks = get_all_chunks()
 	create_crossref_picker("tab", chunks)
 end
 

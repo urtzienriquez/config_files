@@ -38,9 +38,7 @@ local function parse_bib_file(file_paths)
 					end
 					current_entry = {
 						key = key,
-						type = entry_type,
 						title = "",
-						shorttitle = "",
 						author = "",
 						year = "",
 						journaltitle = "",
@@ -56,9 +54,6 @@ local function parse_bib_file(file_paths)
 						if field == "title" then
 							current_entry.title = value
 							current_field = "title"
-						elseif field == "shorttitle" then
-							current_entry.shorttitle = value
-							current_field = "shorttitle"
 						elseif field == "author" then
 							current_entry.author = value:gsub("%s+and%s+", "; ")
 							current_field = "author"
@@ -380,7 +375,6 @@ end
 ---------------------------------------------------------------------
 local function create_citation_previewer(citations)
 	local Previewer = require("fzf-lua.previewer.builtin")
-	local path = require("fzf-lua.path")
 
 	local MyPreviewer = Previewer.buffer_or_file:extend()
 
@@ -548,8 +542,17 @@ local function citation_replace()
 		end
 		fzf_cb()
 	end, {
-		prompt = "Replace citation @" .. citation_info.key .. " with> ",
+		prompt = "with> ",
 		previewer = create_citation_previewer(citations),
+		winopts = {
+			title = "Replace citation @" .. citation_info.key,
+			preview = {
+				layout = "vertical",
+				vertical = "up:50%",
+				wrap = "wrap",
+				scrollbar = "border",
+			},
+		},
 		actions = {
 			["default"] = function(selected)
 				if #selected == 0 then
