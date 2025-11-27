@@ -14,9 +14,19 @@ local function parse_chunks(bufnr)
 		-- Detect labels in ```{r label} or ```{r, label}
 		local label = line:match("^```{r%s+([^,}%s]+)") or line:match("^```{r,%s*([^,}%s]+)")
 		if label then
+			-- Find the end of this chunk (next line starting with ```)
+			local chunk_end = line_num
+			for i = line_num + 1, #lines do
+				if lines[i]:match("^```%s*$") then
+					chunk_end = i
+					break
+				end
+			end
+
 			table.insert(chunks, {
 				label = label,
 				line = line_num,
+				chunk_end = chunk_end,
 				preview = line:gsub("^%s+", ""):gsub("%s+$", ""),
 			})
 		end
@@ -102,7 +112,7 @@ local function insert_crossref(ref_type, label, saved_context)
 end
 
 ---------------------------------------------------------------------
--- Crossref previewer (same style as citation picker, but SAME CONTENT as original)
+-- Crossref previewer with syntax highlighting
 ---------------------------------------------------------------------
 local function create_crossref_previewer(chunks, source_buf)
 	local Previewer = require("fzf-lua.previewer.builtin")
@@ -134,24 +144,38 @@ local function create_crossref_previewer(chunks, source_buf)
 			return false
 		end
 
-		-- EXACT original preview behavior:
-		local start_line = math.max(0, chunk.line - 1)
-		local end_line = math.min(vim.api.nvim_buf_line_count(source_buf), chunk.line + 10)
-		local lines = vim.api.nvim_buf_get_lines(source_buf, start_line, end_line, false)
+		-- Get the chunk content from start to end (including closing ```)
+		local chunk_lines = vim.api.nvim_buf_get_lines(source_buf, chunk.line - 1, chunk.chunk_end, false)
 
-		-- highlight target line with >>> <<< EXACTLY as before
-		local idx = chunk.line - start_line
-		if idx >= 1 and idx <= #lines then
-			lines[idx] = ">>> " .. lines[idx] .. " <<<"
-		end
-
-		-- Create preview buffer
+		-- Create preview buffer if needed
 		if not self.preview_bufnr or not vim.api.nvim_buf_is_valid(self.preview_bufnr) then
 			self.preview_bufnr = vim.api.nvim_create_buf(false, true)
 			vim.bo[self.preview_bufnr].bufhidden = "wipe"
+			vim.bo[self.preview_bufnr].buftype = "nofile"
 		end
 
-		vim.api.nvim_buf_set_lines(self.preview_bufnr, 0, -1, false, lines)
+		-- Set buffer content
+		vim.api.nvim_buf_set_lines(self.preview_bufnr, 0, -1, false, chunk_lines)
+
+		-- Detect language from chunk header
+		local lang = "r" -- default
+		local first_line = chunk_lines[1] or ""
+		local detected_lang = first_line:match("^```{([^,}%s]+)")
+		if detected_lang then
+			lang = detected_lang:lower()
+		end
+
+		-- Set filetype and enable syntax highlighting
+		vim.bo[self.preview_bufnr].filetype = lang
+		vim.bo[self.preview_bufnr].syntax = lang
+
+		-- Force treesitter to start
+		vim.schedule(function()
+			if vim.api.nvim_buf_is_valid(self.preview_bufnr) then
+				pcall(vim.treesitter.start, self.preview_bufnr, lang)
+			end
+		end)
+
 		self:set_preview_buf(self.preview_bufnr)
 		self.preview_bufloaded = true
 
@@ -190,10 +214,11 @@ local function create_crossref_picker(ref_type, chunks)
 
 	local fzf = require("fzf-lua")
 
-    local title_str = "Figure"
+	local title_str = "Figure"
 	if ref_type:gsub("^%l", string.upper) == "Tab" then
 		title_str = "Table"
 	end
+
 	fzf.fzf_exec(function(cb)
 		for _, chunk in ipairs(chunks) do
 			cb(format_chunk_display(chunk))
