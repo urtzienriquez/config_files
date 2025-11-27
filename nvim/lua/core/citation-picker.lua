@@ -1,4 +1,4 @@
--- Citation picker with fzf-lua integration
+-- Citation picker
 
 local zotero_bib = vim.fn.expand("~/Documents/zotero.bib")
 local local_bibs = vim.fn.globpath(vim.fn.getcwd(), "*.bib", false, true)
@@ -114,17 +114,11 @@ local function format_citation_display(entry)
 
 	if entry.title and entry.title ~= "" then
 		local title = entry.title
-		-- if #title > 40 then
-		-- 	title = title:sub(1, 37) .. "..."
-		-- end
 		display = display .. " │ " .. title
 	end
 
 	if entry.author and entry.author ~= "" then
 		local authors = entry.author
-		-- if #authors > 30 then
-		-- 	authors = authors:sub(1, 27) .. "..."
-		-- end
 		display = display .. " │ " .. authors
 	end
 
@@ -132,20 +126,36 @@ local function format_citation_display(entry)
 end
 
 ---------------------------------------------------------------------
--- Wrap text to preview width
+-- Create preview content as a string
 ---------------------------------------------------------------------
-local function wrap_text_to_width(text, width)
+local function format_preview_content(entry)
 	local lines = {}
-	while #text > 0 do
-		local break_point = width
-		local space_pos = text:sub(1, width):match(".*%s()")
-		if space_pos then
-			break_point = space_pos - 1
-		end
-		table.insert(lines, text:sub(1, break_point))
-		text = text:sub(break_point + 1):gsub("^%s+", "")
+
+	if entry.title and entry.title ~= "" then
+		table.insert(lines, "Title: " .. entry.title)
+		table.insert(lines, "")
 	end
-	return lines
+
+	if entry.author and entry.author ~= "" then
+		table.insert(lines, "Author: " .. entry.author)
+		table.insert(lines, "")
+	end
+
+	if entry.year and entry.year ~= "" then
+		table.insert(lines, "Year: " .. entry.year)
+		table.insert(lines, "")
+	end
+
+	if entry.journaltitle and entry.journaltitle ~= "" then
+		table.insert(lines, "Journal: " .. entry.journaltitle)
+		table.insert(lines, "")
+	end
+
+	if entry.abstract and entry.abstract ~= "" then
+		table.insert(lines, "Abstract: " .. entry.abstract)
+	end
+
+	return table.concat(lines, "\n")
 end
 
 ---------------------------------------------------------------------
@@ -366,6 +376,61 @@ local function replace_citation_at_cursor(saved, new_citation_key, citation_info
 end
 
 ---------------------------------------------------------------------
+-- Custom previewer that inherits fzf-lua's styling
+---------------------------------------------------------------------
+local function create_citation_previewer(citations)
+	local Previewer = require("fzf-lua.previewer.builtin")
+	local path = require("fzf-lua.path")
+
+	local MyPreviewer = Previewer.buffer_or_file:extend()
+
+	function MyPreviewer:new(o, opts, fzf_win)
+		MyPreviewer.super.new(self, o, opts, fzf_win)
+		setmetatable(self, MyPreviewer)
+		return self
+	end
+
+	function MyPreviewer:parse_entry(entry_str)
+		-- Extract the citation key from the display string
+		local key = entry_str:match("^([^%s│]+)")
+		return { path = key }
+	end
+
+	function MyPreviewer:populate_preview_buf(entry_str)
+		local key = entry_str:match("^([^%s│]+)")
+		key = key:gsub(" %(current%)$", "")
+
+		local citation = nil
+		for _, cite in ipairs(citations) do
+			if cite.key == key then
+				citation = cite
+				break
+			end
+		end
+
+		if citation then
+			local preview_lines = vim.split(format_preview_content(citation), "\n")
+
+			-- Create buffer if it doesn't exist
+			if not self.preview_bufnr or not vim.api.nvim_buf_is_valid(self.preview_bufnr) then
+				self.preview_bufnr = vim.api.nvim_create_buf(false, true)
+				vim.bo[self.preview_bufnr].bufhidden = "wipe"
+			end
+
+			-- Clear and populate buffer
+			vim.api.nvim_buf_set_lines(self.preview_bufnr, 0, -1, false, preview_lines)
+			self:set_preview_buf(self.preview_bufnr)
+			self.preview_bufloaded = true
+			return true
+		end
+
+		return false
+	end
+
+	return MyPreviewer
+end
+
+---------------------------------------------------------------------
 -- fzf-lua picker for inserting citations
 ---------------------------------------------------------------------
 local function citation_picker(format)
@@ -395,35 +460,6 @@ local function citation_picker(format)
 
 	local fzf = require("fzf-lua")
 
-	-- Create a temporary preview function
-	local function get_preview(entry)
-		local lines = {}
-		local width = 100
-
-		local function wrap_field(label, text)
-			if not text or text == "" then
-				return
-			end
-			local line_prefix = label .. ": "
-			local first_line_width = width - #line_prefix
-			local wrapped = wrap_text_to_width(text, first_line_width)
-			if #wrapped > 0 then
-				lines[#lines + 1] = line_prefix .. table.remove(wrapped, 1)
-				for _, l in ipairs(wrapped) do
-					lines[#lines + 1] = string.rep(" ", #line_prefix) .. l
-				end
-			end
-		end
-
-		wrap_field("Title", entry.title)
-		wrap_field("Author", entry.author)
-		wrap_field("Year", entry.year)
-		wrap_field("Journal", entry.journaltitle)
-		wrap_field("Abstract", entry.abstract)
-
-		return table.concat(lines, "\n")
-	end
-
 	fzf.fzf_exec(function(fzf_cb)
 		for _, entry in ipairs(citations) do
 			fzf_cb(format_citation_display(entry))
@@ -431,17 +467,14 @@ local function citation_picker(format)
 		fzf_cb()
 	end, {
 		prompt = prompt_title .. "> ",
-		fzf_opts = {
-			["--preview-window"] = "down:50%",
-			["--preview"] = "echo {}",
+		previewer = create_citation_previewer(citations),
+		winopts = {
+			preview = {
+				layout = "vertical", -- Use vertical layout (preview at bottom)
+				vertical = "down:50%", -- Preview at bottom, 50% height
+				wrap = "wrap", -- Enable soft wrap
+			},
 		},
-		preview = function(selected)
-			local entry = citation_lookup[selected[1]]
-			if entry then
-				return get_preview(entry)
-			end
-			return "No preview available"
-		end,
 		actions = {
 			["default"] = function(selected)
 				if #selected == 0 then
@@ -459,12 +492,6 @@ local function citation_picker(format)
 					apply_insert_at_saved_context(saved, keys, format)
 				end
 			end,
-		},
-		winopts = {
-			height = 0.85,
-			width = 0.80,
-			row = 0.35,
-			col = 0.50,
 		},
 	})
 end
@@ -509,35 +536,6 @@ local function citation_replace()
 
 	local fzf = require("fzf-lua")
 
-	-- Create a temporary preview function
-	local function get_preview(entry)
-		local lines = {}
-		local width = 80
-
-		local function wrap_field(label, text)
-			if not text or text == "" then
-				return
-			end
-			local line_prefix = label .. ": "
-			local first_line_width = width - #line_prefix
-			local wrapped = wrap_text_to_width(text, first_line_width)
-			if #wrapped > 0 then
-				lines[#lines + 1] = line_prefix .. table.remove(wrapped, 1)
-				for _, l in ipairs(wrapped) do
-					lines[#lines + 1] = string.rep(" ", #line_prefix) .. l
-				end
-			end
-		end
-
-		wrap_field("Title", entry.title)
-		wrap_field("Author", entry.author)
-		wrap_field("Year", entry.year)
-		wrap_field("Journal", entry.journaltitle)
-		wrap_field("Abstract", entry.abstract)
-
-		return table.concat(lines, "\n")
-	end
-
 	fzf.fzf_exec(function(fzf_cb)
 		for _, entry in ipairs(citations) do
 			local display = format_citation_display(entry)
@@ -549,19 +547,7 @@ local function citation_replace()
 		fzf_cb()
 	end, {
 		prompt = "Replace citation @" .. citation_info.key .. " with> ",
-		fzf_opts = {
-			["--preview-window"] = "right:50%",
-			["--preview"] = "echo {}",
-		},
-		preview = function(selected)
-			local selected_line = selected[1]:gsub(" %(current%)$", "")
-			for _, entry in ipairs(citations) do
-				if format_citation_display(entry) == selected_line then
-					return get_preview(entry)
-				end
-			end
-			return "No preview available"
-		end,
+		previewer = create_citation_previewer(citations),
 		actions = {
 			["default"] = function(selected)
 				if #selected == 0 then
@@ -581,12 +567,6 @@ local function citation_replace()
 					end
 				end
 			end,
-		},
-		winopts = {
-			height = 0.85,
-			width = 0.80,
-			row = 0.35,
-			col = 0.50,
 		},
 	})
 end

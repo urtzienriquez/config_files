@@ -160,7 +160,8 @@ export FZF_DEFAULT_OPTS="
   --no-reverse
   --preview 'bat -p --color=always {}'
   --preview-window '~4,+{2}+4/3,<75(up)'
-  --bind 'ctrl-v:toggle-preview'"
+  --bind 'ctrl-v:toggle-preview'
+  --bind 'alt-K:preview-up,alt-J:preview-down'"
 export FZF_CTRL_T_OPTS="
   --preview 'bat -p --color=always {}'
   --bind 'ctrl-v:toggle-preview'"

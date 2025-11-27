@@ -1,4 +1,4 @@
--- Crossref picker with fzf-lua integration
+-- Crossref picker
 
 local M = {}
 
@@ -11,6 +11,7 @@ local function parse_chunks(bufnr)
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
 	for line_num, line in ipairs(lines) do
+		-- Detect labels in ```{r label} or ```{r, label}
 		local label = line:match("^```{r%s+([^,}%s]+)") or line:match("^```{r,%s*([^,}%s]+)")
 		if label then
 			table.insert(chunks, {
@@ -28,11 +29,11 @@ end
 -- Format chunk for display
 ---------------------------------------------------------------------
 local function format_chunk_display(chunk)
-	return string.format("%-30s │ Line %d", chunk.label, chunk.line)
+	return string.format("%-20s │ Line %d", chunk.label, chunk.line)
 end
 
 ---------------------------------------------------------------------
--- Cursor management helpers
+-- Cursor helpers
 ---------------------------------------------------------------------
 local function set_cursor_after_inserted_text(buf, win, row, start_col, inserted_text)
 	if not vim.api.nvim_buf_is_valid(buf) then
@@ -101,7 +102,67 @@ local function insert_crossref(ref_type, label, saved_context)
 end
 
 ---------------------------------------------------------------------
--- Generic picker for crossrefs
+-- Crossref previewer (same style as citation picker, but SAME CONTENT as original)
+---------------------------------------------------------------------
+local function create_crossref_previewer(chunks, source_buf)
+	local Previewer = require("fzf-lua.previewer.builtin")
+	local CrossrefPreviewer = Previewer.buffer_or_file:extend()
+
+	function CrossrefPreviewer:new(o, opts, fzf_win)
+		CrossrefPreviewer.super.new(self, o, opts, fzf_win)
+		setmetatable(self, CrossrefPreviewer)
+		return self
+	end
+
+	function CrossrefPreviewer:parse_entry(entry_str)
+		local label = entry_str:match("^([^%s│]+)")
+		return { path = label }
+	end
+
+	function CrossrefPreviewer:populate_preview_buf(entry_str)
+		local label = entry_str:match("^([^%s│]+)")
+		local chunk
+
+		for _, c in ipairs(chunks) do
+			if c.label == label then
+				chunk = c
+				break
+			end
+		end
+
+		if not chunk then
+			return false
+		end
+
+		-- EXACT original preview behavior:
+		local start_line = math.max(0, chunk.line - 1)
+		local end_line = math.min(vim.api.nvim_buf_line_count(source_buf), chunk.line + 10)
+		local lines = vim.api.nvim_buf_get_lines(source_buf, start_line, end_line, false)
+
+		-- highlight target line with >>> <<< EXACTLY as before
+		local idx = chunk.line - start_line
+		if idx >= 1 and idx <= #lines then
+			lines[idx] = ">>> " .. lines[idx] .. " <<<"
+		end
+
+		-- Create preview buffer
+		if not self.preview_bufnr or not vim.api.nvim_buf_is_valid(self.preview_bufnr) then
+			self.preview_bufnr = vim.api.nvim_create_buf(false, true)
+			vim.bo[self.preview_bufnr].bufhidden = "wipe"
+		end
+
+		vim.api.nvim_buf_set_lines(self.preview_bufnr, 0, -1, false, lines)
+		self:set_preview_buf(self.preview_bufnr)
+		self.preview_bufloaded = true
+
+		return true
+	end
+
+	return CrossrefPreviewer
+end
+
+---------------------------------------------------------------------
+-- Generic crossref picker
 ---------------------------------------------------------------------
 local function create_crossref_picker(ref_type, chunks)
 	if #chunks == 0 then
@@ -113,6 +174,7 @@ local function create_crossref_picker(ref_type, chunks)
 	local cur_buf = vim.api.nvim_get_current_buf()
 	local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
 	local was_insert = vim.api.nvim_get_mode().mode:find("i") ~= nil
+
 	local saved = {
 		win = cur_win,
 		buf = cur_buf,
@@ -121,7 +183,6 @@ local function create_crossref_picker(ref_type, chunks)
 		was_insert_mode = was_insert,
 	}
 
-	-- Create lookup table for chunks
 	local chunk_lookup = {}
 	for _, chunk in ipairs(chunks) do
 		chunk_lookup[format_chunk_display(chunk)] = chunk
@@ -129,54 +190,34 @@ local function create_crossref_picker(ref_type, chunks)
 
 	local fzf = require("fzf-lua")
 
-	fzf.fzf_exec(function(fzf_cb)
+	fzf.fzf_exec(function(cb)
 		for _, chunk in ipairs(chunks) do
-			fzf_cb(format_chunk_display(chunk))
+			cb(format_chunk_display(chunk))
 		end
-		fzf_cb()
+		cb()
 	end, {
 		prompt = "Select " .. ref_type:gsub("^%l", string.upper) .. " Reference> ",
-		fzf_opts = {
-			["--preview-window"] = "right:50%",
-			["--preview"] = "echo {}"
+
+		-- same layout as your citation picker
+		previewer = create_crossref_previewer(chunks, cur_buf),
+		winopts = {
+			preview = {
+				layout = "vertical",
+				vertical = "right:70%",
+				wrap = "wrap",
+			},
 		},
-		preview = function(selected)
-			local selected_line = selected[1]
-			local chunk = chunk_lookup[selected_line]
 
-			if not chunk then
-				return "No preview available"
-			end
-
-			local start_line = math.max(0, chunk.line - 5)
-			local end_line = math.min(vim.api.nvim_buf_line_count(saved.buf), chunk.line + 10)
-			local lines = vim.api.nvim_buf_get_lines(saved.buf, start_line, end_line, false)
-
-			-- Highlight the target line
-			local highlight_line = chunk.line - start_line
-			if highlight_line > 0 and highlight_line <= #lines then
-				lines[highlight_line] = ">>> " .. lines[highlight_line] .. " <<<"
-			end
-
-			return table.concat(lines, "\n")
-		end,
 		actions = {
 			["default"] = function(selected)
 				if #selected == 0 then
 					return
 				end
-				local selected_line = selected[1]
-				local chunk = chunk_lookup[selected_line]
+				local chunk = chunk_lookup[selected[1]]
 				if chunk then
 					insert_crossref(ref_type, chunk.label, saved)
 				end
 			end,
-		},
-		winopts = {
-			height = 0.85,
-			width = 0.80,
-			row = 0.35,
-			col = 0.50,
 		},
 	})
 end
