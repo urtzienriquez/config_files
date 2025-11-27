@@ -162,16 +162,16 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<leader>fk", fzf.keymaps, { desc = "Find keymaps" })
 		vim.keymap.set("n", "<leader>fw", fzf.grep_cword, { desc = "Find current word" })
 
+		vim.keymap.set("n", "<leader>fd", function()
+			fzf.diagnostics_document()
+		end, { desc = "Find diagnostics in current buffer" })
 		vim.keymap.set(
 			"n",
-			"<leader>fdg",
+			"<leader>fD",
 			fzf.diagnostics_workspace,
 			{ desc = "Find diagnostics globally (workspace)" }
 		)
 
-		vim.keymap.set("n", "<leader>fdd", function()
-			fzf.diagnostics_document()
-		end, { desc = "Find diagnostics in current buffer" })
 
 		vim.keymap.set("n", "<leader>fl", fzf.lsp_definitions, { desc = "Find LSP definitions" })
 		vim.keymap.set("n", "<leader>fr", fzf.lsp_references, { desc = "Find LSP references" })
