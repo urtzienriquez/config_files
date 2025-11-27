@@ -23,6 +23,7 @@ return {
 					["<S-Left>"] = "preview-reset",
 					["<M-S-j>"] = "preview-down",
 					["<M-S-k>"] = "preview-up",
+					["ctrl-q"] = false,
 				},
 				fzf = {
 					false,
@@ -31,6 +32,7 @@ return {
 					["ctrl-a"] = "toggle-all",
 					["ctrl-t"] = "first",
 					["ctrl-b"] = "last",
+					["ctrl-q"] = false,
 				},
 			},
 			actions = {
