@@ -25,16 +25,23 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind-ahead
         return
     fi
 
-    local added removed staged unstaged untracked stats_str
+    local add del file staged unstaged untracked stats_str
 
-    # Get diff stats for staged changes
-    staged=0
+    # Get diff stats for unstaged changes
     unstaged=0
     while IFS=$'\t' read -r add del file; do
+        # Skip if add or del are not numbers (e.g., "-" for binary files)
+        [[ "$add" =~ ^[0-9]+$ ]] || add=0
+        [[ "$del" =~ ^[0-9]+$ ]] || del=0
         unstaged=$((unstaged + add + del))
     done < <(git diff --numstat 2>/dev/null)
 
+    # Get diff stats for staged changes
+    staged=0
     while IFS=$'\t' read -r add del file; do
+        # Skip if add or del are not numbers (e.g., "-" for binary files)
+        [[ "$add" =~ ^[0-9]+$ ]] || add=0
+        [[ "$del" =~ ^[0-9]+$ ]] || del=0
         staged=$((staged + add + del))
     done < <(git diff --cached --numstat 2>/dev/null)
 
