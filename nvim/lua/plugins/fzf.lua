@@ -3,6 +3,7 @@ return {
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	opts = {},
 	config = function()
+        local actions = require("fzf-lua").actions
 		require("fzf-lua").setup({
 			defaults = {
 				no_header_i = true,
@@ -37,19 +38,24 @@ return {
 			},
 			actions = {
 				files = {
-					["enter"] = require("fzf-lua").actions.file_edit_or_qf,
-					["ctrl-s"] = require("fzf-lua").actions.file_split,
-					["ctrl-v"] = require("fzf-lua").actions.file_vsplit,
-					["ctrl-q"] = { fn = require("fzf-lua").actions.file_sel_to_qf, prefix = "select-all" },
-					["ctrl-Q"] = require("fzf-lua").actions.file_sel_to_ll,
-					["ctrl-j"] = require("fzf-lua").actions.toggle_ignore,
-					["ctrl-h"] = require("fzf-lua").actions.toggle_hidden,
-					["ctrl-f"] = require("fzf-lua").actions.toggle_follow,
+					["enter"] = actions.file_edit_or_qf,
+					["ctrl-s"] = actions.file_split,
+					["ctrl-v"] = actions.file_vsplit,
+					["ctrl-q"] = { fn = actions.file_sel_to_qf, prefix = "select-all" },
+					["ctrl-Q"] = actions.file_sel_to_ll,
+					["ctrl-j"] = actions.toggle_ignore,
+					["ctrl-h"] = actions.toggle_hidden,
+					["ctrl-f"] = actions.toggle_follow,
 				},
 			},
 			grep = {
 				actions = {
-					["ctrl-f"] = { require("fzf-lua").actions.grep_lgrep },
+					["ctrl-f"] = { actions.grep_lgrep },
+				},
+			},
+			buffers = {
+				actions = {
+					["ctrl-d"] = { fn = actions.buf_del, reload = true },
 				},
 			},
 			fzf_opts = {
