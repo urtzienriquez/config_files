@@ -51,6 +51,7 @@ return {
 			grep = {
 				actions = {
 					["ctrl-f"] = { actions.grep_lgrep },
+					["ctrl-g"] = false,
 				},
 			},
 			buffers = {
