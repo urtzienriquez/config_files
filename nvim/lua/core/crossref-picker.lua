@@ -36,10 +36,11 @@ local function parse_chunks(bufnr)
 end
 
 ---------------------------------------------------------------------
--- Format chunk for display
+-- Format chunk for display with line number embedded for preview
 ---------------------------------------------------------------------
-local function format_chunk_display(chunk)
-	return string.format("%-20s │ Line %d", chunk.label, chunk.line)
+local function format_chunk_display(chunk, filename)
+	-- Embed the filename and line number in a format fzf-lua can parse
+	return string.format("%s:%d: %-20s", filename, chunk.line, chunk.label)
 end
 
 ---------------------------------------------------------------------
@@ -112,80 +113,6 @@ local function insert_crossref(ref_type, label, saved_context)
 end
 
 ---------------------------------------------------------------------
--- Crossref previewer with syntax highlighting
----------------------------------------------------------------------
-local function create_crossref_previewer(chunks, source_buf)
-	local Previewer = require("fzf-lua.previewer.builtin")
-	local CrossrefPreviewer = Previewer.buffer_or_file:extend()
-
-	function CrossrefPreviewer:new(o, opts, fzf_win)
-		CrossrefPreviewer.super.new(self, o, opts, fzf_win)
-		setmetatable(self, CrossrefPreviewer)
-		return self
-	end
-
-	function CrossrefPreviewer:parse_entry(entry_str)
-		local label = entry_str:match("^([^%s│]+)")
-		return { path = label }
-	end
-
-	function CrossrefPreviewer:populate_preview_buf(entry_str)
-		local label = entry_str:match("^([^%s│]+)")
-		local chunk
-
-		for _, c in ipairs(chunks) do
-			if c.label == label then
-				chunk = c
-				break
-			end
-		end
-
-		if not chunk then
-			return false
-		end
-
-		-- Get the chunk content from start to end (including closing ```)
-		local chunk_lines = vim.api.nvim_buf_get_lines(source_buf, chunk.line - 1, chunk.chunk_end, false)
-
-		-- Create preview buffer if needed
-		if not self.preview_bufnr or not vim.api.nvim_buf_is_valid(self.preview_bufnr) then
-			self.preview_bufnr = vim.api.nvim_create_buf(false, true)
-			vim.bo[self.preview_bufnr].bufhidden = "wipe"
-			vim.bo[self.preview_bufnr].buftype = "nofile"
-		end
-
-		-- Set buffer content
-		vim.api.nvim_buf_set_lines(self.preview_bufnr, 0, -1, false, chunk_lines)
-
-		-- Detect language from chunk header
-		local lang = "r" -- default
-		local first_line = chunk_lines[1] or ""
-		local detected_lang = first_line:match("^```{([^,}%s]+)")
-		if detected_lang then
-			lang = detected_lang:lower()
-		end
-
-		-- Set filetype and enable syntax highlighting
-		vim.bo[self.preview_bufnr].filetype = lang
-		vim.bo[self.preview_bufnr].syntax = lang
-
-		-- Force treesitter to start
-		vim.schedule(function()
-			if vim.api.nvim_buf_is_valid(self.preview_bufnr) then
-				pcall(vim.treesitter.start, self.preview_bufnr, lang)
-			end
-		end)
-
-		self:set_preview_buf(self.preview_bufnr)
-		self.preview_bufloaded = true
-
-		return true
-	end
-
-	return CrossrefPreviewer
-end
-
----------------------------------------------------------------------
 -- Generic crossref picker
 ---------------------------------------------------------------------
 local function create_crossref_picker(ref_type, chunks)
@@ -198,6 +125,7 @@ local function create_crossref_picker(ref_type, chunks)
 	local cur_buf = vim.api.nvim_get_current_buf()
 	local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
 	local was_insert = vim.api.nvim_get_mode().mode:find("i") ~= nil
+	local filename = vim.api.nvim_buf_get_name(cur_buf)
 
 	local saved = {
 		win = cur_win,
@@ -209,26 +137,25 @@ local function create_crossref_picker(ref_type, chunks)
 
 	local chunk_lookup = {}
 	for _, chunk in ipairs(chunks) do
-		chunk_lookup[format_chunk_display(chunk)] = chunk
+		local display = format_chunk_display(chunk, filename)
+		chunk_lookup[display] = chunk
 	end
 
 	local fzf = require("fzf-lua")
 
-	local title_str = "Figure"
-	if ref_type:gsub("^%l", string.upper) == "Tab" then
-		title_str = "Table"
-	end
+	local title_str = ref_type == "fig" and "Figure" or "Table"
 
 	fzf.fzf_exec(function(cb)
 		for _, chunk in ipairs(chunks) do
-			cb(format_chunk_display(chunk))
+			cb(format_chunk_display(chunk, filename))
 		end
 		cb()
 	end, {
 		prompt = "Code Chunk> ",
-		previewer = create_crossref_previewer(chunks, cur_buf),
+		-- Use builtin previewer which handles file:line format automatically
+		previewer = "builtin",
 		winopts = {
-			title = title_str,
+			title = title_str .. " Crossref",
 			preview = {
 				layout = "vertical",
 				vertical = "right:70%",
