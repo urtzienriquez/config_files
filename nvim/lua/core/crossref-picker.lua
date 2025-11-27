@@ -190,17 +190,20 @@ local function create_crossref_picker(ref_type, chunks)
 
 	local fzf = require("fzf-lua")
 
+    local title_str = "Figure"
+	if ref_type:gsub("^%l", string.upper) == "Tab" then
+		title_str = "Table"
+	end
 	fzf.fzf_exec(function(cb)
 		for _, chunk in ipairs(chunks) do
 			cb(format_chunk_display(chunk))
 		end
 		cb()
 	end, {
-		prompt = "Select " .. ref_type:gsub("^%l", string.upper) .. " Reference> ",
-
-		-- same layout as your citation picker
+		prompt = "Code Chunk> ",
 		previewer = create_crossref_previewer(chunks, cur_buf),
 		winopts = {
+			title = title_str,
 			preview = {
 				layout = "vertical",
 				vertical = "right:70%",

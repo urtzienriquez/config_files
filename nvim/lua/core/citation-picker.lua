@@ -471,11 +471,10 @@ local function citation_picker(format)
 		winopts = {
 			title = prompt_title,
 			preview = {
-				layout = "flex", -- Use vertical layout (preview at bottom)
-				vertical = "down:50%", -- Preview at bottom, 50% height
-				wrap = "wrap", -- Enable soft wrap
+				layout = "vertical",
+				vertical = "up:50%",
+				wrap = "wrap",
 				scrollbar = "border",
-                title = true,
 			},
 		},
 		actions = {
