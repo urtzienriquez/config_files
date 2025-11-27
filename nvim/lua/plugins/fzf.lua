@@ -46,7 +46,6 @@ return {
 					["ctrl-j"] = actions.toggle_ignore,
 					["ctrl-h"] = actions.toggle_hidden,
 					["ctrl-f"] = actions.toggle_follow,
-					["ctrl-x"] = false,
 				},
 			},
 			grep = {
@@ -57,6 +56,7 @@ return {
 			buffers = {
 				actions = {
 					["ctrl-d"] = { fn = actions.buf_del, reload = true },
+					["ctrl-x"] = false,
 				},
 			},
 			fzf_opts = {
