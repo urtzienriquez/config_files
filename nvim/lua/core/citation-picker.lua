@@ -466,13 +466,16 @@ local function citation_picker(format)
 		end
 		fzf_cb()
 	end, {
-		prompt = prompt_title .. "> ",
+		prompt = "> ",
 		previewer = create_citation_previewer(citations),
 		winopts = {
+			title = prompt_title,
 			preview = {
-				layout = "vertical", -- Use vertical layout (preview at bottom)
+				layout = "flex", -- Use vertical layout (preview at bottom)
 				vertical = "down:50%", -- Preview at bottom, 50% height
 				wrap = "wrap", -- Enable soft wrap
+				scrollbar = "border",
+                title = true,
 			},
 		},
 		actions = {
