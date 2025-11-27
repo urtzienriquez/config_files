@@ -46,6 +46,7 @@ return {
 					["ctrl-j"] = actions.toggle_ignore,
 					["ctrl-h"] = actions.toggle_hidden,
 					["ctrl-f"] = actions.toggle_follow,
+					["ctrl-x"] = false,
 				},
 			},
 			grep = {
