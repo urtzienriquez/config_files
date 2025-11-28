@@ -153,7 +153,7 @@ export FZF_THEME_OPTS="--color=fg:#c8d3f5,bg:#222436,hl:#82aaff \
 --color=fg+:#c8d3f5,bg+:#2f334d,hl+:#82aaff \
 --color=info:#ff966c,prompt:#82aaff,pointer:#ff966c \
 --color=marker:#c3e88d,spinner:#86e1fc,header:#c3e88d \
---color=border:#ff966c,preview-border:#86e1fc,scrollbar:#589ed7"
+--color=border:#ff966c,preview-border:#589ed7,scrollbar:#589ed7"
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -g "!node_modules" -g "!.git" -g "!go"'
 
