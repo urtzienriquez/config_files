@@ -63,7 +63,7 @@ fzf_select_wifi() {
             --prompt="${prompt_all}" \
             --query="$*" \
             --cycle \
-            --inline-info \
+            --info="right" \
             --bind="enter:accept" \
             --bind="${bind_ctrla}" \
             --bind="${bind_ctrln}"
