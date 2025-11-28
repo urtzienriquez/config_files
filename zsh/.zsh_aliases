@@ -119,8 +119,8 @@ alias fd='fdfind'
 # sf: search files in given path (or current path if not specified), open appropriately
 sf() {
   local search_path="${1:-.}"
-  local ofile
-  ofile=$(fd . "$search_path" \
+  local file
+  file=$(fd . "$search_path" \
     -HI \
     --type f \
     --exclude node_modules \
@@ -129,23 +129,38 @@ sf() {
     fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   local mime
-  mime=$(file -b --mime-type "$ofile")
+  mime=$(file -b --mime-type "$file")
 
   if [[ $mime == text/html ]]; then
-    qutebrowser --qt-arg class web --qt-arg name web "$ofile" &
+    qutebrowser --qt-arg class web --qt-arg name web "$file" &
   elif [[ $mime == text/* || $mime == application/javascript ]]; then
-    nvim "$ofile"
-  elif [[ -x "$ofile" ]]; then
-    gio open "$ofile"
+    nvim "$file"
+  elif [[ -x "$file" ]]; then
+    gio open "$file"
   elif [[ $mime == video/* ]]; then
-    mpv "$ofile"
+    mpv "$file"
   else
-    gio open "$ofile"
+    gio open "$file"
   fi
 }
 
-# sd: search files and dirs in given path (or current path if not specified), and cd appropriately
+# sd: search dirs in given path (or current path if not specified), and cd appropriately
 sd() {
+  local search_path="${1:-.}"
+  local dir
+  dir=$(fd . "$search_path" \
+    -HI \
+    --type d \
+    --exclude node_modules \
+    --exclude .git \
+    --exclude "$HOME/go" | \
+    fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+
+  cd "$dir"
+}
+
+# sx: search files and dirs in given path (or current path if not specified), and cd appropriately
+sx() {
   local search_path="${1:-.}"
   local selected
   selected=$(fd . "$search_path" \
@@ -187,13 +202,23 @@ sfr() {
 
 # sdr: like sd but searches entire system using locate, and cd accordingly
 sdr() {
-  local file
-  file=$(locate / | fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+  local dir
+  dir=$(locate / | while read -r p; do
+      [[ -d "$p" ]] && printf '%s\n' "$p"
+    done | fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
 
-  if [[ -d "$file" ]]; then
-    cd "$file"
+  cd "$dir"
+}
+
+# sxr: like sx but searches entire system using locate, and cd accordingly
+sxr() {
+  local selected
+  selected=$(locate / | fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+
+  if [[ -d "$selected" ]]; then
+    cd "$selected"
   else
-    cd "$(dirname "$file")"
+    cd "$(dirname "$selected")"
   fi
 }
 
