@@ -121,6 +121,7 @@ sf() {
   local search_path="${1:-.}"
   local ofile
   ofile=$(fd . "$search_path" \
+    -HI \
     --type f \
     --exclude node_modules \
     --exclude .git \
@@ -148,6 +149,7 @@ sd() {
   local search_path="${1:-.}"
   local selected
   selected=$(fd . "$search_path" \
+    -HI \
     --type f --type d \
     --exclude node_modules \
     --exclude .git \
