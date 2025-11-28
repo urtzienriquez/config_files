@@ -20,6 +20,8 @@ set ttimeout
 set ttimeoutlen=1
 set ttyfast
 
+colorscheme habamax
+
 " Call the .vimrc.plug file
 if filereadable(expand("~/.vimrc.plug"))
 	source ~/.vimrc.plug
