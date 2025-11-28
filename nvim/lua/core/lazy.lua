@@ -15,10 +15,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+	change_detection = {
+		notify = false,
+	},
 	spec = {
 		{ import = "plugins" },
 	},
 	checker = { enabled = true },
-    ui = { backdrop = 40 },
+	ui = { backdrop = 40 },
 })
-
