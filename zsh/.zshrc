@@ -148,22 +148,30 @@ elif [[ "$HOST" == "archlinux" ]]; then
 	source /usr/share/fzf/key-bindings.zsh
 	source /usr/share/fzf/completion.zsh
 fi
-export FZF_THEME_OPTS="--color=fg:#c0caf5,bg:#222436,hl:#7dcfff \
---color=fg+:#c0caf5,bg+:#35274a,hl+:#bb9af7 \
---color=info:#7aa2f7,prompt:#7dcfff,pointer:#bb9af7 \
---color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a"
+
+export FZF_THEME_OPTS="--color=fg:#c8d3f5,bg:#222436,hl:#82aaff \
+--color=fg+:#c8d3f5,bg+:#2f334d,hl+:#82aaff \
+--color=info:#ff966c,prompt:#82aaff,pointer:#ff966c \
+--color=marker:#c3e88d,spinner:#86e1fc,header:#c3e88d \
+--color=border:#ff966c,preview-border:#86e1fc,scrollbar:#589ed7"
+
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -g "!node_modules" -g "!.git" -g "!go"'
+
 export FZF_DEFAULT_OPTS="
   $FZF_THEME_OPTS
   --no-height 
   --no-reverse
   --preview 'bat -p --color=always {}'
-  --preview-window '~4,+{2}+4/3,<75(up)'
+  --preview-window '+{2}+4/3,<75(up),border-sharp'
+  --scrollbar='█'
   --bind 'ctrl-v:toggle-preview'
   --bind 'alt-K:preview-up,alt-J:preview-down'"
+
 export FZF_CTRL_T_OPTS="
   --preview 'bat -p --color=always {}'
+  --preview-window 'border-sharp'
   --bind 'ctrl-v:toggle-preview'"
+
 export FZF_CTRL_R_OPTS="--no-preview"
 export FZF_ALT_C_OPTS="--no-preview"
 

@@ -3,7 +3,7 @@ return {
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	opts = {},
 	config = function()
-        local actions = require("fzf-lua").actions
+		local actions = require("fzf-lua").actions
 		require("fzf-lua").setup({
 			defaults = {
 				no_header_i = true,
