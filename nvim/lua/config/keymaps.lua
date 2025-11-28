@@ -26,10 +26,10 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 vim.keymap.set("i", "<C-d>", "<C-k>", { noremap = true })
 
 -- Resize windows
-vim.keymap.set("n", "<C-A-Left>", ":vertical resize +2<CR>", { silent = true, desc = "Resize vertically" })
-vim.keymap.set("n", "<C-A-Right>", ":vertical resize -2<CR>", { silent = true, desc = "Resize vertically" })
-vim.keymap.set("n", "<C-A-Up>", ":resize +2<CR>", { silent = true, desc = "Resize horizontally" })
-vim.keymap.set("n", "<C-A-Down>", ":resize -2<CR>", { silent = true, desc = "Resize horizontally" })
+vim.keymap.set("n", "<C-A-Left>", ":vertical resize +5<CR>", { silent = true, desc = "Resize vertically" })
+vim.keymap.set("n", "<C-A-Right>", ":vertical resize -5<CR>", { silent = true, desc = "Resize vertically" })
+vim.keymap.set("n", "<C-A-Up>", ":resize +5<CR>", { silent = true, desc = "Resize horizontally" })
+vim.keymap.set("n", "<C-A-Down>", ":resize -5<CR>", { silent = true, desc = "Resize horizontally" })
 
 -- Remap half page up/down to center cursor
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, desc = "Jump half page down" })
