@@ -29,7 +29,7 @@ return {
 				fzf = {
 					false,
 					["ctrl-z"] = "abort",
-					["ctrl-u"] = "unix-line-discard",
+					["ctrl-u"] = "unix-line-discard+first",
 					["ctrl-a"] = "toggle-all",
 					["ctrl-t"] = "first",
 					["ctrl-b"] = "last",

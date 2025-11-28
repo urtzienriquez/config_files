@@ -466,7 +466,7 @@ local function citation_picker(format)
 			title = prompt_title,
 			preview = {
 				layout = "vertical",
-				vertical = "up:50%",
+				vertical = "down:50%",
 				wrap = "wrap",
 				scrollbar = "border",
 			},
