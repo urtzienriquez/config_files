@@ -85,7 +85,7 @@ class fzf_select(Command):
             --color=fg+:#c0caf5,bg+:#35274a,hl+:#bb9af7 \
             --color=info:#7aa2f7,prompt:#7dcfff,pointer:#bb9af7 \
             --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a \
-            --preview 'bat -p --theme=tokyonight_night --color=always {}'"
+            --preview 'bat -p --theme=tokyonight_moon --color=always {}'"
         else:
             # match files and directories
             command = r"find -L . \( -path '*/\.*' -o -fstype 'dev' -o -fstype 'proc' \) -prune \
@@ -93,7 +93,7 @@ class fzf_select(Command):
             --color=fg+:#c0caf5,bg+:#35274a,hl+:#bb9af7 \
             --color=info:#7aa2f7,prompt:#7dcfff,pointer:#bb9af7 \
             --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a \
-            --preview 'bat -p --theme=tokyonight_night --color=always {}'"
+            --preview 'bat -p --theme=tokyonight_moon --color=always {}'"
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, stderr = fzf.communicate()
         if fzf.returncode == 0:

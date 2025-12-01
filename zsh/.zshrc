@@ -23,7 +23,7 @@ setopt extended_glob
 # -------------------------------
 # man with bat
 # -------------------------------
-export BAT_THEME=tokyonight_night
+export BAT_THEME=tokyonight_moon
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
@@ -31,9 +31,6 @@ export MANROFFOPT="-c"
 # Vim mode and keybindings
 # -------------------------------
 bindkey -v
-bindkey "^H" backward-delete-char
-bindkey "^?" backward-delete-char
-bindkey -M viins "^I" expand-or-complete
 autoload edit-command-line; zle -N edit-command-line
 autoload -Uz edit-command-line
 edit-command-line-at-end() {
@@ -43,6 +40,13 @@ edit-command-line-at-end() {
 zle -N edit-command-line-at-end
 bindkey -M vicmd '^E' edit-command-line-at-end
 bindkey -M viins '^E' edit-command-line-at-end
+# Widget to close completion menu
+_close_completion_menu() {
+  zle -M ""
+  zle reset-prompt
+}
+zle -N _close_completion_menu
+bindkey -M viins '^X' _close_completion_menu
 
 # -------------------------------
 # Editor
