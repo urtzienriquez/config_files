@@ -16,7 +16,8 @@ local function define_highlights()
 	vim.api.nvim_set_hl(0, "SLDiagWarn", { fg = tokyonight.yellow })
 	vim.api.nvim_set_hl(0, "SLDiagInfo", { fg = tokyonight.blue2 })
 	vim.api.nvim_set_hl(0, "SLDiagHint", { fg = tokyonight.teal })
-	vim.api.nvim_set_hl(0, "SLFileType", { fg = tokyonight.fg, bold = true })
+	vim.api.nvim_set_hl(0, "SLRecord", { fg = tokyonight.teal})
+	vim.api.nvim_set_hl(0, "SLFileType", { bold = true })
 end
 
 define_highlights()
@@ -329,7 +330,7 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 })
 
 vim.o.statusline = table.concat({
-	" %#SLGitBranch#%{v:lua.st_mode()}%*",
+	" %#Title#%{v:lua.st_mode()}%*",
 	" %t %m ",
 	"%#SLGitBranch#%{v:lua.st_branch()}%*",
 	"%#SLGitAdd#%{v:lua.st_added()}%*",
@@ -338,7 +339,7 @@ vim.o.statusline = table.concat({
 	"%#SLDiagWarn#%{v:lua.st_warn()}%*",
 	"%#SLDiagInfo#%{v:lua.st_info()}%*",
 	"%#SLDiagHint#%{v:lua.st_hint()}%*",
-	"%#SLDiagHint#%{v:lua.st_recording()}%*",
+	"%#SLRecord#%{v:lua.st_recording()}%*",
 	"%=",
 	"%{%v:lua.st_filetype_text()%} ",
 	"%4{v:lua.st_position()} ",
