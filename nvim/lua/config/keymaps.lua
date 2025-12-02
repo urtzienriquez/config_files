@@ -143,7 +143,7 @@ vim.api.nvim_create_autocmd("User", {
 		-- ========================================
 		local fzf = require("fzf-lua")
 
-        vim.keymap.set("n", "<leader>fp", fzf.builtin, { desc = "Find picker" })
+		vim.keymap.set("n", "<leader>fp", fzf.builtin, { desc = "Find picker" })
 		vim.keymap.set("n", "<leader>ff", fzf.files, { desc = "Find files" })
 
 		-- Find files in home directory
@@ -165,13 +165,7 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<leader>fd", function()
 			fzf.diagnostics_document()
 		end, { desc = "Find diagnostics in current buffer" })
-		vim.keymap.set(
-			"n",
-			"<leader>fD",
-			fzf.diagnostics_workspace,
-			{ desc = "Find diagnostics globally (workspace)" }
-		)
-
+		vim.keymap.set("n", "<leader>fD", fzf.diagnostics_workspace, { desc = "Find diagnostics globally (workspace)" })
 
 		vim.keymap.set("n", "<leader>fl", fzf.lsp_definitions, { desc = "Find LSP definitions" })
 		vim.keymap.set("n", "<leader>fr", fzf.lsp_references, { desc = "Find LSP references" })
@@ -251,18 +245,26 @@ vim.api.nvim_create_autocmd("User", {
 
 		vim.keymap.set("n", "<leader>us", toggle_option("spell", true, false), { desc = "Toggle Spelling" })
 		vim.keymap.set("n", "<leader>uw", toggle_option("wrap", true, false), { desc = "Toggle Wrap" })
+
 		vim.keymap.set(
 			"n",
 			"<leader>ul",
 			toggle_option("relativenumber", true, false),
 			{ desc = "Toggle Line Numbers" }
 		)
-		vim.keymap.set(
-			"n",
-			"<leader>uL",
-			toggle_option("relativenumber", true, false),
-			{ desc = "Toggle Relative Number" }
-		)
+		local function toggle_line_numbers()
+			if vim.wo.number == true then
+				vim.o.relativenumber = false
+				vim.wo.number = false
+				vim.notify("line numbers disabled", vim.log.levels.INFO)
+			else
+				vim.o.relativenumber = true
+				vim.wo.number = true
+				vim.notify("line numbers enabled", vim.log.levels.INFO)
+			end
+		end
+		vim.keymap.set("n", "<leader>uL", toggle_line_numbers, { desc = "Toggle All Line Numbers" })
+
 		vim.keymap.set("n", "<leader>ub", toggle_option("background", "dark", "light"), { desc = "Toggle Background" })
 
 		vim.keymap.set("n", "<leader>uc", function()
