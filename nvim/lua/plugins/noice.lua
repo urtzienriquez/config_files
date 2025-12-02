@@ -57,7 +57,7 @@ return {
 				},
 				view = "split",
 			},
-			{ -- Add this opening brace
+			{
 				filter = {
 					event = "msg_show",
 				},
