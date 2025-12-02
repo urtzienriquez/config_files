@@ -31,6 +31,7 @@ return {
 					winblend = 0,
 				},
 			},
+			split = { enter = true },
 		},
 		lsp = {
 			override = {
@@ -47,6 +48,21 @@ return {
 			long_message_to_split = false,
 			inc_rename = false,
 			lsp_doc_border = true,
+		},
+		routes = {
+			{
+				filter = {
+					event = "msg_show",
+					min_height = 10,
+				},
+				view = "split",
+			},
+			{ -- Add this opening brace
+				filter = {
+					event = "msg_show",
+				},
+				view = "mini",
+			},
 		},
 	},
 }

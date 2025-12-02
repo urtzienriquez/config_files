@@ -548,7 +548,7 @@ local function citation_replace()
 			title = " Replace citation @" .. citation_info.key .. " ",
 			preview = {
 				layout = "vertical",
-				vertical = "up:50%",
+				vertical = "down:50%",
 				wrap = "wrap",
 				scrollbar = "border",
 			},
