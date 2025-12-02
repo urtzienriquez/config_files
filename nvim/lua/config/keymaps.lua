@@ -172,6 +172,7 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols, { desc = "Find LSP document symbols" })
 		vim.keymap.set("n", "<leader>ft", fzf.treesitter, { desc = "Find Treesitter symbols" })
 		vim.keymap.set("n", "<leader>fm", fzf.spell_suggest, { desc = "Find spell suggestions" })
+		vim.keymap.set("n", "<leader>fn", ":NoiceFzf<CR>", { desc = "Find noice messages" })
 		vim.keymap.set("n", "<leader>f'", fzf.marks, { desc = "Find marks" })
 		vim.keymap.set("n", "<leader>f,", fzf.resume, { desc = "Resume last picker" })
 		vim.keymap.set("n", "<leader>f.", fzf.oldfiles, { desc = "Find recent files" })
