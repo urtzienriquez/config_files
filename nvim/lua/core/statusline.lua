@@ -23,6 +23,40 @@ define_highlights()
 vim.api.nvim_create_autocmd("ColorScheme", { callback = define_highlights })
 
 -- --------------------------
+-- Mode display
+-- --------------------------
+function _G.st_mode()
+	local mode_map = {
+		["n"] = { text = "NORMAL" },
+		["i"] = { text = "INSERT" },
+		["v"] = { text = "VISUAL" },
+		["V"] = { text = "V-LINE" },
+		["\22"] = { text = "V-BLOCK" },
+		["c"] = { text = "COMMAND" },
+		["s"] = { text = "SELECT" },
+		["S"] = { text = "S-LINE" },
+		["\19"] = { text = "S-BLOCK" },
+		["R"] = { text = "REPLACE" },
+		["r"] = { text = "REPLACE" },
+		["!"] = { text = "SHELL" },
+		["t"] = { text = "TERMINAL" },
+	}
+
+	local mode = vim.api.nvim_get_mode().mode
+	local mode_info = mode_map[mode] or { text = mode }
+
+	return string.format("%s ", mode_info.text)
+end
+
+function _G.st_recording()
+	local reg = vim.fn.reg_recording()
+	if reg == "" then
+		return ""
+	end
+	return string.format(" recording @%s ", reg)
+end
+
+-- --------------------------
 -- Git cache and pending updates
 -- --------------------------
 local git_cache = {}
@@ -64,7 +98,6 @@ local function update_git_async(bufnr)
 		return
 	end
 
-	-- Prevent duplicate updates
 	if pending_updates[bufnr] then
 		return
 	end
@@ -77,7 +110,6 @@ local function update_git_async(bufnr)
 		return
 	end
 
-	-- Run all git commands in a single async shell command
 	local cmd = string.format(
 		[[cd %s 2>/dev/null && {
 			git rev-parse --abbrev-ref HEAD 2>/dev/null
@@ -100,10 +132,8 @@ local function update_git_async(bufnr)
 			local output = table.concat(data, "\n")
 			local parts = vim.split(output, "---", { plain = true })
 
-			-- Parse branch
 			local branch = (parts[1] or ""):match("^%s*(.-)%s*$")
 
-			-- Parse diff stats
 			local added = 0
 			local removed = 0
 			if parts[2] then
@@ -116,7 +146,6 @@ local function update_git_async(bufnr)
 				end
 			end
 
-			-- Check if there are actual changes
 			local has_changes = parts[3] and parts[3]:match("%S") ~= nil
 			if not has_changes then
 				added = 0
@@ -140,16 +169,13 @@ local function update_git_async(bufnr)
 	})
 end
 
--- Debounced update function
 local function update_git_debounced(bufnr, delay)
 	delay = delay or 100
 
-	-- Cancel existing timer
 	if update_timers[bufnr] then
 		update_timers[bufnr]:stop()
 	end
 
-	-- Create new timer
 	update_timers[bufnr] = vim.defer_fn(function()
 		update_git_async(bufnr)
 		update_timers[bufnr] = nil
@@ -157,9 +183,8 @@ local function update_git_debounced(bufnr, delay)
 end
 
 -- --------------------------
--- Statusline functions
+-- Git statusline functions
 -- --------------------------
-
 function _G.st_branch()
 	local buf = vim.api.nvim_get_current_buf()
 	local g = git_cache[buf]
@@ -184,7 +209,7 @@ function _G.st_removed()
 	if not g or g.removed == 0 then
 		return ""
 	end
-	return "-" .. g.removed .. "  "
+	return "-" .. g.removed .. "  "
 end
 
 -- Cache for icon highlight groups
@@ -215,6 +240,7 @@ function _G.st_filetype_text()
 			vim.api.nvim_set_hl(0, hl_name, { fg = icon_color })
 			icon_hl_cache[hl_name] = true
 		end
+		-- This element is complex and requires dynamic formatting inside the function
 		return string.format("%%#%s#%s %%#SLFileType#%s%%*", hl_name, icon, filetype)
 	else
 		return filetype
@@ -268,22 +294,18 @@ end
 -- --------------------------
 -- Refresh triggers
 -- --------------------------
-
--- Debounced update on BufEnter (doesn't block)
 vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function(args)
 		update_git_debounced(args.buf, 100)
 	end,
 })
 
--- Immediate update on buffer write
 vim.api.nvim_create_autocmd("BufWritePost", {
 	callback = function(args)
 		update_git_debounced(args.buf, 0)
 	end,
 })
 
--- Manual refresh command
 vim.api.nvim_create_user_command("GitStatusRefresh", function()
 	update_git_debounced(vim.api.nvim_get_current_buf(), 0)
 	vim.notify("Git status refreshed", vim.log.levels.INFO)
@@ -298,15 +320,16 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 	callback = function()
 		local bt = vim.bo.buftype
 		local bufname = vim.api.nvim_buf_get_name(0)
-		if bufname == "" and bt == "" and vim.bo.filetype == "" or vim.bo.filetype  == "oil" then
+		if bufname == "" and bt == "" and vim.bo.filetype == "" or vim.bo.filetype == "oil" then
 			vim.wo.statusline = " "
 		else
-			vim.wo.statusline = "" -- Use global statusline
+			vim.wo.statusline = ""
 		end
 	end,
 })
 
 vim.o.statusline = table.concat({
+	" %#SLGitBranch#%{v:lua.st_mode()}%*",
 	" %t %m ",
 	"%#SLGitBranch#%{v:lua.st_branch()}%*",
 	"%#SLGitAdd#%{v:lua.st_added()}%*",
@@ -315,6 +338,7 @@ vim.o.statusline = table.concat({
 	"%#SLDiagWarn#%{v:lua.st_warn()}%*",
 	"%#SLDiagInfo#%{v:lua.st_info()}%*",
 	"%#SLDiagHint#%{v:lua.st_hint()}%*",
+	"%#SLDiagHint#%{v:lua.st_recording()}%*",
 	"%=",
 	"%{%v:lua.st_filetype_text()%} ",
 	"%4{v:lua.st_position()} ",

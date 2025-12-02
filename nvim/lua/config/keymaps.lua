@@ -313,6 +313,7 @@ local function set_rnvim_keymaps()
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>kn")
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>d")
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>rd")
+	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>aa")
 
 	local opts_keymap = { noremap = true, silent = true, buffer = true }
 
