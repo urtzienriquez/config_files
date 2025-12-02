@@ -230,7 +230,7 @@ local function create_crossref_picker(ref_type, chunks)
 
 	local fzf = require("fzf-lua")
 
-	local title_str = ref_type == "fig" and "Figure" or "Table"
+	local title_str = ref_type == "fig" and " Figure " or " Table "
 
 	fzf.fzf_exec(function(cb)
 		for _, chunk in ipairs(chunks) do
@@ -247,7 +247,7 @@ local function create_crossref_picker(ref_type, chunks)
 		prompt = "Code Chunk> ",
 		previewer = create_chunk_previewer(chunks),
 		winopts = {
-			title = title_str .. " Crossref",
+			title = title_str .. "Crossref ",
 			preview = {
 				layout = "vertical",
 				vertical = "right:65%",

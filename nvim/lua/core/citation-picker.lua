@@ -444,7 +444,7 @@ local function citation_picker(format)
 	local was_insert = vim.api.nvim_get_mode().mode:find("i") ~= nil
 	local saved = { win = cur_win, buf = cur_buf, row = cur_row, col = cur_col, was_insert_mode = was_insert }
 
-	local prompt_title = format == "latex" and "Citations 󱔗 [LaTeX]" or "Citations 󱔗 [Markdown]"
+	local prompt_title = format == "latex" and " Citations 󱔗 [LaTeX] " or " Citations 󱔗 [Markdown] "
 
 	-- Create a lookup table for citations
 	local citation_lookup = {}
@@ -545,7 +545,7 @@ local function citation_replace()
 		prompt = "with> ",
 		previewer = create_citation_previewer(citations),
 		winopts = {
-			title = "Replace citation @" .. citation_info.key,
+			title = " Replace citation @" .. citation_info.key .. " ",
 			preview = {
 				layout = "vertical",
 				vertical = "up:50%",
