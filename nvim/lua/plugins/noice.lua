@@ -38,7 +38,7 @@ return {
 				["vim.lsp.util.stylize_markdown"] = true,
 			},
 			signature = {
-				enabled = true,
+				enabled = false,
 			},
 		},
 		presets = {

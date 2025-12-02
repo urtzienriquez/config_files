@@ -53,7 +53,7 @@ return {
 			},
 
 			signature = {
-				enabled = false,
+				enabled = true,
 				window = {
 					show_documentation = false,
 					border = "none",
