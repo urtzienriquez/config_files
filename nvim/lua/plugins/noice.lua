@@ -24,6 +24,13 @@ return {
 			enabled = true,
 			view = "mini",
 		},
+		views = {
+			mini = {
+				win_options = {
+					winblend = 0,
+				},
+			},
+		},
 		lsp = {
 			signature = {
 				enabled = false,
