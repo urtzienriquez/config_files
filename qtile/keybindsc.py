@@ -356,7 +356,7 @@ keys = [
         desc="Launch qutebrowser",
     ),
     Key(
-        [mod, alt],
+        [alt],
         "y",
         lazy.to_screen(0),
         lazy.group["5"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
@@ -365,14 +365,6 @@ keys = [
                     --qt-arg class youtube --qt-arg name youtube",
         ),
         desc="Launch qutebrowser for youtube",
-    ),
-    Key(
-        [alt],
-        "y",
-        lazy.to_screen(0),
-        lazy.group["5"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
-        lazy.spawn("ghostty --x11-instance-name='youtube' -e yt-x"),
-        desc="Launch yt-x youtube terminal client",
     ),
     Key(
         [alt],
