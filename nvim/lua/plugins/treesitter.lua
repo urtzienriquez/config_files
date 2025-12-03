@@ -33,36 +33,23 @@ return {
 				"regex",
 				"fortran",
 			}
-			-- Install asynchronously (or add :wait for sync bootstrap)
 			ts.install(parsers)
-			-- Start treesitter highlighting when the language is available
+
 			vim.api.nvim_create_autocmd("FileType", {
 				callback = function(args)
-					-- Disable treesitter completely for Fortran77 files (.f extension)
-					if args.match == "fortran" then
-						local filename = vim.api.nvim_buf_get_name(args.buf)
-						if filename:match("%.f$") then
-							-- Explicitly stop treesitter if it's running
-							pcall(vim.treesitter.stop, args.buf)
-							return
-						end
-					end
-
 					local lang = vim.treesitter.language.get_lang(args.match)
 					if not lang then
 						return
 					end
 
-					-- Safely attempt to start treesitter; if parser missing, no error
 					pcall(vim.treesitter.start, args.buf)
 
-					-- folding based on treesitter
 					vim.wo.foldmethod = "expr"
 					vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 				end,
 			})
 
-			-- Additional safeguard: stop treesitter if it somehow starts on .f files
+			-- stop treesitter on fortran77 (.f) files
 			vim.api.nvim_create_autocmd("BufEnter", {
 				pattern = "*.f",
 				callback = function(args)
@@ -82,7 +69,7 @@ return {
 				select = {
 					enable = true,
 					lookahead = true,
-					-- Disable for Fortran77 files using a function
+					-- Disable for Fortran77 files
 					disable = function(lang, buf)
 						if lang == "fortran" then
 							local filename = vim.api.nvim_buf_get_name(buf)
