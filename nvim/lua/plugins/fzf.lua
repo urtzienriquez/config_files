@@ -8,13 +8,7 @@ return {
 			defaults = {
 				no_header_i = true,
 				actions = {
-					["enter"] = actions.file_edit_or_qf,
-					["ctrl-s"] = actions.file_split,
-					["ctrl-v"] = actions.file_vsplit,
 					["ctrl-q"] = actions.file_sel_to_qf,
-					["ctrl-j"] = actions.toggle_ignore,
-					["ctrl-h"] = actions.toggle_hidden,
-					["ctrl-f"] = actions.toggle_follow,
 				},
 			},
 			keymap = {
@@ -43,6 +37,16 @@ return {
 					["ctrl-t"] = "first",
 					["ctrl-b"] = "last",
 					["ctrl-q"] = false,
+				},
+			},
+			actions = {
+				files = {
+					["enter"] = actions.file_edit_or_qf,
+					["ctrl-s"] = actions.file_split,
+					["ctrl-v"] = actions.file_vsplit,
+					["ctrl-j"] = actions.toggle_ignore,
+					["ctrl-h"] = actions.toggle_hidden,
+					["ctrl-f"] = actions.toggle_follow,
 				},
 			},
 			grep = {
