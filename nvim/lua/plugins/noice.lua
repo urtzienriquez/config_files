@@ -60,6 +60,9 @@ return {
 			{
 				filter = {
 					event = "msg_show",
+					["not"] = {
+						kind = "search_count",
+					},
 				},
 				view = "mini",
 			},
