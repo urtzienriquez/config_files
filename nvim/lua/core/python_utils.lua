@@ -1,4 +1,3 @@
-
 local M = {}
 
 -- Python block start patterns (lines that start blocks with colons)
@@ -54,7 +53,23 @@ function M.get_python_block_range(bufnr, start_line)
 	start_line = start_line or vim.api.nvim_win_get_cursor(0)[1]
 
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+	-- Handle empty buffer
+	if #lines == 0 then
+		return start_line, start_line
+	end
+
+	-- Handle invalid line number
+	if start_line < 1 or start_line > #lines then
+		return start_line, start_line
+	end
+
 	local current_line = lines[start_line]
+
+	-- Handle nil line (shouldn't happen, but be safe)
+	if not current_line then
+		return start_line, start_line
+	end
 
 	-- Skip empty lines and comments
 	if is_empty_line(current_line) or is_comment_line(current_line) then
@@ -72,17 +87,19 @@ function M.get_python_block_range(bufnr, start_line)
 		for i = start_line + 1, #lines do
 			local line = lines[i]
 
-			-- Skip empty lines and comments - they're part of the block
-			if is_empty_line(line) or is_comment_line(line) then
-				end_line = i
-			else
-				local line_indent = get_indent_level(line)
-				-- If indented more than block start, it's part of the block
-				if line_indent > block_indent then
+			if line then -- Safety check
+				-- Skip empty lines and comments - they're part of the block
+				if is_empty_line(line) or is_comment_line(line) then
 					end_line = i
 				else
-					-- We've left the block
-					break
+					local line_indent = get_indent_level(line)
+					-- If indented more than block start, it's part of the block
+					if line_indent > block_indent then
+						end_line = i
+					else
+						-- We've left the block
+						break
+					end
 				end
 			end
 		end
@@ -97,18 +114,20 @@ function M.get_python_block_range(bufnr, start_line)
 	for i = start_line - 1, 1, -1 do
 		local line = lines[i]
 
-		if not is_empty_line(line) and not is_comment_line(line) then
-			local line_indent = get_indent_level(line)
+		if line then -- Safety check
+			if not is_empty_line(line) and not is_comment_line(line) then
+				local line_indent = get_indent_level(line)
 
-			-- Found a line with less indentation
-			if line_indent < current_indent then
-				if is_block_start(line) then
-					block_start = i
-					break
-				else
-					-- This is a line with less indentation but not a block start
-					-- The current line must be at top level
-					break
+				-- Found a line with less indentation
+				if line_indent < current_indent then
+					if is_block_start(line) then
+						block_start = i
+						break
+					else
+						-- This is a line with less indentation but not a block start
+						-- The current line must be at top level
+						break
+					end
 				end
 			end
 		end
@@ -122,14 +141,16 @@ function M.get_python_block_range(bufnr, start_line)
 		for i = block_start + 1, #lines do
 			local line = lines[i]
 
-			if is_empty_line(line) or is_comment_line(line) then
-				end_line = i
-			else
-				local line_indent = get_indent_level(line)
-				if line_indent > block_indent then
+			if line then -- Safety check
+				if is_empty_line(line) or is_comment_line(line) then
 					end_line = i
 				else
-					break
+					local line_indent = get_indent_level(line)
+					if line_indent > block_indent then
+						end_line = i
+					else
+						break
+					end
 				end
 			end
 		end
@@ -146,7 +167,23 @@ function M.get_python_send_text()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+	-- Handle empty buffer
+	if #lines == 0 then
+		return nil, cursor_line, cursor_line
+	end
+
+	-- Handle invalid cursor position
+	if cursor_line < 1 or cursor_line > #lines then
+		return nil, cursor_line, cursor_line
+	end
+
 	local current_line = lines[cursor_line]
+
+	-- Handle nil line
+	if not current_line then
+		return nil, cursor_line, cursor_line
+	end
 
 	-- If line is empty or only whitespace or comment, skip it
 	if is_empty_line(current_line) or is_comment_line(current_line) then
@@ -171,7 +208,25 @@ function M.debug_block_detection()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+	-- Handle empty buffer
+	if #lines == 0 then
+		print("Buffer is empty")
+		return
+	end
+
+	-- Handle invalid cursor position
+	if cursor_line < 1 or cursor_line > #lines then
+		print("Invalid cursor position: " .. cursor_line)
+		return
+	end
+
 	local current_line = lines[cursor_line]
+
+	if not current_line then
+		print("Current line is nil")
+		return
+	end
 
 	print("Current line " .. cursor_line .. ": " .. current_line)
 	print("Indent level: " .. get_indent_level(current_line))

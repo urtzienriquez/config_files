@@ -1,5 +1,19 @@
-
 local M = {}
+
+-- Helper function to escape strings for different REPL types
+local function escape_for_repl(path, repl_type)
+	if repl_type == "python" then
+		-- Python: escape backslashes and single quotes
+		return path:gsub("\\", "\\\\"):gsub("'", "\\'")
+	elseif repl_type == "julia" then
+		-- Julia: escape backslashes and double quotes
+		return path:gsub("\\", "\\\\"):gsub('"', '\\"')
+	elseif repl_type == "matlab" then
+		-- MATLAB: escape single quotes by doubling them
+		return path:gsub("'", "''")
+	end
+	return path
+end
 
 -- Helper function to start REPL in tmux pane
 function M.start_tmux_repl(repl_type)
@@ -60,7 +74,8 @@ function M.has_active_repl()
 	local current_command = handle:read("*l")
 	handle:close()
 
-	if not current_command then
+	-- Handle empty string case
+	if not current_command or current_command == "" then
 		return false
 	end
 
@@ -98,7 +113,7 @@ function M.sync_working_directory()
 	local current_command = handle:read("*l")
 	handle:close()
 
-	if not current_command then
+	if not current_command or current_command == "" then
 		vim.notify("Could not detect REPL type", vim.log.levels.ERROR)
 		return
 	end
@@ -107,13 +122,16 @@ function M.sync_working_directory()
 	local repl_type = nil
 
 	if current_command:find("python") then
-		cd_command = string.format("import os; os.chdir('%s')", cwd)
+		local escaped_path = escape_for_repl(cwd, "python")
+		cd_command = string.format("import os; os.chdir('%s')", escaped_path)
 		repl_type = "Python"
 	elseif current_command:find("julia") then
-		cd_command = string.format('cd("%s")', cwd)
+		local escaped_path = escape_for_repl(cwd, "julia")
+		cd_command = string.format('cd("%s")', escaped_path)
 		repl_type = "Julia"
 	elseif current_command:find("MATLAB") then
-		cd_command = string.format("cd '%s'", cwd)
+		local escaped_path = escape_for_repl(cwd, "matlab")
+		cd_command = string.format("cd '%s'", escaped_path)
 		repl_type = "MATLAB"
 	else
 		vim.notify("Unknown REPL type: " .. current_command, vim.log.levels.ERROR)

@@ -1,4 +1,3 @@
-
 local M = {}
 
 -- Julia block patterns
@@ -9,19 +8,19 @@ local JULIA_BLOCK_START = {
 	"^%s*for%s+",
 	"^%s*while%s+",
 	"^%s*if%s+",
-	"^%s*begin", -- Changed: removed %s*$ to match "begin" anywhere on line
+	"^%s*begin",
 	"^%s*let%s+",
-	"^%s*let%s*$", -- let without arguments
+	"^%s*let%s*$",
 	"^%s*module%s+",
 	"^%s*struct%s+",
 	"^%s*mutable%s+struct%s+",
 	"^%s*abstract%s+type%s+",
 	"^%s*quote%s*$",
 	"^%s*try%s*$",
-	"^%s*@testset", -- test blocks
+	"^%s*@testset",
 }
 
-local JULIA_BLOCK_END = "^%s*end" -- Changed: removed %s*$ to match "end" at start
+local JULIA_BLOCK_END = "^%s*end"
 
 -- Check if a line starts a Julia block
 local function is_block_start(line)
@@ -44,7 +43,23 @@ function M.get_julia_block_range(bufnr, start_line)
 	start_line = start_line or vim.api.nvim_win_get_cursor(0)[1]
 
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+	-- Handle empty buffer
+	if #lines == 0 then
+		return start_line, start_line
+	end
+
+	-- Handle invalid line number
+	if start_line < 1 or start_line > #lines then
+		return start_line, start_line
+	end
+
 	local current_line = lines[start_line]
+
+	-- Handle nil line (shouldn't happen, but be safe)
+	if not current_line then
+		return start_line, start_line
+	end
 
 	-- Check if we're on a block start
 	if is_block_start(current_line) then
@@ -52,12 +67,14 @@ function M.get_julia_block_range(bufnr, start_line)
 		local depth = 1
 		for i = start_line + 1, #lines do
 			local line = lines[i]
-			if is_block_start(line) then
-				depth = depth + 1
-			elseif is_block_end(line) then
-				depth = depth - 1
-				if depth == 0 then
-					return start_line, i
+			if line then -- Safety check
+				if is_block_start(line) then
+					depth = depth + 1
+				elseif is_block_end(line) then
+					depth = depth - 1
+					if depth == 0 then
+						return start_line, i
+					end
 				end
 			end
 		end
@@ -71,7 +88,6 @@ function M.get_julia_block_range(bufnr, start_line)
 	end
 
 	-- We might be inside a block - search backwards for start
-	-- But we need to track depth to avoid matching already-closed blocks
 	local block_start = nil
 	local depth = 0
 
@@ -79,18 +95,20 @@ function M.get_julia_block_range(bufnr, start_line)
 	for i = start_line - 1, 1, -1 do
 		local line = lines[i]
 
-		-- When going backwards, we increment depth when we see 'end'
-		-- and decrement when we see a block start
-		if is_block_end(line) then
-			depth = depth + 1
-		elseif is_block_start(line) then
-			if depth == 0 then
-				-- Found an unmatched block start - we're inside this block
-				block_start = i
-				break
-			else
-				-- This block start matches an end we saw earlier
-				depth = depth - 1
+		if line then -- Safety check
+			-- When going backwards, we increment depth when we see 'end'
+			-- and decrement when we see a block start
+			if is_block_end(line) then
+				depth = depth + 1
+			elseif is_block_start(line) then
+				if depth == 0 then
+					-- Found an unmatched block start - we're inside this block
+					block_start = i
+					break
+				else
+					-- This block start matches an end we saw earlier
+					depth = depth - 1
+				end
 			end
 		end
 	end
@@ -100,17 +118,19 @@ function M.get_julia_block_range(bufnr, start_line)
 		depth = 1
 		for i = block_start + 1, #lines do
 			local line = lines[i]
-			if is_block_start(line) then
-				depth = depth + 1
-			elseif is_block_end(line) then
-				depth = depth - 1
-				if depth == 0 then
-					-- Check if current line is inside this block
-					if start_line >= block_start and start_line <= i then
-						return block_start, i
-					else
-						-- Current line is after this block ended
-						break
+			if line then -- Safety check
+				if is_block_start(line) then
+					depth = depth + 1
+				elseif is_block_end(line) then
+					depth = depth - 1
+					if depth == 0 then
+						-- Check if current line is inside this block
+						if start_line >= block_start and start_line <= i then
+							return block_start, i
+						else
+							-- Current line is after this block ended
+							break
+						end
 					end
 				end
 			end
@@ -126,7 +146,23 @@ function M.get_julia_send_text()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+	-- Handle empty buffer
+	if #lines == 0 then
+		return nil, cursor_line, cursor_line
+	end
+
+	-- Handle invalid cursor position
+	if cursor_line < 1 or cursor_line > #lines then
+		return nil, cursor_line, cursor_line
+	end
+
 	local current_line = lines[cursor_line]
+
+	-- Handle nil line
+	if not current_line then
+		return nil, cursor_line, cursor_line
+	end
 
 	-- If line is empty or only whitespace, skip it
 	if current_line:match("^%s*$") then
@@ -151,7 +187,25 @@ function M.debug_block_detection()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+	-- Handle empty buffer
+	if #lines == 0 then
+		print("Buffer is empty")
+		return
+	end
+
+	-- Handle invalid cursor position
+	if cursor_line < 1 or cursor_line > #lines then
+		print("Invalid cursor position: " .. cursor_line)
+		return
+	end
+
 	local current_line = lines[cursor_line]
+
+	if not current_line then
+		print("Current line is nil")
+		return
+	end
 
 	print("Current line " .. cursor_line .. ": " .. current_line)
 	print("Is block start: " .. tostring(is_block_start(current_line)))
