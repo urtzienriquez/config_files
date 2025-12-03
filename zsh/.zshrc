@@ -32,6 +32,8 @@ export MANROFFOPT="-c"
 # -------------------------------
 bindkey -v
 autoload edit-command-line; zle -N edit-command-line
+bindkey -M viins '^?' backward-delete-char
+bindkey -M viins '^H' backward-delete-char
 autoload -Uz edit-command-line
 edit-command-line-at-end() {
   zle edit-command-line
