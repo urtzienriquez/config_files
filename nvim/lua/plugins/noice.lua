@@ -26,7 +26,7 @@ return {
 		},
 		views = {
 			mini = {
-				timeout = 5000,
+				timeout = 3000,
 				win_options = {
 					winblend = 0,
 				},
