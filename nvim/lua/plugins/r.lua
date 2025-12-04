@@ -2,15 +2,18 @@ return {
 	{
 		"R-nvim/R.nvim",
 		-- lazy = false,
-        ft = {"r", "rmd", "rnoweb", "quarto"},
+		ft = { "r", "rmd", "rnoweb", "quarto" },
 		config = function()
 			local opts = {
 				R_app = "R",
 				external_term = "tmux split-window -d -h",
 				bracketed_paste = true,
 				R_args = { "--no-save --silent" },
-				min_editor_width = 72,
-				rconsole_width = 78,
+				r_ls = {
+					completion = false,
+					hover = false,
+					signature = false,
+				},
 				objbr_mappings = { -- Object browser keymap
 					c = "class", -- Call R functions
 					["<leader>gg"] = "head({object}, n = 15)", -- Use {object} notation to write arbitrary R code.
