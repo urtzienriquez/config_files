@@ -334,7 +334,8 @@ handle_mime() {
 }
 
 handle_fallback() {
-    echo '----- File Type Classification -----' && file --dereference --brief -- "${FILE_PATH}" && exit 5
+    # echo '----- File Type Classification -----' && file --dereference --brief -- "${FILE_PATH}" && exit 5
+    bat -p "${FILE_PATH}" && exit 5
 }
 
 
