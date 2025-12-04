@@ -8,7 +8,7 @@ return {
 			keymap = {
 				preset = "default",
 				["<C-Space>"] = {},
-				["<C-j>"] = { "show", "show_documentation", "hide_documentation" },
+				["<C-c>"] = { "show", "show_documentation", "hide_documentation" },
 			},
 			appearance = {
 				use_nvim_cmp_as_default = true,
