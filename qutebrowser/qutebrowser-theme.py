@@ -31,6 +31,6 @@ c.qt.args = [
 # vertical tabs
 config.set("tabs.position", "top")
 
-# hidden tabs and statusbar by default
-config.set("statusbar.show", "in-mode")
-config.set("tabs.show", "switching")
+# # hidden tabs and statusbar by default
+# config.set("statusbar.show", "in-mode")
+# config.set("tabs.show", "switching")
