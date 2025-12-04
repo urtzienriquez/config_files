@@ -2,6 +2,7 @@
 set nocompatible
 
 " turn relative line numbers on
+set nu
 set rnu
 
 " Change cursor shape in different modes
