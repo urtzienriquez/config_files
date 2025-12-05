@@ -29,6 +29,7 @@ vim.api.nvim_create_autocmd("ColorScheme", { callback = define_highlights })
 function _G.st_mode()
 	local mode_map = {
 		["n"] = { text = "NORMAL" },
+		["nt"] = { text = "NORMAL" },
 		["i"] = { text = "INSERT" },
 		["v"] = { text = "VISUAL" },
 		["V"] = { text = "V-LINE" },
@@ -326,6 +327,18 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 		else
 			vim.wo.statusline = ""
 		end
+	end,
+})
+
+vim.api.nvim_create_autocmd("TermOpen", {
+	callback = function()
+		vim.wo.statusline = ""
+	end,
+})
+
+vim.api.nvim_create_autocmd("TermEnter", {
+	callback = function()
+		vim.wo.statusline = ""
 	end,
 })
 
