@@ -155,6 +155,9 @@ elif [[ "$HOST" == "archlinux" ]]; then
 	source /usr/share/fzf/completion.zsh
 fi
 
+export FZF_TMUX=1
+export FZF_TMUX_OPTS="-p 85%,85%"
+
 export FZF_THEME_OPTS="--color=fg:#c8d3f5,bg:#222436,hl:#82aaff \
 --color=fg+:#c8d3f5,bg+:#2f334d,hl+:#82aaff \
 --color=info:#ff966c,prompt:#82aaff,pointer:#ff966c \
