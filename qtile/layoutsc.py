@@ -4,7 +4,7 @@ from libqtile import layout
 
 def init_layout_theme():
     return {
-        "border_focus": "#d79922",
+        "border_focus": "#ff966c",
         "border_normal": "#000000",
         "border_width": 2,
         "margin": 0,
@@ -36,7 +36,7 @@ layouts = [
 
 floating_layout = layout.Floating(
     # **layout_theme,
-    border_focus="#458587",
+    border_focus="#ff966c",
     border_width=2,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
