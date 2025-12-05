@@ -126,7 +126,7 @@ sf() {
     --exclude node_modules \
     --exclude .git \
     --exclude "$HOME/go" | \
-    fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+    fzf-tmux -p 85%,85% --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   local mime
   mime=$(file -b --mime-type "$file")
@@ -154,7 +154,7 @@ sd() {
     --exclude node_modules \
     --exclude .git \
     --exclude "$HOME/go" | \
-    fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+    fzf-tmux -p 85%,85%) || return
 
   cd "$dir"
 }
@@ -169,7 +169,7 @@ sx() {
     --exclude node_modules \
     --exclude .git \
     --exclude "$HOME/go" | \
-    fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+    fzf-tmux -p 85%,85% --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   if [[ -d "$selected" ]]; then
     cd "$selected"
@@ -182,7 +182,7 @@ sx() {
 sfr() {
   local file
   file=$(locate / | while read -r f; do [[ -f "$f" ]] && echo "$f"; done | \
-    fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+    fzf-tmux -p 85%,85% --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   local mime
   mime=$(file -b --mime-type "$file")
@@ -205,7 +205,7 @@ sdr() {
   local dir
   dir=$(locate / | while read -r p; do
       [[ -d "$p" ]] && printf '%s\n' "$p"
-    done | fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+    done | fzf-tmux -p 85%,85%) || return
 
   cd "$dir"
 }
@@ -213,7 +213,7 @@ sdr() {
 # sxr: like sx but searches entire system using locate, and cd accordingly
 sxr() {
   local selected
-  selected=$(locate / | fzf --preview 'bat -p --color=always {} 2>/dev/null') || return
+  selected=$(locate / | fzf-tmux -p 85%,85% --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   if [[ -d "$selected" ]]; then
     cd "$selected"

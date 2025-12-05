@@ -167,8 +167,7 @@ export FZF_DEFAULT_OPTS="
   $FZF_THEME_OPTS
   --no-height 
   --no-reverse
-  --preview 'bat -p --color=always {}'
-  --preview-window '+{2}+4/3,<75(up),border-sharp'
+  --preview-window '+{2}+4/3,<60(up),border-sharp'
   --scrollbar='█'
   --bind 'ctrl-v:toggle-preview'
   --bind 'alt-K:preview-up,alt-J:preview-down'"
