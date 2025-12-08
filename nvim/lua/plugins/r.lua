@@ -13,11 +13,10 @@ return {
 					hover = false,
 					signature = false,
 				},
-				objbr_mappings = { -- Object browser keymap
-					c = "class", -- Call R functions
-					["<leader>gg"] = "head({object}, n = 15)", -- Use {object} notation to write arbitrary R code.
+				objbr_mappings = {
+					c = "class",
+					["<leader>gp"] = "head({object}, n = 15)",
 					v = function()
-						-- Run lua functions
 						require("r.browser").toggle_view()
 					end,
 				},
