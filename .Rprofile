@@ -1,5 +1,7 @@
 if (interactive() || isatty(stdout())) {
-    options(colorout.verbose = 0)
+    options(
+        colorout.verbose = 0,
+    )
     if (require("colorout", quietly = TRUE)) {
         # Tokyonight moon
         colorout::setOutputColors(
@@ -21,5 +23,14 @@ if (interactive() || isatty(stdout())) {
         )
     }
 }
+
+# options(
+#     languageserver.server_capabilities = list(
+#         hoverProvider = FALSE,
+#         signatureHelpProvider = FALSE,
+#         completionProvider = FALSE,
+#         completionItemResolve = FALSE
+#     )
+# )
 
 lintr.linter_file <- "~/.lintr"
