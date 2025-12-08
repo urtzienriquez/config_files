@@ -156,7 +156,7 @@ elif [[ "$HOST" == "archlinux" ]]; then
 fi
 
 export FZF_TMUX=1
-export FZF_TMUX_OPTS="-p 85%,85%"
+export FZF_TMUX_OPTS="--reverse --info=right -p 85%,85%"
 
 export FZF_THEME_OPTS="--color=fg:#c8d3f5,bg:#222436,hl:#82aaff \
 --color=fg+:#c8d3f5,bg+:#2f334d,hl+:#82aaff \
