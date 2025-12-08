@@ -1,6 +1,6 @@
 if (interactive() || isatty(stdout())) {
     options(
-        colorout.verbose = 0,
+        colorout.verbose = 0
     )
     if (require("colorout", quietly = TRUE)) {
         # Tokyonight moon
