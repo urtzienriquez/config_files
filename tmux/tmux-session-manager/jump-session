@@ -8,7 +8,7 @@ session=$(tmux list-sessions -F "#{session_name}" | while read -r s; do
   else
     echo "  $s"
   fi
-done | fzf --reverse --info=right --no-preview --prompt "jump to session > " | sed "s/^[* ]*//")
+done | fzf --reverse --info=right --no-preview --prompt "jump to session: " | sed "s/^[* ]*//")
 
 if [ $? -eq 0 ] && [ -n "$session" ]; then
   tmux switch-client -t "$session"
