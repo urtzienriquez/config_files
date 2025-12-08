@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Use fzf to select multiple sessions (multi-select with Tab)
-sessions=$(tmux list-sessions -F "#{session_name}" | fzf --multi --no-preview --prompt="Kill session(s): " --bind tab:toggle+up)
+sessions=$(tmux list-sessions -F "#{session_name}" | fzf --info=right --reverse --multi --no-preview --prompt="Kill session(s): " --bind tab:toggle+up)
 
 # Exit if nothing was selected
 [[ -z "$sessions" ]] && exit 0

@@ -18,7 +18,7 @@ done)
 
 # Enable multi-select with --multi and --bind tab:toggle+up
 selected=$(echo "$session_list" | \
-  fzf --no-preview --multi --prompt="Restore sessions: " --bind tab:toggle+up | \
+  fzf --info=right --reverse --no-preview --multi --prompt="Restore sessions: " --bind tab:toggle+up | \
   sed 's/^[+ ]*//')
 
 [[ -z "$selected" ]] && exit 0
