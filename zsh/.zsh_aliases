@@ -107,9 +107,6 @@ alias rn='ranger'
 # alias for bat
 alias bt='bat -p'
 
-#calcurse
-alias cl='clear'
-
 # fd as fdfind (in Debian it is called just with fdfind)
 alias fd='fdfind'
 
