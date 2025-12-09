@@ -26,11 +26,12 @@ group_matches = [
     [],
     [],
     [],
-    ["web", "firefox-esr"],
-    ["youtube"],
-    ["Zotero"],
-    ["Inkscape", "Gimp"],
-    ["zoom"],
+    [Match(wm_class="web"), Match(wm_class="firefox-esr")],
+    [Match(wm_class="youtube")],
+    # Match only main Zotero window by its window role "browser"
+    [Match(wm_class="Zotero", role="browser")],
+    [Match(wm_class="Inkscape"), Match(wm_class="Gimp")],
+    [Match(wm_class="zoom")],
 ]
 group_exclusive = [False, False, False, False, False, False, False, True]
 
@@ -40,7 +41,7 @@ for i in range(len(group_names)):
             name=group_names[i],
             layout=group_layouts[i].lower(),
             label=group_labels[i],
-            matches=([Match(wm_class=group_matches[i])]),
+            matches=group_matches[i],
             exclusive=group_exclusive[i],
         )
     )
