@@ -1,6 +1,12 @@
 # reload zsh
 alias zr='source ~/.config/zsh/.zshrc'
 
+# update neovim
+alias nvup='git pull && \
+    make distclean && \
+    make CMAKE_BUILD_TYPE=RelWithDebInfo && \
+    sudo make install'
+
 # update qutebrowser
 alias qbup='sudo /opt/qutebrowser/scripts/mkvenv.py --update --pyqt-type link'
 
