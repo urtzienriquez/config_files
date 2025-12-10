@@ -126,8 +126,8 @@ config.bind("tv", "spawn --userscript view_in_mpv")
 config.bind("gv", "hint links spawn mpv {hint-url}")
 
 # Proxy to use
-config.bind("pi", "set content.proxy http://proxy.ivb.cz:3128/")
-config.bind("ps", "set content.proxy system")
+c.aliases["toggle-proxy"] = "config-cycle content.proxy system http://proxy.ivb.cz:3128/"
+config.bind("pt", "toggle-proxy")
 
 # download images with hints
 config.bind(";p", "hint images download")
