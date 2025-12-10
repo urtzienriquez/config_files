@@ -105,7 +105,7 @@ alias qs2='ssh -o RemoteCommand=none perian qstat -u urtzien'
 alias iv='imv-x11'
 
 # alias for ranger 
-alias rn='ranger'
+alias ra='ranger'
 
 # alias for bat
 alias bt='bat -p'
