@@ -110,10 +110,7 @@ export RANGER_LOAD_DEFAULT_RC=FALSE
 if [[ -z "$PATH" || "$PATH" == "/bin:/usr/bin" ]]; then
 	export PATH="/usr/local/bin:/usr/bin:/bin:/usr/games"
 fi
-export R_HOME="/usr/lib/R"
 export PATH="/home/urtzi/.local/bin:$PATH"
-# Neovim path
-export PATH="/opt/nvim/bin:$PATH"
 # opt path (e.g. for matlab
 export PATH="/opt:$PATH"
 # go path export
@@ -142,6 +139,7 @@ esac
 # -------------------------------
 # R configuration
 # -------------------------------
+export R_HOME="/usr/lib/R"
 export RENV_CONFIG_USER_PROFILE=TRUE
 
 # -------------------------------
