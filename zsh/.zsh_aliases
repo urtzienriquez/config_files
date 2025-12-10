@@ -1,6 +1,9 @@
 # reload zsh
 alias zr='source ~/.config/zsh/.zshrc'
 
+# update qutebrowser
+alias qbup='sudo /opt/qutebrowser/scripts/mkvenv.py --update --pyqt-type link'
+
 # dot aliases
 alias ..='cd ..'
 alias ...='cd ../..'
