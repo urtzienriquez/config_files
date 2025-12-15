@@ -258,8 +258,21 @@ local function reenter_insert_mode_at_cursor_for_buffer(win, buf, row, col, inse
 	local winid = (win and vim.api.nvim_win_is_valid(win)) and win or 0
 	pcall(vim.api.nvim_set_current_win, winid)
 	pcall(vim.api.nvim_set_current_buf, buf)
-	pcall(vim.api.nvim_win_set_cursor, winid, { row, col + inserted_text_len })
-	local key = vim.api.nvim_replace_termcodes("a", true, false, true)
+
+	-- Get the line to check if we're at the end
+	local line = vim.api.nvim_buf_get_lines(buf, row - 1, row, false)[1] or ""
+	local target_col = col + inserted_text_len
+
+	-- Position cursor at end of inserted text
+	pcall(vim.api.nvim_win_set_cursor, winid, { row, target_col })
+
+	-- If we're at the end of the line, use 'a' (append), otherwise use 'i' (insert)
+	local key
+	if target_col >= #line then
+		key = vim.api.nvim_replace_termcodes("a", true, false, true)
+	else
+		key = vim.api.nvim_replace_termcodes("i", true, false, true)
+	end
 	pcall(vim.api.nvim_feedkeys, key, "n", true)
 end
 
