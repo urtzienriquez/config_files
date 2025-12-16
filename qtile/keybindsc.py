@@ -34,6 +34,12 @@ def swap_screens():
 
 keys = [
     Key(
+        [mod, "control"],
+        "r",
+        lazy.reload_config(),
+        desc="Reload the config",
+    ),
+    Key(
         [mod],
         "m",
         lazy.next_screen(),
@@ -161,10 +167,10 @@ keys = [
         desc="Toggle floating on the focused window",
     ),
     Key(
-        [mod, "control"],
-        "r",
-        lazy.reload_config(),
-        desc="Reload the config",
+        [mod],
+        "q",
+        lazy.window.kill(),
+        desc="Kill focused window",
     ),
     # session management
     Key(
@@ -239,37 +245,6 @@ keys = [
         lazy.spawn("brightnessctl -c backlight set 5%-"),
         desc="Decrease brightness",
     ),
-    # # mouseless pointer
-    # Key(
-    #     [mod],
-    #     "d",
-    #     lazy.spawn("warpd --hint"),
-    #     desc="Launch pointer hint mode",
-    # ),
-    # Key(
-    #     [mod, "shift"],
-    #     "d",
-    #     lazy.spawn("warpd --hint2"),
-    #     desc="Launch pointer hint 2step mode",
-    # ),
-    # Key(
-    #     [mod],
-    #     "c",
-    #     lazy.spawn("warpd --normal"),
-    #     desc="Launch pointer normal mode",
-    # ),
-    # Key(
-    #     [mod],
-    #     "g",
-    #     lazy.spawn("warpd --grid"),
-    #     desc="Launch pointer grid mode",
-    # ),
-    # Key(
-    #     [mod],
-    #     "s",
-    #     lazy.spawn("warpd --screen"),
-    #     desc="Launch pointer screen mode",
-    # ),
     # Launchers
     KeyChord(
         [mod],
@@ -408,12 +383,6 @@ keys = [
         "Print",
         lazy.spawn("gnome-screenshot -i"),
         desc="Launch screenshot with Print key",
-    ),
-    Key(
-        [mod],
-        "q",
-        lazy.window.kill(),
-        desc="Kill focused window",
     ),
 ]
 
