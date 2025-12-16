@@ -248,7 +248,7 @@ keys = [
     # Launchers
     KeyChord(
         [mod],
-        "Space",
+        "a",
         [
             Key(
                 [],
