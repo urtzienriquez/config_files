@@ -271,125 +271,137 @@ keys = [
     #     desc="Launch pointer screen mode",
     # ),
     # Launchers
-    Key(
-        [alt],
-        "q",
-        lazy.window.kill(),
-        desc="Kill focused window",
-    ),
-    Key(
-        [alt],
-        "f",
-        lazy.spawn(
-            "ghostty --x11-instance-name='fzf-nova' \
+    KeyChord(
+        [mod],
+        "Space",
+        [
+            Key(
+                [],
+                "f",
+                lazy.spawn(
+                    "ghostty --x11-instance-name='fzf-nova' \
                     -e bash -c 'source ~/.bashrc &>/dev/null \
                     && $HOME/config_files/fzf-nova/fzf-nova'"
-        ),
-        desc="Launch fzf-nova",
-    ),
-    Key(
-        [alt],
-        "s",
-        lazy.spawn("env XDG_CURRENT_DESKTOP=GNOME gnome-control-center"),
-        desc="Launch gnome control center",
-    ),
-    Key(
-        [alt],
-        "Return",
-        lazy.spawn(terminal),
-        desc="Launch terminal",
-    ),
-    Key(
-        [mod, alt],
-        "Return",
-        lazy.spawn("gnome-terminal"),
-        desc="Launch gnome terminal",
-    ),
-    Key(
-        [alt],
-        "v",
-        lazy.spawn("ghostty -e /opt/nvim/bin/nvim"),
-        desc="Launch nvim",
-    ),
-    Key(
-        [alt],
-        "c",
-        lazy.spawn(
-            "ghostty --x11-instance-name='calendar' --window-height=30 --window-width=120 -e calcurse"
-        ),
-        desc="Launch calendar",
-    ),
-    Key(
-        [alt],
-        "n",
-        lazy.spawn("jupyter-lab"),
-        desc="Launch jupyter lab",
-    ),
-    Key(
-        [alt],
-        "r",
-        lazy.spawn(
-            "ghostty --x11-instance-name='ranger' --window-height=30 --window-width=120 -e ranger"
-        ),
-        desc="Launch range file manager",
-    ),
-    Key(
-        [alt],
-        "w",
-        lazy.spawn("libreoffice --writer"),
-        desc="Launch libreoffice writer",
-    ),
-    Key(
-        [alt],
-        "b",
-        lazy.to_screen(0),
-        lazy.group["4"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
-        lazy.spawn("firefox"),
-        desc="Launch firefox",
-    ),
-    Key(
-        [alt],
-        "j",
-        lazy.to_screen(0),
-        lazy.group["4"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
-        lazy.spawn("qutebrowser --qt-arg class web --qt-arg name web"),
-        desc="Launch qutebrowser",
-    ),
-    Key(
-        [alt],
-        "y",
-        lazy.to_screen(0),
-        lazy.group["5"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
-        lazy.spawn(
-            "qutebrowser --basedir /home/urtzi/.config/quteyoutube \
+                ),
+                desc="Launch fzf-nova",
+            ),
+            Key(
+                [],
+                "s",
+                lazy.spawn("env XDG_CURRENT_DESKTOP=GNOME gnome-control-center"),
+                desc="Launch gnome control center",
+            ),
+            Key(
+                [],
+                "Return",
+                lazy.spawn(terminal),
+                desc="Launch terminal",
+            ),
+            Key(
+                [],
+                "t",
+                lazy.spawn("gnome-terminal"),
+                desc="Launch gnome terminal",
+            ),
+            Key(
+                [],
+                "v",
+                lazy.spawn("ghostty -e /opt/nvim/bin/nvim"),
+                desc="Launch nvim",
+            ),
+            Key(
+                [],
+                "c",
+                lazy.spawn(
+                    "ghostty --x11-instance-name='calendar' --window-height=30 --window-width=120 -e calcurse"
+                ),
+                desc="Launch calendar",
+            ),
+            Key(
+                [],
+                "n",
+                lazy.spawn("jupyter-lab"),
+                desc="Launch jupyter lab",
+            ),
+            Key(
+                [],
+                "r",
+                lazy.spawn(
+                    "ghostty --x11-instance-name='ranger' --window-height=30 --window-width=120 -e ranger"
+                ),
+                desc="Launch range file manager",
+            ),
+            Key(
+                [],
+                "w",
+                lazy.spawn("libreoffice --writer"),
+                desc="Launch libreoffice writer",
+            ),
+            Key(
+                [],
+                "b",
+                lazy.to_screen(0),
+                lazy.group["4"].toscreen(
+                    0
+                ),  # Show web workspace on laptop screen (screen 0)
+                lazy.spawn("firefox"),
+                desc="Launch firefox",
+            ),
+            Key(
+                [],
+                "j",
+                lazy.to_screen(0),
+                lazy.group["4"].toscreen(
+                    0
+                ),  # Show web workspace on laptop screen (screen 0)
+                lazy.spawn("qutebrowser --qt-arg class web --qt-arg name web"),
+                desc="Launch qutebrowser",
+            ),
+            Key(
+                [],
+                "y",
+                lazy.to_screen(0),
+                lazy.group["5"].toscreen(
+                    0
+                ),  # Show web workspace on laptop screen (screen 0)
+                lazy.spawn(
+                    "qutebrowser --basedir /home/urtzi/.config/quteyoutube \
                     --qt-arg class youtube --qt-arg name youtube",
-        ),
-        desc="Launch qutebrowser for youtube",
-    ),
-    Key(
-        [alt],
-        "z",
-        lazy.to_screen(0),
-        lazy.spawn("zotero"),
-        desc="Launch zotero",
-    ),
-    Key(
-        [alt],
-        "i",
-        lazy.spawn("inkscape"),
-        desc="Launch inkscape",
-    ),
-    Key(
-        [alt],
-        "g",
-        lazy.spawn("gimp"),
-        desc="Launch gimp",
-    ),
-    Key(
-        [alt],
-        "o",
-        lazy.spawn("zoom"),
-        desc="Launch zoom",
+                ),
+                desc="Launch qutebrowser for youtube",
+            ),
+            Key(
+                [],
+                "z",
+                lazy.to_screen(0),
+                lazy.spawn("zotero"),
+                desc="Launch zotero",
+            ),
+            Key(
+                [],
+                "i",
+                lazy.spawn("inkscape"),
+                desc="Launch inkscape",
+            ),
+            Key(
+                [],
+                "g",
+                lazy.spawn("gimp"),
+                desc="Launch gimp",
+            ),
+            Key(
+                [],
+                "o",
+                lazy.spawn("zoom"),
+                desc="Launch zoom",
+            ),
+            Key(
+                [],
+                "p",
+                lazy.spawn("gnome-screenshot -i"),
+                desc="Launch screenshot with keyboard",
+            ),
+        ],
     ),
     Key(
         [],
@@ -398,10 +410,10 @@ keys = [
         desc="Launch screenshot with Print key",
     ),
     Key(
-        [alt],
-        "p",
-        lazy.spawn("gnome-screenshot -i"),
-        desc="Launch screenshot with keyboard",
+        [mod],
+        "q",
+        lazy.window.kill(),
+        desc="Kill focused window",
     ),
 ]
 
@@ -442,38 +454,3 @@ for i in groups:
             ),
         ]
     )
-
-# retrieve key information
-keys_list = []
-for key in keys:
-    modifs = key.modifiers
-    modifs = [m.replace("mod1", "alt") for m in modifs]
-    modifs = [m.replace("mod4", "super") for m in modifs]
-    keypress = modifs + [key.key]
-    keypress_str = "-".join(keypress)
-    keys_list.append(f"{keypress_str}: {key.desc}")
-
-# add helper key
-help_desc = "Show qtile keys in ghostty with fzf"
-help_mod = "super-alt"
-help_key = "f"
-keys_list.append(f"{help_mod}-{help_key}: {help_desc}")
-
-
-def get_launcher_command(key_list):
-    # Create the command using here-document to avoid escaping issues
-    keys_text = "\n".join(key_list)
-    return {
-        "shell": True,
-        "cmd": f"ghostty --x11-instance-name='qtile-keys' -e bash -c 'cat <<EOF | fzf --reverse --prompt=\"Qtile keys: \"\n{keys_text}\nEOF'",
-    }
-
-
-keys.append(
-    Key(
-        [mod, alt],
-        help_key,
-        lazy.spawn(**get_launcher_command(keys_list)),
-        desc=help_desc,
-    )
-)
