@@ -14,15 +14,13 @@ colors = {
 }
 
 FONT = "JetBrainsMonoNLNerdFont"
-FONT_SIZE = 16
-BAR_HEIGHT = 26
 
 
-def make_group_box():
+def make_group_box(fontsize):
     """Create a new GroupBox widget instance"""
     return widget.GroupBox(
         font=FONT,
-        fontsize=FONT_SIZE,
+        fontsize=fontsize,
         padding=6,
         margin_y=3,
         margin_x=0,
@@ -44,16 +42,16 @@ def make_group_box():
     )
 
 
-def main_bar():
+def main_bar(fontsize=18, barheight=26):
     return bar.Bar(
         [
             # LEFT — Workspaces
-            make_group_box(),
+            make_group_box(fontsize),
             widget.Spacer(),
             widget.Chord(
                 foreground="#989cff",
                 font=FONT,
-                fontsize=FONT_SIZE,
+                fontsize=fontsize,
             ),
             # Layout indicator
             widget.CurrentLayoutIcon(
@@ -66,7 +64,7 @@ def main_bar():
                 format=" {load_percent}%",
                 foreground=colors["primary"],
                 font=FONT,
-                fontsize=FONT_SIZE,
+                fontsize=fontsize,
             ),
             widget.Sep(),
             # Memory
@@ -75,7 +73,7 @@ def main_bar():
                 format=" {MemUsed:.1f}G/{Available:.1f}G",
                 foreground=colors["primary"],
                 font=FONT,
-                fontsize=FONT_SIZE,
+                fontsize=fontsize,
             ),
             widget.Sep(),
             # Filesystem
@@ -88,7 +86,7 @@ def main_bar():
                 update_interval=60,
                 foreground=colors["primary"],
                 font=FONT,
-                fontsize=FONT_SIZE,
+                fontsize=fontsize,
             ),
             widget.Sep(),
             # Backlight
@@ -97,7 +95,7 @@ def main_bar():
                 format="󰃟 {percent:2.0%}",
                 foreground=colors["primary"],
                 font=FONT,
-                fontsize=FONT_SIZE,
+                fontsize=fontsize,
             ),
             widget.Sep(),
             # Audio
@@ -105,7 +103,7 @@ def main_bar():
                 fmt=" {}",
                 foreground=colors["primary"],
                 font=FONT,
-                fontsize=FONT_SIZE,
+                fontsize=fontsize,
             ),
             widget.Sep(),
             # WiFi & Ethernet
@@ -118,7 +116,7 @@ def main_bar():
                 use_ethernet=True,
                 foreground=colors["primary"],
                 font=FONT,
-                fontsize=FONT_SIZE,
+                fontsize=fontsize,
             ),
             widget.Sep(),
             # Battery
@@ -132,17 +130,18 @@ def main_bar():
                 foreground=colors["primary"],
                 low_foreground=colors["alert"],
                 font=FONT,
-                fontsize=FONT_SIZE,
+                fontsize=fontsize,
             ),
             widget.Sep(),
             # Clock
             widget.Clock(
                 format="%H:%M",
                 font=FONT,
-                fontsize=FONT_SIZE,
+                fontsize=fontsize,
+                foreground="#989cff",
             ),
         ],
-        BAR_HEIGHT,
+        barheight,
         background=colors["bg"],
         opacity=1.0,
     )
@@ -157,6 +156,6 @@ screens = [
     Screen(
         wallpaper="~/Pictures/tux.png",
         wallpaper_mode="fill",
-        top=main_bar(),
+        top=main_bar(fontsize=14, barheight=24),
     ),
 ]
