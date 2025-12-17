@@ -4,20 +4,17 @@ from libqtile import bar, widget
 colors = {
     "bg": "#1A1B26",
     "bg_alt": "#373B41",
-    # "fg": "#C5C8C6",
-    "fg": "#000000",
     "primary": "#D79922",
     "secondary": "#8ABEB7",
     "alert": "#A54242",
     "disabled": "#707880",
     "occupied": "#458587",
     "urgent": "#bd2c40",
-    "success": "#689D69",
 }
 
 FONT = "JetBrainsMonoNLNerdFont"
 FONT_SIZE = 16
-BAR_HEIGHT = 26  # Qtile uses pixels; ~17pt visually
+BAR_HEIGHT = 26 
 
 
 def make_group_box():
@@ -29,14 +26,18 @@ def make_group_box():
         margin_y=3,
         margin_x=0,
         borderwidth=0,
-        active=colors["fg"],
+        active=colors["primary"],
         inactive=colors["disabled"],
         highlight_method="block",
+        # Single monitor: only this is used
         this_current_screen_border=colors["primary"],
+        # Dual monitor: these are also used
         this_screen_border=colors["occupied"],
-        other_current_screen_border=colors["bg_alt"],  # Add this for the other screen
-        other_screen_border=colors["secondary"],  # Add this for the other screen
+        other_current_screen_border=colors["bg_alt"],
+        other_screen_border=colors["occupied"],
         urgent_border=colors["urgent"],
+        urgent_text=colors["urgent"],
+        block_highlight_text_color=colors["bg"],
         background=colors["bg"],
         rounded=False,
     )
@@ -50,8 +51,10 @@ def main_bar():
             widget.Spacer(),
             widget.Chord(
                 foreground="#989cff",
+                font=FONT,
+                fontsize=FONT_SIZE,
             ),
-            # Layout indicator (like your custom qtile script)
+            # Layout indicator
             widget.CurrentLayoutIcon(
                 scale=0.6,
                 foreground="#989cff",
