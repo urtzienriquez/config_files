@@ -3,14 +3,14 @@ from libqtile.config import Group, Match
 groups = []
 group_names = [str(i) for i in range(1, 9)]
 group_labels = [
-    "ws1",
-    "ws2",
-    "ws3",
-    "web",
-    "yt",
-    "zot",
-    "graph",
-    "zoom",
+    " ws1",
+    " ws2",
+    " ws3",
+    "󰖟 web",
+    " yt",
+    "󰰶 zot",
+    " graph",
+    " zoom",
 ]
 group_layouts = [
     "columns",

@@ -377,6 +377,8 @@ keys = [
                 desc="Launch screenshot with keyboard",
             ),
         ],
+        mode="launcher",
+        name="launcher",
     ),
     Key(
         [],
