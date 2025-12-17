@@ -1,5 +1,6 @@
 from libqtile.config import Screen
 from libqtile import bar, widget
+import subprocess
 
 colors = {
     "bg": "#1A1B26",
@@ -14,7 +15,7 @@ colors = {
 
 FONT = "JetBrainsMonoNLNerdFont"
 FONT_SIZE = 16
-BAR_HEIGHT = 26 
+BAR_HEIGHT = 26
 
 
 def make_group_box():
@@ -78,9 +79,13 @@ def main_bar():
             ),
             widget.Sep(),
             # Filesystem
-            widget.DF(
-                format=" {r:.0f}%",
-                visible_on_warn=False,
+            widget.GenPollText(
+                func=lambda: " "
+                + subprocess.check_output(["df", "-h", "--output=pcent", "/"])
+                .decode()
+                .splitlines()[1]
+                .strip(),
+                update_interval=60,
                 foreground=colors["primary"],
                 font=FONT,
                 fontsize=FONT_SIZE,
@@ -123,6 +128,7 @@ def main_bar():
                 discharge_char="󱐤",
                 empty_char="󰂎",
                 full_char="󰁹",
+                full_short_text="󰁹",
                 foreground=colors["primary"],
                 low_foreground=colors["alert"],
                 font=FONT,
