@@ -4,7 +4,7 @@ Linux setup to avoid using the mouse as much as possible and trying to stay in t
 
 Setup for Debian/Arch with:
 
-- qtile as the window manager (with polybar)
+- qtile as the window manager
 - ghostty as the terminal emulator
   - zsh as the shell
 - tmux + neovim
