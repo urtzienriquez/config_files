@@ -72,7 +72,7 @@ def main_bar():
             # Memory
             widget.Memory(
                 measure_mem="G",
-                format=" {MemUsed:.1f}G/{MemFree:.1f}G",
+                format=" {MemUsed:.1f}G/{Available:.1f}G",
                 foreground=colors["primary"],
                 font=FONT,
                 fontsize=FONT_SIZE,
