@@ -4,13 +4,12 @@ import subprocess
 
 colors = {
     "bg": "#1A1B26",
-    "bg_alt": "#373B41",
     "primary": "#D79922",
-    "secondary": "#8ABEB7",
-    "alert": "#A54242",
+    "secondary": "#458587",
     "disabled": "#707880",
-    "occupied": "#458587",
+    "alert": "#A54242",
     "urgent": "#bd2c40",
+    "text": "#989cff",
 }
 
 FONT = "JetBrainsMonoNLNerdFont"
@@ -30,15 +29,15 @@ def make_group_box(fontsize, margey):
         background=colors["bg"],
         active=colors["primary"],
         inactive=colors["disabled"],
-        # focused monitor
-        this_current_screen_border=colors["primary"],
-        other_screen_border=colors["occupied"],
-        # unfocused monitor
-        this_screen_border=colors["disabled"],
-        other_current_screen_border=colors["occupied"],
         urgent_border=colors["urgent"],
         urgent_text=colors["urgent"],
         block_highlight_text_color=colors["bg"],
+        # focused monitor
+        this_current_screen_border=colors["primary"],
+        other_screen_border=colors["secondary"],
+        # unfocused monitor
+        this_screen_border=colors["disabled"],
+        other_current_screen_border=colors["secondary"],
     )
 
 
@@ -50,24 +49,23 @@ def main_bar(fontsize=18, barheight=26, margey=3):
             make_group_box(fontsize, margey),
             widget.Spacer(),
             # RIGHT
-            # Chord (mode)
+            # Chord (mode) (TextBox to add an space)
             widget.Chord(
-                foreground="#989cff",
+                foreground=colors["text"],
                 font=FONT,
                 fontsize=fontsize,
             ),
-            widget.TextBox(  # add an space
+            widget.TextBox(
                 text=" ",
                 fontsize=fontsize,
                 foreground=colors["bg"],
                 background=colors["bg"],
             ),
-            # Layout indicator
+            # Layout indicator (TextBox to add an space)
             widget.CurrentLayoutIcon(
                 scale=0.6,
-                foreground="#989cff",
             ),
-            widget.TextBox(  # add an space
+            widget.TextBox(
                 text=" ",
                 fontsize=fontsize,
                 foreground=colors["bg"],
@@ -157,7 +155,7 @@ def main_bar(fontsize=18, barheight=26, margey=3):
                 format="%H:%M",
                 font=FONT,
                 fontsize=fontsize,
-                foreground="#989cff",
+                foreground=colors["text"],
             ),
         ],
         barheight,
