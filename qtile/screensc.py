@@ -25,20 +25,20 @@ def make_group_box(fontsize, margey):
         margin_y=margey,
         margin_x=0,
         borderwidth=0,
+        rounded=False,
+        highlight_method="block",
+        background=colors["bg"],
         active=colors["primary"],
         inactive=colors["disabled"],
-        highlight_method="block",
-        # Single monitor: only this is used
+        # focused monitor
         this_current_screen_border=colors["primary"],
-        # Dual monitor: these are also used
-        this_screen_border=colors["occupied"],
-        other_current_screen_border=colors["bg_alt"],
         other_screen_border=colors["occupied"],
+        # unfocused monitor
+        this_screen_border=colors["disabled"],
+        other_current_screen_border=colors["occupied"],
         urgent_border=colors["urgent"],
         urgent_text=colors["urgent"],
         block_highlight_text_color=colors["bg"],
-        background=colors["bg"],
-        rounded=False,
     )
 
 
