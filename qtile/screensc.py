@@ -72,30 +72,44 @@ def main_bar(fontsize=18, barheight=26, margey=3):
                 background=colors["bg"],
             ),
             # CPU
-            widget.CPU(
-                format=" {load_percent}% ",
+            widget.TextBox(
+                text=" ",
+                font=FONT,
+                fontsize=fontsize,
                 foreground=colors["primary"],
+            ),
+            widget.CPU(
+                format="{load_percent}% ",
                 font=FONT,
                 fontsize=fontsize,
             ),
             # Memory
+            widget.TextBox(
+                text=" ",
+                font=FONT,
+                fontsize=fontsize,
+                foreground=colors["primary"],
+            ),
             widget.Memory(
                 measure_mem="G",
-                format=" {MemUsed:.1f}G/{Available:.1f}G ",
-                foreground=colors["primary"],
+                format="{MemUsed:.1f}G/{Available:.1f}G ",
                 font=FONT,
                 fontsize=fontsize,
             ),
             # Filesystem
+            widget.TextBox(
+                text=" ",
+                font=FONT,
+                fontsize=fontsize,
+                foreground=colors["primary"],
+            ),
             widget.GenPollText(
-                func=lambda: " "
-                + subprocess.check_output(["df", "-h", "--output=pcent", "/"])
+                func=lambda: subprocess.check_output(["df", "-h", "--output=pcent", "/"])
                 .decode()
                 .splitlines()[1]
                 .strip()
                 + " ",
                 update_interval=60,
-                foreground=colors["primary"],
                 font=FONT,
                 fontsize=fontsize,
             ),
