@@ -103,14 +103,14 @@ def main_bar(fontsize=18, barheight=26, margey=3):
             widget.Backlight(
                 backlight_name="intel_backlight",
                 format="󰃟 {percent:2.0%} ",
-                foreground=colors["primary"],
+                foreground=colors["text"],
                 font=FONT,
                 fontsize=fontsize,
             ),
             # Audio
             widget.Volume(
                 fmt=" {} ",
-                foreground=colors["primary"],
+                foreground=colors["text"],
                 font=FONT,
                 fontsize=fontsize,
             ),
@@ -141,11 +141,11 @@ def main_bar(fontsize=18, barheight=26, margey=3):
             # Battery
             widget.Battery(
                 format="{char}{percent:2.0%} ",
-                charge_char="󰂄",
-                discharge_char="󱐤",
-                empty_char="󰂎",
-                full_char="󰁹",
-                full_short_text="󰁹",
+                charge_char="󰂄 ",
+                discharge_char="󱐤 ",
+                empty_char="󰂎 ",
+                full_char="󰁹 ",
+                full_short_text="󰁹 ",
                 low_foreground=colors["alert"],
                 font=FONT,
                 fontsize=fontsize,
