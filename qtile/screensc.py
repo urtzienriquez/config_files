@@ -73,10 +73,11 @@ def main_bar(fontsize=18, barheight=26, margey=3):
             ),
             # CPU
             widget.TextBox(
-                text=" ",
+                text="",
                 font=FONT,
                 fontsize=fontsize,
                 foreground=colors["primary"],
+                padding = 7,
             ),
             widget.CPU(
                 format="{load_percent}% ",
@@ -85,10 +86,11 @@ def main_bar(fontsize=18, barheight=26, margey=3):
             ),
             # Memory
             widget.TextBox(
-                text=" ",
+                text="",
                 font=FONT,
                 fontsize=fontsize,
                 foreground=colors["primary"],
+                padding = 7,
             ),
             widget.Memory(
                 measure_mem="G",
@@ -98,10 +100,11 @@ def main_bar(fontsize=18, barheight=26, margey=3):
             ),
             # Filesystem
             widget.TextBox(
-                text=" ",
+                text="",
                 font=FONT,
                 fontsize=fontsize,
                 foreground=colors["primary"],
+                padding = 7,
             ),
             widget.GenPollText(
                 func=lambda: subprocess.check_output(["df", "-h", "--output=pcent", "/"])
