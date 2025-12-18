@@ -226,7 +226,7 @@ keys = [
     # controllers
     KeyChord(
         [mod],
-        "y",
+        "u",
         [
             # volume
             Key(
@@ -278,7 +278,7 @@ keys = [
     ## Launcher mode
     KeyChord(
         [mod],
-        "u",
+        "Space",
         [
             Key(
                 [],
