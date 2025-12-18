@@ -267,7 +267,7 @@ keys = [
     # Launchers
     Key(
         [mod],
-        "m",
+        "z",
         lazy.spawn(
             "ghostty --x11-instance-name='fzf-nova' \
                     -e bash -c 'source ~/.bashrc &>/dev/null \
