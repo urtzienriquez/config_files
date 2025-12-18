@@ -16,13 +16,13 @@ colors = {
 FONT = "JetBrainsMonoNLNerdFont"
 
 
-def make_group_box(fontsize):
+def make_group_box(fontsize, margey):
     """Create a new GroupBox widget instance"""
     return widget.GroupBox(
         font=FONT,
         fontsize=fontsize,
         padding=6,
-        margin_y=3,
+        margin_y=margey,
         margin_x=0,
         borderwidth=0,
         active=colors["primary"],
@@ -42,97 +42,116 @@ def make_group_box(fontsize):
     )
 
 
-def main_bar(fontsize=18, barheight=26):
+def main_bar(fontsize=18, barheight=26, margey=3):
     return bar.Bar(
         [
-            # LEFT — Workspaces
-            make_group_box(fontsize),
+            # LEFT
+            # Workspaces
+            make_group_box(fontsize, margey),
             widget.Spacer(),
+            # RIGHT
+            # Chord (mode)
             widget.Chord(
                 foreground="#989cff",
                 font=FONT,
                 fontsize=fontsize,
+            ),
+            widget.TextBox(  # add an space
+                text=" ",
+                fontsize=fontsize,
+                foreground=colors["bg"],
+                background=colors["bg"],
             ),
             # Layout indicator
             widget.CurrentLayoutIcon(
                 scale=0.6,
                 foreground="#989cff",
             ),
-            widget.Sep(linewidth=1, foreground=colors["disabled"]),
+            widget.TextBox(  # add an space
+                text=" ",
+                fontsize=fontsize,
+                foreground=colors["bg"],
+                background=colors["bg"],
+            ),
             # CPU
             widget.CPU(
-                format=" {load_percent}%",
+                format=" {load_percent}% ",
                 foreground=colors["primary"],
                 font=FONT,
                 fontsize=fontsize,
             ),
-            widget.Sep(),
             # Memory
             widget.Memory(
                 measure_mem="G",
-                format=" {MemUsed:.1f}G/{Available:.1f}G",
+                format=" {MemUsed:.1f}G/{Available:.1f}G ",
                 foreground=colors["primary"],
                 font=FONT,
                 fontsize=fontsize,
             ),
-            widget.Sep(),
             # Filesystem
             widget.GenPollText(
                 func=lambda: " "
                 + subprocess.check_output(["df", "-h", "--output=pcent", "/"])
                 .decode()
                 .splitlines()[1]
-                .strip(),
+                .strip()
+                + " ",
                 update_interval=60,
                 foreground=colors["primary"],
                 font=FONT,
                 fontsize=fontsize,
             ),
-            widget.Sep(),
             # Backlight
             widget.Backlight(
                 backlight_name="intel_backlight",
-                format="󰃟 {percent:2.0%}",
+                format="󰃟 {percent:2.0%} ",
                 foreground=colors["primary"],
                 font=FONT,
                 fontsize=fontsize,
             ),
-            widget.Sep(),
             # Audio
             widget.Volume(
-                fmt=" {}",
+                fmt=" {} ",
                 foreground=colors["primary"],
                 font=FONT,
                 fontsize=fontsize,
             ),
-            widget.Sep(),
-            # WiFi & Ethernet
+            # WiFi
             widget.Wlan(
-                format="󰖩",
-                disconnected_message="󰤮",
+                format="󰖩 ",
+                disconnected_message="󰤮 ",
                 interface="wlo1",
-                ethernet_interface="enp4s0",
-                ethernet_message_format="󰌗 eth",
-                use_ethernet=True,
-                foreground=colors["primary"],
                 font=FONT,
                 fontsize=fontsize,
             ),
-            widget.Sep(),
+            # Ethernet
+            widget.GenPollText(
+                func=lambda: (
+                    "󰌗 "
+                    if subprocess.run(
+                        ["cat", "/sys/class/net/enp4s0/operstate"],
+                        capture_output=True,
+                        text=True,
+                    ).stdout.strip()
+                    == "up"
+                    else " "
+                ),
+                update_interval=5,
+                font=FONT,
+                fontsize=fontsize,
+            ),
             # Battery
             widget.Battery(
-                format="{char}{percent:2.0%}",
+                format="{char}{percent:2.0%} ",
                 charge_char="󰂄",
                 discharge_char="󱐤",
                 empty_char="󰂎",
                 full_char="󰁹",
                 full_short_text="󰁹",
-                foreground=colors["primary"],
                 low_foreground=colors["alert"],
                 font=FONT,
                 fontsize=fontsize,
             ),
-            widget.Sep(),
             # Clock
             widget.Clock(
                 format="%H:%M",
@@ -151,7 +170,7 @@ screens = [
     Screen(
         wallpaper="~/Pictures/tux.png",
         wallpaper_mode="fill",
-        top=main_bar(),
+        top=main_bar(margey=1),
     ),
     Screen(
         wallpaper="~/Pictures/tux.png",
