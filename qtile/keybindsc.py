@@ -281,7 +281,7 @@ keys = [
             Key(
                 [],
                 "v",
-                lazy.spawn("ghostty -e /opt/nvim/bin/nvim"),
+                lazy.spawn("ghostty -e nvim"),
                 desc="Launch nvim",
             ),
             Key(
