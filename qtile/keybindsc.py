@@ -39,6 +39,18 @@ keys = [
         lazy.reload_config(),
         desc="Reload the config",
     ),
+    # session management
+    Key(
+        [mod, "control", "shift"],
+        "x",
+        lazy.spawn(
+            "ghostty --x11-instance-name='fzf-nova' \
+                    -e bash -c 'source ~/.bashrc &>/dev/null \
+                    && $HOME/config_files/fzf-nova/_session,--.manage.session'"
+        ),
+        desc="Manage Qtile session",
+    ),
+    # monitors
     Key(
         [mod],
         "m",
@@ -58,6 +70,7 @@ keys = [
         lazy.next_screen(),
         desc="Swap screens and change focused screen",
     ),
+    # windows
     Key(
         [mod],
         "h",
@@ -172,16 +185,11 @@ keys = [
         lazy.window.kill(),
         desc="Kill focused window",
     ),
-    # session management
     Key(
-        [mod, "control", "shift"],
-        "x",
-        lazy.spawn(
-            "ghostty --x11-instance-name='fzf-nova' \
-                    -e bash -c 'source ~/.bashrc &>/dev/null \
-                    && $HOME/config_files/fzf-nova/_session,--.manage.session'"
-        ),
-        desc="Manage Qtile session",
+        [],
+        "Print",
+        lazy.spawn("gnome-screenshot -i"),
+        desc="Launch screenshot with Print key",
     ),
     # volume
     Key(
@@ -202,24 +210,6 @@ keys = [
         lazy.spawn("amixer sset Master 1+ toggle"),
         desc="Mute",
     ),
-    Key(
-        [mod, alt],
-        "j",
-        lazy.spawn("amixer sset Master 5%-"),
-        desc="Decrease volume",
-    ),
-    Key(
-        [mod, alt],
-        "k",
-        lazy.spawn("amixer sset Master 5%+"),
-        desc="Increase volume",
-    ),
-    Key(
-        [mod, alt],
-        "m",
-        lazy.spawn("amixer sset Master 1+ toggle"),
-        desc="Mute",
-    ),
     # Brightness
     Key(
         [],
@@ -233,33 +223,63 @@ keys = [
         lazy.spawn("brightnessctl -c backlight set 5%-"),
         desc="Decrease brightness",
     ),
-    Key(
+    # controllers
+    KeyChord(
         [mod, alt],
-        "i",
-        lazy.spawn("brightnessctl -c backlight set 5%+"),
-        desc="Increase brightness",
-    ),
-    Key(
-        [mod, alt],
-        "u",
-        lazy.spawn("brightnessctl -c backlight set 5%-"),
-        desc="Decrease brightness",
+        "Space",
+        [
+            # volume
+            Key(
+                [],
+                "j",
+                lazy.spawn("amixer sset Master 5%-"),
+                desc="Decrease volume",
+            ),
+            Key(
+                [],
+                "k",
+                lazy.spawn("amixer sset Master 5%+"),
+                desc="Increase volume",
+            ),
+            Key(
+                [],
+                "m",
+                lazy.spawn("amixer sset Master 1+ toggle"),
+                desc="Mute",
+            ),
+            # brightness
+            Key(
+                [],
+                "i",
+                lazy.spawn("brightnessctl -c backlight set 5%+"),
+                desc="Increase brightness",
+            ),
+            Key(
+                [],
+                "u",
+                lazy.spawn("brightnessctl -c backlight set 5%-"),
+                desc="Decrease brightness",
+            ),
+        ],
+        mode="controllers",
+        name="controllers",
     ),
     # Launchers
+    Key(
+        [mod],
+        "m",
+        lazy.spawn(
+            "ghostty --x11-instance-name='fzf-nova' \
+                    -e bash -c 'source ~/.bashrc &>/dev/null \
+                    && $HOME/config_files/fzf-nova/fzf-nova'"
+        ),
+        desc="Launch fzf-nova",
+    ),
+    ## Launcher mode
     KeyChord(
         [mod],
         "Space",
         [
-            Key(
-                [],
-                "f",
-                lazy.spawn(
-                    "ghostty --x11-instance-name='fzf-nova' \
-                    -e bash -c 'source ~/.bashrc &>/dev/null \
-                    && $HOME/config_files/fzf-nova/fzf-nova'"
-                ),
-                desc="Launch fzf-nova",
-            ),
             Key(
                 [],
                 "s",
@@ -379,12 +399,6 @@ keys = [
         ],
         mode="launcher",
         name="launcher",
-    ),
-    Key(
-        [],
-        "Print",
-        lazy.spawn("gnome-screenshot -i"),
-        desc="Launch screenshot with Print key",
     ),
 ]
 
