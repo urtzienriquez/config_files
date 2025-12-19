@@ -8,7 +8,8 @@ colors = {
     "disabled": "#707880",
     "alert": "#A54242",
     "urgent": "#bd2c40",
-    "text": "#989cff",
+    "magenta": "#c099ff",
+    "cyan": "#86e1fc",
 }
 
 FONT = "JetBrainsMonoNerdFont"
@@ -50,7 +51,7 @@ def top_bar(fontsize=18, barheight=26, margey=3):
             # RIGHT
             # Chord (mode) (TextBox to add an space)
             widget.Chord(
-                foreground=colors["text"],
+                foreground=colors["cyan"],
                 font=FONT,
                 fontsize=fontsize,
             ),
@@ -119,14 +120,14 @@ def top_bar(fontsize=18, barheight=26, margey=3):
             widget.Backlight(
                 backlight_name="intel_backlight",
                 format="󰃟 {percent:2.0%} ",
-                foreground=colors["text"],
+                foreground=colors["magenta"],
                 font=FONT,
                 fontsize=fontsize,
             ),
             # Audio
             widget.Volume(
                 fmt=" {} ",
-                foreground=colors["text"],
+                foreground=colors["magenta"],
                 font=FONT,
                 fontsize=fontsize,
             ),
@@ -171,7 +172,7 @@ def top_bar(fontsize=18, barheight=26, margey=3):
                 format="%H:%M",
                 font=FONT,
                 fontsize=fontsize,
-                foreground=colors["text"],
+                foreground=colors["cyan"],
             ),
         ],
         barheight,
