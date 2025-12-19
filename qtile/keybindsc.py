@@ -261,8 +261,8 @@ keys = [
                 desc="Decrease brightness",
             ),
         ],
-        mode="controllers",
-        name="controllers",
+        mode="controller",
+        name="controller",
     ),
     # Launchers
     Key(
