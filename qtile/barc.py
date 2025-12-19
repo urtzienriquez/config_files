@@ -11,7 +11,7 @@ colors = {
     "text": "#989cff",
 }
 
-FONT = "JetBrainsMonoNLNerdFont"
+FONT = "JetBrainsMonoNerdFont"
 
 
 def make_group_box(fontsize, margey):
