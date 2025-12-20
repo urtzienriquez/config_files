@@ -2,10 +2,47 @@
 alias zr='source ~/.config/zsh/.zshrc'
 
 # update neovim
-alias nvup='git pull && \
-    make distclean && \
-    make CMAKE_BUILD_TYPE=RelWithDebInfo && \
-    sudo make install'
+nvup() {
+    local nvim_dir="/home/urtzi/Documents/GitHub/neovim/"
+    echo "Updating neovim from $nvim_dir..."
+    cd "$nvim_dir" || return 1
+    
+    local before=$(git rev-parse HEAD)
+    git pull
+    local after=$(git rev-parse HEAD)
+    
+    if [ "$before" != "$after" ]; then
+        echo "Changes detected, rebuilding..."
+        make distclean && \
+        make CMAKE_BUILD_TYPE=RelWithDebInfo && \
+        sudo make install && \
+        echo "✓ Neovim updated successfully!"
+    else
+        echo "No updates available."
+    fi
+    cd - > /dev/null
+}
+
+# update tmux
+tmuxup() {
+    local tmux_dir="/home/urtzi/Documents/GitHub/tmux/"
+    echo "Updating tmux from $tmux_dir..."
+    cd "$tmux_dir" || return 1
+    
+    local before=$(git rev-parse HEAD)
+    git pull
+    local after=$(git rev-parse HEAD)
+    
+    if [ "$before" != "$after" ]; then
+        echo "Changes detected, rebuilding..."
+        make && \
+        sudo make install && \
+        echo "✓ tmux updated successfully!"
+    else
+        echo "No updates available."
+    fi
+    cd - > /dev/null
+}
 
 # update qutebrowser
 alias qbup='sudo /opt/qutebrowser/scripts/mkvenv.py --update --pyqt-type link'
