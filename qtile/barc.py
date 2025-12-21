@@ -77,7 +77,7 @@ def top_bar(fontsize=18, barheight=26, margey=3):
                 font=FONT,
                 fontsize=fontsize,
                 foreground=colors["primary"],
-                padding = 7,
+                padding=7,
             ),
             widget.CPU(
                 format="{load_percent}% ",
@@ -90,7 +90,7 @@ def top_bar(fontsize=18, barheight=26, margey=3):
                 font=FONT,
                 fontsize=fontsize,
                 foreground=colors["primary"],
-                padding = 7,
+                padding=7,
             ),
             widget.Memory(
                 measure_mem="G",
@@ -104,10 +104,12 @@ def top_bar(fontsize=18, barheight=26, margey=3):
                 font=FONT,
                 fontsize=fontsize,
                 foreground=colors["primary"],
-                padding = 7,
+                padding=7,
             ),
             widget.GenPollText(
-                func=lambda: subprocess.check_output(["df", "-h", "--output=pcent", "/"])
+                func=lambda: subprocess.check_output(
+                    ["df", "-h", "--output=pcent", "/"]
+                )
                 .decode()
                 .splitlines()[1]
                 .strip()
@@ -163,6 +165,7 @@ def top_bar(fontsize=18, barheight=26, margey=3):
                 empty_char="󰂎 ",
                 full_char="󰁹 ",
                 full_short_text="󰁹 ",
+                not_charging_char="󰂃 ",
                 low_foreground=colors["alert"],
                 font=FONT,
                 fontsize=fontsize,
