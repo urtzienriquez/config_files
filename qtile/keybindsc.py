@@ -223,63 +223,53 @@ keys = [
         lazy.spawn("brightnessctl -c backlight set 5%-"),
         desc="Decrease brightness",
     ),
-    # controllers
-    KeyChord(
-        [mod],
+    # volume
+    Key(
+        [mod, alt],
+        "j",
+        lazy.spawn("amixer sset Master 5%-"),
+        desc="Decrease volume",
+    ),
+    Key(
+        [mod, alt],
+        "k",
+        lazy.spawn("amixer sset Master 5%+"),
+        desc="Increase volume",
+    ),
+    Key(
+        [mod, alt],
+        "m",
+        lazy.spawn("amixer sset Master 1+ toggle"),
+        desc="Mute",
+    ),
+    # brightness
+    Key(
+        [mod, alt],
+        "i",
+        lazy.spawn("brightnessctl -c backlight set 5%+"),
+        desc="Increase brightness",
+    ),
+    Key(
+        [mod, alt],
         "u",
-        [
-            # volume
-            Key(
-                [],
-                "j",
-                lazy.spawn("amixer sset Master 5%-"),
-                desc="Decrease volume",
-            ),
-            Key(
-                [],
-                "k",
-                lazy.spawn("amixer sset Master 5%+"),
-                desc="Increase volume",
-            ),
-            Key(
-                [],
-                "m",
-                lazy.spawn("amixer sset Master 1+ toggle"),
-                desc="Mute",
-            ),
-            # brightness
-            Key(
-                [],
-                "i",
-                lazy.spawn("brightnessctl -c backlight set 5%+"),
-                desc="Increase brightness",
-            ),
-            Key(
-                [],
-                "u",
-                lazy.spawn("brightnessctl -c backlight set 5%-"),
-                desc="Decrease brightness",
-            ),
-        ],
-        mode="controller",
-        name="controller",
+        lazy.spawn("brightnessctl -c backlight set 5%-"),
+        desc="Decrease brightness",
     ),
     # Launchers
-    Key(
-        [mod],
-        "z",
-        lazy.spawn(
-            "ghostty --x11-instance-name='fzf-nova' \
-                    -e bash -c 'source ~/.bashrc &>/dev/null \
-                    && $HOME/config_files/fzf-nova/fzf-nova'"
-        ),
-        desc="Launch fzf-nova",
-    ),
-    ## Launcher mode
     KeyChord(
         [mod],
         "Space",
         [
+            Key(
+                [],
+                "f",
+                lazy.spawn(
+                    "ghostty --x11-instance-name='fzf-nova' \
+                    -e bash -c 'source ~/.bashrc &>/dev/null \
+                    && $HOME/config_files/fzf-nova/fzf-nova'"
+                ),
+                desc="Launch fzf-nova",
+            ),
             Key(
                 [],
                 "s",
@@ -397,7 +387,7 @@ keys = [
                 desc="Launch screenshot with keyboard",
             ),
         ],
-        mode="launcher",
+        # mode="launcher",
         name="launcher",
     ),
 ]
