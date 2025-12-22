@@ -100,8 +100,8 @@ launcher_keys = [
         "b",
         lazy.to_screen(0),
         lazy.group["4"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
-        lazy.spawn("firefox"),
-        desc="Launch firefox",
+        lazy.spawn("librewolf"),
+        desc="Launch librewolf",
     ),
     Key(
         [],

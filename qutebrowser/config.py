@@ -133,8 +133,8 @@ config.bind("pt", "toggle-proxy")
 config.bind(";p", "hint images download")
 
 # open page/link in firefox
-config.bind("pf", "spawn --detach firefox {url}")
-config.bind("ph", "hint links spawn --detach firefox {hint-url}")
+config.bind("pf", "spawn --detach librewolf {url}")
+config.bind("ph", "hint links spawn --detach librewolf {hint-url}")
 
 # switch mapping of F and ;f so that:
 # F follows a link to a new active tab

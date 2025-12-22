@@ -26,7 +26,7 @@ group_matches = [
     [],
     [],
     [],
-    [Match(wm_class="web"), Match(wm_class="firefox-esr")],
+    [Match(wm_class="web"), Match(wm_class="librewolf")],
     [Match(wm_class="youtube")],
     # Match only main Zotero window by its window role "browser"
     [Match(wm_class="Zotero", role="browser")],
