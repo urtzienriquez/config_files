@@ -75,21 +75,6 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-stats git-behind-ahead
     hook_com[misc]="${arrow_str} ${hook_com[misc]}"
 }
 
-
-# Auto-fetch when entering a git repo
-chpwd_git_fetch() {
-    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-        {
-            git fetch --quiet 2>/dev/null
-            vcs_info
-            if (( $+widgets[zle-line-init] )); then
-                zle -R
-            fi
-        } &!
-    fi
-}
-chpwd_functions+=( chpwd_git_fetch )
-
 # -------------------------------
 # Vi mode indicator
 # -------------------------------

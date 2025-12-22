@@ -42,6 +42,10 @@ alias ls='ls -F --color=auto'
 alias ll='ls -lhA'
 alias la='ls -hA'
 
+# some git aliases
+alias gf='git fetch'
+alias gp='git pull'
+
 # rm alias (function) to always ask for permission
 rm() {
   if [[ $# -eq 0 ]]; then
