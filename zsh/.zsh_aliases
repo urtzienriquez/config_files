@@ -27,7 +27,16 @@ tmuxup() {
 }
 
 # update qutebrowser
-alias qbup='sudo /opt/qutebrowser/scripts/mkvenv.py --update --pyqt-type link'
+qbup() {
+    local qb_dir="/opt/qutebrowser"
+    echo "Updating qutebrowser from $qb_dir..."
+    cd "$qb_dir" || return 1
+    git pull && \
+    sudo /opt/qutebrowser/scripts/mkvenv.py --update --pyqt-type link && \
+    echo "✓ qutebrowser updated successfully!"
+    cd - > /dev/null
+}
+# alias qbup='sudo /opt/qutebrowser/scripts/mkvenv.py --update --pyqt-type link'
 
 # dot aliases
 alias ..='cd ..'
@@ -115,6 +124,12 @@ alias nv='nvim'
 
 # lazygit alias
 alias lg='lazygit'
+
+# qutebrowser alias
+alias qb='qutebrowser'
+
+# zathura alias
+alias za='zathura'
 
 # R
 alias r='R --silent --no-save'
