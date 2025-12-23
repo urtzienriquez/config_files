@@ -157,9 +157,6 @@ alias bt='bat -p'
 # fd as fdfind (in Debian it is called just with fdfind)
 alias fd='fdfind'
 
-#########
-# fzf 
-
 # sf: search files in given path (or current path if not specified), open appropriately
 sf() {
   local search_path="${1:-.}"
@@ -271,4 +268,13 @@ tm() {
 	  tty_id=$(basename "$(tty)")
 	  session="term_${tty_id}"
 	  tmux new-session -A -s "$session"
+}
+
+# Activate virtual env and save the path as a tmux variable
+# after deactivate, remove the VIRTUAL_ENV tmux variable
+function sv() {
+    local venv_path="${1:-.}"
+    source $venv_path/bin/activate &&
+    tmux set-environment VIRTUAL_ENV $VIRTUAL_ENV &&
+    alias deactivate='\deactivate && tmux set-environment -u VIRTUAL_ENV && unalias deactivate'
 }

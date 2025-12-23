@@ -200,14 +200,7 @@ fi
 # -------------------------------
 # venv
 # -------------------------------
-# Activate virtual env and save the path as a tmux variable,
-# so that new panes/windows can re-activate as necessary
-function sv() {
-    local venv_path="${1:-.}"
-    source $venv_path/bin/activate &&
-    tmux set-environment VIRTUAL_ENV $VIRTUAL_ENV &&
-    alias deactivate='\deactivate && tmux set-environment -u VIRTUAL_ENV && unalias deactivate'
-}
+# re-activate python virtual environments in new panes/windows
 if [ -n "$VIRTUAL_ENV" ]; then
     source $VIRTUAL_ENV/bin/activate;
 fi
