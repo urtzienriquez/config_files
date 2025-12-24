@@ -87,7 +87,7 @@ config.set(
 )
 
 # open neovim from qutebrowser
-c.editor.command = ["ghostty", "-e", "/opt/nvim/bin/nvim", "-f", "{}"]
+c.editor.command = ["ghostty", "-e", "nvim", "-f", "{}"]
 
 # edit url / to edit text control-e in insert mode sends you to the editor
 config.bind("eu", "edit-url")
