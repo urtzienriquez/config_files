@@ -1,3 +1,14 @@
+options(lintr.linter_file = "~/.lintr")
+
+# options(
+#     languageserver.server_capabilities = list(
+#         hoverProvider = FALSE,
+#         signatureHelpProvider = FALSE,
+#         completionProvider = FALSE,
+#         completionItemResolve = FALSE
+#     )
+# )
+
 if (interactive() || isatty(stdout())) {
     options(
         colorout.verbose = 0
@@ -23,14 +34,3 @@ if (interactive() || isatty(stdout())) {
         )
     }
 }
-
-# options(
-#     languageserver.server_capabilities = list(
-#         hoverProvider = FALSE,
-#         signatureHelpProvider = FALSE,
-#         completionProvider = FALSE,
-#         completionItemResolve = FALSE
-#     )
-# )
-
-lintr.linter_file <- "~/.lintr"
