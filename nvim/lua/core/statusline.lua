@@ -12,7 +12,7 @@ local function define_highlights()
 	vim.api.nvim_set_hl(0, "SLFileName", { fg = tokyonight.blue })
 	vim.api.nvim_set_hl(0, "SLGitAdd", { fg = tokyonight.git.add })
 	vim.api.nvim_set_hl(0, "SLGitDelete", { fg = tokyonight.git.delete })
-	vim.api.nvim_set_hl(0, "SLGitRepo", { fg = tokyonight.teal })
+	-- vim.api.nvim_set_hl(0, "SLGitRepo", { fg = tokyonight.teal })
 	vim.api.nvim_set_hl(0, "SLGitBranch", { fg = tokyonight.magenta })
 	vim.api.nvim_set_hl(0, "SLDiagError", { fg = tokyonight.red1 })
 	vim.api.nvim_set_hl(0, "SLDiagWarn", { fg = tokyonight.yellow })
@@ -56,24 +56,24 @@ local function get_git_root(bufnr)
 	return git_root_cache[bufnr]
 end
 
--- Repo name cache
-local repo_name_cache = {}
-local function get_repo_name(bufnr)
-	if repo_name_cache[bufnr] then
-		return repo_name_cache[bufnr]
-	end
-
-	local root = get_git_root(bufnr)
-	if not root then
-		repo_name_cache[bufnr] = ""
-		return ""
-	end
-
-	-- Extract just the repo name from the path
-	local repo_name = root:match("([^/\\]+)$") or ""
-	repo_name_cache[bufnr] = repo_name
-	return repo_name
-end
+-- -- Repo name cache
+-- local repo_name_cache = {}
+-- local function get_repo_name(bufnr)
+-- 	if repo_name_cache[bufnr] then
+-- 		return repo_name_cache[bufnr]
+-- 	end
+--
+-- 	local root = get_git_root(bufnr)
+-- 	if not root then
+-- 		repo_name_cache[bufnr] = ""
+-- 		return ""
+-- 	end
+--
+-- 	-- Extract just the repo name from the path
+-- 	local repo_name = root:match("([^/\\]+)$") or ""
+-- 	repo_name_cache[bufnr] = repo_name
+-- 	return repo_name
+-- end
 
 -- --------------------------
 -- Async git status update
@@ -172,14 +172,15 @@ end
 -- --------------------------
 -- Git statusline functions
 -- --------------------------
-function _G.st_repo()
-	local buf = vim.api.nvim_get_current_buf()
-	local repo = get_repo_name(buf)
-	if repo == "" then
-		return ""
-	end
-	return " " .. repo .. " "
-end
+
+-- function _G.st_repo()
+-- 	local buf = vim.api.nvim_get_current_buf()
+-- 	local repo = get_repo_name(buf)
+-- 	if repo == "" then
+-- 		return ""
+-- 	end
+-- 	return " " .. repo .. " "
+-- end
 
 function _G.st_branch()
 	local buf = vim.api.nvim_get_current_buf()
@@ -336,8 +337,8 @@ vim.api.nvim_create_autocmd("TermEnter", {
 })
 
 vim.o.statusline = table.concat({
-	" %#SLFileName#%t%m %*",
-	"%{%v:lua.st_repo()%}",
+	" %#SLFileName#%t %m%* ",
+	-- "%{%v:lua.st_repo()%}",
 	"%#SLGitBranch#%{v:lua.st_branch()}%*",
 	"%#SLGitAdd#%{v:lua.st_added()}%*",
 	"%#SLGitDelete#%{v:lua.st_removed()}%*",
