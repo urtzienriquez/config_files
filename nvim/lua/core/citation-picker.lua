@@ -327,10 +327,10 @@ local function apply_insert_at_saved_context(saved, citation_keys, format)
 		reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, col, #insert_text)
 	end
 
-	vim.schedule(function()
+	vim.defer_fn(function()
 		local msg = "Inserted citation" .. (#citation_keys > 1 and "s" or "") .. ": " .. insert_text
 		vim.notify(msg, vim.log.levels.INFO)
-	end)
+	end, 100)
 end
 
 ---------------------------------------------------------------------
@@ -375,11 +375,13 @@ local function replace_citation_at_cursor(saved, new_citation_key, citation_info
 		if saved.was_insert_mode then
 			reenter_insert_mode_at_cursor_for_buffer(saved.win, saved.buf, row, citation_info.start_col, #replacement)
 		end
-		vim.schedule(function()
+		vim.defer_fn(function()
 			vim.notify("Replaced citation: " .. citation_info.key .. " → " .. new_citation_key, vim.log.levels.INFO)
-		end)
+		end, 100)
 	else
-		vim.notify("Failed to replace citation", vim.log.levels.ERROR)
+		vim.defer_fn(function()
+			vim.notify("Failed to replace citation", vim.log.levels.ERROR)
+		end, 100)
 	end
 end
 
@@ -577,9 +579,9 @@ local function citation_replace()
 						if entry.key ~= citation_info.key then
 							replace_citation_at_cursor(saved, entry.key, citation_info)
 						else
-							vim.schedule(function()
+							vim.defer_fn(function()
 								vim.notify("Same citation selected, no replacement needed", vim.log.levels.INFO)
-							end)
+							end, 100)
 						end
 						break
 					end

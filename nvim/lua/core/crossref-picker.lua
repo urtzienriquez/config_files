@@ -172,11 +172,13 @@ local function insert_crossref(ref_type, label, saved_context)
 		if saved_context.was_insert_mode then
 			reenter_insert_mode_at_cursor_for_buffer(saved_context.win, saved_context.buf, row, col, #crossref)
 		end
-		vim.schedule(function()
+		vim.defer_fn(function()
 			vim.notify("Inserted crossref: " .. crossref, vim.log.levels.INFO)
-		end)
+		end, 100)
 	else
-		vim.notify("Failed to insert crossref", vim.log.levels.ERROR)
+		vim.defer_fn(function()
+			vim.notify("Failed to insert crossref", vim.log.levels.ERROR)
+		end, 100)
 	end
 end
 
