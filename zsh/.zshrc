@@ -137,6 +137,11 @@ case ":$PATH:" in
 esac
 
 # -------------------------------
+# R configuration
+# -------------------------------
+export RENV_CONFIG_USER_PROFILE=TRUE
+
+# -------------------------------
 # fzf
 # -------------------------------
 if [[ "$HOST" == "debian" ]]; then
