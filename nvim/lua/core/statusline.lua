@@ -16,47 +16,47 @@ local function define_highlights()
 	vim.api.nvim_set_hl(0, "SLDiagWarn", { fg = tokyonight.yellow })
 	vim.api.nvim_set_hl(0, "SLDiagInfo", { fg = tokyonight.blue2 })
 	vim.api.nvim_set_hl(0, "SLDiagHint", { fg = tokyonight.teal })
-	vim.api.nvim_set_hl(0, "SLRecord", { fg = tokyonight.teal})
+	-- vim.api.nvim_set_hl(0, "SLRecord", { fg = tokyonight.teal})
 	vim.api.nvim_set_hl(0, "SLFileType", { bold = true })
 end
 
 define_highlights()
 vim.api.nvim_create_autocmd("ColorScheme", { callback = define_highlights })
 
--- --------------------------
--- Mode display
--- --------------------------
-function _G.st_mode()
-	local mode_map = {
-		["n"] = { text = "NORMAL" },
-		["nt"] = { text = "NORMAL" },
-		["i"] = { text = "INSERT" },
-		["v"] = { text = "VISUAL" },
-		["V"] = { text = "V-LINE" },
-		["\22"] = { text = "V-BLOCK" },
-		["c"] = { text = "COMMAND" },
-		["s"] = { text = "SELECT" },
-		["S"] = { text = "S-LINE" },
-		["\19"] = { text = "S-BLOCK" },
-		["R"] = { text = "REPLACE" },
-		["r"] = { text = "REPLACE" },
-		["!"] = { text = "SHELL" },
-		["t"] = { text = "TERMINAL" },
-	}
-
-	local mode = vim.api.nvim_get_mode().mode
-	local mode_info = mode_map[mode] or { text = mode }
-
-	return string.format("%s ", mode_info.text)
-end
-
-function _G.st_recording()
-	local reg = vim.fn.reg_recording()
-	if reg == "" then
-		return ""
-	end
-	return string.format(" recording @%s ", reg)
-end
+-- -- --------------------------
+-- -- Mode display
+-- -- --------------------------
+-- function _G.st_mode()
+-- 	local mode_map = {
+-- 		["n"] = { text = "NORMAL" },
+-- 		["nt"] = { text = "NORMAL" },
+-- 		["i"] = { text = "INSERT" },
+-- 		["v"] = { text = "VISUAL" },
+-- 		["V"] = { text = "V-LINE" },
+-- 		["\22"] = { text = "V-BLOCK" },
+-- 		["c"] = { text = "COMMAND" },
+-- 		["s"] = { text = "SELECT" },
+-- 		["S"] = { text = "S-LINE" },
+-- 		["\19"] = { text = "S-BLOCK" },
+-- 		["R"] = { text = "REPLACE" },
+-- 		["r"] = { text = "REPLACE" },
+-- 		["!"] = { text = "SHELL" },
+-- 		["t"] = { text = "TERMINAL" },
+-- 	}
+--
+-- 	local mode = vim.api.nvim_get_mode().mode
+-- 	local mode_info = mode_map[mode] or { text = mode }
+--
+-- 	return string.format("%s ", mode_info.text)
+-- end
+--
+-- function _G.st_recording()
+-- 	local reg = vim.fn.reg_recording()
+-- 	if reg == "" then
+-- 		return ""
+-- 	end
+-- 	return string.format(" recording @%s ", reg)
+-- end
 
 -- --------------------------
 -- Git cache and pending updates
@@ -343,7 +343,7 @@ vim.api.nvim_create_autocmd("TermEnter", {
 })
 
 vim.o.statusline = table.concat({
-	" %#Title#%{v:lua.st_mode()}%*",
+	-- " %#Title#%{v:lua.st_mode()}%*",
 	" %t %m ",
 	"%#SLGitBranch#%{v:lua.st_branch()}%*",
 	"%#SLGitAdd#%{v:lua.st_added()}%*",
@@ -352,7 +352,7 @@ vim.o.statusline = table.concat({
 	"%#SLDiagWarn#%{v:lua.st_warn()}%*",
 	"%#SLDiagInfo#%{v:lua.st_info()}%*",
 	"%#SLDiagHint#%{v:lua.st_hint()}%*",
-	"%#SLRecord#%{v:lua.st_recording()}%*",
+	-- "%#SLRecord#%{v:lua.st_recording()}%*",
 	"%=",
 	"%{%v:lua.st_filetype_text()%} ",
 	"%4{v:lua.st_position()} ",
