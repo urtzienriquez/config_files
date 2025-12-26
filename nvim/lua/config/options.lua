@@ -55,7 +55,7 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
 	desc = "Auto-resize windows on terminal resize",
 })
 
--- Better line wrapping for text files (use FileType instead of BufEnter)
+-- Better line wrapping for text files
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
 		"markdown",
@@ -96,7 +96,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	desc = "Set pandoc syntax for markdown-like files",
 })
 
--- Diagnostics (lazy load on VimEnter since it's not needed immediately)
+-- Diagnostics
 vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()
 		vim.diagnostic.config({
@@ -114,4 +114,13 @@ vim.api.nvim_create_autocmd("VimEnter", {
 		})
 	end,
 	desc = "Configure diagnostics signs and virtual text",
+})
+
+-- Set help window height
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "help",
+	callback = function()
+		vim.cmd("resize 25")
+	end,
+	desc = "Configure help window size",
 })
