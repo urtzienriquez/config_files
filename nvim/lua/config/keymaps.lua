@@ -385,6 +385,7 @@ local function set_rnvim_keymaps()
 			prompt = "Output filename (without extension): ",
 			cancelreturn = "__CANCEL__",
 		})
+		vim.api.nvim_echo({}, false, {})
 		if filename == "__CANCEL__" then
 			return
 		end
