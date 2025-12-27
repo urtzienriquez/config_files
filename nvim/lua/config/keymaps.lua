@@ -389,16 +389,14 @@ local function set_rnvim_keymaps()
 		if filename == "__CANCEL__" then
 			return
 		end
+
+		-- Clear params if it exists
+		vim.cmd('RSend if(exists("params")) rm(params)')
+
 		if filename ~= "" then
-			vim.cmd(
-				'RSend rmarkdown::render("'
-					.. vim.fn.expand("%")
-					.. '", output_file = "'
-					.. filename
-					.. '", envir = new.env())'
-			)
+			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", output_file = "' .. filename .. '")')
 		else
-			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", envir = new.env())')
+			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '")')
 		end
 	end, { desc = "Render R Markdown with custom output name" })
 
