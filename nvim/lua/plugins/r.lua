@@ -59,7 +59,7 @@ return {
 			require("r").setup(opts)
 
 			local function set_chunk_highlights()
-				local bg = (vim.o.background == "dark") and "#292e42" or "#c4c8da"
+				local bg = (vim.o.background == "dark") and "#2f334d" or "#c4c8da"
 
 				-- RMarkdown chunks
 				vim.cmd("hi! link rmdChunk CodeBlock")
