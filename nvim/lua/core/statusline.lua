@@ -324,18 +324,6 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 	end,
 })
 
-vim.api.nvim_create_autocmd("TermOpen", {
-	callback = function()
-		vim.wo.statusline = ""
-	end,
-})
-
-vim.api.nvim_create_autocmd("TermEnter", {
-	callback = function()
-		vim.wo.statusline = ""
-	end,
-})
-
 vim.o.statusline = table.concat({
 	" %#SLFileName#%t %m%* ",
 	-- "%{%v:lua.st_repo()%}",
