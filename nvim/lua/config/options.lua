@@ -26,7 +26,7 @@ vim.opt.ignorecase = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes:1"
-vim.opt.cursorline = true
+-- vim.opt.cursorline = true
 
 -- code folding
 vim.opt.foldcolumn = "0"
