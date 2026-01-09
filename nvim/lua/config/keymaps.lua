@@ -277,7 +277,12 @@ vim.api.nvim_create_autocmd("User", {
 
 		vim.keymap.set("n", "<leader>us", toggle_option("spell", true, false), { desc = "Toggle Spelling" })
 		vim.keymap.set("n", "<leader>uw", toggle_option("wrap", true, false), { desc = "Toggle Wrap" })
-		vim.keymap.set("n", "<leader>uc", toggle_option("cursorline", true, false), { desc = "Toggle Cursorline" })
+		vim.keymap.set(
+			"n",
+			"<leader>uc",
+			toggle_option("cursorlineopt", "both", "number"),
+			{ desc = "Toggle Cursorline" }
+		)
 
 		vim.keymap.set(
 			"n",
