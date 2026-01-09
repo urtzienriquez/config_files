@@ -277,6 +277,7 @@ vim.api.nvim_create_autocmd("User", {
 
 		vim.keymap.set("n", "<leader>us", toggle_option("spell", true, false), { desc = "Toggle Spelling" })
 		vim.keymap.set("n", "<leader>uw", toggle_option("wrap", true, false), { desc = "Toggle Wrap" })
+		vim.keymap.set("n", "<leader>uc", toggle_option("cursorline", true, false), { desc = "Toggle Cursorline" })
 
 		vim.keymap.set(
 			"n",
@@ -299,7 +300,7 @@ vim.api.nvim_create_autocmd("User", {
 
 		vim.keymap.set("n", "<leader>ub", toggle_option("background", "dark", "light"), { desc = "Toggle Background" })
 
-		vim.keymap.set("n", "<leader>uc", function()
+		vim.keymap.set("n", "<leader>ux", function()
 			if vim.o.conceallevel > 0 then
 				vim.o.conceallevel = 0
 				vim.notify("Conceal disabled", vim.log.levels.INFO)
