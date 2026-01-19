@@ -2,7 +2,7 @@ from libqtile import bar, widget
 import subprocess
 
 colors = {
-    "bg": "#1A1B26",
+    "bg": "#000000",
     "primary": "#D79922",
     "secondary": "#458587",
     "disabled": "#707880",
