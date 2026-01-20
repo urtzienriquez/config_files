@@ -28,6 +28,7 @@ vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes:1"
 vim.opt.cursorline = true
 vim.opt.cursorlineopt = "number"
+vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20,t:block"
 
 -- code folding
 vim.opt.foldcolumn = "0"
