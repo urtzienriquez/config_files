@@ -59,3 +59,9 @@ def _center_window(window):
         window.tweak_float(x=x, y=y)
     except:
         pass  # Window might have been closed
+
+
+@hook.subscribe.client_name_updated
+def shorten_pdf_names(window):
+    if window.name and ".pdf" in window.name.lower():
+        window.name = os.path.basename(window.name)
