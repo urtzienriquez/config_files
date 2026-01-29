@@ -1,5 +1,3 @@
-options(lintr.linter_file = "~/.lintr")
-
 # options(
 #     languageserver.server_capabilities = list(
 #         hoverProvider = FALSE,
@@ -8,6 +6,8 @@ options(lintr.linter_file = "~/.lintr")
 #         completionItemResolve = FALSE
 #     )
 # )
+
+options(lintr.linter_file = "~/.lintr")
 
 if (interactive() || isatty(stdout())) {
     options(
