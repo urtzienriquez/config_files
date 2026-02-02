@@ -4,7 +4,7 @@
 # Load theme
 . "$HOME/config_files/fzf-nova/theme.sh"
 
-export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=right --scroll-off=5 --tiebreak=index --bind 'home:first,end:last' --header 'only searching /home and /media'"
+export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=right --scroll-off=5 --tiebreak=index --bind 'home:first,end:last' --bind 'ctrl-t:first,ctrl-b:last' --header 'only searching /home and /media'"
 find ~ -type f \
   | fzf -m --prompt="select file(s) to open: " \
   |  while read -r line ; do setsid xdg-open "$line" & disown	; done

@@ -3,7 +3,7 @@
 # Load theme
 . "$HOME/config_files/fzf-nova/theme.sh"
 
-export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=right --scroll-off=5 --tiebreak=index --bind 'home:first,end:last'"
+export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=right --scroll-off=5 --tiebreak=index --bind 'home:first,end:last' --bind 'ctrl-t:first,ctrl-b:last'"
 
 selected=$(printf "suspend\nlogout\nreboot\npoweroff" | fzf --prompt='Choose action: ')
 

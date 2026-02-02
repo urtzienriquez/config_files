@@ -4,7 +4,7 @@
 # Load theme
 . "$HOME/config_files/fzf-nova/theme.sh"
 
-export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=right --scroll-off=5 --tiebreak=index --bind 'home:first,end:last,tab:down,shift-tab:up'"
+export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=right --scroll-off=5 --tiebreak=index --bind 'home:first,end:last,tab:down,shift-tab:up' --bind 'ctrl-t:first,ctrl-b:last'"
 man -k . | fzf -q "$1" --prompt='manpages: ' --preview-window down \
   --preview $'echo {} | tr -d \'()\' | awk \'{printf "%s ", $2} {print $1}\' | xargs -r man' \
   | tr -d '()' | awk '{printf "%s ", $2} {print $1}' | xargs -r man

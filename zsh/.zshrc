@@ -171,7 +171,8 @@ export FZF_DEFAULT_OPTS="
   --preview-window '+{2}+4/3,<60(up),border-sharp'
   --scrollbar='█'
   --bind 'ctrl-v:toggle-preview'
-  --bind 'alt-K:preview-up,alt-J:preview-down'"
+  --bind 'alt-K:preview-up,alt-J:preview-down'
+  --bind 'ctrl-t:first,ctrl-b:last'"
 
 export FZF_CTRL_T_OPTS="
   --preview 'bat -p --color=always {}'

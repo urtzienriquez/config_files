@@ -6,7 +6,8 @@
 export FZF_DEFAULT_OPTS="
     $FZF_THEME_OPTS
 		--no-height 
-		--reverse"
+		--reverse
+        --bind 'ctrl-t:first,ctrl-b:last'"
 
 # Time delay between nmcli rescans (milliseconds)
 declare -i RESCAN_DELAY="${RESCAN_DELAY:-2000}"
