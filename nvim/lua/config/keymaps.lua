@@ -177,8 +177,6 @@ vim.api.nvim_create_autocmd("User", {
 
 		vim.keymap.set("n", "<leader>fp", fzf.builtin, { desc = "Find picker" })
 		vim.keymap.set("n", "<leader>ff", fzf.files, { desc = "Find files" })
-
-		-- Find files in home directory
 		vim.keymap.set("n", "<leader>f~", function()
 			fzf.files({
 				cwd = vim.fn.expand("~"),
@@ -186,22 +184,22 @@ vim.api.nvim_create_autocmd("User", {
 				hidden = true,
 			})
 		end, { desc = "Find files in home directory" })
-
 		vim.keymap.set("n", "<leader>fg", fzf.live_grep, { desc = "Find with grep" })
 		vim.keymap.set("n", "<leader>fq", fzf.grep_quickfix, { desc = "Find inside the quickfix list with grep" })
 		vim.keymap.set("n", "<leader>fb", fzf.buffers, { desc = "Find buffers" })
 		vim.keymap.set("n", "<leader>fh", fzf.help_tags, { desc = "Find help tags" })
 		vim.keymap.set("n", "<leader>fk", fzf.keymaps, { desc = "Find keymaps" })
 		vim.keymap.set("n", "<leader>fw", fzf.grep_cword, { desc = "Find current word" })
-
 		vim.keymap.set("n", "<leader>fd", function()
 			fzf.diagnostics_document()
 		end, { desc = "Find diagnostics in current buffer" })
 		vim.keymap.set("n", "<leader>fD", fzf.diagnostics_workspace, { desc = "Find diagnostics globally (workspace)" })
-
 		vim.keymap.set("n", "<leader>fl", fzf.lsp_definitions, { desc = "Find LSP definitions" })
 		vim.keymap.set("n", "<leader>fr", fzf.lsp_references, { desc = "Find LSP references" })
 		vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols, { desc = "Find LSP document symbols" })
+		vim.keymap.set("n", "<leader>fS", function()
+			fzf.lsp_document_symbols({ regex_filter = "Str.*" })
+		end, { desc = "Find LSP symbols (strings/headers)" })
 		vim.keymap.set("n", "<leader>ft", fzf.treesitter, { desc = "Find Treesitter symbols" })
 		vim.keymap.set("n", "<leader>fm", fzf.spell_suggest, { desc = "Find spell suggestions" })
 		vim.keymap.set("n", "<leader>f'", fzf.marks, { desc = "Find marks" })
