@@ -286,14 +286,11 @@ vim.o.laststatus = 3
 
 vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "BufModifiedSet" }, {
 	callback = function()
-		local bt = vim.bo.buftype
-		local bufname = vim.api.nvim_buf_get_name(0)
 		local is_oil = vim.bo.filetype == "oil"
-
-		-- Hide statusline on:
-		-- 1. Oil file explorer
-		-- 2. Empty unnamed unmodified buffers (startpage)
-		if is_oil or (bufname == "" and bt == "" and vim.bo.filetype == "" and not vim.bo.modified) then
+		local bufname = vim.api.nvim_buf_get_name(0)
+		local bt = vim.bo.buftype
+		local modified = vim.bo.modified
+		if is_oil or (bufname == "" and bt == "" and not modified) then
 			vim.wo.statusline = "%#StatusLineMinimal# "
 		else
 			vim.wo.statusline = ""
