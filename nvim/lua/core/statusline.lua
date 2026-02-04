@@ -12,13 +12,13 @@ local function define_highlights()
 	vim.api.nvim_set_hl(0, "SLFileName", { fg = tokyonight.blue })
 	vim.api.nvim_set_hl(0, "SLGitAdd", { fg = tokyonight.git.add })
 	vim.api.nvim_set_hl(0, "SLGitDelete", { fg = tokyonight.git.delete })
-	-- vim.api.nvim_set_hl(0, "SLGitRepo", { fg = tokyonight.teal })
 	vim.api.nvim_set_hl(0, "SLGitBranch", { fg = tokyonight.magenta })
 	vim.api.nvim_set_hl(0, "SLDiagError", { fg = tokyonight.red1 })
 	vim.api.nvim_set_hl(0, "SLDiagWarn", { fg = tokyonight.yellow })
 	vim.api.nvim_set_hl(0, "SLDiagInfo", { fg = tokyonight.blue2 })
 	vim.api.nvim_set_hl(0, "SLDiagHint", { fg = tokyonight.teal })
 	vim.api.nvim_set_hl(0, "SLFileType", { bold = true })
+	vim.api.nvim_set_hl(0, "StatusLineMinimal", { bg = tokyonight.bg, fg = tokyonight.bg })
 end
 
 define_highlights()
@@ -55,25 +55,6 @@ local function get_git_root(bufnr)
 	git_root_cache[bufnr] = (root and root ~= "") and root or nil
 	return git_root_cache[bufnr]
 end
-
--- -- Repo name cache
--- local repo_name_cache = {}
--- local function get_repo_name(bufnr)
--- 	if repo_name_cache[bufnr] then
--- 		return repo_name_cache[bufnr]
--- 	end
---
--- 	local root = get_git_root(bufnr)
--- 	if not root then
--- 		repo_name_cache[bufnr] = ""
--- 		return ""
--- 	end
---
--- 	-- Extract just the repo name from the path
--- 	local repo_name = root:match("([^/\\]+)$") or ""
--- 	repo_name_cache[bufnr] = repo_name
--- 	return repo_name
--- end
 
 -- --------------------------
 -- Async git status update
@@ -172,15 +153,6 @@ end
 -- --------------------------
 -- Git statusline functions
 -- --------------------------
-
--- function _G.st_repo()
--- 	local buf = vim.api.nvim_get_current_buf()
--- 	local repo = get_repo_name(buf)
--- 	if repo == "" then
--- 		return ""
--- 	end
--- 	return " " .. repo .. " "
--- end
 
 function _G.st_branch()
 	local buf = vim.api.nvim_get_current_buf()
@@ -317,7 +289,7 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 		local bt = vim.bo.buftype
 		local bufname = vim.api.nvim_buf_get_name(0)
 		if bufname == "" and bt == "" and vim.bo.filetype == "" or vim.bo.filetype == "oil" then
-			vim.wo.statusline = " "
+			vim.wo.statusline = "%#StatusLineMinimal# "
 		else
 			vim.wo.statusline = ""
 		end
@@ -326,7 +298,6 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 
 vim.o.statusline = table.concat({
 	" %#SLFileName#%t %m%* ",
-	-- "%{%v:lua.st_repo()%}",
 	"%#SLGitBranch#%{v:lua.st_branch()}%*",
 	"%#SLGitAdd#%{v:lua.st_added()}%*",
 	"%#SLGitDelete#%{v:lua.st_removed()}%*",
