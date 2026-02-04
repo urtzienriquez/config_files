@@ -284,34 +284,16 @@ end, {})
 -- --------------------------
 vim.o.laststatus = 3
 
-vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "TextChanged", "TextChangedI" }, {
+vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "BufModifiedSet" }, {
 	callback = function()
 		local bt = vim.bo.buftype
 		local bufname = vim.api.nvim_buf_get_name(0)
 		local is_oil = vim.bo.filetype == "oil"
 
-		-- Check if it's an empty unnamed buffer
-		if bufname == "" and bt == "" and vim.bo.filetype == "" then
-			-- Get buffer lines to check if it's truly empty (startpage) or has content
-			local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-			local has_content = false
-
-			-- Check if buffer has any non-empty lines
-			for _, line in ipairs(lines) do
-				if line ~= "" then
-					has_content = true
-					break
-				end
-			end
-
-			-- Hide statusline only if buffer is completely empty (startpage)
-			-- Show statusline if buffer has any content (noname buffer being edited)
-			if not has_content and #lines <= 1 then
-				vim.wo.statusline = "%#StatusLineMinimal# "
-			else
-				vim.wo.statusline = ""
-			end
-		elseif is_oil then
+		-- Hide statusline on:
+		-- 1. Oil file explorer
+		-- 2. Empty unnamed unmodified buffers (startpage)
+		if is_oil or (bufname == "" and bt == "" and vim.bo.filetype == "" and not vim.bo.modified) then
 			vim.wo.statusline = "%#StatusLineMinimal# "
 		else
 			vim.wo.statusline = ""
