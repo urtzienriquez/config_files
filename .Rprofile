@@ -1,11 +1,11 @@
-# options(
-#     languageserver.server_capabilities = list(
-#         hoverProvider = FALSE,
-#         signatureHelpProvider = FALSE,
-#         completionProvider = FALSE,
-#         completionItemResolve = FALSE
-#     )
-# )
+options(
+    languageserver.server_capabilities = list(
+        hoverProvider = FALSE,
+        signatureHelpProvider = FALSE,
+        completionProvider = FALSE,
+        completionItemResolve = FALSE
+    )
+)
 
 options(lintr.linter_file = "~/.lintr")
 

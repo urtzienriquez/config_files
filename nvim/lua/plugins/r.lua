@@ -9,9 +9,9 @@ return {
 				bracketed_paste = true,
 				R_args = { "--no-save --silent" },
 				r_ls = {
-					completion = false,
-					hover = false,
-					signature = false,
+					completion = true,
+					hover = true,
+					signature = true,
 				},
 				objbr_mappings = {
 					c = "class",
