@@ -118,11 +118,39 @@ vim.api.nvim_create_autocmd("VimEnter", {
 	desc = "Configure diagnostics signs and virtual text",
 })
 
--- Set help window height
+-- man page / help viewing for shell scripts
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = "help",
+	pattern = { "sh", "bash", "zsh" },
 	callback = function()
-		vim.cmd("resize 25")
+		vim.keymap.set("n", "K", function()
+			local word = vim.fn.expand("<cword>")
+
+			-- Try :Man first (for actual man pages)
+			local ok = pcall(vim.cmd.Man, word)
+
+			-- If that fails, try bash help for builtins
+			if not ok then
+				local help_output = vim.fn.system("bash -c 'help " .. word .. "' 2>&1")
+
+				if vim.v.shell_error == 0 then
+					-- Open help in a split
+					vim.cmd("new")
+					vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(help_output, "\n"))
+					vim.bo.buftype = "nofile"
+					vim.bo.bufhidden = "wipe"
+					vim.bo.modifiable = false
+				else
+					vim.notify("No manual entry for '" .. word .. "'", vim.log.levels.WARN)
+				end
+			end
+		end, { buffer = true, desc = "Show man page or bash help" })
 	end,
-	desc = "Configure help window size",
+})
+
+-- disable 'q' to close for man pages
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "man",
+	callback = function()
+		vim.keymap.del("n", "q", { buffer = true })
+	end,
 })
