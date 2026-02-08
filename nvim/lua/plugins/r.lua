@@ -12,6 +12,9 @@ return {
 					completion = true,
 					hover = true,
 					signature = true,
+					implementation = false,
+					definition = false,
+					references = false,
 				},
 				objbr_mappings = {
 					c = "class",
