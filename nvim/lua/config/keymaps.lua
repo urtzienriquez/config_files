@@ -437,7 +437,7 @@ local function set_slime_keymaps()
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Start Python REPL" }))
 
 	vim.keymap.set("n", "<leader>oj", function()
-		slime_utils.start_tmux_repl("julia")
+		slime_utils.start_tmux_repl_with_version("julia")
 	end, vim.tbl_extend("force", opts_keymap, { desc = "Start Julia REPL" }))
 
 	vim.keymap.set("n", "<leader>om", function()

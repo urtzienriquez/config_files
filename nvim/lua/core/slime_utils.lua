@@ -15,7 +15,124 @@ local function escape_for_repl(path, repl_type)
 	return path
 end
 
--- Helper function to start REPL in tmux pane
+-- Get installed Julia channels from juliaup
+local function get_julia_versions()
+	local handle = io.popen("juliaup status 2>/dev/null")
+	if not handle then
+		return {}
+	end
+
+	local output = handle:read("*a")
+	handle:close()
+
+	local channels = {}
+	local in_table = false
+
+	-- Parse juliaup status output
+	for line in output:gmatch("[^\r\n]+") do
+		-- Check if we're at the header line
+		if line:match("Default%s+Channel") then
+			in_table = true
+		-- If we're in the table and the line has content
+		elseif in_table and not line:match("^%-+$") and not line:match("^%s*$") then
+			-- Extract the channel name (second column)
+			-- Format: "       *  1.11     1.11.9+0.x64.linux.gnu"
+			-- or:     "          release  1.12.4+0.x64.linux.gnu"
+			local channel = line:match("%s+%*?%s+(%S+)%s+")
+			if channel then
+				table.insert(channels, channel)
+			end
+		end
+	end
+
+	-- If no channels found, try to at least get the default
+	if #channels == 0 then
+		local default_handle = io.popen("julia +default --version 2>/dev/null")
+		if default_handle then
+			local default_output = default_handle:read("*a")
+			default_handle:close()
+
+			if default_output:match("julia version") then
+				table.insert(channels, "default")
+			end
+		end
+	end
+
+	return channels
+end
+
+-- Helper function to start REPL in tmux pane with version selection for Julia
+function M.start_tmux_repl_with_version(repl_type)
+	if not vim.env.TMUX then
+		vim.notify("Not in tmux session", vim.log.levels.ERROR)
+		return
+	end
+
+	if repl_type == "julia" then
+		local channels = get_julia_versions()
+
+		if #channels == 0 then
+			-- Debug: show the actual output from juliaup
+			local debug_handle = io.popen("juliaup status 2>&1")
+			local debug_output = debug_handle and debug_handle:read("*a") or "Could not run juliaup"
+			if debug_handle then
+				debug_handle:close()
+			end
+
+			vim.notify("No Julia channels found. juliaup status output:\n" .. debug_output, vim.log.levels.WARN)
+
+			-- Try to start default julia anyway
+			vim.notify("Attempting to start default Julia...", vim.log.levels.INFO)
+			M.start_tmux_repl("julia")
+			return
+		elseif #channels == 1 then
+			-- Only one channel, use it directly
+			local cmd = string.format("julia +%s", channels[1])
+			local tmux_cmd =
+				string.format("tmux split-window -h -c '%s' %s && tmux select-pane -l", vim.fn.getcwd(), cmd)
+			vim.fn.system(tmux_cmd)
+			vim.schedule(function()
+				vim.notify("Started Julia +" .. channels[1] .. " REPL in tmux pane", vim.log.levels.INFO)
+			end)
+		else
+			-- Multiple channels, show picker
+			local fzf = require("fzf-lua")
+
+			fzf.fzf_exec(channels, {
+				prompt = "Julia Channel> ",
+				winopts = {
+					title = " Select Julia Channel ",
+					height = 0.4,
+					width = 0.5,
+				},
+				actions = {
+					["default"] = function(selected)
+						if #selected == 0 then
+							return
+						end
+
+						local channel = selected[1]
+						local cmd = string.format("julia +%s", channel)
+						local tmux_cmd = string.format(
+							"tmux split-window -h -c '%s' %s && tmux select-pane -l",
+							vim.fn.getcwd(),
+							cmd
+						)
+						vim.fn.system(tmux_cmd)
+						vim.schedule(function()
+							vim.notify("Started Julia +" .. channel .. " REPL in tmux pane", vim.log.levels.INFO)
+						end)
+					end,
+				},
+			})
+		end
+	else
+		-- Fall back to regular start for other REPLs
+		M.start_tmux_repl(repl_type)
+	end
+end
+
+-- Helper function to start REPL in tmux pane (original function)
 function M.start_tmux_repl(repl_type)
 	if not vim.env.TMUX then
 		vim.notify("Not in tmux session", vim.log.levels.ERROR)
