@@ -274,6 +274,32 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	end,
 })
 
+vim.api.nvim_create_autocmd("FocusGained", {
+	callback = function()
+		local bufnr = vim.api.nvim_get_current_buf()
+		git_root_cache[bufnr] = nil
+		update_git_debounced(bufnr, 0)
+	end,
+})
+
+vim.api.nvim_create_autocmd("User", {
+	pattern = "FugitiveChanged",
+	callback = function()
+		git_root_cache = {}
+		for bufnr in pairs(git_cache) do
+			update_git_debounced(bufnr, 0)
+		end
+	end,
+})
+
+vim.api.nvim_create_autocmd("ShellCmdPost", {
+	callback = function()
+		local bufnr = vim.api.nvim_get_current_buf()
+		git_root_cache[bufnr] = nil
+		update_git_debounced(bufnr, 0)
+	end,
+})
+
 vim.api.nvim_create_user_command("GitStatusRefresh", function()
 	update_git_debounced(vim.api.nvim_get_current_buf(), 0)
 	vim.notify("Git status refreshed", vim.log.levels.INFO)
