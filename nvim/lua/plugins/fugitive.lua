@@ -15,7 +15,7 @@ return {
 
 				local bufnr = vim.api.nvim_get_current_buf()
 				local opts = { buffer = bufnr, remap = false }
-				vim.keymap.set("n", "aa", function()
+				vim.keymap.set("n", "S", function()
 					vim.cmd.Git("add -A")
 				end, opts)
 			end,
