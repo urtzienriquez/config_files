@@ -1,6 +1,6 @@
 return {
 	"stevearc/conform.nvim",
-	-- event = { "BufReadPre", "BufNewFile" },
+	dependencies = { "mason-org/mason.nvim" }, -- to enable e.g. stylua
 	keys = {
 		{
 			"<leader>bf",
