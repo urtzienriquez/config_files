@@ -4,7 +4,7 @@ return {
 		"rafamadriz/friendly-snippets",
 	},
 	version = "*",
-	event = "InsertEnter", -- add this, remove nothing else
+	event = { "CmdlineEnter", "InsertEnter" },
 	opts = {
 		keymap = {
 			preset = "default",
