@@ -1,6 +1,5 @@
 return {
 	"mason-org/mason.nvim",
-	-- event = "VeryLazy",
 	cmd = { "Mason" },
 	config = function()
 		-- import mason
