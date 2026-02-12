@@ -67,6 +67,10 @@ return {
 				["--multi"] = true,
 				["--bind"] = "tab:toggle+down,shift-tab:toggle+up",
 			},
+			fzf_colors = {
+				bg = "-1",
+				gutter = "-1",
+			},
 		})
 	end,
 }
