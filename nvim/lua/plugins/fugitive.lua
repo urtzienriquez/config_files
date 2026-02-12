@@ -4,11 +4,11 @@ return {
 	keys = {
 		{ "<leader>gs", "<cmd>Git<cr>", mode = "n", desc = "Git status" },
 		{ "<leader>gp", "<cmd>Git pull<cr>", mode = "n", desc = "Git pull" },
+		{ "<leader>gl", "<cmd>Git log<cr>", mode = "n", desc = "Git log" },
 	},
 	config = function()
 		-- Set up keymaps
 		vim.keymap.set("n", "<leader>gc", "<cmd>Git commit<cr>", { desc = "Git commit" })
-		vim.keymap.set("n", "<leader>gl", "<cmd>Git log<cr>", { desc = "Git log" })
 		vim.keymap.set("n", "<leader>gP", "<cmd>Git push<cr>", { desc = "Git push" })
 		vim.keymap.set("n", "<leader>gv", "<cmd>Gvdiffsplit!<cr>", { desc = "Git diff split" })
 		vim.keymap.set("n", "<leader>gB", "<cmd>Git blame<cr>", { desc = "Git blame" })
