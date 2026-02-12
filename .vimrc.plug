@@ -3,4 +3,7 @@ call plug#begin('~/.vim/plugged')
 " vim-polyglote
 Plug 'sheerun/vim-polyglot'
 
+" vim-fugitive (Git integration)
+Plug 'tpope/vim-fugitive'
+
 call plug#end()
