@@ -294,8 +294,18 @@ vim.api.nvim_create_autocmd("User", {
 			end
 		end
 
-		vim.keymap.set("n", "<leader>us", toggle_option("spell", true, false), { desc = "Toggle Spelling" })
+		vim.keymap.set("n", "<leader>uS", toggle_option("spell", true, false), { desc = "Toggle Spelling" })
+		vim.keymap.set("n", "<leader>us", function()
+			local current = vim.bo.spelllang
+			if current == "es_es" then
+				vim.cmd("SpellEN")
+			else
+				vim.cmd("SpellES")
+			end
+		end, { desc = "Toggle Spell Language" })
+
 		vim.keymap.set("n", "<leader>uw", toggle_option("wrap", true, false), { desc = "Toggle Wrap" })
+
 		vim.keymap.set(
 			"n",
 			"<leader>uc",
@@ -357,15 +367,6 @@ vim.api.nvim_create_autocmd("User", {
 				vim.notify("Treesitter enabled", vim.log.levels.INFO)
 			end
 		end, { desc = "Toggle Treesitter" })
-
-		vim.keymap.set("n", "<leader>uS", function()
-			local current = vim.bo.spelllang
-			if current == "es_es" then
-				vim.cmd("SpellEN")
-			else
-				vim.cmd("SpellES")
-			end
-		end, { desc = "Toggle Spell Language" })
 	end,
 })
 
