@@ -4,6 +4,7 @@ return {
 		"rafamadriz/friendly-snippets",
 	},
 	version = "*",
+	event = "InsertEnter", -- add this, remove nothing else
 	opts = {
 		keymap = {
 			preset = "default",

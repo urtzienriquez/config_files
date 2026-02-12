@@ -1,6 +1,15 @@
 return {
 	"stevearc/conform.nvim",
-	event = { "BufReadPre", "BufNewFile" },
+	-- event = { "BufReadPre", "BufNewFile" },
+	keys = {
+		vim.keymap.set({ "n", "v" }, "<leader>bf", function()
+			require("conform").format({
+				lsp_fallback = true,
+				async = false,
+				timeout_ms = 50000,
+			})
+		end, { desc = "Format buffer or range" }),
+	},
 	config = function()
 		local conform = require("conform")
 		conform.setup({
