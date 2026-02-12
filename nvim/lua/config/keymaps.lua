@@ -277,13 +277,6 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", { desc = "Navigate previous (tmux)" })
 
 		-- ========================================
-		-- Buffer management
-		-- ========================================
-		vim.keymap.set("n", "<leader>bd", function()
-			vim.cmd("bd")
-		end, { desc = "Delete Buffer" })
-
-		-- ========================================
 		-- Toggles
 		-- ========================================
 		local function toggle_option(option, on_val, off_val)
