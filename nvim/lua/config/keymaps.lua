@@ -357,6 +357,15 @@ vim.api.nvim_create_autocmd("User", {
 				vim.notify("Treesitter enabled", vim.log.levels.INFO)
 			end
 		end, { desc = "Toggle Treesitter" })
+
+		vim.keymap.set("n", "<leader>uS", function()
+			local current = vim.bo.spelllang
+			if current == "es_es" then
+				vim.cmd("SpellEN")
+			else
+				vim.cmd("SpellES")
+			end
+		end, { desc = "Toggle Spell Language" })
 	end,
 })
 

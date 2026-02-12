@@ -3,9 +3,21 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- spelling language
-vim.opt.spelllang = "en_us"
 vim.opt.spell = true
+vim.opt.spelllang = "en_us"
 vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+
+vim.api.nvim_create_user_command("SpellEN", function()
+  vim.opt.spelllang = { "en_us" }
+  vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+  vim.notify("Spell: EN")
+end, {})
+
+vim.api.nvim_create_user_command("SpellES", function()
+  vim.opt.spelllang = { "es_es" }
+  vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/es.utf-8.add"
+  vim.notify("Spell: ES")
+end, {})
 
 -- Disable mouse
 vim.opt.mouse = ""
