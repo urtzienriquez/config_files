@@ -173,8 +173,12 @@ vim.api.nvim_create_autocmd("User", {
 		-- ========================================
 		-- fzf-lua (fuzzy finding) keymaps
 		-- ========================================
-		vim.keymap.set("n", "<leader>fp", require("fzf-lua").builtin, { desc = "Find picker" })
-		vim.keymap.set("n", "<leader>ff", require("fzf-lua").files, { desc = "Find files" })
+		vim.keymap.set("n", "<leader>fp", function()
+			require("fzf-lua").builtin()
+		end, { desc = "Find picker" })
+		vim.keymap.set("n", "<leader>ff", function()
+			require("fzf-lua").files()
+		end, { desc = "Find files" })
 		vim.keymap.set("n", "<leader>f~", function()
 			require("fzf-lua").files({
 				cwd = vim.fn.expand("~"),
@@ -182,43 +186,60 @@ vim.api.nvim_create_autocmd("User", {
 				hidden = true,
 			})
 		end, { desc = "Find files in home directory" })
-		vim.keymap.set("n", "<leader>fg", require("fzf-lua").live_grep, { desc = "Find with grep" })
-		vim.keymap.set(
-			"n",
-			"<leader>fq",
-			require("fzf-lua").grep_quickfix,
-			{ desc = "Find inside the quickfix list with grep" }
-		)
-		vim.keymap.set("n", "<leader>fb", require("fzf-lua").buffers, { desc = "Find buffers" })
-		vim.keymap.set("n", "<leader>fB", require("fzf-lua").git_branches, { desc = "Find git branches" })
-		vim.keymap.set("n", "<leader>fh", require("fzf-lua").help_tags, { desc = "Find help tags" })
-		vim.keymap.set("n", "<leader>fk", require("fzf-lua").keymaps, { desc = "Find keymaps" })
-		vim.keymap.set("n", "<leader>fw", require("fzf-lua").grep_cword, { desc = "Find current word" })
+		vim.keymap.set("n", "<leader>fg", function()
+			require("fzf-lua").live_grep()
+		end, { desc = "Find with grep" })
+		vim.keymap.set("n", "<leader>fq", function()
+			require("fzf-lua").grep_quickfix()
+		end, { desc = "Find inside the quickfix list with grep" })
+		vim.keymap.set("n", "<leader>fb", function()
+			require("fzf-lua").buffers()
+		end, { desc = "Find buffers" })
+		vim.keymap.set("n", "<leader>fB", function()
+			require("fzf-lua").git_branches()
+		end, { desc = "Find git branches" })
+		vim.keymap.set("n", "<leader>fh", function()
+			require("fzf-lua").help_tags()
+		end, { desc = "Find help tags" })
+		vim.keymap.set("n", "<leader>fk", function()
+			require("fzf-lua").keymaps()
+		end, { desc = "Find keymaps" })
+		vim.keymap.set("n", "<leader>fw", function()
+			require("fzf-lua").grep_cword()
+		end, { desc = "Find current word" })
 		vim.keymap.set("n", "<leader>fd", function()
 			require("fzf-lua").diagnostics_document()
 		end, { desc = "Find diagnostics in current buffer" })
-		vim.keymap.set(
-			"n",
-			"<leader>fD",
-			require("fzf-lua").diagnostics_workspace,
-			{ desc = "Find diagnostics globally (workspace)" }
-		)
-		vim.keymap.set("n", "<leader>fl", require("fzf-lua").lsp_definitions, { desc = "Find LSP definitions" })
-		vim.keymap.set("n", "<leader>fr", require("fzf-lua").lsp_references, { desc = "Find LSP references" })
-		vim.keymap.set(
-			"n",
-			"<leader>fs",
-			require("fzf-lua").lsp_document_symbols,
-			{ desc = "Find LSP document symbols" }
-		)
+		vim.keymap.set("n", "<leader>fD", function()
+			require("fzf-lua").diagnostics_workspace()
+		end, { desc = "Find diagnostics globally (workspace)" })
+		vim.keymap.set("n", "<leader>fl", function()
+			require("fzf-lua").lsp_definitions()
+		end, { desc = "Find LSP definitions" })
+		vim.keymap.set("n", "<leader>fr", function()
+			require("fzf-lua").lsp_references()
+		end, { desc = "Find LSP references" })
+		vim.keymap.set("n", "<leader>fs", function()
+			require("fzf-lua").lsp_document_symbols()
+		end, { desc = "Find LSP document symbols" })
 		vim.keymap.set("n", "<leader>fS", function()
 			require("fzf-lua").lsp_document_symbols({ regex_filter = "Str.*" })
 		end, { desc = "Find LSP symbols (strings/headers)" })
-		vim.keymap.set("n", "<leader>ft", require("fzf-lua").treesitter, { desc = "Find Treesitter symbols" })
-		vim.keymap.set("n", "<leader>fm", require("fzf-lua").spell_suggest, { desc = "Find spell suggestions" })
-		vim.keymap.set("n", "<leader>f'", require("fzf-lua").marks, { desc = "Find marks" })
-		vim.keymap.set("n", "<leader>f,", require("fzf-lua").resume, { desc = "Resume last picker" })
-		vim.keymap.set("n", "<leader>f.", require("fzf-lua").oldfiles, { desc = "Find recent files" })
+		vim.keymap.set("n", "<leader>ft", function()
+			require("fzf-lua").treesitter()
+		end, { desc = "Find Treesitter symbols" })
+		vim.keymap.set("n", "<leader>fm", function()
+			require("fzf-lua").spell_suggest()
+		end, { desc = "Find spell suggestions" })
+		vim.keymap.set("n", "<leader>f'", function()
+			require("fzf-lua").marks()
+		end, { desc = "Find marks" })
+		vim.keymap.set("n", "<leader>f,", function()
+			require("fzf-lua").resume()
+		end, { desc = "Resume last picker" })
+		vim.keymap.set("n", "<leader>f.", function()
+			require("fzf-lua").oldfiles()
+		end, { desc = "Find recent files" })
 
 		-- ========================================
 		-- treesitter textobjects
