@@ -195,9 +195,6 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<leader>fb", function()
 			require("fzf-lua").buffers()
 		end, { desc = "Find buffers" })
-		vim.keymap.set("n", "<leader>fB", function()
-			require("fzf-lua").git_branches()
-		end, { desc = "Find git branches" })
 		vim.keymap.set("n", "<leader>fh", function()
 			require("fzf-lua").help_tags()
 		end, { desc = "Find help tags" })
@@ -240,6 +237,13 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<leader>f.", function()
 			require("fzf-lua").oldfiles()
 		end, { desc = "Find recent files" })
+        -- git related
+		vim.keymap.set("n", "<leader>gb", function()
+			require("fzf-lua").git_branches()
+		end, { desc = "Find git branches" })
+		vim.keymap.set("n", "<leader>gC", function()
+			require("fzf-lua").git_commits()
+		end, { desc = "Find git commits" })
 
 		-- ========================================
 		-- treesitter textobjects
@@ -762,7 +766,7 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>s", name = "Send" },
 				{ "<leader>u", name = "UI toggle" },
 				{ "<leader>a", name = "Add citation/crossref" },
-				{ "<leader>ug", name = "git toggle" },
+				{ "<leader>g", name = "Git" },
 			})
 		end
 	end,
