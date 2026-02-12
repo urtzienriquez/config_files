@@ -1,6 +1,6 @@
 return {
 	"mason-org/mason.nvim",
-	cmd = { "M", "Mason" },
+	cmd = { "Mason" },
 	config = function()
 		-- import mason
 		local mason = require("mason")
