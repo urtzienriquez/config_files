@@ -23,8 +23,8 @@ end, {})
 vim.opt.mouse = ""
 
 -- misc options
--- require('vim._extui').enable({})
--- vim.opt.cmdheight = 0
+require('vim._extui').enable({})
+vim.opt.cmdheight = 0
 vim.g.have_nerd_font = true
 vim.opt.number = true
 vim.opt.relativenumber = true
