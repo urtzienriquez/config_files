@@ -6,9 +6,9 @@
 -- Colors
 -- --------------------------
 local devicons = require("nvim-web-devicons")
-local tokyonight = require("tokyonight.colors").setup()
 
 local function define_highlights()
+	local tokyonight = require("tokyonight.colors").setup()
 	vim.api.nvim_set_hl(0, "SLFileName", { fg = tokyonight.blue })
 	vim.api.nvim_set_hl(0, "SLGitAdd", { fg = tokyonight.git.add })
 	vim.api.nvim_set_hl(0, "SLGitDelete", { fg = tokyonight.git.delete })
@@ -22,7 +22,24 @@ local function define_highlights()
 end
 
 define_highlights()
-vim.api.nvim_create_autocmd("ColorScheme", { callback = define_highlights })
+
+-- Cache for icon highlight groups
+local icon_hl_cache = {}
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+    callback = function()
+        icon_hl_cache = {}
+        define_highlights()
+        vim.api.nvim_set_hl(0, "StatusLine", { bg = "#191B29", fg = "#737aa2" })
+    end,
+})
+
+vim.api.nvim_create_autocmd("OptionSet", {
+	pattern = "background",
+	callback = function()
+		icon_hl_cache = {}
+	end,
+})
 
 -- --------------------------
 -- Git cache and pending updates
@@ -181,9 +198,6 @@ function _G.st_removed()
 	return "-" .. g.removed .. "  "
 end
 
--- Cache for icon highlight groups
-local icon_hl_cache = {}
-
 function _G.st_filetype_text()
 	local path = vim.api.nvim_buf_get_name(0)
 	local filename = vim.fn.fnamemodify(path, ":t")
@@ -194,7 +208,7 @@ function _G.st_filetype_text()
 		return ""
 	end
 
-	local icon, icon_color = devicons.get_icon_color(filename, extension, { default = true })
+	local icon, icon_color = devicons.get_icon_color(filename, extension:lower(), { default = true })
 
 	if not icon then
 		icon, icon_color = devicons.get_icon_color("", filetype, { default = true })
