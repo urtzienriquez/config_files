@@ -23,6 +23,7 @@ end, {})
 vim.opt.mouse = ""
 
 -- misc options
+require('vim._extui').enable({})
 vim.g.have_nerd_font = true
 vim.opt.number = true
 vim.opt.relativenumber = true
