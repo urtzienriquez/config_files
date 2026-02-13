@@ -302,6 +302,7 @@ vim.api.nvim_create_autocmd("User", {
 		end, { desc = "Toggle Spell Language" })
 
 		vim.keymap.set("n", "<leader>uw", toggle_option("wrap", true, false), { desc = "Toggle Wrap" })
+		vim.keymap.set("n", "<leader>uo", toggle_option("scrolloff", 10, 0), { desc = "Toggle Scrolloff" })
 
 		vim.keymap.set(
 			"n",
