@@ -1,10 +1,22 @@
+local function julia_root_dir(fname)
+	local dir = vim.fs.dirname(fname)
+	local root = vim.fs.find({ "Project.toml", "JuliaProject.toml", ".git" }, { upward = true, path = dir })[1]
+
+	if root then
+		return vim.fs.dirname(root)
+	end
+
+	-- fallback: use the current file's directory
+	return dir
+end
+
 return {
 	cmd = {
-		'julia',
-		'--project=@v1.11',  -- Use your Julia 1.11 environment where LanguageServer is installed
-		'--startup-file=no',
-		'--history-file=no',
-		'-e',
+		"julia",
+		"--project=@v1.11", -- Use Julia 1.11 environment where LanguageServer is installed
+		"--startup-file=no",
+		"--history-file=no",
+		"-e",
 		[[
             using Pkg
             Pkg.instantiate()
@@ -33,6 +45,6 @@ return {
         run(server)
         ]],
 	},
-	filetypes = { 'julia' },
-	root_markers = { 'Project.toml', 'JuliaProject.toml', '.git' },
+	filetypes = { "julia" },
+	root_dir = julia_root_dir(vim.api.nvim_buf_get_name(0)),
 }
