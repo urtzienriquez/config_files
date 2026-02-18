@@ -237,7 +237,7 @@ vim.api.nvim_create_autocmd("User", {
 		vim.keymap.set("n", "<leader>f.", function()
 			require("fzf-lua").oldfiles()
 		end, { desc = "Find recent files" })
-        -- git related
+		-- git related
 		vim.keymap.set("n", "<leader>gb", function()
 			require("fzf-lua").git_branches()
 		end, { desc = "Find git branches" })
@@ -330,7 +330,15 @@ vim.api.nvim_create_autocmd("User", {
 		end
 		vim.keymap.set("n", "<leader>uL", toggle_line_numbers, { desc = "Toggle All Line Numbers" })
 
-		vim.keymap.set("n", "<leader>ub", toggle_option("background", "dark", "light"), { desc = "Toggle Background" })
+		vim.keymap.set("n", "<leader>ub", function()
+			if vim.o.background == "dark" then
+				vim.cmd.colorscheme("dayfox")
+				vim.notify("colorscheme = dayfox", vim.log.levels.INFO)
+			else
+				vim.cmd.colorscheme("nightfox")
+				vim.notify("colorscheme = nightfox", vim.log.levels.INFO)
+			end
+		end, { desc = "Toggle Background" })
 
 		vim.keymap.set("n", "<leader>ux", function()
 			if vim.o.conceallevel > 0 then

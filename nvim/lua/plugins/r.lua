@@ -62,9 +62,9 @@ return {
 			require("r").setup(opts)
 
 			local function set_chunk_highlights()
-				local bg = (vim.o.background == "dark") and "#2f334d" or "#c4c8da"
+				local ok, palette = pcall(require("nightfox.palette").load, vim.g.colors_name or "nightfox")
+				local bg = ok and palette.bg2 or (vim.o.background == "dark" and "#2b3044" or "#d9dce8")
 
-				-- RMarkdown chunks
 				vim.cmd("hi! link rmdChunk CodeBlock")
 				vim.cmd("hi! RCodeBlock guibg=" .. bg .. " guifg=NONE")
 			end

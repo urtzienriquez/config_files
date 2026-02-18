@@ -23,7 +23,7 @@ setopt extended_glob
 # -------------------------------
 # man with bat
 # -------------------------------
-export BAT_THEME=tokyonight_moon
+export BAT_THEME=nightfox
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
@@ -155,12 +155,19 @@ fi
 export FZF_TMUX=1
 export FZF_TMUX_OPTS="--reverse --info=right -p 85%,85%"
 
-export FZF_THEME_OPTS="--color=fg:#c8d3f5,bg:#222436,hl:#82aaff \
---color=fg+:#c8d3f5,bg+:#2f334d,hl+:#82aaff,gutter:#222436 \
---color=info:#ff966c,prompt:#82aaff,pointer:#ff966c \
---color=marker:#c3e88d,spinner:#86e1fc,header:#c3e88d \
---color=border:#589ed7,preview-border:#589ed7,scrollbar:#589ed7 \
---color=separator:#ff966c"
+# export FZF_THEME_OPTS="--color=fg:#c8d3f5,bg:#222436,hl:#82aaff \
+# --color=fg+:#c8d3f5,bg+:#2f334d,hl+:#82aaff,gutter:#222436 \
+# --color=info:#ff966c,prompt:#82aaff,pointer:#ff966c \
+# --color=marker:#c3e88d,spinner:#86e1fc,header:#c3e88d \
+# --color=border:#589ed7,preview-border:#589ed7,scrollbar:#589ed7 \
+# --color=separator:#ff966c"
+
+export FZF_THEME_OPTS="--color=fg:#cdcecf,bg:#192330,hl:#719cd6 \
+--color=fg+:#cdcecf,bg+:#29394f,hl+:#82b3f4,gutter:#192330 \
+--color=info:#f4a261,prompt:#719cd6,pointer:#f4a261 \
+--color=marker:#81b29a,spinner:#63cdcf,header:#81b29a \
+--color=border:#39506d,preview-border:#39506d,scrollbar:#39506d \
+--color=separator:#f4a261"
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -g "!node_modules" -g "!.git" -g "!go"'
 

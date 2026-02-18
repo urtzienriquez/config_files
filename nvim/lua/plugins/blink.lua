@@ -75,32 +75,34 @@ return {
 	config = function(_, opts)
 		require("blink.cmp").setup(opts)
 
-		-- Set up custom highlight groups for borderless completion
 		local function setup_highlights()
+			local ok, palette = pcall(require("nightfox.palette").load, vim.g.colors_name or "nightfox")
+			if not ok then
+				return
+			end
+
 			if vim.o.background == "dark" then
-				-- Dark theme colors
-				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = "#373C52", fg = "#a9b1d6" })
-				vim.api.nvim_set_hl(0, "CmpSel", { bg = "#4F5675", fg = "#c0caf5", bold = true })
-				vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#373C52", fg = "#a9b1d6" })
-				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = "#373C52", fg = "#a9b1d6" })
-				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = "#373C52", fg = "#7dcfff" })
+				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = palette.bg2, fg = palette.fg2 })
+				vim.api.nvim_set_hl(0, "CmpSel", { bg = palette.sel1, fg = palette.fg1, bold = true })
+				vim.api.nvim_set_hl(0, "CmpDoc", { bg = palette.bg2, fg = palette.fg2 })
+				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = palette.bg2, fg = palette.fg2 })
+				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = palette.bg2, fg = palette.blue.base })
 
-				vim.api.nvim_set_hl(0, "Pmenu", { bg = "#373C52" })
-				vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#4F5675" })
-				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "#373C52" })
-				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#373C52" })
+				vim.api.nvim_set_hl(0, "Pmenu", { bg = palette.bg2 })
+				vim.api.nvim_set_hl(0, "PmenuSel", { bg = palette.sel1 })
+				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = palette.bg2 })
+				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = palette.bg3 })
 			else
-				-- Light theme colors
-				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = "#CED3EB", fg = "#3760bf" })
-				vim.api.nvim_set_hl(0, "CmpSel", { bg = "#B4BEED", fg = "#3760bf", bold = true })
-				vim.api.nvim_set_hl(0, "CmpDoc", { bg = "#CED3EB", fg = "#3760bf" })
-				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = "#CED3EB", fg = "#3760bf" })
-				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = "#CED3EB", fg = "#3760bf" })
+				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = palette.bg2, fg = palette.fg2 })
+				vim.api.nvim_set_hl(0, "CmpSel", { bg = palette.sel0, fg = palette.fg1, bold = true })
+				vim.api.nvim_set_hl(0, "CmpDoc", { bg = palette.bg2, fg = palette.fg2 })
+				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = palette.bg2, fg = palette.fg2 })
+				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = palette.bg2, fg = palette.blue.base })
 
-				vim.api.nvim_set_hl(0, "Pmenu", { bg = "#CED3EB" })
-				vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#B4BEED" })
-				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "#CED3EB" })
-				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#A6A9BA" })
+				vim.api.nvim_set_hl(0, "Pmenu", { bg = palette.bg2 })
+				vim.api.nvim_set_hl(0, "PmenuSel", { bg = palette.sel0 })
+				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = palette.bg2 })
+				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = palette.bg3 })
 			end
 		end
 
