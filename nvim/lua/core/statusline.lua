@@ -9,6 +9,7 @@ local devicons = require("nvim-web-devicons")
 
 local function define_highlights()
     local palette = require("nightfox.palette").load("nightfox")
+    -- local palette = require("nightfox").load("nightfox")
     vim.api.nvim_set_hl(0, "SLFileName",        { fg = palette.blue.base })
     vim.api.nvim_set_hl(0, "SLGitAdd",          { fg = palette.green.base })
     vim.api.nvim_set_hl(0, "SLGitDelete",       { fg = palette.red.base })
