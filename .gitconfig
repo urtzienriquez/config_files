@@ -7,6 +7,6 @@
 	name = Urtzi Enriquez-Urzelai
 	email = urtzi.enriquez@gmail.com
 [credential]
-	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+	helper = store
 [init]
 	defaultBranch = main
