@@ -14,6 +14,7 @@ return {
 				all = {
 					-- SignColumn = { bg = "none" },
 					WinSeparator = { fg = "palette.blue.base", bg = "none" },
+					["@markup.strong"] = { fg = "palette.fg0", style = "bold" },
 				},
 			},
 		})
