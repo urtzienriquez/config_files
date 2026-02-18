@@ -13,7 +13,7 @@ end
 return {
 	cmd = {
 		"julia",
-		"--project=@v1.11", -- Use Julia 1.11 environment where LanguageServer is installed
+		"--project=@lang_serv", -- environment where LanguageServer is installed
 		"--startup-file=no",
 		"--history-file=no",
 		"-e",
@@ -21,7 +21,7 @@ return {
             using Pkg
             Pkg.instantiate()
             using LanguageServer
-            depot_path = get(ENV, "JULIA_DEPOT_PATH", "")
+            depot_path = get(ENV, "JULIA_DEPOT_PATH", joinpath(homedir(), ".julia"))
             project_path = let
             dirname(something(
                 ## 1. Finds an explicitly set project (JULIA_PROJECT)

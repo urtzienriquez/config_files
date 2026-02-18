@@ -76,6 +76,7 @@ return {
 				juliafmt = {
 					command = "julia",
 					args = {
+						"--project=@lang_serv", -- environment where JuliaFormatter is installed
 						"--startup-file=no",
 						"-e",
 						[[
