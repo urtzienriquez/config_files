@@ -8,17 +8,19 @@
 local devicons = require("nvim-web-devicons")
 
 local function define_highlights()
-	local palette = require("nightfox.palette").load("nightfox")
-	vim.api.nvim_set_hl(0, "SLFileName",  { fg = palette.blue.base })
-	vim.api.nvim_set_hl(0, "SLGitAdd",    { fg = palette.green.base })
-	vim.api.nvim_set_hl(0, "SLGitDelete", { fg = palette.red.base })
-	vim.api.nvim_set_hl(0, "SLGitBranch", { fg = palette.magenta.base })
-	vim.api.nvim_set_hl(0, "SLDiagError", { fg = palette.red.base })
-	vim.api.nvim_set_hl(0, "SLDiagWarn",  { fg = palette.yellow.base })
-	vim.api.nvim_set_hl(0, "SLDiagInfo",  { fg = palette.blue.base })
-	vim.api.nvim_set_hl(0, "SLDiagHint",  { fg = palette.cyan.base })
-	vim.api.nvim_set_hl(0, "SLFileType",  { bold = true })
-	vim.api.nvim_set_hl(0, "StatusLineMinimal", { bg = palette.bg1, fg = palette.bg1 })
+    local palette = require("nightfox.palette").load("nightfox")
+    vim.api.nvim_set_hl(0, "SLFileName",        { fg = palette.blue.base })
+    vim.api.nvim_set_hl(0, "SLGitAdd",          { fg = palette.green.base })
+    vim.api.nvim_set_hl(0, "SLGitDelete",       { fg = palette.red.base })
+    vim.api.nvim_set_hl(0, "SLGitBranch",       { fg = palette.magenta.base })
+    vim.api.nvim_set_hl(0, "SLDiagError",       { fg = palette.red.base })
+    vim.api.nvim_set_hl(0, "SLDiagWarn",        { fg = palette.yellow.base })
+    vim.api.nvim_set_hl(0, "SLDiagInfo",        { fg = palette.blue.base })
+    vim.api.nvim_set_hl(0, "SLDiagHint",        { fg = palette.cyan.base })
+    vim.api.nvim_set_hl(0, "SLFileType",        { bold = true })
+    vim.api.nvim_set_hl(0, "StatusLineMinimal", { bg = palette.bg1, fg = palette.bg1 })
+    vim.api.nvim_set_hl(0, "StatusLine",        { bg = palette.bg0, fg = palette.fg3 })
+    vim.api.nvim_set_hl(0, "StatusLineNC",      { bg = palette.bg0, fg = palette.fg3 })
 end
 
 define_highlights()
@@ -30,7 +32,6 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     callback = function()
         icon_hl_cache = {}
         define_highlights()
-        vim.api.nvim_set_hl(0, "StatusLine", { bg = "#191B29", fg = "#737aa2" })
     end,
 })
 
