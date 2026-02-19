@@ -1,8 +1,6 @@
 return {
 	"urtzienriquez/nightfox.nvim",
-	-- dir = "/home/urtzi/Documents/GitHub/nightfox.nvim",
-	lazy = false,
-	priority = 1000,
+    dev = false,
 	config = function()
 		-- require("nightfox").setup({
 		--           dim_inactive = true, -- defaults to 0.4

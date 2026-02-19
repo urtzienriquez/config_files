@@ -15,6 +15,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+	dev = {
+		path = "~/Documents/GitHub",
+	},
 	change_detection = {
 		notify = false,
 	},
