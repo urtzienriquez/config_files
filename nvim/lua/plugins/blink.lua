@@ -61,56 +61,5 @@ return {
 				winhighlight = "Normal:CmpSignatureHelp",
 			},
 		},
-
-		-- fuzzy = {
-		-- 	sorts = {
-		-- 		"exact", -- Prioritize exact matches first
-		-- 		"sort_text", -- Then use the LSP's sortText
-		-- 		"score", -- Fallback to fuzzy matching score
-		-- 		"label", -- Finally, sort by the display label
-		-- 	},
-		-- },
 	},
-
-	config = function(_, opts)
-		require("blink.cmp").setup(opts)
-
-		local function setup_highlights()
-			local ok, palette = pcall(require("nightfox.palette").load, vim.g.colors_name or "nightfox")
-			if not ok then
-				return
-			end
-
-			if vim.o.background == "dark" then
-				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = palette.bg2, fg = palette.fg2 })
-				vim.api.nvim_set_hl(0, "CmpSel", { bg = palette.sel1, fg = palette.fg1, bold = true })
-				vim.api.nvim_set_hl(0, "CmpDoc", { bg = palette.bg2, fg = palette.fg2 })
-				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = palette.bg2, fg = palette.fg2 })
-				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = palette.bg2, fg = palette.blue.base })
-
-				vim.api.nvim_set_hl(0, "Pmenu", { bg = palette.bg2 })
-				vim.api.nvim_set_hl(0, "PmenuSel", { bg = palette.sel1 })
-				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = palette.bg2 })
-				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = palette.bg3 })
-			else
-				vim.api.nvim_set_hl(0, "CmpPmenu", { bg = palette.bg2, fg = palette.fg2 })
-				vim.api.nvim_set_hl(0, "CmpSel", { bg = palette.sel0, fg = palette.fg1, bold = true })
-				vim.api.nvim_set_hl(0, "CmpDoc", { bg = palette.bg2, fg = palette.fg2 })
-				vim.api.nvim_set_hl(0, "CmpSignatureHelp", { bg = palette.bg2, fg = palette.fg2 })
-				vim.api.nvim_set_hl(0, "BlinkCmpDocSeparator", { bg = palette.bg2, fg = palette.blue.base })
-
-				vim.api.nvim_set_hl(0, "Pmenu", { bg = palette.bg2 })
-				vim.api.nvim_set_hl(0, "PmenuSel", { bg = palette.sel0 })
-				vim.api.nvim_set_hl(0, "PmenuSbar", { bg = palette.bg2 })
-				vim.api.nvim_set_hl(0, "PmenuThumb", { bg = palette.bg3 })
-			end
-		end
-
-		-- Apply highlights on startup and colorscheme changes
-		setup_highlights()
-		vim.api.nvim_create_autocmd("ColorScheme", {
-			pattern = "*",
-			callback = setup_highlights,
-		})
-	end,
 }

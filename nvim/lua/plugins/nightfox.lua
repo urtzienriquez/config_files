@@ -1,29 +1,21 @@
 return {
 	"urtzienriquez/nightfox.nvim",
+	-- dir = "/home/urtzi/Documents/GitHub/nightfox.nvim",
 	lazy = false,
 	priority = 1000,
 	config = function()
-		require("nightfox").setup({
-			options = {
-				styles = {
-					comments = "italic",
-					keywords = "bold",
-				},
-			},
-			groups = {
-				all = {
-					-- Use 'spec.' prefix to access your background/foreground variables
-					NormalNC = { fg = "spec.fg1", bg = "spec.bg1" },
-
-					-- Use 'palette.' to access raw colors defined in your palette
-					WinSeparator = { fg = "palette.blue.base", bg = "none" },
-
-					-- Use 'spec.syntax' for specific syntax colors
-					-- ["@markup.strong"] = { fg = "spec.syntax.keyword", style = "bold" },
-					["@markup.strong"] = { style = "bold" },
-				},
-			},
-		})
+		-- require("nightfox").setup({
+		-- 	on_load = function(spec, palette)
+		-- 		-- highlight overrides
+		-- 		vim.api.nvim_set_hl(0, "NormalNC", { fg = spec.fg1, bg = spec.bg1 })
+		-- 		vim.api.nvim_set_hl(0, "WinSeparator", { fg = palette.blue.base, bg = "none" })
+		--
+		-- 		-- style overrides
+		-- 		vim.api.nvim_set_hl(0, "Comment", { fg = spec.syntax.comment, italic = true })
+		-- 		vim.api.nvim_set_hl(0, "Keyword", { fg = spec.syntax.keyword, bold = true })
+		-- 		vim.api.nvim_set_hl(0, "@markup.strong", { bold = true })
+		-- 	end,
+		-- })
 		vim.cmd.colorscheme("nightfox")
 	end,
 }
