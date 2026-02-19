@@ -5,6 +5,7 @@ return {
 	priority = 1000,
 	config = function()
 		-- require("nightfox").setup({
+		--           dim_inactive = true, -- defaults to 0.4
 		-- 	on_load = function(spec, palette)
 		-- 		-- highlight overrides
 		-- 		vim.api.nvim_set_hl(0, "NormalNC", { fg = spec.fg1, bg = spec.bg1 })
