@@ -60,26 +60,6 @@ return {
 				opts.objbr_auto_start = true
 			end
 			require("r").setup(opts)
-
-			local function set_chunk_highlights()
-				local ok, palette = pcall(require("nightfox.palette").load, vim.g.colors_name or "nightfox")
-				local bg = ok and palette.bg2 or (vim.o.background == "dark" and "#2b3044" or "#d9dce8")
-
-				vim.cmd("hi! link rmdChunk CodeBlock")
-				vim.cmd("hi! RCodeBlock guibg=" .. bg .. " guifg=NONE")
-			end
-
-			vim.api.nvim_create_autocmd("ColorScheme", {
-				pattern = "*",
-				callback = set_chunk_highlights,
-			})
-
-			vim.api.nvim_create_autocmd("OptionSet", {
-				pattern = "background",
-				callback = set_chunk_highlights,
-			})
-
-			vim.defer_fn(set_chunk_highlights, 100)
 		end,
 	},
 }
