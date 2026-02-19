@@ -19,12 +19,18 @@ return {
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
 			providers = {
+				citeref = { name = "citeref", module = "citeref.completion" },
 				snippets = {
 					name = "snippets",
 					opts = {
 						score_offset = 100,
 					},
 				},
+			},
+			per_filetype = {
+				markdown = { inherit_defaults = true, "citeref" },
+				rmd = { inherit_defaults = true, "citeref" },
+				quarto = { inherit_defaults = true, "citeref" },
 			},
 		},
 

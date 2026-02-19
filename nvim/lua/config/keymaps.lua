@@ -268,15 +268,6 @@ vim.api.nvim_create_autocmd("User", {
 		end, { desc = "inside the condition" })
 
 		-- ========================================
-		-- Tmux Navigator keymaps
-		-- ========================================
-		vim.keymap.set("n", "<c-h>", "<cmd>TmuxNavigateLeft<cr>", { desc = "Navigate left (tmux)" })
-		vim.keymap.set("n", "<c-j>", "<cmd>TmuxNavigateDown<cr>", { desc = "Navigate down (tmux)" })
-		vim.keymap.set("n", "<c-k>", "<cmd>TmuxNavigateUp<cr>", { desc = "Navigate up (tmux)" })
-		vim.keymap.set("n", "<c-l>", "<cmd>TmuxNavigateRight<cr>", { desc = "Navigate right (tmux)" })
-		vim.keymap.set("n", "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", { desc = "Navigate previous (tmux)" })
-
-		-- ========================================
 		-- Toggles
 		-- ========================================
 		local function toggle_option(option, on_val, off_val)
