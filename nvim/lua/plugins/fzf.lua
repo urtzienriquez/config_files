@@ -68,8 +68,13 @@ return {
 				["--bind"] = "tab:toggle+down,shift-tab:toggle+up",
 			},
 			fzf_colors = {
-				bg = "-1",
-				gutter = "-1",
+				["fg"] = { "fg", "Normal" },
+				["bg"] = { "bg", "Normal" },
+				["fg+"] = { "fg", "Normal" },
+				["bg+"] = { "bg", "CursorLine" },
+				["hl"] = { "fg", "Comment" },
+				["hl+"] = { "fg", "Statement" },
+				["gutter"] = { "bg", "Normal" },
 			},
 		})
 	end,
