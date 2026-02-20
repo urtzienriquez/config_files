@@ -278,3 +278,14 @@ function sv() {
     tmux set-environment VIRTUAL_ENV $VIRTUAL_ENV &&
     alias deactivate='\deactivate && tmux set-environment -u VIRTUAL_ENV && unalias deactivate'
 }
+
+# start screenkey with transparent background
+function kon() {
+    screenkey > /dev/null 2>&1 &
+    disown
+}
+
+# stop screenkey
+function koff() {
+    pkill -f screenkey
+}
