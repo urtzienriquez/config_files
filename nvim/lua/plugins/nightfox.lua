@@ -1,6 +1,6 @@
 return {
 	"urtzienriquez/nightfox.nvim",
-    dev = false,
+    dev = true,
 	config = function()
 		-- require("nightfox").setup({
 		--           dim_inactive = true, -- defaults to 0.4
