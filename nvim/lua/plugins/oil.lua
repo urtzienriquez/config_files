@@ -5,7 +5,7 @@ return {
 	opts = {
 		default_file_explorer = true,
 		use_default_keymaps = true,
-        view_options = { show_hidden = true },
+		view_options = { show_hidden = true },
 		keymaps = {
 			["t"] = { "actions.parent", mode = "n" },
 			["<C-h>"] = false,
