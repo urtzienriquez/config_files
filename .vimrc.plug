@@ -6,4 +6,20 @@ Plug 'sheerun/vim-polyglot'
 " vim-fugitive (Git integration)
 Plug 'tpope/vim-fugitive'
 
+" vim-tmux-navigator
+Plug 'christoomey/vim-tmux-navigator'
+
+
 call plug#end()
+
+" Fugitive keymaps (matching neovim)
+nnoremap <leader>gs <cmd>Git<cr>
+nnoremap <leader>gf <cmd>Git fetch<cr>
+nnoremap <leader>gp <cmd>Git pull<cr>
+nnoremap <leader>gl <cmd>Git log<cr>
+nnoremap <leader>gB <cmd>Git blame<cr>
+nnoremap <leader>gc <cmd>Git commit<cr>
+nnoremap <leader>gP <cmd>Git push<cr>
+nnoremap <leader>gv <cmd>Gvdiffsplit!<cr>
+nnoremap <leader>gw <cmd>Gwrite<cr>
+nnoremap <leader>gr <cmd>Gread<cr>

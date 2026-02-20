@@ -1,6 +1,10 @@
 " set no compatible
 set nocompatible
 
+" Leader key
+let mapleader = " "
+let maplocalleader = " "
+
 " turn relative line numbers on
 set nu
 set rnu
