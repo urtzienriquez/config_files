@@ -47,22 +47,25 @@ vim.api.nvim_create_autocmd("OptionSet", {
 -- --------------------------
 -- Mode
 -- --------------------------
+local block = vim.api.nvim_replace_termcodes("<C-v>", true, false, true)
+local sblock = vim.api.nvim_replace_termcodes("<C-s>", true, false, true)
+
 local mode_map = {
-	["n"] = " NORMAL",
-	["no"] = " O-PEND",
-	["v"] = " VISUAL",
-	["V"] = " V-LINE",
-	[""] = " V-BLOCK",
-	["s"] = " SELECT",
-	["S"] = " S-LINE",
-	[""] = " S-BLOCK",
-	["i"] = " INSERT",
-	["ic"] = " INSERT",
-	["R"] = " REPLACE",
-	["Rv"] = " V-REPL",
-	["c"] = " COMMAND",
-	["t"] = " TERM",
-	["nt"] = " N-TERM",
+    ["n"]       = " NORMAL",
+    ["no"]      = " O-PEND",
+    ["v"]       = " VISUAL",
+    ["V"]       = " V-LINE",
+    [block]     = " V-BLOCK",
+    ["s"]       = " SELECT",
+    ["S"]       = " S-LINE",
+    [sblock]    = " S-BLOCK",
+    ["i"]       = " INSERT",
+    ["ic"]      = " INSERT",
+    ["R"]       = " REPLACE",
+    ["Rv"]      = " V-REPL",
+    ["c"]       = " COMMAND",
+    ["t"]       = " TERM",
+    ["nt"]      = " N-TERM",
 }
 
 function _G.st_mode()
@@ -389,6 +392,7 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "BufModifiedSet" }, {
 		end
 	end,
 })
+
 vim.o.statusline = table.concat({
 	"%#SLMode#%{v:lua.st_mode()}%* ", -- ← add this
 	"%#SLFileName#%t %m%* ",
