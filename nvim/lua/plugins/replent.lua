@@ -1,5 +1,6 @@
 return {
-	dir = "/home/urtzi/Documents/GitHub/replent.nvim",
+    "urtzienriquez/replent.nvim",
+    dev = false,
 	ft = { "python", "julia", "matlab", "quarto" },
 	dependencies = {
 		{ "jpalardy/vim-slime" },
