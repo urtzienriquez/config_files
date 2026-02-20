@@ -380,8 +380,6 @@ local function set_rnvim_keymaps()
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>d")
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>rd")
 	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>aa")
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>qp")
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>qs")
 
 	local opts_keymap = { noremap = true, silent = true, buffer = true }
 
@@ -451,9 +449,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- ========================================
--- for quarto
--- ========================================
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "quarto" },
 	callback = function()
@@ -469,8 +464,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		end
 		if lang == "r" then
 			set_rnvim_keymaps()
-		-- elseif lang == "python" or lang == "julia" or lang == "matlab" then
-		-- 	set_slime_keymaps()
 		end
 	end,
 })

@@ -53,6 +53,9 @@ return {
 					"RMakePDFK",
 					"RMakeWord",
 					"RUndebug",
+					"RQuartoStop",
+					"RQuartoPreview",
+					"RQuartoRender",
 				},
 			}
 			if vim.env.R_AUTO_START == "true" then
