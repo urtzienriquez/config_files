@@ -367,107 +367,6 @@ vim.api.nvim_create_autocmd("User", {
 	end,
 })
 
--- ========================================
--- r.nvim
--- ========================================
-local function set_rnvim_keymaps()
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>rf")
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>gn")
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>gN")
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>ip")
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>ka")
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>kn")
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>d")
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>rd")
-	pcall(vim.api.nvim_buf_del_keymap, 0, "n", "<leader>aa")
-
-	local opts_keymap = { noremap = true, silent = true, buffer = true }
-
-	vim.keymap.set("n", "<Enter>", "<Plug>RDSendLine", opts_keymap)
-	vim.keymap.set("v", "<Enter>", "<Plug>RSendSelection", opts_keymap)
-
-	vim.keymap.set("n", "<leader>or", "<Plug>RStart", opts_keymap)
-	vim.keymap.set("n", "<leader>sb", "<Plug>RSendFile", opts_keymap)
-	vim.keymap.set("n", "<leader>qr", "<Plug>RClose", opts_keymap)
-	vim.keymap.set("n", "<leader>cn", "<Plug>RNextRChunk", opts_keymap)
-	vim.keymap.set("n", "<leader>cN", "<Plug>RPreviousRChunk", opts_keymap)
-	vim.keymap.set("n", "<leader>cd", "<Plug>RSetwd", opts_keymap)
-
-	-- Render bookdown book
-	vim.keymap.set("n", "<leader>rb", function()
-		local file = vim.fn.expand("%:t")
-		file = file:gsub('"', '\\"') -- escape any double quotes in filename
-		local rcmd = string.format(
-			'out <- tryCatch(bookdown::render_book("%s"), error=function(e){'
-				.. 'message("BOOKDOWN RENDER ERROR: ", e$message); NULL });'
-				.. "if(!is.null(out)){ if(is.list(out)) out <- unlist(out)[1];"
-				.. "if(length(out) >= 1 && file.exists(out[1])){ out <- "
-				.. 'normalizePath(out[1]); system2("xdg-open", out);'
-				.. 'message("Opened: ", out) } else message("Render completed'
-				.. 'but output file not found: ", paste(out, collapse=", ")) }',
-			file
-		)
-		vim.cmd("RSend " .. rcmd)
-	end, { noremap = true, silent = true, desc = "Render and open Bookdown" })
-
-	-- Render markdown with output name
-	-- none entered: filename, else: provided name, esc: cancel
-	vim.keymap.set("n", "<leader>rr", function()
-		local filename = vim.fn.input({
-			prompt = "Output filename (without extension): ",
-			cancelreturn = "__CANCEL__",
-		})
-		vim.api.nvim_echo({}, false, {})
-		if filename == "__CANCEL__" then
-			return
-		end
-
-		-- Clear params if it exists
-		vim.cmd('RSend if(exists("params")) rm(params)')
-
-		if filename ~= "" then
-			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", output_file = "' .. filename .. '")')
-		else
-			vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '")')
-		end
-	end, { desc = "Render R Markdown with custom output name" })
-
-	-- add inline r code in insert and normal modes
-	vim.keymap.set("i", "<C-a>c", "`r<Space>`<Esc>i", opts_keymap)
-	vim.keymap.set(
-		"n",
-		"<leader>ac",
-		"i`r<Space>`<Esc>i",
-		vim.tbl_extend("force", opts_keymap, { desc = "Add inline code" })
-	)
-end
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "r", "rmd", "Rmd", "rnoweb" },
-	callback = function()
-		set_rnvim_keymaps()
-	end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "quarto" },
-	callback = function()
-		local bufnr = vim.api.nvim_get_current_buf()
-		local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 100, false)
-		local lang = nil
-		for _, line in ipairs(lines) do
-			local l = line:match("^```{(%w+)}")
-			if l then
-				lang = l:lower()
-				break
-			end
-		end
-		if lang == "r" then
-			set_rnvim_keymaps()
-		end
-	end,
-})
-
 -- -- ========================================
 -- LSP KEYMAPS (set when LSP attaches)
 -- ========================================
@@ -504,7 +403,7 @@ vim.api.nvim_create_autocmd("User", {
 				{ "<leader>r", name = "R/Render" },
 				{ "<leader>s", name = "Send" },
 				{ "<leader>u", name = "UI toggle" },
-				{ "<leader>a", name = "Add citation/crossref" },
+				{ "<leader>a", name = "Add" },
 				{ "<leader>g", name = "Git" },
 			})
 		end
