@@ -8,20 +8,21 @@
 local devicons = require("nvim-web-devicons")
 
 local function define_highlights()
-    local palette = require("nightfox.palette").load("nightfox")
-    -- local palette = require("nightfox").load("nightfox")
-    vim.api.nvim_set_hl(0, "SLFileName",        { fg = palette.blue.base })
-    vim.api.nvim_set_hl(0, "SLGitAdd",          { fg = palette.green.base })
-    vim.api.nvim_set_hl(0, "SLGitDelete",       { fg = palette.red.base })
-    vim.api.nvim_set_hl(0, "SLGitBranch",       { fg = palette.magenta.base })
-    vim.api.nvim_set_hl(0, "SLDiagError",       { fg = palette.red.base })
-    vim.api.nvim_set_hl(0, "SLDiagWarn",        { fg = palette.yellow.base })
-    vim.api.nvim_set_hl(0, "SLDiagInfo",        { fg = palette.blue.base })
-    vim.api.nvim_set_hl(0, "SLDiagHint",        { fg = palette.cyan.base })
-    vim.api.nvim_set_hl(0, "SLFileType",        { bold = true })
-    vim.api.nvim_set_hl(0, "StatusLineMinimal", { bg = palette.bg1, fg = palette.bg1 })
-    vim.api.nvim_set_hl(0, "StatusLine",        { bg = palette.bg0, fg = palette.fg3 })
-    vim.api.nvim_set_hl(0, "StatusLineNC",      { bg = palette.bg0, fg = palette.fg3 })
+	local palette = require("nightfox.palette").load("nightfox")
+	vim.api.nvim_set_hl(0, "SLFileName", { fg = palette.blue.base })
+	vim.api.nvim_set_hl(0, "SLGitAdd", { fg = palette.green.base })
+	vim.api.nvim_set_hl(0, "SLGitDelete", { fg = palette.red.base })
+	vim.api.nvim_set_hl(0, "SLGitBranch", { fg = palette.magenta.base })
+	vim.api.nvim_set_hl(0, "SLDiagError", { fg = palette.red.base })
+	vim.api.nvim_set_hl(0, "SLDiagWarn", { fg = palette.yellow.base })
+	vim.api.nvim_set_hl(0, "SLDiagInfo", { fg = palette.blue.base })
+	vim.api.nvim_set_hl(0, "SLDiagHint", { fg = palette.cyan.base })
+	vim.api.nvim_set_hl(0, "SLFileType", { bold = true })
+	vim.api.nvim_set_hl(0, "StatusLineMinimal", { bg = palette.bg1, fg = palette.bg1 })
+	vim.api.nvim_set_hl(0, "StatusLine", { bg = palette.bg0, fg = palette.fg3 })
+	vim.api.nvim_set_hl(0, "StatusLineNC", { bg = palette.bg0, fg = palette.fg3 })
+	vim.api.nvim_set_hl(0, "SLMacro", { fg = palette.green.base })
+	vim.api.nvim_set_hl(0, "SLMode", { fg = palette.bg0, bg = palette.blue.base, bold = true })
 end
 
 define_highlights()
@@ -30,10 +31,10 @@ define_highlights()
 local icon_hl_cache = {}
 
 vim.api.nvim_create_autocmd("ColorScheme", {
-    callback = function()
-        icon_hl_cache = {}
-        define_highlights()
-    end,
+	callback = function()
+		icon_hl_cache = {}
+		define_highlights()
+	end,
 })
 
 vim.api.nvim_create_autocmd("OptionSet", {
@@ -42,6 +43,43 @@ vim.api.nvim_create_autocmd("OptionSet", {
 		icon_hl_cache = {}
 	end,
 })
+
+-- --------------------------
+-- Mode
+-- --------------------------
+local mode_map = {
+	["n"] = " NORMAL",
+	["no"] = " O-PEND",
+	["v"] = " VISUAL",
+	["V"] = " V-LINE",
+	[""] = " V-BLOCK",
+	["s"] = " SELECT",
+	["S"] = " S-LINE",
+	[""] = " S-BLOCK",
+	["i"] = " INSERT",
+	["ic"] = " INSERT",
+	["R"] = " REPLACE",
+	["Rv"] = " V-REPL",
+	["c"] = " COMMAND",
+	["t"] = " TERM",
+	["nt"] = " N-TERM",
+}
+
+function _G.st_mode()
+	local mode = vim.fn.mode()
+	return " " .. (mode_map[mode] or mode) .. " "
+end
+
+-- --------------------------
+-- Macro recording
+-- --------------------------
+function _G.st_macro()
+	local reg = vim.fn.reg_recording()
+	if reg == "" then
+		return ""
+	end
+	return "  recording @" .. reg .. " "
+end
 
 -- --------------------------
 -- Git cache and pending updates
@@ -321,6 +359,18 @@ vim.api.nvim_create_user_command("GitStatusRefresh", function()
 	vim.notify("Git status refreshed", vim.log.levels.INFO)
 end, {})
 
+vim.api.nvim_create_autocmd("RecordingEnter", {
+	callback = function()
+		vim.cmd("redrawstatus")
+	end,
+})
+
+vim.api.nvim_create_autocmd("RecordingLeave", {
+	callback = function()
+		vim.cmd("redrawstatus")
+	end,
+})
+
 -- --------------------------
 -- Final statusline
 -- --------------------------
@@ -339,9 +389,9 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "BufModifiedSet" }, {
 		end
 	end,
 })
-
 vim.o.statusline = table.concat({
-	" %#SLFileName#%t %m%* ",
+	"%#SLMode#%{v:lua.st_mode()}%* ", -- ← add this
+	"%#SLFileName#%t %m%* ",
 	"%#SLGitBranch#%{v:lua.st_branch()}%*",
 	"%#SLGitAdd#%{v:lua.st_added()}%*",
 	"%#SLGitDelete#%{v:lua.st_removed()}%*",
@@ -349,6 +399,7 @@ vim.o.statusline = table.concat({
 	"%#SLDiagWarn#%{v:lua.st_warn()}%*",
 	"%#SLDiagInfo#%{v:lua.st_info()}%*",
 	"%#SLDiagHint#%{v:lua.st_hint()}%*",
+	"%#SLMacro#%{v:lua.st_macro()}%*", -- ← add this
 	"%=",
 	"%{%v:lua.st_filetype_text()%} ",
 	"%4{v:lua.st_position()} ",
