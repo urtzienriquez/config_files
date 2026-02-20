@@ -7,6 +7,7 @@ return {
 
 		mason.setup({
 			ui = {
+                border = "none",
 				backdrop = 40,
 				icons = {
 					package_installed = "✓",
