@@ -135,6 +135,8 @@ case ":$PATH:" in
     *:/home/urtzi/.juliaup/bin:*) ;;
     *) export PATH=/home/urtzi/.juliaup/bin${PATH:+:${PATH}} ;;
 esac
+# luarocks paths
+export PATH="$HOME/.luarocks/bin:$PATH"
 
 # -------------------------------
 # R configuration
