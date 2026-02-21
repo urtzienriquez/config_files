@@ -39,20 +39,11 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, desc = "Jump half page
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Better paste that doesn't overwrite register in visual mode
-vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "Paste without overwriting register" })
 vim.keymap.set("x", "p", [["_dP]], { desc = "Paste without overwriting register" })
-
--- Delete to black hole register (doesn't overwrite clipboard)
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete to black hole register" })
-vim.keymap.set("n", "<leader>D", [["_D]], { desc = "Delete line to black hole register" })
-vim.keymap.set("n", "<leader>x", [["_x]], { desc = "Delete char to black hole register" })
 
 -- Better search centering and n/N behavior
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
-
--- Better Y behavior (yank to end of line like C and D)
-vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 
 -- Highlight when yanking text
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -351,6 +342,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
 	end,
 })
+
+-- execute lua
+vim.keymap.set("n", "<leader><leader>x", "<CMD>source %<CR>")
+vim.keymap.set("v", "<leader>x", ":lua<CR>")
 
 -- ========================================
 -- WHICH-KEY GROUPS AND ORGANIZATION
