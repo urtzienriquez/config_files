@@ -1,5 +1,4 @@
 require("options")
 require("lazy.lazy")
 require("lsp")
-require("statusline")
 require("keymaps")
