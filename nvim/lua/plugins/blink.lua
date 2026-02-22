@@ -19,7 +19,7 @@ return {
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
 			providers = {
-				citeref = { name = "citeref", module = "citeref.completion" },
+				citeref = { name = "citeref", module = "citeref.backends.blink" },
 				snippets = {
 					name = "snippets",
 					opts = {
