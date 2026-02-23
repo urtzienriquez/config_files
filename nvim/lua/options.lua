@@ -23,7 +23,11 @@ end, {})
 vim.opt.mouse = ""
 
 -- misc options
-require('vim._extui').enable({})
+require('vim._core.ui2').enable({
+msg = {
+    target = 'msg',
+  },
+})
 vim.opt.cmdheight = 0
 vim.o.winborder = "rounded"
 vim.g.have_nerd_font = true
