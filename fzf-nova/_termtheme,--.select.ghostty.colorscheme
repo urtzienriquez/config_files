@@ -28,7 +28,7 @@ selected=$(ghostty +list-themes | fzf --prompt='Select Ghostty theme: ')
 [ -z "$selected" ] && exit
 
 # Remove (resources) suffix if present
-theme_name=$(echo "$selected" | sed 's/ (resources)$//')
+theme_name=$(echo "$selected" | sed 's/ *([^)]*)$//')
 
 # Update or add theme line in config
 if grep -q "^theme = " "$config_file"; then
