@@ -10,6 +10,9 @@ config.source("start-page.py")
 # set font size
 config.set("fonts.default_size", "11pt")
 
+# set downloads position
+config.set("downloads.position", "bottom")
+
 # Which cookies to accept.
 config.set("content.cookies.accept", "no-3rdparty", "chrome-devtools://*")
 
