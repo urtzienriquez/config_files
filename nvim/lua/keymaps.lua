@@ -269,8 +269,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 -- execute lua
-vim.keymap.set("n", "<leader><leader>x", "<CMD>source %<CR>")
-vim.keymap.set("v", "<leader>x", ":lua<CR>")
+vim.keymap.set("n", "<leader><leader><Enter>", "<CMD>source %<CR>")
+vim.keymap.set("n", "<leader><Enter>", ":.lua<CR>")
+vim.keymap.set("v", "<leader><Enter>", ":lua<CR>")
 
 -- ========================================
 -- WHICH-KEY GROUPS AND ORGANIZATION
