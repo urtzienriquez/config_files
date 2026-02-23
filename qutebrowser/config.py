@@ -89,6 +89,10 @@ config.set(
 # open neovim from qutebrowser
 c.editor.command = ["ghostty", "-e", "nvim", "-f", "{}"]
 
+# remap J to K and K to J
+config.bind("J", "tab-prev")
+config.bind("K", "tab-next")
+
 # edit url / to edit text control-e in insert mode sends you to the editor
 config.bind("eu", "edit-url")
 
