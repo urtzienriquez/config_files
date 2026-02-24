@@ -178,7 +178,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("LspProgress", {
   callback = function(ev)
     local value = ev.data.params.value or {}
-    local msg = value.message or "lsp: done"
+    local msg = value.message or "done"
     if #msg > 40 then
       msg = msg:sub(1, 37) .. "..."
     end
