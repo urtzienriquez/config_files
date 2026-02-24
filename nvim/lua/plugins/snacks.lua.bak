@@ -21,20 +21,98 @@ return {
 	},
 	keys = {
 		-- files
-		{ "<leader>ff", function() Snacks.picker.files() end,                desc = "Find Files" },
-		{ "<leader>fg", function() Snacks.picker.grep() end,                 desc = "Grep" },
-		{ "<leader>fb", function() Snacks.picker.buffers() end,              desc = "Buffers" },
-		{ "<leader>fr", function() Snacks.picker.recent() end,               desc = "Recent Files" },
-		{ "<leader>fh", function() Snacks.picker.help() end,                 desc = "Help Tags" },
-		{ "<leader>fk", function() Snacks.picker.keymaps() end,              desc = "Keymaps" },
-		{ "<leader>fd", function() Snacks.picker.diagnostics() end,          desc = "Diagnostics" },
-		{ "<leader>fs", function() Snacks.picker.lsp_symbols() end,          desc = "LSP Symbols" },
-		{ "<leader>fw", function() Snacks.picker.grep_word() end,            desc = "Grep Word" },
-		{ "<leader>f.", function() Snacks.picker.resume() end,               desc = "Resume Picker" },
+		{
+			"<leader>ff",
+			function()
+				Snacks.picker.files()
+			end,
+			desc = "Find Files",
+		},
+		{
+			"<leader>fg",
+			function()
+				Snacks.picker.grep()
+			end,
+			desc = "Grep",
+		},
+		{
+			"<leader>fb",
+			function()
+				Snacks.picker.buffers()
+			end,
+			desc = "Buffers",
+		},
+		{
+			"<leader>fr",
+			function()
+				Snacks.picker.recent()
+			end,
+			desc = "Recent Files",
+		},
+		{
+			"<leader>fh",
+			function()
+				Snacks.picker.help()
+			end,
+			desc = "Help Tags",
+		},
+		{
+			"<leader>fk",
+			function()
+				Snacks.picker.keymaps()
+			end,
+			desc = "Keymaps",
+		},
+		{
+			"<leader>fd",
+			function()
+				Snacks.picker.diagnostics()
+			end,
+			desc = "Diagnostics",
+		},
+		{
+			"<leader>fs",
+			function()
+				Snacks.picker.lsp_symbols()
+			end,
+			desc = "LSP Symbols",
+		},
+		{
+			"<leader>fw",
+			function()
+				Snacks.picker.grep_word()
+			end,
+			desc = "Grep Word",
+		},
+		{
+			"<leader>f.",
+			function()
+				Snacks.picker.resume()
+			end,
+			desc = "Resume Picker",
+		},
 		-- git
-		{ "<leader>gb", function() Snacks.picker.git_branches() end,         desc = "Git Branches" },
-		{ "<leader>gC", function() Snacks.picker.git_log() end,              desc = "Git Log" },
+		{
+			"<leader>gb",
+			function()
+				Snacks.picker.git_branches()
+			end,
+			desc = "Git Branches",
+		},
+		{
+			"<leader>gC",
+			function()
+				Snacks.picker.git_log()
+			end,
+			desc = "Git Log",
+		},
 		-- colorscheme preview (great for testing the theme!)
-		{ "<leader>uc", function() Snacks.picker.colorschemes() end,         desc = "Colorschemes" },
+		{
+			"<leader>uc",
+			function()
+				Snacks.picker.colorschemes()
+			end,
+			desc = "Colorschemes",
+		},
 	},
 }

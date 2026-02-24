@@ -8,25 +8,25 @@ vim.opt.spelllang = "en_us"
 vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
 
 vim.api.nvim_create_user_command("SpellEN", function()
-  vim.opt.spelllang = { "en_us" }
-  vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
-  vim.notify("Spell: EN")
+	vim.opt.spelllang = { "en_us" }
+	vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+	vim.notify("Spell: EN")
 end, {})
 
 vim.api.nvim_create_user_command("SpellES", function()
-  vim.opt.spelllang = { "es_es" }
-  vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/es.utf-8.add"
-  vim.notify("Spell: ES")
+	vim.opt.spelllang = { "es_es" }
+	vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/es.utf-8.add"
+	vim.notify("Spell: ES")
 end, {})
 
 -- Disable mouse
 vim.opt.mouse = ""
 
 -- misc options
-require('vim._core.ui2').enable({
-msg = {
-    target = 'msg',
-  },
+require("vim._core.ui2").enable({
+	msg = {
+		target = "msg",
+	},
 })
 vim.opt.cmdheight = 0
 vim.o.winborder = "rounded"
@@ -35,12 +35,6 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 10
 vim.opt.backspace = { "indent", "eol", "start" }
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.softtabstop = 4
-vim.opt.expandtab = true
-vim.opt.smartindent = true
-vim.opt.autoindent = true
 vim.opt.ignorecase = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.termguicolors = true
@@ -48,6 +42,22 @@ vim.opt.signcolumn = "yes:1"
 vim.opt.cursorline = true
 vim.opt.cursorlineopt = "number"
 vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20,t:block"
+
+-- indentation
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.autoindent = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "lua",
+	callback = function()
+		vim.opt_local.tabstop = 2
+		vim.opt_local.shiftwidth = 2
+		vim.opt_local.softtabstop = 2
+	end,
+})
 
 -- code folding
 vim.opt.foldcolumn = "0"
@@ -176,15 +186,15 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- lsp message in ui2
 vim.api.nvim_create_autocmd("LspProgress", {
-  callback = function(ev)
-    local value = ev.data.params.value or {}
-    local msg = value.message or "done"
-    vim.api.nvim_echo({ { msg } }, false, {
-      id = "lsp",
-      kind = "progress",
-      title = value.title,
-      status = value.kind ~= "end" and "running" or "success",
-      percent = value.percentage,
-    })
-  end,
+	callback = function(ev)
+		local value = ev.data.params.value or {}
+		local msg = value.message or "done"
+		vim.api.nvim_echo({ { msg } }, false, {
+			id = "lsp",
+			kind = "progress",
+			title = value.title,
+			status = value.kind ~= "end" and "running" or "success",
+			percent = value.percentage,
+		})
+	end,
 })

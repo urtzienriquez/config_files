@@ -1,6 +1,6 @@
 return {
 	"urtzienriquez/nightfox.nvim",
-    dev = true,
+	dev = true,
 	config = function()
 		vim.cmd.colorscheme("nightfox")
 	end,

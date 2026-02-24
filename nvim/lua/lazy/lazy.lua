@@ -27,7 +27,7 @@ require("lazy").setup({
 	checker = { enabled = true },
 	ui = { backdrop = 40 },
 
-    -- hack until a better fix to remove border around backdrop
+	-- hack until a better fix to remove border around backdrop
 	vim.api.nvim_create_autocmd("FileType", {
 		desc = "User: fix backdrop for lazy window",
 		pattern = "lazy_backdrop",
