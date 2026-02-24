@@ -36,7 +36,7 @@ return {
 		},
 
 		completion = {
-			list = { selection = { preselect = true, auto_insert = true } },
+			list = { selection = { preselect = true, auto_insert = false } },
 			accept = { auto_brackets = { enabled = false } },
 
 			menu = {
