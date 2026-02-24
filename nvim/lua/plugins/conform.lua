@@ -38,7 +38,7 @@ return {
 						"--no-restore",
 						"--no-save",
 						"-e",
-						"styler::style_file(commandArgs(TRUE), transformers = styler::tidyverse_style(indent_by = 4L, strict = TRUE))",
+						"styler::style_file(commandArgs(TRUE), transformers = styler::tidyverse_style(indent_by = 2L, strict = TRUE))",
 						"--args",
 						"$FILENAME",
 					},
