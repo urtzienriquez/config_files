@@ -31,6 +31,7 @@ return {
 				markdown = { inherit_defaults = true, "citeref" },
 				rmd = { inherit_defaults = true, "citeref" },
 				quarto = { inherit_defaults = true, "citeref" },
+				tex = { inherit_defaults = true, "citeref" },
 			},
 		},
 
