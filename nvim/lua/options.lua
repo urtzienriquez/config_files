@@ -2,23 +2,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- spelling language
-vim.opt.spell = true
-vim.opt.spelllang = "en_us"
-vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
-
-vim.api.nvim_create_user_command("SpellEN", function()
-  vim.opt.spelllang = { "en_us" }
-  vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
-  vim.notify("Spell: EN")
-end, {})
-
-vim.api.nvim_create_user_command("SpellES", function()
-  vim.opt.spelllang = { "es_es" }
-  vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/es.utf-8.add"
-  vim.notify("Spell: ES")
-end, {})
-
 -- Disable mouse
 vim.opt.mouse = ""
 
@@ -50,6 +33,22 @@ vim.opt.autoindent = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
+
+-- for diffing two files
+-- wrap text and always center text: improves comparing markdown files
+vim.opt.diffopt:append("followwrap")
+
+local diff_group = vim.api.nvim_create_augroup("DiffAutoCenter", { clear = true })
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = diff_group,
+  callback = function()
+    if vim.wo.diff then
+      vim.keymap.set("n", "j", "gjzz", { buffer = true, silent = true })
+      vim.keymap.set("n", "k", "gkzz", { buffer = true, silent = true })
+    end
+  end,
+})
 
 -- code folding
 vim.opt.foldcolumn = "0"
@@ -190,3 +189,20 @@ vim.api.nvim_create_autocmd("LspProgress", {
     })
   end,
 })
+
+-- spelling language
+vim.opt.spell = true
+vim.opt.spelllang = "en_us"
+vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+
+vim.api.nvim_create_user_command("SpellEN", function()
+  vim.opt.spelllang = { "en_us" }
+  vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+  vim.notify("Spell: EN")
+end, {})
+
+vim.api.nvim_create_user_command("SpellES", function()
+  vim.opt.spelllang = { "es_es" }
+  vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/es.utf-8.add"
+  vim.notify("Spell: ES")
+end, {})
