@@ -137,6 +137,7 @@ case ":$PATH:" in
 esac
 # luarocks paths
 export PATH="$HOME/.luarocks/bin:$PATH"
+eval "$(luarocks path)"
 
 # -------------------------------
 # R configuration
