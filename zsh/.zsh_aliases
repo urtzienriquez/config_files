@@ -219,6 +219,17 @@ sx() {
   fi
 }
 
+
+# sr: search git repos in given path (or $HOME if not specified), and cd appropriately
+sr() {
+  local search_path="${1:-$HOME}"
+  local dir
+  dir=$(fd -HI --type d --glob '.git' "$search_path" \
+    | sed 's|/\.git||' \
+    | fzf-tmux --reverse --info=right -p 85%,85% --prompt='git repos > ') || return
+  cd "$dir"
+}
+
 # sfr: like sf but searches the whole system with locate
 sfr() {
   local file
