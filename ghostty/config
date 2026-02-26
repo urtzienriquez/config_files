@@ -1,7 +1,7 @@
 # theme
 theme = Nightfox
 font-size = 15
-# font-feature = -calt
+font-feature = -calt
 
 # default shell
 command = /usr/bin/zsh
