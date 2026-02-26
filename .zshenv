@@ -14,3 +14,4 @@
 
 ZDOTDIR=~/.config/zsh
 
+lig() { ~/.config/zsh/scripts/ligatures_toggle.sh }
