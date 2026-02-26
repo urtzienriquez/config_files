@@ -2,7 +2,7 @@
 # Ghostty ligature toggler
 # Toggles font-feature ligature settings in ghostty config
 
-config_file="$HOME/.config/ghostty/config"
+config_file="$HOME/.config/ghostty/local.config"
 
 # Check if config file exists
 if [ ! -f "$config_file" ]; then

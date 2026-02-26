@@ -13,3 +13,4 @@ tmux*.log
 theme.sh
 theme.toml
 */zsh/plugins
+local.config

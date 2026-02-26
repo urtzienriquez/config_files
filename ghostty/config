@@ -1,7 +1,7 @@
 # theme
 theme = Nightfox
 font-size = 15
-font-feature = -calt
+config-file = ~/.config/ghostty/local.config
 
 # default shell
 command = /usr/bin/zsh
