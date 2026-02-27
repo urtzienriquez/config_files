@@ -1,7 +1,3 @@
--- =========
--- KEYMAPS
--- =========
-
 -- Basic keymaps
 -- ===============
 
@@ -10,7 +6,8 @@ vim.keymap.set("i", "<Up>", "<Nop>", { noremap = true, silent = true })
 vim.keymap.set("i", "<Down>", "<Nop>", { noremap = true, silent = true })
 vim.keymap.set("i", "<Left>", "<Nop>", { noremap = true, silent = true })
 vim.keymap.set("i", "<Right>", "<Nop>", { noremap = true, silent = true })
--- arrows in normal mode to navigate quickfix
+
+-- Arrow keys in normal mode → navigate quickfix
 vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Left>", "<cmd>cclose<CR>", { noremap = true, silent = true })
@@ -22,73 +19,38 @@ vim.keymap.set("n", "*", "*``")
 -- Escape terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
--- remap C-k to C-d to insert digraphs
+-- Remap C-k to C-d to insert digraphs
 vim.keymap.set("i", "<C-d>", "<C-k>", { noremap = true })
 
 -- Resize windows
-vim.keymap.set("n", "<C-A-Left>", ":vertical resize +5<CR>", { silent = true, desc = "Resize vertically" })
-vim.keymap.set("n", "<C-A-Right>", ":vertical resize -5<CR>", { silent = true, desc = "Resize vertically" })
-vim.keymap.set("n", "<C-A-Up>", ":resize +5<CR>", { silent = true, desc = "Resize horizontally" })
-vim.keymap.set("n", "<C-A-Down>", ":resize -5<CR>", { silent = true, desc = "Resize horizontally" })
+vim.keymap.set("n", "<C-A-Left>", ":vertical resize +5<CR>", { silent = true, desc = "Resize vertically +" })
+vim.keymap.set("n", "<C-A-Right>", ":vertical resize -5<CR>", { silent = true, desc = "Resize vertically -" })
+vim.keymap.set("n", "<C-A-Up>", ":resize +5<CR>", { silent = true, desc = "Resize horizontally +" })
+vim.keymap.set("n", "<C-A-Down>", ":resize -5<CR>", { silent = true, desc = "Resize horizontally -" })
 
--- Remap half page up/down to center cursor
+-- Half page up/down, keeping cursor centered
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, desc = "Jump half page down" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, desc = "Jump half page up" })
 
--- Clear highlights on search when pressing <Esc> in normal mode
+-- Clear search highlights
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
--- Better paste that doesn't overwrite register in visual mode
+-- Better paste: don't overwrite register in visual mode
 vim.keymap.set("x", "p", [["_dP]], { desc = "Paste without overwriting register" })
 
--- Better search centering and n/N behavior
+-- Search: center results
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 
--- Highlight when yanking text
-vim.api.nvim_create_autocmd("TextYankPost", {
-  desc = "Highlight when yanking (copying) text",
-  group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
-  callback = function()
-    vim.hl.on_yank()
-  end,
-})
+-- Execute Lua
+vim.keymap.set("n", "<leader><leader><Enter>", "<CMD>source %<CR>")
+vim.keymap.set("n", "<leader><Enter>", ":.lua<CR>")
+vim.keymap.set("v", "<leader><Enter>", ":lua<CR>")
 
--- Visual line navigation for wrapped lines
--- only have this behavior in markdown files
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = {
-    "markdown",
-    "text",
-    "quarto",
-    "rmd",
-    "jmd",
-    "qmd",
-    "org",
-    "rst",
-    "asciidoc",
-    "adoc",
-    "tex",
-    "latex",
-    "wiki",
-    "textile",
-    "mail",
-    "gitcommit",
-  },
-  callback = function()
-    local opts = { buffer = true }
-    vim.keymap.set("n", "j", "gj", vim.tbl_extend("force", opts, { desc = "Move down by visual line" }))
-    vim.keymap.set("n", "k", "gk", vim.tbl_extend("force", opts, { desc = "Move up by visual line" }))
-    vim.keymap.set("v", "j", "gj", vim.tbl_extend("force", opts, { desc = "Move down by visual line" }))
-    vim.keymap.set("v", "k", "gk", vim.tbl_extend("force", opts, { desc = "Move up by visual line" }))
+-- Refresh git status
+vim.keymap.set("n", "<leader>gg", ":GitStatusRefresh<CR>", { silent = true, desc = "Refresh git status" })
 
-    -- Keep original behavior accessible
-    vim.keymap.set("n", "gj", "j", vim.tbl_extend("force", opts, { desc = "Move down by logical line" }))
-    vim.keymap.set("n", "gk", "k", vim.tbl_extend("force", opts, { desc = "Move up by logical line" }))
-  end,
-})
-
--- add all variants of a word to spellfile
+-- Add all case variants of a word to spellfile
 vim.api.nvim_create_user_command("ZgVariants", function()
   local word = vim.fn.expand("<cword>")
   local variants = {
@@ -101,23 +63,33 @@ vim.api.nvim_create_user_command("ZgVariants", function()
   end
   vim.notify("Added variants of '" .. word .. "' to spellfile", vim.log.levels.INFO)
 end, {})
-
 vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 
--- refresh git status
-vim.keymap.set("n", "<leader>gg", ":GitStatusRefresh<CR>", { silent = true, desc = "refresh git status" })
+-- ========================================
+-- LSP KEYMAPS (set on LspAttach)
+-- ========================================
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("lsp-attach-keymaps", { clear = true }),
+  callback = function(event)
+    local opts = { buffer = event.buf, silent = true }
+    vim.keymap.set("n", "K", function()
+      vim.lsp.buf.hover({ border = "single" })
+    end, vim.tbl_extend("force", opts, { desc = "Information hover" }))
+
+    vim.keymap.set("n", "<leader>k", function()
+      vim.diagnostic.open_float({ border = "single" })
+    end, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
+  end,
+})
 
 -- ========================================
--- PLUGIN-DEPENDENT KEYMAPS
+-- PLUGIN-DEPENDENT KEYMAPS (after VeryLazy)
 -- ========================================
-
--- Create autocommands that will set up keymaps after plugins load
 vim.api.nvim_create_autocmd("User", {
+  group = vim.api.nvim_create_augroup("plugin-keymaps", { clear = true }),
   pattern = "VeryLazy",
   callback = function()
-    -- ========================================
-    -- Oil file explorer keymaps
-    -- ========================================
+    -- Oil file explorer
     local oil_ok, oil = pcall(require, "oil")
     if oil_ok then
       vim.keymap.set("n", "<leader>t", function()
@@ -129,30 +101,28 @@ vim.api.nvim_create_autocmd("User", {
       end, { desc = "Toggle Oil file explorer" })
     end
 
-    -- ========================================
-    -- treesitter textobjects
-    -- ========================================
+    -- Treesitter textobjects
     vim.keymap.set({ "x", "o" }, "af", function()
       require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
-    end, { desc = "around function" })
+    end, { desc = "Around function" })
     vim.keymap.set({ "x", "o" }, "if", function()
       require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
-    end, { desc = "inside function" })
+    end, { desc = "Inside function" })
     vim.keymap.set({ "x", "o" }, "al", function()
       require("nvim-treesitter-textobjects.select").select_textobject("@loop.outer", "textobjects")
-    end, { desc = "around loop" })
+    end, { desc = "Around loop" })
     vim.keymap.set({ "x", "o" }, "il", function()
       require("nvim-treesitter-textobjects.select").select_textobject("@loop.inner", "textobjects")
-    end, { desc = "inside loop" })
+    end, { desc = "Inside loop" })
     vim.keymap.set({ "x", "o" }, "ac", function()
       require("nvim-treesitter-textobjects.select").select_textobject("@conditional.outer", "textobjects")
-    end, { desc = "around conditional" })
+    end, { desc = "Around conditional" })
     vim.keymap.set({ "x", "o" }, "ic", function()
       require("nvim-treesitter-textobjects.select").select_textobject("@conditional.inner", "textobjects")
-    end, { desc = "inside the condition" })
+    end, { desc = "Inside conditional" })
 
     -- ========================================
-    -- Toggles
+    -- UI Toggles
     -- ========================================
     local function toggle_option(option, on_val, off_val)
       return function()
@@ -168,8 +138,7 @@ vim.api.nvim_create_autocmd("User", {
 
     vim.keymap.set("n", "<leader>uS", toggle_option("spell", true, false), { desc = "Toggle Spelling" })
     vim.keymap.set("n", "<leader>us", function()
-      local current = vim.bo.spelllang
-      if current == "es_es" then
+      if vim.bo.spelllang == "es_es" then
         vim.cmd("SpellEN")
       else
         vim.cmd("SpellES")
@@ -177,17 +146,21 @@ vim.api.nvim_create_autocmd("User", {
     end, { desc = "Toggle Spell Language" })
 
     vim.keymap.set("n", "<leader>uu", function()
-        vim.cmd(":!lig")
+      vim.cmd(":!lig")
     end, { silent = true, desc = "Toggle ligatures (ghostty)" })
 
     vim.keymap.set("n", "<leader>uw", toggle_option("wrap", true, false), { desc = "Toggle Wrap" })
     vim.keymap.set("n", "<leader>uo", toggle_option("scrolloff", 10, 0), { desc = "Toggle Scrolloff" })
-
     vim.keymap.set("n", "<leader>uc", toggle_option("cursorlineopt", "both", "number"), { desc = "Toggle Cursorline" })
+    vim.keymap.set(
+      "n",
+      "<leader>ul",
+      toggle_option("relativenumber", true, false),
+      { desc = "Toggle Relative Numbers" }
+    )
 
-    vim.keymap.set("n", "<leader>ul", toggle_option("relativenumber", true, false), { desc = "Toggle Line Numbers" })
-    local function toggle_line_numbers()
-      if vim.wo.number == true then
+    vim.keymap.set("n", "<leader>uL", function()
+      if vim.wo.number then
         vim.o.relativenumber = false
         vim.wo.number = false
         vim.notify("line numbers disabled", vim.log.levels.INFO)
@@ -196,8 +169,7 @@ vim.api.nvim_create_autocmd("User", {
         vim.wo.number = true
         vim.notify("line numbers enabled", vim.log.levels.INFO)
       end
-    end
-    vim.keymap.set("n", "<leader>uL", toggle_line_numbers, { desc = "Toggle All Line Numbers" })
+    end, { desc = "Toggle All Line Numbers" })
 
     vim.keymap.set("n", "<leader>ub", function()
       if vim.o.background == "dark" then
@@ -242,38 +214,16 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
--- -- ========================================
--- LSP KEYMAPS (set when LSP attaches)
 -- ========================================
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("lsp-attach-keymaps", { clear = true }),
-  callback = function(event)
-    local opts = { buffer = event.buf, silent = true }
-    vim.keymap.set("n", "K", function()
-      vim.lsp.buf.hover({ border = "single" })
-    end, vim.tbl_extend("force", opts, { desc = "Information hover" }))
-
-    vim.keymap.set("n", "<leader>k", function()
-      vim.diagnostic.open_float({ border = "single" })
-    end, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
-  end,
-})
-
--- execute lua
-vim.keymap.set("n", "<leader><leader><Enter>", "<CMD>source %<CR>")
-vim.keymap.set("n", "<leader><Enter>", ":.lua<CR>")
-vim.keymap.set("v", "<leader><Enter>", ":lua<CR>")
-
--- ========================================
--- WHICH-KEY GROUPS AND ORGANIZATION
+-- WHICH-KEY GROUPS
 -- ========================================
 vim.api.nvim_create_autocmd("User", {
+  group = vim.api.nvim_create_augroup("which-key-groups", { clear = true }),
   pattern = "VeryLazy",
   callback = function()
     local wk_ok, wk = pcall(require, "which-key")
     if wk_ok then
       wk.add({
-        -- Main groups
         { "<leader>f", name = "Find" },
         { "<leader>fd", name = "diagnostics" },
         { "<leader>b", name = "Buffer" },
