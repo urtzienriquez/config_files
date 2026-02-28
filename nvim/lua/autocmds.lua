@@ -128,7 +128,7 @@ vim.api.nvim_create_autocmd("LspProgress", {
       id = "lsp",
       kind = "progress",
       title = value.title,
-      status = "running",
+      status = value.kind ~= "end" and "running" or "success",
       percent = value.percentage,
     })
   end,
