@@ -89,6 +89,11 @@ vim.api.nvim_create_autocmd("User", {
   group = vim.api.nvim_create_augroup("plugin-keymaps", { clear = true }),
   pattern = "VeryLazy",
   callback = function()
+    -- Lazy
+    vim.keymap.set({ "n" }, "<leader>l", function()
+      require("lazy").home()
+    end, { desc = "Around function" })
+
     -- Oil file explorer
     local oil_ok, oil = pcall(require, "oil")
     if oil_ok then
