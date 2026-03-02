@@ -64,13 +64,13 @@ vim.o.spelllang = "en_us"
 vim.o.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
 
 vim.api.nvim_create_user_command("SpellEN", function()
-  vim.o.spelllang = { "en_us" }
+  vim.o.spelllang = "en_us"
   vim.o.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
   vim.notify("Spell: EN")
 end, {})
 
 vim.api.nvim_create_user_command("SpellES", function()
-  vim.o.spelllang = { "es_es" }
+  vim.o.spelllang = "es_es"
   vim.o.spellfile = vim.fn.stdpath("config") .. "/spell/es.utf-8.add"
   vim.notify("Spell: ES")
 end, {})
