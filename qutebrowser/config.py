@@ -1,4 +1,11 @@
-# don't load the autoconfig.yaml, but the config.py instead
+# pyright: ignore config/c not defined error
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    config = config  # type: ignore
+    c = c  # type: ignore
+
 config.load_autoconfig(False)
 
 # set the theme
