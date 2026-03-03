@@ -42,7 +42,6 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.opt_local.wrap = true
     vim.opt_local.linebreak = true
-    vim.opt_local.showbreak = "↳ "
   end,
   desc = "Better wrapping for prose files",
 })
