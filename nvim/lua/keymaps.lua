@@ -92,7 +92,7 @@ vim.api.nvim_create_autocmd("User", {
     -- Lazy
     vim.keymap.set({ "n" }, "<leader>l", function()
       require("lazy").home()
-    end, { desc = "Around function" })
+    end, { desc = "Lazy" })
 
     -- Oil file explorer
     local oil_ok, oil = pcall(require, "oil")
