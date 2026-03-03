@@ -9,6 +9,7 @@ vim.schedule(function()
   end
 
   noop("n", "<leader>rr")
+  noop("n", "<leader>bf")
   noop("n", "<leader><Enter>")
   noop("v", "<leader><Enter>")
   noop("n", "<leader><leader><Enter>")
@@ -16,6 +17,7 @@ vim.schedule(function()
   -- Hide from which-key in this buffer
   wk.add({
     { "<leader>rr", hidden = true, buffer = buf },
+    { "<leader>bf", hidden = true, buffer = buf },
     { "<leader><CR>", hidden = true, buffer = buf },
     { "<leader><leader><CR>", hidden = true, buffer = buf },
   })
