@@ -31,6 +31,15 @@ return {
         julia = { "juliafmt" },
       },
       formatters = {
+        injected = {
+          condition = function()
+            return true
+          end,
+          options = {
+            ignore_errors = false,
+            lang_to_formatters = {},
+          },
+        },
         styler = {
           command = "R",
           args = {
