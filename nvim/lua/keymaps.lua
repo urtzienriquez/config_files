@@ -14,7 +14,11 @@ vim.keymap.set("n", "<Left>", "<cmd>cclose<CR>", { noremap = true, silent = true
 vim.keymap.set("n", "<Right>", "<cmd>copen<CR>", { noremap = true, silent = true })
 
 -- Highlight without moving
-vim.keymap.set("n", "*", "*``")
+vim.keymap.set("n", "*", function()
+  local word = vim.fn.expand("<cword>")
+  vim.fn.setreg("/", word)
+  vim.opt.hlsearch = true
+end, { noremap = true, desc = "Search word under cursor, stay in place" })
 
 -- Escape terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
