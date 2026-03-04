@@ -72,10 +72,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-attach-keymaps", { clear = true }),
   callback = function(event)
     local opts = { buffer = event.buf, silent = true }
-    vim.keymap.set("n", "K", function()
-      vim.lsp.buf.hover({ border = "single" })
-    end, vim.tbl_extend("force", opts, { desc = "Information hover" }))
-
     vim.keymap.set("n", "<leader>k", function()
       vim.diagnostic.open_float({ border = "single" })
     end, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
