@@ -47,7 +47,7 @@ vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 
 -- Execute Lua
-vim.keymap.set("n", "<leader><leader><Enter>", "<CMD>source %<CR>")
+vim.keymap.set("n", "<leader><leader><Enter>", "<CMD>silent update<BAR>source %<CR>")
 vim.keymap.set("n", "<leader><Enter>", ":.lua<CR>")
 vim.keymap.set("v", "<leader><Enter>", ":lua<CR>")
 
