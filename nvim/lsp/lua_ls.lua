@@ -17,6 +17,7 @@ return {
       diagnostics = {
         globals = {
           "vim",
+          "love",
           "describe",
           "it",
           "before_each",
@@ -28,7 +29,10 @@ return {
       },
       workspace = {
         checkThirdParty = false,
-        library = vim.api.nvim_get_runtime_file("", true),
+        library = vim.list_extend(
+          vim.api.nvim_get_runtime_file("", true),
+          { vim.fn.expand("~/.local/share/lua-libraries/love2d/library") }
+        ),
       },
       telemetry = { enable = false },
     },
