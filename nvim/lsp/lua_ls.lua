@@ -17,7 +17,6 @@ return {
       diagnostics = {
         globals = {
           "vim",
-          "love",
           "describe",
           "it",
           "before_each",
