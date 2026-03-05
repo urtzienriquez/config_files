@@ -43,5 +43,6 @@ floating_layout = layout.Floating(
         Match(title="pinentry"),  # GPG key password entry
         # Zotero LibreOffice citation popup - match by window role "Toplevel"
         Match(wm_class="Zotero", role="Toplevel"),
+        Match(wm_class="love-11.5"),
     ],
 )
