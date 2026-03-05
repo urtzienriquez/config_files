@@ -14,7 +14,18 @@ return {
   settings = {
     Lua = {
       runtime = { version = "LuaJIT" },
-      diagnostics = { globals = { "vim" } },
+      diagnostics = {
+        globals = {
+          "vim",
+          "describe",
+          "it",
+          "before_each",
+          "after_each",
+          "before_all",
+          "after_all",
+          "pending",
+        },
+      },
       workspace = {
         checkThirdParty = false,
         library = vim.api.nvim_get_runtime_file("", true),
