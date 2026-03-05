@@ -239,3 +239,15 @@ vim.api.nvim_create_autocmd("User", {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("love2d-maps", { clear = true }),
+  pattern = "*.lua",
+  callback = function()
+    vim.keymap.set("n", "<leader>rr", function()
+      vim.fn.jobstart({ "love", vim.fn.getcwd() }, {
+        detach = true,
+      })
+    end, { desc = "Run Love2D game" })
+  end,
+})
