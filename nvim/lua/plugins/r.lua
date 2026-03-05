@@ -17,22 +17,25 @@ return {
         vim.keymap.set("n", "<leader>cn", "<Plug>RNextRChunk", opts_keymap)
         vim.keymap.set("n", "<leader>cN", "<Plug>RPreviousRChunk", opts_keymap)
 
-        vim.keymap.set("n", "<leader>rr", function()
-          local filename = vim.fn.input({
-            prompt = "Output filename (without extension): ",
-            cancelreturn = "__CANCEL__",
-          })
-          vim.api.nvim_echo({}, false, {})
-          if filename == "__CANCEL__" then
-            return
-          end
-          vim.cmd('RSend if(exists("params")) rm(params)')
-          if filename ~= "" then
-            vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", output_file = "' .. filename .. '")')
-          else
-            vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '")')
-          end
-        end, { desc = "Render R Markdown with custom output name" })
+        local ft = vim.bo.filetype
+        if ft == "rmd" then
+          vim.keymap.set("n", "<leader>rr", function()
+            local filename = vim.fn.input({
+              prompt = "Output filename (without extension): ",
+              cancelreturn = "__CANCEL__",
+            })
+            vim.api.nvim_echo({}, false, {})
+            if filename == "__CANCEL__" then
+              return
+            end
+            vim.cmd('RSend if(exists("params")) rm(params)')
+            if filename ~= "" then
+              vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '", output_file = "' .. filename .. '")')
+            else
+              vim.cmd('RSend rmarkdown::render("' .. vim.fn.expand("%") .. '")')
+            end
+          end, { desc = "Render R Markdown with custom output name" })
+        end
 
         vim.keymap.set("i", "<C-a>c", "`r<Space>`<Esc>i", opts_keymap)
         vim.keymap.set(
