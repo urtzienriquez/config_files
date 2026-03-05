@@ -245,6 +245,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   pattern = "*.lua",
   callback = function()
     vim.keymap.set("n", "<leader>rr", function()
+      vim.cmd('write')
       vim.fn.jobstart({ "love", vim.fn.getcwd() }, {
         detach = true,
       })
