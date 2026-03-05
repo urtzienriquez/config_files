@@ -14,4 +14,3 @@ theme.sh
 theme.toml
 */zsh/plugins
 local.config
-**/nvim/lua/extras/
