@@ -215,6 +215,25 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 -- ========================================
+-- love2d run
+-- ========================================
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("love2d-maps", { clear = true }),
+  pattern = "*.lua",
+  callback = function()
+    local root = vim.fs.root(0, { "main.lua" })
+    if not root then
+      return
+    end
+
+    vim.keymap.set("n", "<leader>rr", function()
+      vim.cmd("write")
+      vim.fn.jobstart({ "love", root }, { detach = true })
+    end, { buffer = true, desc = "Run Love2D game" })
+  end,
+})
+
+-- ========================================
 -- WHICH-KEY GROUPS
 -- ========================================
 vim.api.nvim_create_autocmd("User", {
@@ -237,18 +256,5 @@ vim.api.nvim_create_autocmd("User", {
         { "<leader>g", name = "Git" },
       })
     end
-  end,
-})
-
-vim.api.nvim_create_autocmd("BufEnter", {
-  group = vim.api.nvim_create_augroup("love2d-maps", { clear = true }),
-  pattern = "*.lua",
-  callback = function()
-    vim.keymap.set("n", "<leader>rr", function()
-      vim.cmd('write')
-      vim.fn.jobstart({ "love", vim.fn.getcwd() }, {
-        detach = true,
-      })
-    end, { desc = "Run Love2D game" })
   end,
 })
