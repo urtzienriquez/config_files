@@ -450,7 +450,9 @@ local function set_rnvim_keymaps()
     vim.keymap.set("n", "<leader>rr", function()
       local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
       vim.api.nvim_echo({}, false, {})
-      if filename == "__CANCEL__" then return end
+      if filename == "__CANCEL__" then
+        return
+      end
       vim.cmd('RSend if(exists("params")) rm(params)')
       local file = vim.fn.expand("%")
       if filename ~= "" then
@@ -470,13 +472,19 @@ local r_opts = {
   R_args = { "--no-save --silent" },
   user_maps_only = true,
   r_ls = {
-    completion = true, hover = true, signature = true,
-    implementation = false, definition = false, references = false,
+    completion = true,
+    hover = true,
+    signature = true,
+    implementation = false,
+    definition = false,
+    references = false,
   },
   objbr_mappings = {
     c = "class",
     ["<leader>gp"] = "head({object}, n = 15)",
-    v = function() require("r.browser").toggle_view() end,
+    v = function()
+      require("r.browser").toggle_view()
+    end,
   },
   hook = {
     on_filetype = function()
