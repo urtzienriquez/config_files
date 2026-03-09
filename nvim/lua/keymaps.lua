@@ -47,9 +47,16 @@ vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 
 -- Execute Lua
-vim.keymap.set("n", "<leader><leader><Enter>", "<CMD>silent update<BAR>source %<CR>")
-vim.keymap.set("n", "<leader><Enter>", ":.lua<CR>")
-vim.keymap.set("v", "<leader><Enter>", ":lua<CR>")
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("lua-keymaps", { clear = true }),
+  pattern = "lua",
+  callback = function()
+    vim.keymap.set("n", "<leader><leader><Enter>", "<CMD>silent update<BAR>source %<CR>", { desc = "exec lua file" })
+    vim.keymap.set("n", "<leader><Enter>", ":.lua<CR>", { desc = "exec lua line" })
+    vim.keymap.set("v", "<leader><Enter>", ":lua<CR>", { desc = "exec lua block" })
+  end,
+  desc = "Remove q-to-close in man pages",
+})
 
 -- Refresh git status
 vim.keymap.set("n", "<leader>gg", ":GitStatusRefresh<CR>", { silent = true, desc = "Refresh git status" })
