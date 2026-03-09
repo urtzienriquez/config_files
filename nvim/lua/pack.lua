@@ -12,6 +12,9 @@ vim.api.nvim_create_autocmd("PackChanged", {
       end
       vim.cmd("TSUpdate")
     end
+    if name == "blink.cmp" and (kind == "install" or kind == "update") then
+      vim.system({ "cargo", "build", "--release" }, { cwd = ev.data.path }):wait()
+    end
   end,
 })
 
@@ -23,7 +26,7 @@ vim.pack.add({
   gh("christoomey/vim-tmux-navigator"),
   gh("stevearc/oil.nvim"),
   gh("ibhagwan/fzf-lua"),
-  { src = gh("saghen/blink.cmp"), version = vim.version.range("1.0") },
+  gh("saghen/blink.cmp"),
   gh("rafamadriz/friendly-snippets"),
   gh("stevearc/conform.nvim"),
   gh("mason-org/mason.nvim"),
