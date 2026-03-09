@@ -48,9 +48,6 @@ end
 
 vim.cmd.colorscheme("nightfox")
 
-vim.cmd.packadd("nvim-web-devicons")
-require("nvim-web-devicons").setup({})
-
 vim.cmd.packadd("plenary.nvim")
 vim.cmd.packadd("vim-tmux-navigator")
 
@@ -102,6 +99,10 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 vim.api.nvim_create_autocmd("UIEnter", {
   once = true,
   callback = function()
+    -- nvim-web-devicons: deferred from startup into UIEnter
+    vim.cmd.packadd("nvim-web-devicons")
+    require("nvim-web-devicons").setup({})
+
     -- nvim-surround
     vim.cmd.packadd("nvim-surround")
     require("nvim-surround").setup({
@@ -301,12 +302,16 @@ vim.api.nvim_create_autocmd("UIEnter", {
 })
 
 -- InsertEnter / CmdlineEnter  →  blink.cmp
+-- blink.cmp's rtp is only added here to prevent its plugin/ file from sourcing at startup
 
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
   once = true,
   callback = function()
+    -- Add blink.cmp to rtp now so its plugin/ file sources for the first time here
+    local blink_path = vim.fn.stdpath("data") .. "/site/pack/core/opt/blink.cmp"
+    vim.opt.rtp:append(blink_path)
+
     vim.cmd.packadd("friendly-snippets")
-    vim.cmd.packadd("blink.cmp")
     require("blink.cmp").setup({
       keymap = {
         preset = "default",
@@ -432,6 +437,8 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- FileType  →  R.nvim
 
+vim.cmd.packadd("R.nvim")
+
 local function set_rnvim_keymaps()
   local o = { noremap = true, silent = true, buffer = true }
   vim.keymap.set("n", "<leader>or", "<Plug>RStart", o)
@@ -464,7 +471,6 @@ local function set_rnvim_keymaps()
   end
 end
 
-vim.cmd.packadd("R.nvim")
 local r_opts = {
   R_app = "R",
   external_term = "tmux split-window -d -h",
@@ -506,6 +512,7 @@ if vim.env.R_AUTO_START == "true" then
   r_opts.auto_start = "on startup"
   r_opts.objbr_auto_start = true
 end
+
 require("r").setup(r_opts)
 
 -- FileType  →  vim-slime + replent.nvim
