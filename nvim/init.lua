@@ -1,5 +1,5 @@
 require("options")
 require("autocmds")
-require("lazy.lazy")
+require("pack")
 require("lsp")
 require("keymaps")

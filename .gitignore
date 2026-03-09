@@ -6,7 +6,7 @@
 quickmarks
 autoconfig.yml
 */spell
-lazy-lock.json
+nvim-pack-lock.json
 .histfile
 .zcompdump*
 tmux*.log
