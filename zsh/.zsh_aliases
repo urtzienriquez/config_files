@@ -300,3 +300,9 @@ function kon() {
 function koff() {
     pkill -f screenkey
 }
+
+# get paper template
+function rticle() {
+    git clone https://github.com/urtzienriquez/paper_template ./manuscript
+    command rm -rf manuscript/(.git|README.md)
+}
