@@ -1,8 +1,6 @@
-local gh = require("plugins.utils").gh
-
 vim.pack.add({
-  gh("nvim-treesitter/nvim-treesitter"),
-  gh("nvim-treesitter/nvim-treesitter-textobjects"),
+  "https://github.com/nvim-treesitter/nvim-treesitter",
+  "https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
 })
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -93,4 +91,3 @@ vim.api.nvim_create_autocmd("FileType", {
     end
   end,
 })
-

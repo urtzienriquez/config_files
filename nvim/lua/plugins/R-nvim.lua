@@ -1,6 +1,4 @@
-local gh = require("plugins.utils").gh
-
-vim.pack.add({ gh("R-nvim/R.nvim") })
+vim.pack.add({ "https://github.com/R-nvim/R.nvim" })
 
 local function set_rnvim_keymaps()
   local o = { noremap = true, silent = true, buffer = true }

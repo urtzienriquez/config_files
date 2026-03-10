@@ -1,6 +1,4 @@
-local gh = require("plugins.utils").gh
-
-vim.pack.add({ gh("stevearc/oil.nvim") })
+vim.pack.add({ "https://github.com/stevearc/oil.nvim" })
 
 vim.cmd.packadd("oil.nvim")
 require("oil").setup({

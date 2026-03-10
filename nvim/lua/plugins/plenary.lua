@@ -1,6 +1,4 @@
-local gh = require("plugins.utils").gh
-
-vim.pack.add({ gh("nvim-lua/plenary.nvim") })
+vim.pack.add({ "https://github.com/nvim-lua/plenary.nvim" })
 
 vim.cmd.packadd("plenary.nvim")
 

@@ -1,6 +1,4 @@
-local gh = require("plugins.utils").gh
-
-vim.pack.add({ gh("kylechui/nvim-surround") })
+vim.pack.add({ "https://github.com/kylechui/nvim-surround" })
 
 vim.cmd.packadd("nvim-surround")
 require("nvim-surround").setup({

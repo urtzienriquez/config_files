@@ -1,6 +1,4 @@
-local gh = require("plugins.utils").gh
-
-vim.pack.add({ gh("ibhagwan/fzf-lua") })
+vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
 
 local _fzf_loaded = false
 local function fzf(method, opts)

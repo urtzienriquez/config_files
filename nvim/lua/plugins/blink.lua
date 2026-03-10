@@ -1,8 +1,6 @@
-local gh = require("plugins.utils").gh
-
 vim.pack.add({
-  gh("saghen/blink.cmp"),
-  gh("rafamadriz/friendly-snippets"),
+  "https://github.com/saghen/blink.cmp",
+  "https://github.com/rafamadriz/friendly-snippets",
 })
 
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {

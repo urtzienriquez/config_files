@@ -1,8 +1,6 @@
-local gh = require("plugins.utils").gh
-
 vim.pack.add({
-  gh("folke/which-key.nvim"),
-  gh("nvim-tree/nvim-web-devicons"),
+  "https://github.com/folke/which-key.nvim",
+  "https://github.com/nvim-tree/nvim-web-devicons",
 })
 
 vim.cmd.packadd("which-key.nvim")

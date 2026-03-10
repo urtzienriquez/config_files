@@ -1,6 +1,4 @@
-local gh = require("plugins.utils").gh
-
-vim.pack.add({ gh("tpope/vim-fugitive") })
+vim.pack.add({ "https://github.com/tpope/vim-fugitive" })
 
 vim.cmd.packadd("vim-fugitive")
 vim.keymap.set("n", "<leader>gs", "<cmd>Git<cr>", { desc = "Git status" })
