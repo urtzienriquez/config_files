@@ -6,10 +6,6 @@ vim.pack.add({
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
   once = true,
   callback = function()
-    -- Add blink.cmp to rtp now so its plugin/ file sources for the first time here
-    local blink_path = vim.fn.stdpath("data") .. "/site/pack/core/opt/blink.cmp"
-    vim.opt.rtp:append(blink_path)
-
     require("blink.cmp").setup({
       keymap = {
         preset = "default",
