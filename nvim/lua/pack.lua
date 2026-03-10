@@ -40,17 +40,11 @@ for _, name in ipairs(my_packs) do
   vim.opt.rtp:prepend(dev .. "/" .. name)
 end
 
--- ALWAYS LOADED
-
+-- colorscheme: nightfox
 vim.cmd.colorscheme("nightfox")
 
--- citeref: always loaded so blink.cmp can use its source from first InsertEnter,
--- regardless of which filetype was opened first.
+-- citeref
 require("citeref").setup({
   backend = "fzf",
   bib_files = { "~/Documents/zotero.bib" },
 })
-
--- vim.api.nvim_create_user_command("Learn", function()
---   vim.cmd("Learn")
--- end, {})
