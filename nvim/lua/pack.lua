@@ -30,6 +30,7 @@ local my_packs = {
   "citeref.nvim",
   "replent.nvim",
   "learnlua.nvim",
+  "neoffice.nvim",
 }
 for _, name in ipairs(my_packs) do
   vim.opt.rtp:prepend(dev .. "/" .. name)
@@ -43,3 +44,6 @@ require("citeref").setup({
   backend = "fzf",
   bib_files = { "~/Documents/zotero.bib" },
 })
+
+-- neoffice
+require("neoffice").setup({})
