@@ -14,21 +14,16 @@ vim.api.nvim_create_autocmd("PackChanged", {
   end,
 })
 
-require("plugins.oil")
-require("plugins.plenary")
-require("plugins.which-key")
-require("plugins.vim-tmux-navigator")
-require("plugins.fzf-lua")
-require("plugins.blink")
-require("plugins.conform")
-require("plugins.mason")
-require("plugins.nvim-treesitter")
-require("plugins.nvim-surround")
-require("plugins.vim-fugitive")
-require("plugins.vim-slime")
-require("plugins.R-nvim")
+-- external plugins
+local plugin_dir = vim.fn.stdpath("config") .. "/lua/plugins"
+for _, file in ipairs(vim.fn.readdir(plugin_dir)) do
+  local plugin = file:match("^(.+)%.lua$")
+  if plugin then
+    require("plugins." .. plugin)
+  end
+end
 
--- Dev plugins
+-- my plugins
 local dev = vim.fn.expand("~/Documents/GitHub")
 local my_packs = {
   "nightfox.nvim",
