@@ -1,0 +1,16 @@
+local gh = require("plugins.utils").gh
+
+vim.pack.add({ gh("jpalardy/vim-slime") })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "python", "julia", "matlab", "quarto" },
+  once = true,
+  callback = function()
+    vim.cmd.packadd("vim-slime")
+    vim.g.slime_target = "tmux"
+    vim.g.slime_default_config = { socket_name = "default", target_pane = "{last}" }
+    vim.g.slime_dont_ask_default = 1
+    vim.g.slime_no_mappings = 1
+    vim.g.slime_bracketed_paste = 1
+  end,
+})
