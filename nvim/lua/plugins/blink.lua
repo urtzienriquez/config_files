@@ -1,7 +1,7 @@
 vim.pack.add({
   "https://github.com/saghen/blink.cmp",
   "https://github.com/rafamadriz/friendly-snippets",
-})
+}, { load = false })
 
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
   once = true,
@@ -10,7 +10,6 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
     local blink_path = vim.fn.stdpath("data") .. "/site/pack/core/opt/blink.cmp"
     vim.opt.rtp:append(blink_path)
 
-    vim.cmd.packadd("friendly-snippets")
     require("blink.cmp").setup({
       keymap = {
         preset = "default",

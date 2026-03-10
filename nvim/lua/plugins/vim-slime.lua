@@ -1,4 +1,4 @@
-vim.pack.add({ "https://github.com/jpalardy/vim-slime" })
+vim.pack.add({ "https://github.com/jpalardy/vim-slime" }, { load = false })
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "python", "julia", "matlab", "quarto" },

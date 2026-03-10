@@ -14,19 +14,19 @@ vim.api.nvim_create_autocmd("PackChanged", {
   end,
 })
 
-require("plugins.oil") -- adds + immediately loads
-require("plugins.plenary") -- adds + immediately loads
-require("plugins.which-key") -- adds + immediately loads
-require("plugins.vim-tmux-navigator") -- adds + immediately loads
-require("plugins.fzf-lua") -- adds + immediately loads
-require("plugins.blink") -- adds + immediately loads
-require("plugins.conform") -- adds + immediately loads
-require("plugins.mason") -- adds + immediately loads
-require("plugins.nvim-treesitter") -- adds + immediately loads
-require("plugins.nvim-surround") -- adds + immediately loads
-require("plugins.vim-fugitive") -- adds + immediately loads
-require("plugins.vim-slime") -- adds + immediately loads
-require("plugins.R-nvim") -- adds + immediately loads
+require("plugins.oil")
+require("plugins.plenary")
+require("plugins.which-key")
+require("plugins.vim-tmux-navigator")
+require("plugins.fzf-lua")
+require("plugins.blink")
+require("plugins.conform")
+require("plugins.mason")
+require("plugins.nvim-treesitter")
+require("plugins.nvim-surround")
+require("plugins.vim-fugitive")
+require("plugins.vim-slime")
+require("plugins.R-nvim")
 
 -- Dev plugins
 local dev = vim.fn.expand("~/Documents/GitHub")
