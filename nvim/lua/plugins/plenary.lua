@@ -1,7 +1,5 @@
 vim.pack.add({ "https://github.com/nvim-lua/plenary.nvim" })
 
-vim.cmd.packadd("plenary.nvim")
-
 -- plenary test runner
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
   pattern = "*_spec.lua",

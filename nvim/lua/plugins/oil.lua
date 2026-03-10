@@ -1,6 +1,5 @@
 vim.pack.add({ "https://github.com/stevearc/oil.nvim" })
 
-vim.cmd.packadd("oil.nvim")
 require("oil").setup({
   default_file_explorer = true,
   use_default_keymaps = true,

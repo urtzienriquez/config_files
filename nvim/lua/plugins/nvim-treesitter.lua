@@ -6,9 +6,6 @@ vim.pack.add({
 vim.api.nvim_create_autocmd("FileType", {
   once = true,
   callback = function()
-    vim.cmd.packadd("nvim-treesitter")
-    vim.cmd.packadd("nvim-treesitter-textobjects")
-
     require("nvim-treesitter").setup({})
     require("nvim-treesitter").install({
       "bash",

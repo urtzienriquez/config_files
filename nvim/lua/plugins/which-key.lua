@@ -3,7 +3,6 @@ vim.pack.add({
   "https://github.com/nvim-tree/nvim-web-devicons",
 })
 
-vim.cmd.packadd("which-key.nvim")
 require("which-key").setup({
   plugins = { spelling = { enabled = false } },
   delay = 0,

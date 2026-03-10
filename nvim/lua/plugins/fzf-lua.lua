@@ -5,7 +5,6 @@ local function fzf(method, opts)
   return function()
     if not _fzf_loaded then
       _fzf_loaded = true
-      vim.cmd.packadd("fzf-lua")
       local actions = require("fzf-lua").actions
       require("fzf-lua").setup({
         defaults = { no_header_i = true, actions = { ["ctrl-q"] = actions.file_sel_to_qf } },

@@ -1,7 +1,6 @@
 vim.pack.add({ "https://github.com/mason-org/mason.nvim" }, { load = false })
 
 vim.api.nvim_create_user_command("Mason", function(cmd_opts)
-  vim.cmd.packadd("mason.nvim")
   require("mason").setup({
     ui = {
       border = "none",

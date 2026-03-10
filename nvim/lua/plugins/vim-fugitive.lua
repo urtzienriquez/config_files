@@ -1,6 +1,5 @@
 vim.pack.add({ "https://github.com/tpope/vim-fugitive" })
 
-vim.cmd.packadd("vim-fugitive")
 vim.keymap.set("n", "<leader>gs", "<cmd>Git<cr>", { desc = "Git status" })
 vim.keymap.set("n", "<leader>gf", "<cmd>Git fetch<cr>", { desc = "Git fetch" })
 vim.keymap.set("n", "<leader>gp", "<cmd>Git pull<cr>", { desc = "Git pull" })
