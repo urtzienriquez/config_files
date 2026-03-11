@@ -175,3 +175,11 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
   desc = "Use visual-line navigation in prose files",
 })
+
+-- disable spelling in quickfix list
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "qf",
+  callback = function()
+    vim.opt_local.spell = false
+  end,
+})
