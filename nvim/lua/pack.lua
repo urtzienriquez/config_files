@@ -225,10 +225,10 @@ vim.keymap.set("n", "<leader>fd", fzf("diagnostics_document"), { desc = "Find di
 vim.keymap.set("n", "<leader>fD", fzf("diagnostics_workspace"), { desc = "Find diagnostics (workspace)" })
 vim.keymap.set("n", "<leader>fl", fzf("lsp_definitions"), { desc = "Find LSP definitions" })
 vim.keymap.set("n", "<leader>fr", fzf("lsp_references"), { desc = "Find LSP references" })
-vim.keymap.set("n", "<leader>fs", fzf("lsp_document_symbols"), { desc = "Find LSP symbols" })
+vim.keymap.set("n", "<leader>fS", fzf("lsp_document_symbols"), { desc = "Find LSP symbols" })
 vim.keymap.set(
   "n",
-  "<leader>fS",
+  "<leader>fs",
   fzf("lsp_document_symbols", { regex_filter = "Str.*" }),
   { desc = "Find LSP symbols (strings)" }
 )
