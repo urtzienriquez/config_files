@@ -1,17 +1,15 @@
 -- Basic keymaps
 -- ===============
 
--- Disable arrow keys in insert mode
-vim.keymap.set("i", "<Up>", "<Nop>", { noremap = true, silent = true })
-vim.keymap.set("i", "<Down>", "<Nop>", { noremap = true, silent = true })
-vim.keymap.set("i", "<Left>", "<Nop>", { noremap = true, silent = true })
-vim.keymap.set("i", "<Right>", "<Nop>", { noremap = true, silent = true })
+-- Disable arrow keys in insert and normal mode
+vim.keymap.set({"i","n"}, "<Up>", "<Nop>", { noremap = true, silent = true })
+vim.keymap.set({"i","n"}, "<Down>", "<Nop>", { noremap = true, silent = true })
+vim.keymap.set({"i","n"}, "<Left>", "<Nop>", { noremap = true, silent = true })
+vim.keymap.set({"i","n"}, "<Right>", "<Nop>", { noremap = true, silent = true })
 
 -- Arrow keys in normal mode → navigate quickfix
 vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Left>", "<cmd>cclose<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Right>", "<cmd>copen<CR>", { noremap = true, silent = true })
 
 -- Highlight without moving
 vim.keymap.set("n", "*", function()
