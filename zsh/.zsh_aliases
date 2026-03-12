@@ -1,6 +1,31 @@
 # reload zsh
 alias zr='source ~/.config/zsh/.zshrc'
 
+# neovim alternative config aliases
+alias nv-neoffice='NVIM_APPNAME=nvim_neoffice nvim'
+
+# nv switcher
+function nvs() {
+  local items=("default" "normal" "neoffice")
+  local config
+  config=$(printf "%s\n" "${items[@]}" | fzf --prompt=" config: " --height=20% --layout=reverse --border --exit-0)
+  if [[ -z $config ]]; then
+    echo "Nothing selected"
+    return 0
+  fi
+  case $config in
+    default)
+      nvim --clean "$@"
+      ;;
+    normal)
+      nvim "$@"
+      ;;
+    *)
+      NVIM_APPNAME="nvim_$config" nvim "$@"
+      ;;
+  esac
+}
+
 # update neovim
 nvup() {
     local nvim_dir="/home/urtzi/Documents/GitHub/neovim/"
