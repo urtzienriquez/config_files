@@ -74,10 +74,10 @@ config.set("fileselect.handler", "external")
 config.set(
     "fileselect.single_file.command",
     [
-        "ghostty",
-        "--x11-instance-name=ranger",
-        "--window-width=80",
-        "--window-height=25",
+        "wezterm",
+        "start",
+        "--class",
+        "fzf-nova",  # Removed trailing space
         "-e",
         "ranger",
         "--choosefile={}",
@@ -86,10 +86,10 @@ config.set(
 config.set(
     "fileselect.multiple_files.command",
     [
-        "ghostty",
-        "--x11-instance-name=ranger",
-        "--window-width=80",
-        "--window-height=25",
+        "wezterm",
+        "start",
+        "--class",
+        "fzf-nova",
         "-e",
         "ranger",
         "--choosefiles={}",
@@ -97,7 +97,7 @@ config.set(
 )
 
 # open neovim from qutebrowser
-c.editor.command = ["ghostty", "-e", "nvim", "-f", "{}"]
+c.editor.command = ["wezterm", "start", "--", "nvim", "-f", "{}"]
 
 # remap J to K and K to J
 config.bind("J", "tab-prev")
@@ -140,7 +140,9 @@ config.bind("tv", "spawn --userscript view_in_mpv")
 config.bind("gv", "hint links spawn mpv {hint-url}")
 
 # Proxy to use
-c.aliases["toggle-proxy"] = "config-cycle content.proxy system http://proxy.ivb.cz:3128/"
+c.aliases["toggle-proxy"] = (
+    "config-cycle content.proxy system http://proxy.ivb.cz:3128/"
+)
 config.bind("pt", "toggle-proxy")
 
 # download images with hints
