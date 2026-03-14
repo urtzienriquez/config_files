@@ -380,7 +380,7 @@ keys = [
         [mod, "control"],
         "Space",
         launcher_keys,
-        mode="multi-launcher",
+        mode=True,
         name="multi-launcher",
     ),
 ]
