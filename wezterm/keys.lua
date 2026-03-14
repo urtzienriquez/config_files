@@ -8,58 +8,38 @@ local mod = {}
 function mod.with_options(config)
   local keyBindings = {
     {
-      key = 'f',
-      mods = 'LEADER',
-      action = wezterm.action.SpawnCommandInNewTab {
-        -- We use a small script or direct command to launch fzf
-        args = {
-          'zsh', '-c',
-          'fzf --height=85% --layout=reverse --border=rounded > /tmp/fzf_result && nvim $(cat /tmp/fzf_result)'
-        },
-        -- This ensures it spawns in a way that respects your window configuration
-        domain = 'CurrentPaneDomain',
-      },
-    },
-    {
       key = "b",
       mods = "LEADER",
       action = wezterm.action.EmitEvent("toggle-colorscheme"),
     },
-    -- tmux behavior
     {
       key = ";",
       mods = "LEADER",
       action = act.ActivateCopyMode,
     },
-
     {
       key = "z",
       mods = "LEADER",
       action = act.TogglePaneZoomState,
     },
-
     -- Pane and window management
     {
-      -- Create new tab
-      key = "c",
+      key = "c", -- Create new tab
       mods = "LEADER",
       action = act.SpawnTab("CurrentPaneDomain"),
     },
     {
-      -- Previous tab
-      key = "h",
+      key = "h", -- Previous tab
       mods = "ALT",
       action = act.ActivateTabRelative(-1),
     },
     {
-      -- Next tab
-      key = "l",
+      key = "l", -- Next tab
       mods = "ALT",
       action = act.ActivateTabRelative(1),
     },
     {
-      -- Tab navigator
-      key = "t",
+      key = "t", -- Tab navigator
       mods = "LEADER",
       action = act.ShowTabNavigator,
     },
@@ -76,32 +56,17 @@ function mod.with_options(config)
       }),
     },
     {
-      -- Force close current tab
-      key = "x",
+      key = "x", -- Force close current tab
       mods = "LEADER",
       action = act.CloseCurrentPane({ confirm = false }),
     },
     {
-      -- Swap panes
-      key = "{",
+      key = "{", -- Swap panes
       mods = "LEADER|SHIFT",
       action = act.PaneSelect({ mode = "SwapWithActiveKeepFocus" }),
     },
-    -- {
-    -- 	-- Go to previous pane
-    -- 	key = ";",
-    -- 	mods = "LEADER",
-    -- 	action = act.ActivatePaneDirection("Prev"),
-    -- },
-    -- {
-    -- 	-- Go to next pane
-    -- 	key = "o",
-    -- 	mods = "LEADER",
-    -- 	action = act.ActivatePaneDirection("Next"),
-    -- },
     {
-      -- Vertical split
-      key = "v",
+      key = "v", -- Vertical split
       mods = "LEADER",
       action = act.SplitPane({
         direction = "Right",
@@ -109,20 +74,16 @@ function mod.with_options(config)
       }),
     },
     {
-      -- Horizontal split
-      key = "s",
+      key = "s", -- Horizontal split
       mods = "LEADER",
       action = act.SplitPane({
         direction = "Down",
         size = { Percent = 50 },
       }),
     },
-
     -- Workspaces
-
     {
-      -- Create and activate a new workspace
-      key = "w",
+      key = "w", -- Create and activate a new workspace
       mods = "LEADER",
       action = act.PromptInputLine({
         description = wezterm.format({
@@ -143,15 +104,12 @@ function mod.with_options(config)
       }),
     },
   }
-
-  -- Programmatically define key bindings for activating
-  -- tabs by index.
-
-  for i = 0, 8 do
+  -- activating tabs by index.
+  for i = 1, 9 do
     table.insert(keyBindings, {
       key = tostring(i),
       mods = "LEADER",
-      action = act.ActivateTab(i),
+      action = act.ActivateTab(i - 1),
     })
   end
 

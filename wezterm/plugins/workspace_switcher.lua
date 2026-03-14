@@ -30,7 +30,6 @@ function mod.with_options(config)
     }),
   }
 
-  -- Use your util.concat to ensure the key is correctly added to config.keys
   config.keys = util.concat(config.keys or {}, { workspace_key })
 end
 
