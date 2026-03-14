@@ -17,12 +17,6 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 -- Remap C-k to C-d to insert digraphs
 vim.keymap.set("i", "<C-d>", "<C-k>", { noremap = true })
 
--- Resize windows
-vim.keymap.set("n", "<C-Left>", ":vertical resize +5<CR>", { silent = true, desc = "Resize vertically +" })
-vim.keymap.set("n", "<C-Right>", ":vertical resize -5<CR>", { silent = true, desc = "Resize vertically -" })
-vim.keymap.set("n", "<C-Up>", ":resize +5<CR>", { silent = true, desc = "Resize horizontally +" })
-vim.keymap.set("n", "<C-Down>", ":resize -5<CR>", { silent = true, desc = "Resize horizontally -" })
-
 -- Half page up/down, keeping cursor centered
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, desc = "Jump half page down" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, desc = "Jump half page up" })
