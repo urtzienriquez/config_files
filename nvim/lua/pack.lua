@@ -23,7 +23,7 @@ end
 vim.pack.add({
   gh("folke/which-key.nvim"),
   gh("nvim-tree/nvim-web-devicons"),
-  gh("christoomey/vim-tmux-navigator"),
+  gh("mrjones2014/smart-splits.nvim"),
   gh("stevearc/oil.nvim"),
   gh("stevearc/quicker.nvim"),
   gh("kylechui/nvim-surround"),
@@ -70,6 +70,15 @@ require("which-key").add({
 
 -- nvim-web-devicons
 require("nvim-web-devicons").setup({})
+
+-- smart splits
+require("smart-splits").setup({})
+
+vim.keymap.set("n", "<C-h>", require("smart-splits").move_cursor_left)
+vim.keymap.set("n", "<C-j>", require("smart-splits").move_cursor_down)
+vim.keymap.set("n", "<C-k>", require("smart-splits").move_cursor_up)
+vim.keymap.set("n", "<C-l>", require("smart-splits").move_cursor_right)
+vim.keymap.set("n", "<C-\\>", require("smart-splits").move_cursor_previous)
 
 -- oil
 require("oil").setup({
@@ -375,7 +384,8 @@ end
 
 local r_opts = {
   R_app = "R",
-  external_term = "tmux split-window -d -h",
+  -- external_term = "tmux split-window -d -h",
+  external_term = "wezterm cli split-pane --horizontal",
   bracketed_paste = false,
   R_args = { "--no-save --silent" },
   user_maps_only = true,

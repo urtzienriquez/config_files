@@ -155,9 +155,6 @@ elif [[ "$HOST" == "archlinux" ]]; then
 	source /usr/share/fzf/completion.zsh
 fi
 
-export FZF_TMUX=1
-export FZF_TMUX_OPTS="--reverse --info=right -p 85%,85%"
-
 export FZF_THEME_OPTS="--color=fg:#cdcecf,bg:#192330,hl:#719cd6 \
 --color=fg+:#cdcecf,bg+:#29394f,hl+:#82b3f4,gutter:#192330 \
 --color=info:#39506d,prompt:#719cd6,pointer:#dbc074 \
@@ -169,8 +166,8 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -g "!node_module
 
 export FZF_DEFAULT_OPTS="
   $FZF_THEME_OPTS
-  --no-height 
-  --no-reverse
+  --height 85%
+  --layout=reverse
   --preview-window '+{2}+4/3,<60(up),border-sharp'
   --scrollbar='█'
   --bind 'ctrl-v:toggle-preview'
@@ -189,16 +186,6 @@ export FZF_ALT_C_OPTS="--no-preview"
 # Zoxide
 # -------------------------------
 eval "$(zoxide init --cmd cd zsh)"
-
-# -------------------------------
-# tmux
-# -------------------------------
-# always start in a tmux session
-if [ -z "$TMUX" ]; then
-  tty_id=$(basename "$(tty)")
-  session="term_${tty_id}"
-  tmux new-session -A -s "$session"
-fi
 
 # -------------------------------
 # venv
