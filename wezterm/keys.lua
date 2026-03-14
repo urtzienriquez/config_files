@@ -2,6 +2,7 @@ local wezterm = require("wezterm")
 local util = require("util")
 
 local act = wezterm.action
+local act_callback = wezterm.action_callback
 
 local mod = {}
 
@@ -48,7 +49,7 @@ function mod.with_options(config)
       mods = "LEADER",
       action = act.PromptInputLine({
         description = "Enter new name for tab",
-        action = wezterm.action_callback(function(window, _, line)
+        action = act_callback(function(window, _, line)
           if line then
             window:active_tab():set_title(line)
           end
@@ -80,6 +81,19 @@ function mod.with_options(config)
         direction = "Down",
         size = { Percent = 50 },
       }),
+    },
+    {
+      key = "o",
+      mods = "LEADER",
+      action = act_callback(function(win, pane)
+        local tab = win:active_tab()
+        for _, p in ipairs(tab:panes()) do
+          if p:pane_id() ~= pane:pane_id() then
+            p:activate()
+            win:perform_action(act.CloseCurrentPane({ confirm = false }), p)
+          end
+        end
+      end),
     },
     -- Workspaces
     {
