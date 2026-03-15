@@ -568,7 +568,6 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.g.slime_default_config = { socket_name = "default", target_pane = "{last}" }
     vim.g.slime_dont_ask_default = 1
     vim.g.slime_no_mappings = 1
-    vim.g.slime_bracketed_paste = 1
   end,
 })
 
@@ -592,4 +591,9 @@ vim.cmd.colorscheme("nightfox")
 require("citeref").setup({
   backend = "fzf",
   bib_files = { "~/Documents/zotero.bib" },
+})
+
+-- replent
+require("replent").setup({
+  strategy = "neovim",
 })
