@@ -9,6 +9,68 @@ local mod = {}
 function mod.with_options(config)
   local keyBindings = {
     {
+      key = "'",
+      mods = "LEADER",
+      action = act.PromptInputLine({
+        description = wezterm.format({
+          { Attribute = { Intensity = "Bold" } },
+          { Foreground = { AnsiColor = "Teal" } },
+          { Text = "Enter tab position: " },
+        }),
+        action = wezterm.action_callback(function(window, pane, line)
+          if line then
+            -- Convert to 0-based index for MoveTab
+            local position = tonumber(line)
+            if position and position > 0 then
+              window:perform_action(act.MoveTab(position - 1), pane)
+            end
+          end
+        end),
+      }),
+    },
+    {
+      key = "[",
+      mods = "LEADER",
+      -- action = act.RotatePanes("CounterClockwise"),
+      action = wezterm.action_callback(function(window, pane)
+        -- Save the current pane ID
+        local original_pane_id = pane:pane_id()
+
+        -- Perform the rotation
+        window:perform_action(act.RotatePanes("CounterClockwise"), pane)
+
+        -- Restore focus to the original pane
+        local tab = window:active_tab()
+        for _, p in ipairs(tab:panes()) do
+          if p:pane_id() == original_pane_id then
+            p:activate()
+            break
+          end
+        end
+      end),
+    },
+    {
+      key = "]",
+      mods = "LEADER",
+      -- action = act.RotatePanes("Clockwise"),
+      action = wezterm.action_callback(function(window, pane)
+        -- Save the current pane ID
+        local original_pane_id = pane:pane_id()
+
+        -- Perform the rotation
+        window:perform_action(act.RotatePanes("Clockwise"), pane)
+
+        -- Restore focus to the original pane
+        local tab = window:active_tab()
+        for _, p in ipairs(tab:panes()) do
+          if p:pane_id() == original_pane_id then
+            p:activate()
+            break
+          end
+        end
+      end),
+    },
+    {
       key = "b",
       mods = "LEADER",
       action = wezterm.action.EmitEvent("toggle-colorscheme"),
@@ -48,7 +110,11 @@ function mod.with_options(config)
       key = ",",
       mods = "LEADER",
       action = act.PromptInputLine({
-        description = "Enter new name for tab",
+        description = wezterm.format({
+          { Attribute = { Intensity = "Bold" } },
+          { Foreground = { AnsiColor = "Teal" } },
+          { Text = "Enter new name for tab" },
+        }),
         action = act_callback(function(window, _, line)
           if line then
             window:active_tab():set_title(line)
