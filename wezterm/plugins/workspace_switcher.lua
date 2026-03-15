@@ -17,7 +17,7 @@ function mod.with_options(config)
       { Attribute = { Intensity = "Bold" } },
       { Foreground = { Color = active_colors.fg_color } },
       { Background = { Color = active_colors.bg_color } },
-      { Text = " 󱂬: " .. label .. " " },
+      { Text = " 󱂬 : " .. label .. " " },
     })
   end
 
