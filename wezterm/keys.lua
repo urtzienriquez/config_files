@@ -130,6 +130,17 @@ function mod.with_options(config)
       }),
     },
     {
+      key = "X",
+      mods = "LEADER",
+      action = util.kill_workspace_ui(), -- One clean call
+    },
+    {
+      key = "K",
+      mods = "LEADER",
+      -- Replace the pkill command with this:
+      action = wezterm.action.QuitApplication,
+    },
+    {
       key = "F12",
       mods = "",
       action = act.ShowDebugOverlay,
