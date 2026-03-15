@@ -6,8 +6,71 @@ local act_callback = wezterm.action_callback
 
 local mod = {}
 
+-- Track tab bar visibility state for single tab
+local hide_single_tab = true -- Matches your config.hide_tab_bar_if_only_one_tab
+
+wezterm.on("toggle-tab-bar", function(window, pane)
+  hide_single_tab = not hide_single_tab
+  window:set_config_overrides({
+    enable_tab_bar = true, -- Always enabled for multiple tabs
+    hide_tab_bar_if_only_one_tab = hide_single_tab
+  })
+end)
+
 function mod.with_options(config)
   local keyBindings = {
+    {
+      key = "b",
+      mods = "LEADER",
+      action = wezterm.action.EmitEvent("toggle-colorscheme"),
+    },
+    {
+      key = ";",
+      mods = "LEADER",
+      action = act.ActivateCopyMode,
+    },
+    {
+      key = "z",
+      mods = "LEADER",
+      action = act.TogglePaneZoomState,
+    },
+    -- Pane and window management
+    {
+      key = "t",
+      mods = "LEADER",
+      action = wezterm.action.EmitEvent("toggle-tab-bar"),
+    },
+    {
+      key = "[",
+      mods = "LEADER",
+      action = wezterm.action_callback(function(window, pane)
+        local original_pane_id = pane:pane_id()
+        window:perform_action(act.RotatePanes("CounterClockwise"), pane)
+        local tab = window:active_tab()
+        for _, p in ipairs(tab:panes()) do
+          if p:pane_id() == original_pane_id then
+            p:activate()
+            break
+          end
+        end
+      end),
+    },
+    {
+      key = "]",
+      mods = "LEADER",
+      action = wezterm.action_callback(function(window, pane)
+        local original_pane_id = pane:pane_id()
+        window:perform_action(act.RotatePanes("Clockwise"), pane)
+        local tab = window:active_tab()
+        for _, p in ipairs(tab:panes()) do
+          if p:pane_id() == original_pane_id then
+            p:activate()
+            break
+          end
+        end
+      end),
+    },
+    -- tabs
     {
       key = "'",
       mods = "LEADER",
@@ -29,64 +92,6 @@ function mod.with_options(config)
       }),
     },
     {
-      key = "[",
-      mods = "LEADER",
-      -- action = act.RotatePanes("CounterClockwise"),
-      action = wezterm.action_callback(function(window, pane)
-        -- Save the current pane ID
-        local original_pane_id = pane:pane_id()
-
-        -- Perform the rotation
-        window:perform_action(act.RotatePanes("CounterClockwise"), pane)
-
-        -- Restore focus to the original pane
-        local tab = window:active_tab()
-        for _, p in ipairs(tab:panes()) do
-          if p:pane_id() == original_pane_id then
-            p:activate()
-            break
-          end
-        end
-      end),
-    },
-    {
-      key = "]",
-      mods = "LEADER",
-      -- action = act.RotatePanes("Clockwise"),
-      action = wezterm.action_callback(function(window, pane)
-        -- Save the current pane ID
-        local original_pane_id = pane:pane_id()
-
-        -- Perform the rotation
-        window:perform_action(act.RotatePanes("Clockwise"), pane)
-
-        -- Restore focus to the original pane
-        local tab = window:active_tab()
-        for _, p in ipairs(tab:panes()) do
-          if p:pane_id() == original_pane_id then
-            p:activate()
-            break
-          end
-        end
-      end),
-    },
-    {
-      key = "b",
-      mods = "LEADER",
-      action = wezterm.action.EmitEvent("toggle-colorscheme"),
-    },
-    {
-      key = ";",
-      mods = "LEADER",
-      action = act.ActivateCopyMode,
-    },
-    {
-      key = "z",
-      mods = "LEADER",
-      action = act.TogglePaneZoomState,
-    },
-    -- Pane and window management
-    {
       key = "c", -- Create new tab
       mods = "LEADER",
       action = act.SpawnTab("CurrentPaneDomain"),
@@ -100,11 +105,6 @@ function mod.with_options(config)
       key = "l", -- Next tab
       mods = "ALT",
       action = act.ActivateTabRelative(1),
-    },
-    {
-      key = "t", -- Tab navigator
-      mods = "LEADER",
-      action = act.ShowTabNavigator,
     },
     {
       key = ",",
