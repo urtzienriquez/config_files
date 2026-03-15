@@ -118,6 +118,18 @@ function mod.with_options(config)
       }),
     },
     {
+      key = "r",
+      mods = "LEADER",
+      action = act.PromptInputLine({
+        description = "Enter new name for workspace",
+        action = wezterm.action_callback(function(window, pane, line)
+          if line then
+            wezterm.mux.rename_workspace(window:active_workspace(), line)
+          end
+        end),
+      }),
+    },
+    {
       key = "F12",
       mods = "",
       action = act.ShowDebugOverlay,

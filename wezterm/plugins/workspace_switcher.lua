@@ -14,7 +14,7 @@ function mod.with_options(config)
     local active_colors = colors.tab_bar_configs[theme].active_tab
 
     return wezterm.format({
-      { Attribute = { Italic = true } },
+      { Attribute = { Intensity = "Bold" } },
       { Foreground = { Color = active_colors.fg_color } },
       { Background = { Color = active_colors.bg_color } },
       { Text = " 󱂬: " .. label .. " " },
