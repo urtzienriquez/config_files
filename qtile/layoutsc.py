@@ -44,5 +44,7 @@ floating_layout = layout.Floating(
         # Zotero LibreOffice citation popup - match by window role "Toplevel"
         Match(wm_class="Zotero", role="Toplevel"),
         Match(wm_class="love-11.5"),
+        Match(wm_class="gksqt"),
+        Match(wm_class="r_x11"),
     ],
 )
