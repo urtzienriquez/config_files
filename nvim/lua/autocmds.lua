@@ -1,11 +1,3 @@
--- Auto-resize splits when terminal window changes size
-vim.api.nvim_create_autocmd("VimResized", {
-  group = vim.api.nvim_create_augroup("auto-resize", { clear = true }),
-  pattern = "*",
-  command = "wincmd =",
-  desc = "Auto-resize windows on terminal resize",
-})
-
 -- Diff mode: center cursor on j/k
 vim.api.nvim_create_autocmd("BufEnter", {
   group = vim.api.nvim_create_augroup("diff-center", { clear = true }),

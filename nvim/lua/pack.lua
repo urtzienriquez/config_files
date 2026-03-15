@@ -79,10 +79,10 @@ vim.keymap.set("n", "<C-j>", require("smart-splits").move_cursor_down)
 vim.keymap.set("n", "<C-k>", require("smart-splits").move_cursor_up)
 vim.keymap.set("n", "<C-l>", require("smart-splits").move_cursor_right)
 vim.keymap.set("n", "<C-\\>", require("smart-splits").move_cursor_previous)
-vim.keymap.set('n', '<C-Left>', require('smart-splits').resize_left)
-vim.keymap.set('n', '<C-Down>', require('smart-splits').resize_down)
-vim.keymap.set('n', '<C-Up>', require('smart-splits').resize_up)
-vim.keymap.set('n', '<C-Right>', require('smart-splits').resize_right)
+vim.keymap.set("n", "<C-Left>", require("smart-splits").resize_left)
+vim.keymap.set("n", "<C-Down>", require("smart-splits").resize_down)
+vim.keymap.set("n", "<C-Up>", require("smart-splits").resize_up)
+vim.keymap.set("n", "<C-Right>", require("smart-splits").resize_right)
 
 -- oil
 require("oil").setup({
@@ -356,7 +356,12 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 -- R.nvim
 local function set_rnvim_keymaps()
   local o = { noremap = true, silent = true, buffer = true }
-  vim.keymap.set("n", "<leader>or", "<Plug>RStart", o)
+  vim.keymap.set("n", "<leader>or", function()
+    vim.cmd("norm! " .. vim.api.nvim_replace_termcodes("<Plug>RStart", true, true, true))
+    vim.defer_fn(function()
+      vim.cmd("wincmd H")
+    end, 30)
+  end, { desc = "Start R and force vertical split", noremap = true, silent = true })
   vim.keymap.set("n", "<leader>qr", "<Plug>RClose", o)
   vim.keymap.set("n", "<leader>cd", "<Plug>RSetwd", o)
   vim.keymap.set("n", "<Enter>", "<Plug>RDSendLine", o)
@@ -389,7 +394,7 @@ end
 local r_opts = {
   R_app = "R",
   -- external_term = "tmux split-window -d -h",
-  external_term = "wezterm cli split-pane --horizontal",
+  -- external_term = "wezterm cli split-pane --horizontal",
   bracketed_paste = false,
   R_args = { "--no-save --silent" },
   user_maps_only = true,
