@@ -1,12 +1,6 @@
 -- Basic keymaps
 -- ===============
 
--- Disable arrow keys in insert and normal mode
-vim.keymap.set({"i","n"}, "<Up>", "<Nop>", { noremap = true, silent = true })
-vim.keymap.set({"i","n"}, "<Down>", "<Nop>", { noremap = true, silent = true })
-vim.keymap.set({"i","n"}, "<Left>", "<Nop>", { noremap = true, silent = true })
-vim.keymap.set({"i","n"}, "<Right>", "<Nop>", { noremap = true, silent = true })
-
 -- Arrow keys in normal mode → navigate quickfix
 vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
