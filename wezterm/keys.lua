@@ -102,8 +102,8 @@ function mod.with_options(config)
       action = act.PromptInputLine({
         description = wezterm.format({
           { Attribute = { Intensity = "Bold" } },
-          { Foreground = { AnsiColor = "Fuchsia" } },
-          { Text = "Enter name for new workspace" },
+          { Foreground = { AnsiColor = "Teal" } },
+          { Text = "New workspace. Enter name:" },
         }),
         action = act_callback(function(window, pane, line)
           if line then
@@ -121,7 +121,11 @@ function mod.with_options(config)
       key = "r",
       mods = "LEADER",
       action = act.PromptInputLine({
-        description = "Enter new name for workspace",
+        description = wezterm.format({
+          { Attribute = { Intensity = "Bold" } },
+          { Foreground = { AnsiColor = "Teal" } },
+          { Text = "Rename workspace" },
+        }),
         action = wezterm.action_callback(function(window, pane, line)
           if line then
             wezterm.mux.rename_workspace(window:active_workspace(), line)

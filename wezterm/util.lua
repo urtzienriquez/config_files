@@ -40,7 +40,11 @@ function mod.kill_workspace_ui()
     win:perform_action(
       act.InputSelector({
         title = "Kill Workspace",
-        fuzzy_description = "Fuzzy match workspace to kill: ",
+        fuzzy_description = wezterm.format({
+          { Attribute = { Intensity = "Bold" } },
+          { Foreground = { AnsiColor = "Teal" } },
+          { Text = "Fuzzy match workspace to kill: " },
+        }),
         choices = choices,
         fuzzy = true,
         action = act_callback(function(inner_win, inner_pane, id, _)
