@@ -3,6 +3,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- misc options
+vim.o.shell = "/usr/bin/zsh"
 require("vim._core.ui2").enable({ msg = { target = "msg" } })
 -- vim.o.cmdheight = 0
 vim.o.winborder = "rounded"
