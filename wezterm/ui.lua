@@ -1,6 +1,37 @@
 local wezterm = require("wezterm")
+local colors = require("colors")
 
 local mod = {}
+
+wezterm.on("update-status", function(window, pane)
+  local theme_name = _G.current_theme or "nightfox"
+  local theme = colors.themes[theme_name]
+
+  local status_table = {}
+  local workspace = window:active_workspace()
+
+  -- Leader indicator
+  if window:leader_is_active() then
+    table.insert(status_table, { Foreground = { Color = theme.status.leader } })
+    table.insert(status_table, { Text = " 󱐋 " })
+  end
+
+  -- Search/Copy mode indicators
+  local key_table = window:active_key_table()
+  if key_table == "copy_mode" then
+    table.insert(status_table, { Foreground = { Color = theme.status.copy } })
+    table.insert(status_table, { Text = " 󰆏 " })
+  elseif key_table == "search_mode" then
+    table.insert(status_table, { Foreground = { Color = theme.search.indicator } })
+    table.insert(status_table, { Text = "  " })
+  end
+
+  -- Workspace name
+  table.insert(status_table, { Foreground = { Color = theme.status.workspace } })
+  table.insert(status_table, { Text = " " .. workspace .. " " })
+
+  window:set_right_status(wezterm.format(status_table))
+end)
 
 function mod.with_options(config)
   config.enable_tab_bar = true
@@ -26,38 +57,5 @@ function mod.with_options(config)
     bottom = 0,
   }
 end
-
-wezterm.on("update-status", function(window, pane)
-  local overrides = window:get_config_overrides() or {}
-  local scheme = overrides.color_scheme or window:effective_config().color_scheme
-
-  local fg_workspace = (scheme == "dayfox") and "#333333" or "#63cdcf"
-  local fg_leader = "#dbc074"
-  local fg_copy_mode = "#f29e74"
-  local fg_search_mode = "Fuchsia"
-
-  local workspace = window:active_workspace()
-  local status_table = {}
-
-  if window:leader_is_active() then
-    table.insert(status_table, { Foreground = { Color = fg_leader } })
-    table.insert(status_table, { Text = " leader  " })
-  end
-
-  if window:active_key_table() == "copy_mode" then
-    table.insert(status_table, { Foreground = { Color = fg_copy_mode } })
-    table.insert(status_table, { Text = " copy  " })
-  end
-
-  if window:active_key_table() == "search_mode" then
-    table.insert(status_table, { Foreground = { AnsiColor = fg_search_mode } })
-    table.insert(status_table, { Text = " search  " })
-  end
-
-  table.insert(status_table, { Foreground = { Color = fg_workspace } })
-  table.insert(status_table, { Text = " " .. workspace .. " " })
-
-  window:set_right_status(wezterm.format(status_table))
-end)
 
 return mod

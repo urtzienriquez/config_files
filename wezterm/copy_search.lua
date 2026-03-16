@@ -22,6 +22,7 @@ function mod.setup(config)
     act.CopyMode("ClearPattern"),
     act.CopyMode("ClearSelectionMode"),
     act.CopyMode("Close"),
+    act.ScrollToBottom,
   })
 
   -- --- Copy Mode Overrides ---

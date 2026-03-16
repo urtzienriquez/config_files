@@ -52,7 +52,6 @@ function mod.kill_workspace_ui()
             return
           end
 
-          -- Define the kill logic as a function
           local do_kill = function(workspace_name)
             local success, stdout = wezterm.run_child_process({ "wezterm", "cli", "list", "--format=json" })
             if success then
@@ -70,7 +69,6 @@ function mod.kill_workspace_ui()
           -- If target is current, switch to 0_default first
           if id == current then
             inner_win:perform_action(act.SwitchToWorkspace({ name = "0_default" }), inner_pane)
-            -- Brief delay to let the UI context switch before killing the panes
             wezterm.sleep_ms(100)
             do_kill(id)
           else
