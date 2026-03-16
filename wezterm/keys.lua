@@ -11,11 +11,18 @@ local mod = {}
 local hide_single_tab = true
 
 wezterm.on("toggle-tab-bar", function(window, pane)
+  -- 1. Get current overrides or an empty table if none exist
+  local overrides = window:get_config_overrides() or {}
+
+  -- 2. Toggle your local state
   hide_single_tab = not hide_single_tab
-  window:set_config_overrides({
-    enable_tab_bar = true, -- Always enabled for multiple tabs
-    hide_tab_bar_if_only_one_tab = hide_single_tab,
-  })
+
+  -- 3. Update the overrides table without wiping out color_scheme
+  overrides.enable_tab_bar = true
+  overrides.hide_tab_bar_if_only_one_tab = hide_single_tab
+
+  -- 4. Apply the updated table
+  window:set_config_overrides(overrides)
 end)
 
 function mod.with_options(config)
