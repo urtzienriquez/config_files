@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 # modified from https://github.com/gotbletu/fzf-nova
 
-# Load theme
-. "$HOME/config_files/fzf-nova/theme.sh"
-
 desktop_file() {
 find /usr/share/applications -name "*.desktop" 2>/dev/null
 find /usr/local/share/applications -name "*.desktop" 2>/dev/null
