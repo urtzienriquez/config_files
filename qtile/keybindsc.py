@@ -154,6 +154,12 @@ keys = [
         lazy.reload_config(),
         desc="Reload the config",
     ),
+    Key(
+        [mod],
+        "i",
+        lazy.spawn("togglekbd"),
+        desc="Toggle keyboard input",
+    ),
     # session management
     Key(
         [mod, "control", "shift"],
