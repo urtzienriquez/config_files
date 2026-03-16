@@ -585,7 +585,7 @@ for _, name in ipairs(my_packs) do
 end
 
 -- nightfox
-vim.cmd.colorscheme("nightfox")
+require("nightfox").setup()
 
 -- citeref
 require("citeref").setup({

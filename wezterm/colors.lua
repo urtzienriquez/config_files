@@ -15,33 +15,62 @@ mod.tab_bar_configs = {
   },
 }
 
--- Initialize global state
-_G.current_theme = "nightfox"
-
-local function toggle_colors(window)
+wezterm.on("toggle-colorscheme", function(window, pane)
   local overrides = window:get_config_overrides() or {}
-  local new_scheme = (overrides.color_scheme == "dayfox") and "nightfox" or "dayfox"
 
-  -- Update global state
+  local is_dark = (overrides.color_scheme ~= "dayfox")
+  local new_scheme = is_dark and "dayfox" or "nightfox"
+  local new_gnome_setting = is_dark and "prefer-light" or "prefer-dark"
+
+  wezterm.run_child_process({
+    "gsettings",
+    "set",
+    "org.gnome.desktop.interface",
+    "color-scheme",
+    new_gnome_setting,
+  })
+
   _G.current_theme = new_scheme
-
-  -- Apply color scheme AND tab bar colors
   overrides.color_scheme = new_scheme
   overrides.colors = { tab_bar = mod.tab_bar_configs[new_scheme] }
 
   window:set_config_overrides(overrides)
+end)
+
+-- Helper to pick theme based on system appearance
+local function get_theme_name()
+  if wezterm.gui and wezterm.gui.get_appearance():find("Dark") then
+    return "nightfox"
+  end
+  return "dayfox"
 end
 
+-- Update the colorscheme and tab bar colors
+local function apply_theme(window, scheme)
+  local overrides = window:get_config_overrides() or {}
+
+  _G.current_theme = scheme
+
+  overrides.color_scheme = scheme
+  overrides.colors = { tab_bar = mod.tab_bar_configs[scheme] }
+
+  window:set_config_overrides(overrides)
+end
+
+-- Listen for system changes
+wezterm.on("window-config-reloaded", function(window, pane)
+  local overrides = window:get_config_overrides() or {}
+  local new_scheme = get_theme_name()
+
+  if overrides.color_scheme ~= new_scheme then
+    apply_theme(window, new_scheme)
+  end
+end)
+
 function mod.with_options(config)
-  config.color_scheme_dirs = { wezterm.config_dir .. "/colors" }
-  local appearance = wezterm.gui.get_appearance()
-  local initial_scheme = appearance:find("Light") and "dayfox" or "nightfox"
-
-  _G.current_theme = initial_scheme
-  config.color_scheme = initial_scheme
-  config.colors = { tab_bar = mod.tab_bar_configs[initial_scheme] }
-
-  wezterm.on("toggle-colorscheme", toggle_colors)
+  -- Set initial theme based on system on startup
+  config.color_scheme = get_theme_name()
+  config.colors = { tab_bar = mod.tab_bar_configs[config.color_scheme] }
 end
 
 return mod
