@@ -30,6 +30,11 @@ function mod.with_options(config)
       action = act.ActivateCopyMode,
     },
     {
+      key = "/",
+      mods = "LEADER",
+      action = act.Search("CurrentSelectionOrEmptyString"),
+    },
+    {
       key = "z",
       mods = "LEADER",
       action = act.TogglePaneZoomState,
