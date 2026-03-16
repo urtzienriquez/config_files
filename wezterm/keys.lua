@@ -13,7 +13,7 @@ wezterm.on("toggle-tab-bar", function(window, pane)
   hide_single_tab = not hide_single_tab
   window:set_config_overrides({
     enable_tab_bar = true, -- Always enabled for multiple tabs
-    hide_tab_bar_if_only_one_tab = hide_single_tab
+    hide_tab_bar_if_only_one_tab = hide_single_tab,
   })
 end)
 
@@ -23,6 +23,11 @@ function mod.with_options(config)
       key = "b",
       mods = "LEADER",
       action = wezterm.action.EmitEvent("toggle-colorscheme"),
+    },
+    {
+      key = "f",
+      mods = "LEADER",
+      action = wezterm.action.EmitEvent("toggle-ligatures"),
     },
     {
       key = ";",

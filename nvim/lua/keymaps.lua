@@ -110,9 +110,6 @@ vim.api.nvim_create_autocmd("UIEnter", {
         vim.cmd("SpellES")
       end
     end, { desc = "Toggle Spell Language" })
-    vim.keymap.set("n", "<leader>uu", function()
-      vim.cmd("!lig")
-    end, { silent = true, desc = "Toggle ligatures" })
     vim.keymap.set("n", "<leader>uw", toggle("wrap", true, false), { desc = "Toggle Wrap" })
     vim.keymap.set("n", "<leader>uo", toggle("scrolloff", 10, 0), { desc = "Toggle Scrolloff" })
     vim.keymap.set("n", "<leader>uc", toggle("cursorlineopt", "both", "number"), { desc = "Toggle Cursorline" })
