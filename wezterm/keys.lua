@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local util = require("util")
+local copy_search = require("copy_search")
 
 local act = wezterm.action
 local act_callback = wezterm.action_callback
@@ -7,7 +8,7 @@ local act_callback = wezterm.action_callback
 local mod = {}
 
 -- Track tab bar visibility state for single tab
-local hide_single_tab = true -- Matches your config.hide_tab_bar_if_only_one_tab
+local hide_single_tab = true
 
 wezterm.on("toggle-tab-bar", function(window, pane)
   hide_single_tab = not hide_single_tab
@@ -32,12 +33,19 @@ function mod.with_options(config)
     {
       key = ";",
       mods = "LEADER",
-      action = act.ActivateCopyMode,
+      action = act.Multiple({
+        act.ActivateCopyMode,
+        act.CopyMode("ClearPattern"),
+        act.CopyMode("ClearSelectionMode"),
+      }),
     },
     {
       key = "/",
       mods = "LEADER",
-      action = act.Search("CurrentSelectionOrEmptyString"),
+      action = act.Multiple({
+        act.CopyMode("ClearPattern"),
+        act.Search({ CaseInSensitiveString = "" }),
+      }),
     },
     {
       key = "z",
@@ -241,6 +249,8 @@ function mod.with_options(config)
   config.use_dead_keys = true
   config.send_composed_key_when_left_alt_is_pressed = true
   config.send_composed_key_when_right_alt_is_pressed = true
+
+  copy_search.setup(config)
 end
 
 return mod
