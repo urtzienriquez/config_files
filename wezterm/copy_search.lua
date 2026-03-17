@@ -47,7 +47,7 @@ function mod.setup(config)
     "NONE",
     act.Multiple({
       act.CopyTo("Clipboard"),
-      clean_exit,
+      act.CopyMode("ClearSelectionMode"),
     })
   )
 
