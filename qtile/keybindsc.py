@@ -1,3 +1,7 @@
+import subprocess
+import os
+import json
+
 from libqtile import qtile
 from libqtile.config import Key, KeyChord
 from libqtile.lazy import lazy
@@ -30,6 +34,40 @@ def swap_screens():
         qtile.current_screen.set_group(other_group)
 
     return __inner
+
+
+config_dir = os.path.expanduser("~/.config/qtile/")
+local_settings_path = os.path.join(config_dir, "local_settings.json")
+
+HEADPHONES_MAC = "00:00:00:00:00:00"
+
+if os.path.exists(local_settings_path):
+    with open(local_settings_path, "r") as f:
+        data = json.load(f)
+        HEADPHONES_MAC = data.get("headphones_mac", HEADPHONES_MAC)
+
+
+def toggle_headphones(qtile):
+    mac = HEADPHONES_MAC
+    if mac == "00:00:00:00:00:00":
+        subprocess.run(
+            "notify-send 'Error' 'Headphones MAC not configured'", shell=True
+        )
+        return
+
+    check_cmd = f"bluetoothctl info {mac} | grep 'Connected: yes'"
+    connected = subprocess.run(check_cmd, shell=True, capture_output=True)
+
+    if connected.returncode == 0:
+        subprocess.run(f"bluetoothctl disconnect {mac}", shell=True)
+        subprocess.run(
+            f"notify-send 'Bluetooth' 'Monitor III Disconnected'", shell=True
+        )
+    else:
+        subprocess.run(f"bluetoothctl connect {mac}", shell=True)
+        subprocess.run(
+            f"notify-send 'Bluetooth' 'Connecting to Monitor III...'", shell=True
+        )
 
 
 launcher_keys = [
@@ -148,6 +186,22 @@ launcher_keys = [
 ]
 
 keys = [
+    Key(
+        [mod, alt],
+        "h",
+        lazy.spawn(
+            f'bash -c \'if bluetoothctl info {HEADPHONES_MAC} | grep -q "Connected: yes"; '
+            f'then bluetoothctl disconnect {HEADPHONES_MAC} && notify-send "Bluetooth" "Disconnected"; '
+            f'else bluetoothctl connect {HEADPHONES_MAC} && notify-send "Bluetooth" "Connecting..."; fi\''
+        ),
+        desc="Toggle Marshall Headphones",
+    ),
+    Key(
+        [mod, "control"],
+        "h",
+        lazy.function(toggle_headphones),
+        desc="Toggle Marshall Headphones",
+    ),
     Key(
         [mod, "control"],
         "r",
