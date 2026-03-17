@@ -96,7 +96,6 @@ qbup() {
     echo "✓ qutebrowser updated successfully!"
     cd - > /dev/null
 }
-# alias qbup='sudo /opt/qutebrowser/scripts/mkvenv.py --update --pyqt-type link'
 
 # dot aliases
 alias ..='cd ..'
@@ -249,7 +248,6 @@ sf_widget() {
   zle reset-prompt
 }
 zle -N sf_widget
-bindkey '^ff' sf_widget
 
 # sd: search dirs in given path (or current path if not specified), and cd appropriately
 sd() {
@@ -270,7 +268,6 @@ sd_widget() {
   zle reset-prompt
 }
 zle -N sd_widget
-bindkey '^fd' sd_widget
 
 # sx: search files and dirs in given path (or current path if not specified), and cd appropriately
 sx() {
@@ -295,8 +292,6 @@ sx_widget() {
   zle reset-prompt
 }
 zle -N sx_widget
-bindkey '^fx' sx_widget
-
 
 # sr: search git repos in given path (or $HOME if not specified), and cd appropriately
 sr() {
@@ -312,7 +307,6 @@ sr_widget() {
   zle reset-prompt
 }
 zle -N sr_widget
-bindkey '^fr' sr_widget
 
 # sfr: like sf but searches the whole system with locate
 sfr() {
@@ -340,7 +334,6 @@ srf_widget() {
   zle reset-prompt
 }
 zle -N srf_widget
-bindkey '^frf' srf_widget
 
 # sdr: like sd but searches entire system using locate, and cd accordingly
 sdr() {
@@ -356,7 +349,6 @@ srd_widget() {
   zle reset-prompt
 }
 zle -N srd_widget
-bindkey '^frd' srd_widget
 
 # sxr: like sx but searches entire system using locate, and cd accordingly
 sxr() {
@@ -374,14 +366,6 @@ srx_widget() {
   zle reset-prompt
 }
 zle -N srx_widget
-bindkey '^frx' srx_widget
-
-# tmux with session name = term name
-tm() {
-	  tty_id=$(basename "$(tty)")
-	  session="term_${tty_id}"
-	  tmux new-session -A -s "$session"
-}
 
 # Activate virtual env and save the path as a tmux variable
 # after deactivate, remove the VIRTUAL_ENV tmux variable

@@ -69,6 +69,15 @@ bindkey -M viins -r '^L'
 bindkey -M vicmd -r '^L'
 bindkey -M viins '^[a' clear-screen
 
+# bindings for fzf s<x> widgets
+bindkey '^ff' sf_widget
+bindkey '^fd' sd_widget
+bindkey '^fx' sx_widget
+bindkey '^fr' sr_widget
+bindkey '^frf' srf_widget
+bindkey '^frd' srd_widget
+bindkey '^frx' srx_widget
+
 # -------------------------------
 # Editor
 # -------------------------------
@@ -95,16 +104,6 @@ source ~/.config/zsh/.zsh_aliases
 # -------------------------------
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# -------------------------------
-# Terminal compatibility for Ghostty + tmux
-# -------------------------------
-# Let Ghostty and tmux handle TERM automatically
-# Ghostty sets TERM=xterm-ghostty, tmux will use tmux-256color
-# Only override if we detect we're in a problematic environment
-if [[ -z "$TMUX" && "$TERM" != "xterm-ghostty" && "$TERM" != "xterm-256color" ]]; then
-    export TERM=xterm-256color
-fi
 
 # -------------------------------
 # Prompt colors
