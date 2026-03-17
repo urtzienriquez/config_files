@@ -3,6 +3,7 @@ local mod = {}
 
 mod.themes = {
   nightfox = {
+    palette = { pal_fg = "#d0d0d0" },
     tab_bar = {
       background = "#131a24",
       inactive_tab = { bg_color = "#131a24", fg_color = "#aeafb0" },
@@ -22,6 +23,7 @@ mod.themes = {
     },
   },
   dayfox = {
+    palette = { pal_fg = "#192330" },
     tab_bar = {
       background = "#d0d0d0",
       inactive_tab = { bg_color = "#d0d0d0", fg_color = "#837a72" },
@@ -51,21 +53,18 @@ end
 
 _G.current_theme = get_system_theme()
 
--- Construct the colors table handling the strict type differences
 local function make_colors_table(theme_name)
   local theme = mod.themes[theme_name]
   return {
     tab_bar = theme.tab_bar,
-
     copy_mode_active_highlight_bg = { Color = theme.search.active_bg },
     copy_mode_active_highlight_fg = { Color = theme.search.active_fg },
     copy_mode_inactive_highlight_bg = { Color = theme.search.inactive_bg },
     copy_mode_inactive_highlight_fg = { Color = theme.search.inactive_fg },
-
     selection_bg = theme.search.active_bg,
     selection_fg = theme.search.active_fg,
     quick_select_label_bg = { Color = theme.status.leader },
-    quick_select_label_fg = { Color = theme.tab_bar.background },
+    quick_select_label_fg = { Color = theme.palette.pal_fg },
   }
 end
 
@@ -75,9 +74,12 @@ local function apply_theme(window, scheme)
     return
   end
 
+  local theme = mod.themes[scheme]
   _G.current_theme = scheme
   overrides.color_scheme = scheme
   overrides.colors = make_colors_table(scheme)
+  overrides.command_palette_bg_color = theme.tab_bar.background
+  overrides.command_palette_fg_color = theme.palette.pal_fg
 
   window:set_config_overrides(overrides)
 end
@@ -98,8 +100,11 @@ wezterm.on("window-config-reloaded", function(window, pane)
 end)
 
 function mod.with_options(config)
+  local theme = mod.themes[_G.current_theme]
   config.color_scheme = _G.current_theme
   config.colors = make_colors_table(_G.current_theme)
+  config.command_palette_bg_color = theme.tab_bar.background
+  config.command_palette_fg_color = theme.palette.pal_fg
 end
 
 return mod
