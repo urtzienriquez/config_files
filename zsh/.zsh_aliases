@@ -244,6 +244,12 @@ sf() {
     gio open "$file"
   fi
 }
+sf_widget() {
+  sf
+  zle reset-prompt
+}
+zle -N sf_widget
+bindkey '^ff' sf_widget
 
 # sd: search dirs in given path (or current path if not specified), and cd appropriately
 sd() {
@@ -259,6 +265,12 @@ sd() {
 
   cd "$dir"
 }
+sd_widget() {
+  sd
+  zle reset-prompt
+}
+zle -N sd_widget
+bindkey '^fd' sd_widget
 
 # sx: search files and dirs in given path (or current path if not specified), and cd appropriately
 sx() {
@@ -278,6 +290,12 @@ sx() {
     cd "$(dirname "$selected")"
   fi
 }
+sx_widget() {
+  sx
+  zle reset-prompt
+}
+zle -N sx_widget
+bindkey '^fx' sx_widget
 
 
 # sr: search git repos in given path (or $HOME if not specified), and cd appropriately
@@ -289,6 +307,12 @@ sr() {
     | fzf-tmux --reverse --info=right -p 85%,85% --prompt='git repos > ') || return
   cd "$dir"
 }
+sr_widget() {
+  sr
+  zle reset-prompt
+}
+zle -N sr_widget
+bindkey '^fr' sr_widget
 
 # sfr: like sf but searches the whole system with locate
 sfr() {
@@ -311,6 +335,12 @@ sfr() {
     gio open "$file"
   fi
 }
+srf_widget() {
+  sfr
+  zle reset-prompt
+}
+zle -N srf_widget
+bindkey '^frf' srf_widget
 
 # sdr: like sd but searches entire system using locate, and cd accordingly
 sdr() {
@@ -321,6 +351,12 @@ sdr() {
 
   cd "$dir"
 }
+srd_widget() {
+  sdr
+  zle reset-prompt
+}
+zle -N srd_widget
+bindkey '^frd' srd_widget
 
 # sxr: like sx but searches entire system using locate, and cd accordingly
 sxr() {
@@ -333,6 +369,12 @@ sxr() {
     cd "$(dirname "$selected")"
   fi
 }
+srx_widget() {
+  sxr
+  zle reset-prompt
+}
+zle -N srx_widget
+bindkey '^frx' srx_widget
 
 # tmux with session name = term name
 tm() {
