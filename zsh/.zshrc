@@ -23,7 +23,21 @@ setopt extended_glob
 # -------------------------------
 # man with bat
 # -------------------------------
-export BAT_THEME=nightfox
+_sync_bat_theme() {
+    sleep 0.1
+    local current_mode=$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null)
+    if [[ "$current_mode" == *'prefer-light'* ]]; then
+        export BAT_THEME="dayfox"
+    else
+        export BAT_THEME="nightfox"
+    fi
+}
+
+_sync_bat_theme
+
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec _sync_bat_theme
+
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
