@@ -367,11 +367,19 @@ srx_widget() {
 }
 zle -N srx_widget
 
-# Activate virtual env and save the path as a tmux variable
-# after deactivate, remove the VIRTUAL_ENV tmux variable
+# Activate virtual env:
+# sv: activates ./.venv
+# sv myenv: activates ./myenv
+# sv /full/path/to/env: activates that env
 function sv() {
-    local venv_path="${1:-.}"
-    source $venv_path/bin/activate &&
+    local venv_path="${1:-.venv}"
+
+    if [ -f "$venv_path/bin/activate" ]; then
+        source "$venv_path/bin/activate"
+    else
+        echo "No virtualenv found at: $venv_path"
+        return 1
+    fi
 }
 
 # start screenkey with transparent background
