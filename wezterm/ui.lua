@@ -56,6 +56,11 @@ function mod.with_options(config)
     top = 0,
     bottom = 0,
   }
+
+  config.inactive_pane_hsb = {
+    saturation = 1.0,
+    brightness = 1.0,
+  }
 end
 
 return mod
