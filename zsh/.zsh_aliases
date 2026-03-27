@@ -398,3 +398,9 @@ function rticle() {
     git clone https://github.com/urtzienriquez/paper_template ./manuscript
     command rm -rf manuscript/(.git|README.md)
 }
+
+# render quarto and fix paths for hugo site
+quarto-hugo() {
+    local filename="${1%.*}"  # Remove extension if present
+    quarto render "$1" && ~/Documents/GitHub/urtzienriquez.github.io/util/fix-hugo-images.sh "${filename}.md"
+}
