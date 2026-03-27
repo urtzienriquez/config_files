@@ -20,6 +20,7 @@ config.keys = {}
 config.max_fps = 120
 config.unix_domains = { { name = "unix" } }
 config.default_workspace = "0_default"
+config.adjust_window_size_when_changing_font_size = false
 
 -- plugin options
 smart_splits.with_options(config)
