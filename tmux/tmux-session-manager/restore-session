@@ -10,7 +10,7 @@ active_sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null || true)
 # List saved sessions, mark with '+' if already active
 session_list=$(ls "$saved_dir" | sed 's/\.resurrect$//' | while read -r session; do
   if echo "$active_sessions" | grep -Fxq "$session"; then
-    echo " $session"
+    echo "󰄴 $session"
   else
     echo "  $session"
   fi
@@ -19,7 +19,7 @@ done)
 # Enable multi-select with --multi and --bind tab:toggle+up
 selected=$(echo "$session_list" | \
   fzf --info=right --reverse --no-preview --multi --prompt="Restore session(s): " --bind tab:toggle+up | \
-  sed 's/^[+ ]*//')
+  sed 's/^[󰄴 ]*//')
 
 [[ -z "$selected" ]] && exit 0
 
@@ -27,12 +27,18 @@ for session in $selected; do
   file="$saved_dir/$session.resurrect"
   [[ -f "$file" ]] || { echo "No saved session: $session"; continue; }
 
+  # Check if session is already active
+  if tmux has-session -t "$session" 2>/dev/null; then
+    # Session already exists - just switch to it, don't restore
+    tmux display-message "Session '$session' is already active, switching to it..."
+    continue
+  fi
+
+  # Session doesn't exist - restore it
   cp "$file" "$resurrect_dir/last"
 
-  # Create the session if it doesn't exist
-  if ! tmux has-session -t "$session" 2>/dev/null; then
-    tmux new-session -ds "$session"
-  fi
+  # Create the session
+  tmux new-session -ds "$session"
 
   # Kill existing windows so restore works properly
   tmux list-windows -t "$session" -F "#{window_index}" | while read -r win; do
@@ -46,6 +52,7 @@ for session in $selected; do
   sleep 0.3
 done
 
-# Attach to the last selected session
+# Switch to the last selected session
 last_session=$(echo "$selected" | tail -n 1)
 tmux switch-client -t "$last_session"
+

@@ -4,11 +4,11 @@ saved_dir="$HOME/.local/share/tmux/resurrect/saved"
 
 session=$(tmux list-sessions -F "#{session_name}" | while read -r s; do
   if [ -e "$saved_dir/$s.resurrect" ]; then
-    echo " $s"
+    echo "󱂬 $s"
   else
     echo "  $s"
   fi
-done | fzf --reverse --info=right --no-preview --prompt "jump to session: " | sed "s/^[ ]*//")
+done | fzf --reverse --info=right --no-preview --prompt "jump to session: " | sed "s/^[󱂬 ]*//")
 
 if [ $? -eq 0 ] && [ -n "$session" ]; then
   tmux switch-client -t "$session"

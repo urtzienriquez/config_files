@@ -26,7 +26,7 @@ sleep 1
 
 # Check if 'last' file exists
 if [[ ! -f "$resurrect_dir/last" && ! -L "$resurrect_dir/last" ]]; then
-    tmux display-message "❌ Error: tmux-resurrect did not generate a 'last' file."
+    tmux display-message " Error: tmux-resurrect did not generate a 'last' file."
     exit 1
 fi
 
@@ -37,7 +37,7 @@ if [[ -f "$resurrect_dir/last" ]]; then
 elif [[ -L "$resurrect_dir/last" ]]; then
     source_file=$(readlink -f "$resurrect_dir/last" 2>/dev/null || echo "")
     if [[ ! -f "$source_file" ]]; then
-        tmux display-message "❌ Error: Cannot resolve 'last' symlink"
+        tmux display-message " Error: Cannot resolve 'last' symlink"
         exit 1
     fi
 fi
@@ -76,4 +76,4 @@ done
 # Show success message in popup using bash -c
 file_path="$saved_dir/$session.resurrect"
 tmux display-popup -E -w 80 -h 10 -T " Session Saved " \
-  bash -c "clear; echo ''; echo '  ✅ Session \"$session\" saved successfully!'; echo ''; echo '  📁 Saved to:'; echo '  $file_path'; echo ''; echo '  Press Enter to continue...'; echo ''; read -r"
+  bash -c "clear; echo ''; echo '   Session \"$session\" saved successfully!'; echo '   Saved to:'; echo '  $file_path'; echo ''; echo '  Press Enter to continue...'; read -r"
