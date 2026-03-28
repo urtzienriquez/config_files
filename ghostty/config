@@ -1,5 +1,5 @@
 # theme
-theme = Nightfox
+theme = dark:Nightfox,light:Dayfox
 font-size = 15
 config-file = ~/.config/ghostty/local.config
 
