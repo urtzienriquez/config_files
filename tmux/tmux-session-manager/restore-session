@@ -10,7 +10,7 @@ active_sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null || true)
 # List saved sessions, mark with '+' if already active
 session_list=$(ls "$saved_dir" | sed 's/\.resurrect$//' | while read -r session; do
   if echo "$active_sessions" | grep -Fxq "$session"; then
-    echo "+ $session"
+    echo " $session"
   else
     echo "  $session"
   fi

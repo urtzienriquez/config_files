@@ -4,7 +4,7 @@ saved_dir="$HOME/.local/share/tmux/resurrect/saved"
 
 session=$(tmux list-sessions -F "#{session_name}" | while read -r s; do
   if [ -e "$saved_dir/$s.resurrect" ]; then
-    echo "* $s"
+    echo " $s"
   else
     echo "  $s"
   fi
