@@ -10,7 +10,7 @@ command = /usr/bin/zsh
 cursor-style = block
 cursor-style-blink = false
 shell-integration-features = no-cursor
-cursor-color = dbc074
+# cursor-color = dbc074
 cursor-text = 000000
 
 # keybindings

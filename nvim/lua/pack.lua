@@ -23,7 +23,7 @@ end
 vim.pack.add({
   gh("folke/which-key.nvim"),
   gh("nvim-tree/nvim-web-devicons"),
-  gh("mrjones2014/smart-splits.nvim"),
+  gh("christoomey/vim-tmux-navigator"),
   gh("stevearc/oil.nvim"),
   gh("stevearc/quicker.nvim"),
   gh("kylechui/nvim-surround"),
@@ -71,18 +71,18 @@ require("which-key").add({
 -- nvim-web-devicons
 require("nvim-web-devicons").setup({})
 
--- smart splits
-require("smart-splits").setup({})
-
-vim.keymap.set("n", "<C-h>", require("smart-splits").move_cursor_left)
-vim.keymap.set("n", "<C-j>", require("smart-splits").move_cursor_down)
-vim.keymap.set("n", "<C-k>", require("smart-splits").move_cursor_up)
-vim.keymap.set("n", "<C-l>", require("smart-splits").move_cursor_right)
-vim.keymap.set("n", "<C-\\>", require("smart-splits").move_cursor_previous)
-vim.keymap.set("n", "<C-Left>", require("smart-splits").resize_left)
-vim.keymap.set("n", "<C-Down>", require("smart-splits").resize_down)
-vim.keymap.set("n", "<C-Up>", require("smart-splits").resize_up)
-vim.keymap.set("n", "<C-Right>", require("smart-splits").resize_right)
+-- -- smart splits
+-- require("smart-splits").setup({})
+--
+-- vim.keymap.set("n", "<C-h>", require("smart-splits").move_cursor_left)
+-- vim.keymap.set("n", "<C-j>", require("smart-splits").move_cursor_down)
+-- vim.keymap.set("n", "<C-k>", require("smart-splits").move_cursor_up)
+-- vim.keymap.set("n", "<C-l>", require("smart-splits").move_cursor_right)
+-- vim.keymap.set("n", "<C-\\>", require("smart-splits").move_cursor_previous)
+-- vim.keymap.set("n", "<C-Left>", require("smart-splits").resize_left)
+-- vim.keymap.set("n", "<C-Down>", require("smart-splits").resize_down)
+-- vim.keymap.set("n", "<C-Up>", require("smart-splits").resize_up)
+-- vim.keymap.set("n", "<C-Right>", require("smart-splits").resize_right)
 
 -- oil
 require("oil").setup({

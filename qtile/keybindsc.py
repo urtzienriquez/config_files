@@ -10,7 +10,7 @@ from groupsc import groups
 
 mod = "mod4"
 alt = "mod1"
-terminal = "wezterm"
+terminal = "ghostty"
 
 
 def swap_screens():
@@ -74,9 +74,9 @@ launcher_keys = [
     Key(
         [],
         "f",
-        lazy.spawn(
-            "wezterm --config enable_tab_bar=false start --class fzf-nova -- bash -c 'source ~/.bashrc &>/dev/null && $HOME/config_files/fzf-nova/fzf-nova'"
-        ),
+        lazy.spawn("ghostty --x11-instance-name='fzf-nova' \
+                    -e bash -c 'source ~/.bashrc &>/dev/null \
+                    && $HOME/config_files/fzf-nova/fzf-nova'"),
         desc="Launch fzf-nova",
     ),
     Key(
@@ -101,7 +101,7 @@ launcher_keys = [
         [],
         "c",
         lazy.spawn(
-            "wezterm --config enable_tab_bar=false start --class calendar -- bash -c 'resize -s 30 120; calcurse'"
+            "ghostty --x11-instance-name='calendar' --window-height=30 --window-width=120 -e calcurse"
         ),
         desc="Launch calendar",
     ),
@@ -115,7 +115,7 @@ launcher_keys = [
         [],
         "r",
         lazy.spawn(
-            "wezterm --config enable_tab_bar=false start --class ranger -- bash -c 'resize -s 30 120; ranger'"
+            "ghostty --x11-instance-name='ranger' --window-height=30 --window-width=120 -e ranger"
         ),
         desc="Launch range file manager",
     ),
@@ -218,8 +218,8 @@ keys = [
     Key(
         [mod, "control", "shift"],
         "x",
-        lazy.spawn("wezterm --config enable_tab_bar=false start --class fzf-nova --  \
-                    bash -c 'source ~/.bashrc &>/dev/null \
+        lazy.spawn("ghostty --x11-instance-name='fzf-nova' \
+                    -e bash -c 'source ~/.bashrc &>/dev/null \
                     && $HOME/config_files/fzf-nova/_session,--.manage.session'"),
         desc="Manage Qtile session",
     ),

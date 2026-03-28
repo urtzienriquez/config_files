@@ -39,50 +39,15 @@ nvup() {
     cd - > /dev/null
 }
 
-# update wezterm
-wtup() {
-    local wt_dir="$HOME/Documents/GitHub/wezterm"
-    
-    # 1. Update or Clone source
-    if [ ! -d "$wt_dir" ]; then
-        echo "Cloning wezterm to $wt_dir..."
-        git clone --depth=1 --branch=main --recursive https://github.com/wezterm/wezterm.git "$wt_dir" || return 1
-        cd "$wt_dir" || return 1
-    else
-        echo "Updating wezterm from $wt_dir..."
-        cd "$wt_dir" || return 1
-        # Pull latest and update submodules (critical for zlib/dependencies)
-        git pull && git submodule update --init --recursive || return 1
-    fi
-
-    # 2. Build process using cargo
-    ./get-deps && \
-    cargo build --release || return 1
-    
-    # 3. Install binaries to /usr/local/bin
-    sudo cp target/release/wezterm /usr/local/bin/wezterm && \
-    sudo cp target/release/wezterm-gui /usr/local/bin/wezterm-gui && \
-    sudo cp target/release/wezterm-mux-server /usr/local/bin/wezterm-mux-server && \
-    sudo cp target/release/strip-ansi-escapes /usr/local/bin/strip-ansi-escapes && \
-
-    # 4. Desktop integration (Menu icon and launcher)
-    if [ -d "assets/icon" ]; then
-        sudo mkdir -p /usr/share/icons/hicolor/128x128/apps/
-        sudo cp assets/icon/terminal.png /usr/share/icons/hicolor/128x128/apps/org.wezfurlong.wezterm.png
-        sudo cp assets/wezterm.desktop /usr/share/applications/org.wezfurlong.wezterm.desktop
-        sudo update-desktop-database
-    fi
-
-    # 5. Update Terminfo (Ensures SSH works correctly)
-    if [ -f "assets/terminfo" ]; then
-        tic -x -o ~/.terminfo assets/terminfo
-    fi
-
-    # 6. Generate Zsh Completions
-    mkdir -p "$HOME/.config/zsh/completions"
-    ./target/release/wezterm shell-completion --shell zsh > "$HOME/.config/zsh/completions/_wezterm"
-
-    echo "✓ WezTerm updated successfully!"
+# update tmux
+tmuxup() {
+    local tmux_dir="/home/urtzi/Documents/GitHub/tmux/"
+    echo "Updating tmux from $tmux_dir..."
+    cd "$tmux_dir" || return 1
+    git pull && \
+    make && \
+    sudo make install && \
+    echo "✓ tmux updated successfully!"
     cd - > /dev/null
 }
 
@@ -367,6 +332,13 @@ srx_widget() {
 }
 zle -N srx_widget
 
+# tmux with session name = term name
+tm() {
+	  tty_id=$(basename "$(tty)")
+	  session="term_${tty_id}"
+	  tmux new-session -A -s "$session"
+}
+
 # Activate virtual env:
 # sv: activates ./.venv
 # sv myenv: activates ./myenv
@@ -376,6 +348,8 @@ function sv() {
 
     if [ -f "$venv_path/bin/activate" ]; then
         source "$venv_path/bin/activate"
+        tmux set-environment VIRTUAL_ENV $VIRTUAL_ENV &&
+        alias deactivate='\deactivate && tmux set-environment -u VIRTUAL_ENV && unalias deactivate'
     else
         echo "No virtualenv found at: $venv_path"
         return 1

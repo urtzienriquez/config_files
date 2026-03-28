@@ -141,6 +141,11 @@ export PERL_MB_OPT="--install_base $HOME/.perl5"
 export PERL_MM_OPT="INSTALL_BASE=$HOME/.perl5"
 export PERL5LIB="$HOME/.perl5/lib/perl5"
 export PATH="$HOME/.perl5/bin:$PATH"
+# ZVM
+export ZVM_INSTALL="$HOME/.zvm/self"
+export PATH="$PATH:$HOME/.zvm/bin"
+export PATH="$PATH:$ZVM_INSTALL/"
+
 # juliaup 
 case ":$PATH:" in
     *:/home/urtzi/.juliaup/bin:*) ;;
@@ -189,6 +194,16 @@ export FZF_ALT_C_OPTS="--no-preview"
 # Zoxide
 # -------------------------------
 eval "$(zoxide init --cmd cd zsh)"
+
+# -------------------------------
+# tmux
+# -------------------------------
+# always start in a tmux session
+if [ -z "$TMUX" ]; then
+  tty_id=$(basename "$(tty)")
+  session="term_${tty_id}"
+  tmux new-session -A -s "$session"
+fi
 
 # -------------------------------
 # venv

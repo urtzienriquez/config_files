@@ -74,10 +74,10 @@ config.set("fileselect.handler", "external")
 config.set(
     "fileselect.single_file.command",
     [
-        "wezterm",
-        "start",
-        "--class",
-        "fzf-nova",  # Removed trailing space
+        "ghostty",
+        "--x11-instance-name=ranger",
+        "--window-width=80",
+        "--window-height=25",
         "-e",
         "ranger",
         "--choosefile={}",
@@ -86,10 +86,10 @@ config.set(
 config.set(
     "fileselect.multiple_files.command",
     [
-        "wezterm",
-        "start",
-        "--class",
-        "fzf-nova",
+        "ghostty",
+        "--x11-instance-name=ranger",
+        "--window-width=80",
+        "--window-height=25",
         "-e",
         "ranger",
         "--choosefiles={}",
@@ -97,7 +97,7 @@ config.set(
 )
 
 # open neovim from qutebrowser
-c.editor.command = ["wezterm", "start", "--", "nvim", "-f", "{}"]
+c.editor.command = ["ghostty", "-e", "nvim", "-f", "{}"]
 
 # remap J to K and K to J
 config.bind("J", "tab-prev")
