@@ -75,7 +75,7 @@ launcher_keys = [
         [],
         "f",
         lazy.spawn(
-            "wezterm start --class fzf-nova -- bash -c 'source ~/.bashrc &>/dev/null && $HOME/config_files/fzf-nova/fzf-nova'"
+            "wezterm --config enable_tab_bar=false start --class fzf-nova -- bash -c 'source ~/.bashrc &>/dev/null && $HOME/config_files/fzf-nova/fzf-nova'"
         ),
         desc="Launch fzf-nova",
     ),
@@ -101,7 +101,7 @@ launcher_keys = [
         [],
         "c",
         lazy.spawn(
-            "wezterm start --class calendar -- bash -c 'resize -s 30 120; calcurse'"
+            "wezterm --config enable_tab_bar=false start --class calendar -- bash -c 'resize -s 30 120; calcurse'"
         ),
         desc="Launch calendar",
     ),
@@ -115,7 +115,7 @@ launcher_keys = [
         [],
         "r",
         lazy.spawn(
-            "wezterm start --class ranger -- bash -c 'resize -s 30 120; ranger'"
+            "wezterm --config enable_tab_bar=false start --class ranger -- bash -c 'resize -s 30 120; ranger'"
         ),
         desc="Launch range file manager",
     ),
@@ -218,7 +218,7 @@ keys = [
     Key(
         [mod, "control", "shift"],
         "x",
-        lazy.spawn("wezterm start --class fzf-nova --  \
+        lazy.spawn("wezterm --config enable_tab_bar=false start --class fzf-nova --  \
                     bash -c 'source ~/.bashrc &>/dev/null \
                     && $HOME/config_files/fzf-nova/_session,--.manage.session'"),
         desc="Manage Qtile session",
