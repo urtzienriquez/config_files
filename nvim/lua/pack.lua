@@ -376,7 +376,7 @@ local function set_rnvim_keymaps()
   if vim.bo.filetype == "rmd" then
     vim.keymap.set("n", "<leader>rr", function()
       local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
-      vim.api.nvim_echo({}, false, {})
+      vim.api.nvim_echo({{""}}, false, {})
       if filename == "__CANCEL__" then
         return
       end
