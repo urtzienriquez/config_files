@@ -51,6 +51,26 @@ tmuxup() {
     cd - > /dev/null
 }
 
+# update ghostty
+ghosttyup() {
+    local ghostty_dir="/home/urtzi/Documents/GitHub/ghostty"
+    echo "Updating Ghostty from $ghostty_dir..."
+    
+    cd "$ghostty_dir" || return 1
+    
+    # 1. Pull latest code
+    # 2. Update submodules (crucial for Ghostty)
+    # 3. Clean previous build artifacts
+    # 4. Build and install to ~/.local
+    git pull && \
+    git submodule update --init --recursive && \
+    rm -rf .zig-cache zig-out && \
+    zig build -p "$HOME/.local" -Doptimize=ReleaseFast && \
+    echo "✓ Ghostty updated successfully!"
+    
+    cd - > /dev/null
+}
+
 # update qutebrowser
 qbup() {
     local qb_dir="/opt/qutebrowser"
@@ -191,7 +211,7 @@ sf() {
     --exclude node_modules \
     --exclude .git \
     --exclude "$HOME/go" | \
-    fzf-tmux --reverse --info=right -p 85%,85% --preview 'bat -p --color=always {} 2>/dev/null') || return
+    fzf --reverse --info=right --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   local mime
   mime=$(file -b --mime-type "$file")
@@ -224,7 +244,7 @@ sd() {
     --exclude node_modules \
     --exclude .git \
     --exclude "$HOME/go" | \
-    fzf-tmux --reverse --info=right -p 85%,85%) || return
+    fzf --reverse --info=right) || return
 
   cd "$dir"
 }
@@ -244,7 +264,7 @@ sx() {
     --exclude node_modules \
     --exclude .git \
     --exclude "$HOME/go" | \
-    fzf-tmux --reverse --info=right -p 85%,85% --preview 'bat -p --color=always {} 2>/dev/null') || return
+    fzf --reverse --info=right --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   if [[ -d "$selected" ]]; then
     cd "$selected"
@@ -264,7 +284,7 @@ sr() {
   local dir
   dir=$(fd -HI --type d --glob '.git' "$search_path" \
     | sed 's|/\.git||' \
-    | fzf-tmux --reverse --info=right -p 85%,85% --prompt='git repos > ') || return
+    | fzf --reverse --info=right --prompt='git repos > ') || return
   cd "$dir"
 }
 sr_widget() {
@@ -277,7 +297,7 @@ zle -N sr_widget
 sfr() {
   local file
   file=$(locate / | while read -r f; do [[ -f "$f" ]] && echo "$f"; done | \
-    fzf-tmux --reverse --info=right -p 85%,85% --preview 'bat -p --color=always {} 2>/dev/null') || return
+    fzf --reverse --info=right --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   local mime
   mime=$(file -b --mime-type "$file")
@@ -305,7 +325,7 @@ sdr() {
   local dir
   dir=$(locate / | while read -r p; do
       [[ -d "$p" ]] && printf '%s\n' "$p"
-    done | fzf-tmux --reverse --info=right -p 85%,85%) || return
+    done | fzf --reverse --info=right) || return
 
   cd "$dir"
 }
@@ -318,7 +338,7 @@ zle -N srd_widget
 # sxr: like sx but searches entire system using locate, and cd accordingly
 sxr() {
   local selected
-  selected=$(locate / | fzf-tmux --reverse --info=right -p 85%,85% --preview 'bat -p --color=always {} 2>/dev/null') || return
+  selected=$(locate / | fzf --reverse --info=right --preview 'bat -p --color=always {} 2>/dev/null') || return
 
   if [[ -d "$selected" ]]; then
     cd "$selected"
