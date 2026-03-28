@@ -3,13 +3,14 @@ import subprocess
 
 colors = {
     "bg": "#000000",
-    "primary": "#D79922",
-    "secondary": "#458587",
+    "primary": "#dbc074",
+    "secondary": "#719cd6",
     "disabled": "#707880",
+    "disabled_ws": "#63cdcf",
     "alert": "#A54242",
     "urgent": "#bd2c40",
     "magenta": "#c099ff",
-    "cyan": "#86e1fc",
+    "cyan": "#63cdcf",
 }
 
 FONT = "JetBrainsMonoNerdFont"
@@ -36,7 +37,7 @@ def make_group_box(fontsize, margey):
         this_current_screen_border=colors["primary"],
         other_screen_border=colors["secondary"],
         # unfocused monitor
-        this_screen_border=colors["disabled"],
+        this_screen_border=colors["disabled_ws"],
         other_current_screen_border=colors["secondary"],
     )
 
