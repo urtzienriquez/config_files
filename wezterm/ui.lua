@@ -42,7 +42,6 @@ function mod.with_options(config)
   config.show_tab_index_in_tab_bar = true
   config.tab_bar_at_bottom = false
   config.tab_and_split_indices_are_zero_based = false
-  config.hide_tab_bar_if_only_one_tab = true
 
   config.window_close_confirmation = "NeverPrompt"
 

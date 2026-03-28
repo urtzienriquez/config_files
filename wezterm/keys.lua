@@ -7,16 +7,6 @@ local act_callback = wezterm.action_callback
 
 local mod = {}
 
-wezterm.on("toggle-tab-bar", function(window, pane)
-  local overrides = window:get_config_overrides() or {}
-  local current_setting = window:effective_config().hide_tab_bar_if_only_one_tab
-
-  overrides.hide_tab_bar_if_only_one_tab = not current_setting
-  overrides.enable_tab_bar = true
-
-  window:set_config_overrides(overrides)
-end)
-
 function mod.with_options(config)
   config.keys = config.keys or {} -- Ensure table exists
   local my_keys = {
@@ -53,11 +43,6 @@ function mod.with_options(config)
       action = act.TogglePaneZoomState,
     },
     -- Pane and window management
-    {
-      key = "t",
-      mods = "LEADER",
-      action = wezterm.action.EmitEvent("toggle-tab-bar"),
-    },
     {
       key = "[",
       mods = "LEADER",
