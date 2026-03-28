@@ -70,6 +70,35 @@ def toggle_headphones(qtile):
         )
 
 
+def toggle_colorscheme(qtile):
+    # Get the current GNOME color scheme
+    get_cmd = ["gsettings", "get", "org.gnome.desktop.interface", "color-scheme"]
+    current_scheme = (
+        subprocess.check_output(get_cmd).decode("utf-8").strip().replace("'", "")
+    )
+
+    # Determine the new scheme
+    if current_scheme == "prefer-dark":
+        new_scheme = "prefer-light"
+        notification = "Dayfox (Light Mode)"
+    else:
+        new_scheme = "prefer-dark"
+        notification = "Nightfox (Dark Mode)"
+
+    # Set the new GNOME color scheme
+    set_cmd = [
+        "gsettings",
+        "set",
+        "org.gnome.desktop.interface",
+        "color-scheme",
+        new_scheme,
+    ]
+    subprocess.run(set_cmd)
+
+    # Optional: Send a notification so you know it worked
+    subprocess.run(["notify-send", "Theme Toggled", f"Switched to {notification}"])
+
+
 launcher_keys = [
     Key(
         [],
@@ -186,6 +215,12 @@ launcher_keys = [
 ]
 
 keys = [
+    Key(
+        [mod],
+        "b",
+        lazy.function(toggle_colorscheme),
+        desc="Toggle between Dark (Nightfox) and Light (Dayfox) themes",
+    ),
     Key(
         [mod, alt],
         "h",
