@@ -73,11 +73,15 @@ file_type:
   lossless: {foreground: "#9d79d6"} # Palette 5 (Magenta) 
   crypto: {foreground: "#dbc074"} # Palette 3 (Yellow) 
   document: {foreground: "#dfdfe0"} # Palette 7 (White) 
-  compressed: {foreground: "#c94f6d"} # Palette 1 (Red) 
+  compressed: {foreground: "#dbc074"} # Palette 3 (Yellow) 
   temp: {foreground: "#575860"} # Palette 8 (Bright Black) 
-  compiled: {foreground: "#8ebaa4"} # Palette 10 (Bright Green) 
-  build: {foreground: "#81b29a"} # Palette 2 (Green) 
-  source: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
+  compiled: {foreground: "#dfdfe0"} # Palette 7 (White) 
+  build: {foreground: "#dfdfe0"} # Palette 7 (White) 
+  source: {foreground: "#baa1e2"} # Palette 13 (Bright Magenta) 
+
+extensions:
+  sh:  { filename: {foreground: "#81b29a"}, icon: {style: {foreground: "#81b29a"}} }
+  rmd:  { filename: {foreground: "#baa1e2"}, icon: {style: {foreground: "#baa1e2"}} }
 
 punctuation: {foreground: "#575860"} # Palette 8 (Bright Black) 
 date: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
