@@ -95,6 +95,26 @@ def toggle_colorscheme(qtile):
     ]
     subprocess.run(set_cmd)
 
+    # Define eza paths
+    eza_config_dir = os.path.expanduser("~/.config/eza")
+    theme_link = os.path.join(eza_config_dir, "theme.yml")
+    
+    if current_scheme == "prefer-dark":
+        new_scheme = "prefer-light"
+        eza_source = os.path.join(eza_config_dir, "theme_day.yml")
+        notification = "Dayfox (Light Mode)"
+    else:
+        new_scheme = "prefer-dark"
+        eza_source = os.path.join(eza_config_dir, "theme_night.yml")
+        notification = "Nightfox (Dark Mode)"
+
+    # Update eza theme via symlink
+    try:
+        if os.path.lexists(theme_link):
+            os.remove(theme_link)
+        os.symlink(eza_source, theme_link)
+    except Exception as e:
+        subprocess.run(["notify-send", "Theme Error", f"Could not swap eza theme: {e}"])
     # Optional: Send a notification so you know it worked
     subprocess.run(["notify-send", "Theme Toggled", f"Switched to {notification}"])
 

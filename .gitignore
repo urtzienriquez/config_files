@@ -15,3 +15,4 @@ theme.toml
 */zsh/plugins
 local.config
 local_settings.json
+*/eza/theme.yml
