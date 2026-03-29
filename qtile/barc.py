@@ -4,7 +4,7 @@ import subprocess
 colors = {
     "bg": "#000000",
     "primary": "#dbc074",
-    "secondary": "#719cd6",
+    "secondary": "#707880",
     "disabled": "#707880",
     "disabled_ws": "#63cdcf",
     "alert": "#A54242",
