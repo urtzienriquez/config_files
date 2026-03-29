@@ -1,4 +1,0 @@
-color:
-  when: always
-  theme: custom
-  # Remove the "theme: muted" line entirely

@@ -1,0 +1,93 @@
+filekinds:
+  normal: {foreground: "#cdcecf"} # Foreground 
+  directory: {foreground: "#719cd6"} # Palette 4 (Blue) 
+  symlink: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
+  pipe: {foreground: "#dbc074"} # Palette 3 (Yellow) 
+  block_device: {foreground: "#dbc074"} # Palette 3 (Yellow) 
+  char_device: {foreground: "#dbc074"} # Palette 3 (Yellow) 
+  socket: {foreground: "#9d79d6"} # Palette 5 (Magenta) 
+  special: {foreground: "#9d79d6"} # Palette 5 (Magenta) 
+  executable: {foreground: "#81b29a"} # Palette 2 (Green) 
+  mount_point: {foreground: "#719cd6"} # Palette 4 (Blue) 
+
+perms:
+  user_read: {foreground: "#dfdfe0"} # Palette 7 (White) 
+  user_write: {foreground: "#dfdfe0"} # Palette 4 (Blue) 
+  user_execute_file: {foreground: "#dfdfe0"} # Palette 2 (Green) 
+  user_execute_other: {foreground: "#dfdfe0"} # Palette 10 (Bright Green) 
+  group_read: {foreground: "#719cd6"} # Foreground 
+  group_write: {foreground: "#719cd6"} # Palette 4 (Blue) 
+  group_execute: {foreground: "#719cd6"} # Palette 2 (Green) 
+  other_read: {foreground: "#81b29a"} # Palette 8 (Bright Black) 
+  other_write: {foreground: "#81b29a"} # Palette 4 (Blue) 
+  other_execute: {foreground: "#81b29a"} # Palette 2 (Green) 
+  special_user_file: {foreground: "#baa1e2"} # Palette 13 (Bright Magenta) 
+  special_other: {foreground: "#393b44"} # Palette 0 (Black) 
+  attribute: {foreground: "#7ad5d6"} # Palette 14 (Bright Cyan) 
+
+size:
+  major: {foreground: "#86abdc"} # Palette 12 (Bright Blue) 
+  minor: {foreground: "#719cd6"} # Palette 4 (Blue) 
+  number_byte: {foreground: "#cdcecf"} # Foreground 
+  number_kilo: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
+  number_mega: {foreground: "#7ad5d6"} # Palette 14 (Bright Cyan) 
+  number_giga: {foreground: "#86abdc"} # Palette 12 (Bright Blue) 
+  number_huge: {foreground: "#719cd6"} # Palette 4 (Blue) 
+  unit_byte: {foreground: "#cdcecf"} # Foreground 
+  unit_kilo: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
+  unit_mega: {foreground: "#7ad5d6"} # Palette 14 (Bright Cyan) 
+  unit_giga: {foreground: "#86abdc"} # Palette 12 (Bright Blue) 
+  unit_huge: {foreground: "#719cd6"} # Palette 4 (Blue) 
+
+users:
+  user_you: {foreground: "#dfdfe0"} # Palette 7 (White) 
+  user_root: {foreground: "#dbc074"} # Palette 1 (Red) 
+  user_other: {foreground: "#575860"} # Palette 8 (Bright Black) 
+  group_yours: {foreground: "#dfdfe0"} # Palette 7 (White) 
+  group_other: {foreground: "#575860"} # Palette 8 (Bright Black) 
+  group_root: {foreground: "#dbc074"} # Palette 1 (Red) 
+
+links:
+  normal: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
+  multi_link_file: {foreground: "#7ad5d6"} # Palette 14 (Bright Cyan) 
+
+git:
+  new: {foreground: "#81b29a"} # Palette 2 (Green) 
+  modified: {foreground: "#719cd6"} # Palette 4 (Blue) 
+  deleted: {foreground: "#c94f6d"} # Palette 1 (Red) 
+  renamed: {foreground: "#dbc074"} # Palette 3 (Yellow) 
+  typechange: {foreground: "#9d79d6"} # Palette 5 (Magenta) 
+  ignored: {foreground: "#575860"} # Palette 8 (Bright Black) 
+  conflicted: {foreground: "#d16983"} # Palette 9 (Bright Red) 
+
+git_repo:
+  branch_main: {foreground: "#e4e4e5"} # Palette 15 (Bright White) 
+  branch_other: {foreground: "#dfdfe0"} # Palette 7 (White) 
+  git_clean: {foreground: "#81b29a"} # Palette 2 (Green) 
+  git_dirty: {foreground: "#c94f6d"} # Palette 1 (Red) 
+
+file_type:
+  image: {foreground: "#9d79d6"} # Palette 5 (Magenta) 
+  video: {foreground: "#baa1e2"} # Palette 13 (Bright Magenta) 
+  music: {foreground: "#baa1e2"} # Palette 13 (Bright Magenta) 
+  lossless: {foreground: "#9d79d6"} # Palette 5 (Magenta) 
+  crypto: {foreground: "#dbc074"} # Palette 3 (Yellow) 
+  document: {foreground: "#dfdfe0"} # Palette 7 (White) 
+  compressed: {foreground: "#c94f6d"} # Palette 1 (Red) 
+  temp: {foreground: "#575860"} # Palette 8 (Bright Black) 
+  compiled: {foreground: "#8ebaa4"} # Palette 10 (Bright Green) 
+  build: {foreground: "#81b29a"} # Palette 2 (Green) 
+  source: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
+
+punctuation: {foreground: "#575860"} # Palette 8 (Bright Black) 
+date: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
+inode: {foreground: "#7ad5d6"} # Palette 14 (Bright Cyan) 
+blocks: {foreground: "#393b44"} # Palette 0 (Black) 
+header: {foreground: "#e4e4e5"} # Palette 15 (Bright White) 
+octal: {foreground: "#7ad5d6"} # Palette 14 (Bright Cyan) 
+flags: {foreground: "#719cd6"} # Palette 4 (Blue) 
+
+symlink_path: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
+control_char: {foreground: "#d16983"} # Palette 9 (Bright Red) 
+broken_symlink: {foreground: "#c94f6d"} # Palette 1 (Red) 
+broken_path_overlay: {foreground: "#393b44"} # Palette 0 (Black)
