@@ -1,15 +1,3 @@
--- Diff mode: center cursor on j/k
-vim.api.nvim_create_autocmd("BufEnter", {
-  group = vim.api.nvim_create_augroup("diff-center", { clear = true }),
-  callback = function()
-    if vim.wo.diff then
-      vim.keymap.set("n", "j", "gjzz", { buffer = true, silent = true })
-      vim.keymap.set("n", "k", "gkzz", { buffer = true, silent = true })
-    end
-  end,
-  desc = "Center cursor when navigating in diff mode",
-})
-
 -- Better line wrapping for prose file types
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("prose-wrap", { clear = true }),
@@ -125,6 +113,15 @@ vim.api.nvim_create_autocmd("LspProgress", {
     })
   end,
   desc = "Show LSP progress in ui2",
+})
+
+-- nicer lsp colors
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("lsp-colors", { clear = true }),
+  callback = function()
+    vim.lsp.document_color.enable(true, nil, { style = "virtual" })
+  end,
+  desc = "nicer lsp colors",
 })
 
 -- Highlight when yanking text
