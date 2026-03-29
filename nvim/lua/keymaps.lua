@@ -61,6 +61,13 @@ vim.api.nvim_create_user_command("ZgVariants", function()
 end, {})
 vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 
+-- cd to current buffers directory
+vim.keymap.set('n', '<leader>~', function()
+  local dir = vim.fn.expand('%:p:h')
+  vim.api.nvim_set_current_dir(dir)
+  print("CWD: " .. dir)
+end, { desc = "Change CWD to current buffer's directory" })
+
 -- ========================================
 -- LSP KEYMAPS (set on LspAttach)
 -- ========================================
