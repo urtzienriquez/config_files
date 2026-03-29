@@ -91,9 +91,10 @@ alias ......='cd ../../../../..'
 alias .......='cd ../../../../../..'
 
 # ls aliases
-alias ls='ls -F --color=auto'
-alias ll='ls -lhA'
-alias la='ls -hA'
+alias ls='lsd -F --color=auto'
+alias ll='lsd -lhA'
+alias la='lsd -hA'
+alias tree='lsd --tree'
 
 # some git aliases
 alias gf='git fetch'
