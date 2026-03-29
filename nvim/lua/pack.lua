@@ -28,6 +28,7 @@ vim.pack.add({
   gh("stevearc/quicker.nvim"),
   gh("kylechui/nvim-surround"),
   gh("tpope/vim-fugitive"),
+  gh("lewis6991/gitsigns.nvim"),
   gh("ibhagwan/fzf-lua"),
   gh("nvim-treesitter/nvim-treesitter"),
   gh("nvim-treesitter/nvim-treesitter-textobjects"),
@@ -142,7 +143,43 @@ vim.keymap.set("n", "<leader>gc", "<cmd>Git commit<cr>", { desc = "Git commit" }
 vim.keymap.set("n", "<leader>gP", "<cmd>Git push<cr>", { desc = "Git push" })
 vim.keymap.set("n", "<leader>gv", "<cmd>Gvdiffsplit!<cr>", { desc = "Git diff split" })
 vim.keymap.set("n", "<leader>gw", "<cmd>Gwrite<cr>", { desc = "Git write (stage)" })
-vim.keymap.set("n", "<leader>gr", "<cmd>Gread<cr>", { desc = "Git read (checkout)" })
+vim.keymap.set("n", "<leader>Gr", "<cmd>Gread<cr>", { desc = "Git read (checkout)" })
+
+-- gitsigns
+require("gitsigns").setup({
+  current_line_blame = true,
+
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+
+    -- Navigation
+    vim.keymap.set("n", "]c", function()
+      if vim.wo.diff then
+        return "]c"
+      end
+      vim.schedule(function()
+        gs.next_hunk()
+      end)
+      return "<Ignore>"
+    end, { expr = true, desc = "Next hunk" })
+
+    vim.keymap.set("n", "[c", function()
+      if vim.wo.diff then
+        return "[c"
+      end
+      vim.schedule(function()
+        gs.prev_hunk()
+      end)
+      return "<Ignore>"
+    end, { expr = true, desc = "Prev hunk" })
+
+    vim.keymap.set("n", "<leader>ss", gs.preview_hunk, { buffer = bufnr, desc = "Git diff (hunk)" })
+    vim.keymap.set("n", "<leader>sr", gs.reset_hunk, { desc = "Reset hunk" })
+    vim.keymap.set("v", "<leader>sr", function()
+      gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+    end, { desc = "Reset selection" })
+  end,
+})
 
 -- fzf-lua
 local _fzf_loaded = false
@@ -358,7 +395,7 @@ local function set_rnvim_keymaps()
   if vim.bo.filetype == "rmd" then
     vim.keymap.set("n", "<leader>rr", function()
       local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
-      vim.api.nvim_echo({{""}}, false, {})
+      vim.api.nvim_echo({ { "" } }, false, {})
       if filename == "__CANCEL__" then
         return
       end
