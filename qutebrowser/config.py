@@ -70,31 +70,31 @@ config.set("content.notifications.enabled", True)
 # config.set("content.proxy", "system", "*://youtube.com/")
 
 # use ranger as file picker
-config.set("fileselect.handler", "external")
-config.set(
-    "fileselect.single_file.command",
-    [
-        "ghostty",
-        "--x11-instance-name=ranger",
-        "--window-width=80",
-        "--window-height=25",
-        "-e",
-        "ranger",
-        "--choosefile={}",
-    ],
-)
-config.set(
-    "fileselect.multiple_files.command",
-    [
-        "ghostty",
-        "--x11-instance-name=ranger",
-        "--window-width=80",
-        "--window-height=25",
-        "-e",
-        "ranger",
-        "--choosefiles={}",
-    ],
-)
+# config.set("fileselect.handler", "external")
+# config.set(
+#     "fileselect.single_file.command",
+#     [
+#         "ghostty",
+#         "--x11-instance-name=ranger",
+#         "--window-width=80",
+#         "--window-height=25",
+#         "-e",
+#         "ranger",
+#         "--choosefile={}",
+#     ],
+# )
+# config.set(
+#     "fileselect.multiple_files.command",
+#     [
+#         "ghostty",
+#         "--x11-instance-name=ranger",
+#         "--window-width=80",
+#         "--window-height=25",
+#         "-e",
+#         "ranger",
+#         "--choosefiles={}",
+#     ],
+# )
 
 # open neovim from qutebrowser
 c.editor.command = ["ghostty", "-e", "nvim", "-f", "{}"]
