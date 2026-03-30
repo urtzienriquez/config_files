@@ -399,3 +399,6 @@ quarto-hugo() {
     local filename="${1%.*}"  # Remove extension if present
     quarto render "$1" && ~/Documents/GitHub/urtzienriquez.github.io/util/fix-hugo-images.sh "${filename}.md"
 }
+
+# alias udisksctl
+alias disk='udisksctl'
