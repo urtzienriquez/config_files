@@ -77,11 +77,2440 @@ file_type:
   temp: {foreground: "#575860"} # Palette 8 (Bright Black) 
   compiled: {foreground: "#dfdfe0"} # Palette 7 (White) 
   build: {foreground: "#dfdfe0"} # Palette 7 (White) 
-  source: {foreground: "#baa1e2"} # Palette 13 (Bright Magenta) 
+  source:
+    foreground: "#ffffff"
+    is_bold: false
 
 extensions:
-  sh:  { filename: {foreground: "#81b29a"}, icon: {style: {foreground: "#81b29a"}} }
-  rmd:  { filename: {foreground: "#baa1e2"}, icon: {style: {foreground: "#baa1e2"}} }
+  3gp:
+    icon:
+      glyph: ""
+      style: { foreground: "#FD971F" }
+
+  3mf:
+    icon:
+      glyph: "󰆧"
+      style: { foreground: "#888888" }
+
+  7z:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  dockerfile:
+    icon:
+      glyph: "󰡨"
+      style: { foreground: "#458EE6" }
+
+  r:
+    icon:
+      glyph: "󰟔"
+      style: { foreground: "#2266BA" }
+
+  a:
+    icon:
+      glyph: ""
+      style: { foreground: "#DCDDD6" }
+
+  aac:
+    icon:
+      glyph: ""
+      style: { foreground: "#00AFFF" }
+
+  ada:
+    icon:
+      glyph: ""
+      style: { foreground: "#599EFF" }
+
+  adb:
+    icon:
+      glyph: ""
+      style: { foreground: "#599EFF" }
+
+  ads:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  ai:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  aif:
+    icon:
+      glyph: ""
+      style: { foreground: "#00AFFF" }
+
+  aiff:
+    icon:
+      glyph: ""
+      style: { foreground: "#00AFFF" }
+
+  android:
+    icon:
+      glyph: ""
+      style: { foreground: "#34A853" }
+
+  ape:
+    icon:
+      glyph: ""
+      style: { foreground: "#00AFFF" }
+
+  apk:
+    icon:
+      glyph: ""
+      style: { foreground: "#34A853" }
+
+  apl:
+    icon:
+      glyph: ""
+      style: { foreground: "#24A148" }
+
+  app:
+    icon:
+      glyph: ""
+      style: { foreground: "#9F0500" }
+
+  applescript:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8085" }
+
+  asc:
+    icon:
+      glyph: "󰦝"
+      style: { foreground: "#576D7F" }
+
+  asm:
+    icon:
+      glyph: ""
+      style: { foreground: "#0091BD" }
+
+  ass:
+    icon:
+      glyph: "󰨖"
+      style: { foreground: "#FFB713" }
+
+  astro:
+    icon:
+      glyph: ""
+      style: { foreground: "#E23F67" }
+
+  avif:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  awk:
+    icon:
+      glyph: ""
+      style: { foreground: "#4D5A5E" }
+
+  azcli:
+    icon:
+      glyph: ""
+      style: { foreground: "#0078D4" }
+
+  bak:
+    icon:
+      glyph: "󰁯"
+      style: { foreground: "#6D8086" }
+
+  bash:
+    icon:
+      glyph: ""
+      style: { foreground: "#89E051" }
+
+  bat:
+    icon:
+      glyph: ""
+      style: { foreground: "#C1F12E" }
+
+  bazel:
+    icon:
+      glyph: ""
+      style: { foreground: "#89E051" }
+
+  bib:
+    icon:
+      glyph: "󱉟"
+      style: { foreground: "#CBCB41" }
+
+  bicep:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  bicepparam:
+    icon:
+      glyph: ""
+      style: { foreground: "#9F74B3" }
+
+  bin:
+    icon:
+      glyph: ""
+      style: { foreground: "#9F0500" }
+
+  blade.php:
+    icon:
+      glyph: ""
+      style: { foreground: "#F05340" }
+
+  blend:
+    icon:
+      glyph: "󰂫"
+      style: { foreground: "#EA7600" }
+
+  blp:
+    icon:
+      glyph: "󰺾"
+      style: { foreground: "#5796E2" }
+
+  bmp:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  bqn:
+    icon:
+      glyph: ""
+      style: { foreground: "#24A148" }
+
+  brep:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  bz:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  bz2:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  bz3:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  bzl:
+    icon:
+      glyph: ""
+      style: { foreground: "#89E051" }
+
+  c:
+    icon:
+      glyph: ""
+      style: { foreground: "#599EFF" }
+
+  c++:
+    icon:
+      glyph: ""
+      style: { foreground: "#F34B7D" }
+
+  cache:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  cast:
+    icon:
+      glyph: ""
+      style: { foreground: "#FD971F" }
+
+  cbl:
+    icon:
+      glyph: ""
+      style: { foreground: "#005CA5" }
+
+  cc:
+    icon:
+      glyph: ""
+      style: { foreground: "#F34B7D" }
+
+  ccm:
+    icon:
+      glyph: ""
+      style: { foreground: "#F34B7D" }
+
+  cfc:
+    icon:
+      glyph: ""
+      style: { foreground: "#01A4BA" }
+
+  cfg:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  cfm:
+    icon:
+      glyph: ""
+      style: { foreground: "#01A4BA" }
+
+  cjs:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  clj:
+    icon:
+      glyph: ""
+      style: { foreground: "#8DC149" }
+
+  cljc:
+    icon:
+      glyph: ""
+      style: { foreground: "#8DC149" }
+
+  cljd:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  cljs:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  cmake:
+    icon:
+      glyph: ""
+      style: { foreground: "#DCE3EB" }
+
+  cob:
+    icon:
+      glyph: ""
+      style: { foreground: "#005CA5" }
+
+  cobol:
+    icon:
+      glyph: ""
+      style: { foreground: "#005CA5" }
+
+  coffee:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  conda:
+    icon:
+      glyph: ""
+      style: { foreground: "#43B02A" }
+
+  conf:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  config.ru:
+    icon:
+      glyph: ""
+      style: { foreground: "#701516" }
+
+  cow:
+    icon:
+      glyph: "󰆚"
+      style: { foreground: "#965824" }
+
+  cp:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  cpp:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  cppm:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  cpy:
+    icon:
+      glyph: ""
+      style: { foreground: "#005CA5" }
+
+  cr:
+    icon:
+      glyph: ""
+      style: { foreground: "#C8C8C8" }
+
+  crdownload:
+    icon:
+      glyph: ""
+      style: { foreground: "#44CDA8" }
+
+  cs:
+    icon:
+      glyph: "󰌛"
+      style: { foreground: "#596706" }
+
+  csh:
+    icon:
+      glyph: ""
+      style: { foreground: "#4D5A5E" }
+
+  cshtml:
+    icon:
+      glyph: "󱦗"
+      style: { foreground: "#512BD4" }
+
+  cson:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  csproj:
+    icon:
+      glyph: "󰪮"
+      style: { foreground: "#512BD4" }
+
+  css:
+    icon:
+      glyph: ""
+      style: { foreground: "#663399" }
+
+  csv:
+    icon:
+      glyph: ""
+      style: { foreground: "#89E051" }
+
+  cts:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  cu:
+    icon:
+      glyph: ""
+      style: { foreground: "#89E051" }
+
+  cue:
+    icon:
+      glyph: "󰲹"
+      style: { foreground: "#ED95AE" }
+
+  cuh:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  cxx:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  cxxm:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  d:
+    icon:
+      glyph: ""
+      style: { foreground: "#B03931" }
+
+  d.ts:
+    icon:
+      glyph: ""
+      style: { foreground: "#D59855" }
+
+  dart:
+    icon:
+      glyph: ""
+      style: { foreground: "#03589C" }
+
+  db:
+    icon:
+      glyph: ""
+      style: { foreground: "#DAD8D8" }
+
+  dconf:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  desktop:
+    icon:
+      glyph: ""
+      style: { foreground: "#563D7C" }
+
+  diff:
+    icon:
+      glyph: ""
+      style: { foreground: "#41535B" }
+
+  dll:
+    icon:
+      glyph: ""
+      style: { foreground: "#4D2C0B" }
+
+  doc:
+    icon:
+      glyph: "󰈬"
+      style: { foreground: "#185ABD" }
+
+  dockerignore:
+    icon:
+      glyph: "󰡨"
+      style: { foreground: "#458EE6" }
+
+  docx:
+    icon:
+      glyph: "󰈬"
+      style: { foreground: "#185ABD" }
+
+  dot:
+    icon:
+      glyph: "󱁉"
+      style: { foreground: "#30638E" }
+
+  download:
+    icon:
+      glyph: ""
+      style: { foreground: "#44CDA8" }
+
+  drl:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFAFAF" }
+
+  dropbox:
+    icon:
+      glyph: ""
+      style: { foreground: "#0061FE" }
+
+  dump:
+    icon:
+      glyph: ""
+      style: { foreground: "#DAD8D8" }
+
+  dwg:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  dxf:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  ebook:
+    icon:
+      glyph: ""
+      style: { foreground: "#EAB16D" }
+
+  ebuild:
+    icon:
+      glyph: ""
+      style: { foreground: "#4C416E" }
+
+  edn:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  eex:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  ejs:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  el:
+    icon:
+      glyph: ""
+      style: { foreground: "#8172BE" }
+
+  elc:
+    icon:
+      glyph: ""
+      style: { foreground: "#8172BE" }
+
+  elf:
+    icon:
+      glyph: ""
+      style: { foreground: "#9F0500" }
+
+  elm:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  eln:
+    icon:
+      glyph: ""
+      style: { foreground: "#8172BE" }
+
+  env:
+    icon:
+      glyph: ""
+      style: { foreground: "#FAF743" }
+
+  eot:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECECEC" }
+
+  epp:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFA61A" }
+
+  epub:
+    icon:
+      glyph: ""
+      style: { foreground: "#EAB16D" }
+
+  erb:
+    icon:
+      glyph: ""
+      style: { foreground: "#701516" }
+
+  erl:
+    icon:
+      glyph: ""
+      style: { foreground: "#B83998" }
+
+  ex:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  exe:
+    icon:
+      glyph: ""
+      style: { foreground: "#9F0500" }
+
+  exs:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  f#:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  f3d:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  f90:
+    icon:
+      glyph: "󱈚"
+      style: { foreground: "#734F96" }
+
+  fbx:
+    icon:
+      glyph: "󰆧"
+      style: { foreground: "#888888" }
+
+  fcbak:
+    icon:
+      glyph: ""
+      style: { foreground: "#CB333B" }
+
+  fcmacro:
+    icon:
+      glyph: ""
+      style: { foreground: "#CB333B" }
+
+  fcmat:
+    icon:
+      glyph: ""
+      style: { foreground: "#CB333B" }
+
+  fcparam:
+    icon:
+      glyph: ""
+      style: { foreground: "#CB333B" }
+
+  fcscript:
+    icon:
+      glyph: ""
+      style: { foreground: "#CB333B" }
+
+  fcstd:
+    icon:
+      glyph: ""
+      style: { foreground: "#CB333B" }
+
+  fcstd1:
+    icon:
+      glyph: ""
+      style: { foreground: "#CB333B" }
+
+  fctb:
+    icon:
+      glyph: ""
+      style: { foreground: "#CB333B" }
+
+  fctl:
+    icon:
+      glyph: ""
+      style: { foreground: "#CB333B" }
+
+  fdmdownload:
+    icon:
+      glyph: ""
+      style: { foreground: "#44CDA8" }
+
+  feature:
+    icon:
+      glyph: ""
+      style: { foreground: "#00A818" }
+
+  fish:
+    icon:
+      glyph: ""
+      style: { foreground: "#4D5A5E" }
+
+  flac:
+    icon:
+      glyph: ""
+      style: { foreground: "#0075AA" }
+
+  flc:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECECEC" }
+
+  flf:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECECEC" }
+
+  fnl:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFF3D7" }
+
+  fodg:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFB57" }
+
+  fodp:
+    icon:
+      glyph: ""
+      style: { foreground: "#FE9C45" }
+
+  fods:
+    icon:
+      glyph: ""
+      style: { foreground: "#78FC4E" }
+
+  fodt:
+    icon:
+      glyph: ""
+      style: { foreground: "#2DCBFD" }
+
+  frag:
+    icon:
+      glyph: ""
+      style: { foreground: "#5586A6" }
+
+  fs:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  fsi:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  fsscript:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  fsx:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  gcode:
+    icon:
+      glyph: "󰐫"
+      style: { foreground: "#1471AD" }
+
+  gd:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  gemspec:
+    icon:
+      glyph: ""
+      style: { foreground: "#701516" }
+
+  geom:
+    icon:
+      glyph: ""
+      style: { foreground: "#5586A6" }
+
+  gif:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  git:
+    icon:
+      glyph: ""
+      style: { foreground: "#F14C28" }
+
+  glb:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFB13B" }
+
+  gleam:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFAFF3" }
+
+  glsl:
+    icon:
+      glyph: ""
+      style: { foreground: "#5586A6" }
+
+  gnumakefile:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  go:
+    icon:
+      glyph: ""
+      style: { foreground: "#00ADD8" }
+
+  godot:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  gpr:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  gql:
+    icon:
+      glyph: ""
+      style: { foreground: "#E535AB" }
+
+  gradle:
+    icon:
+      glyph: ""
+      style: { foreground: "#005F87" }
+
+  graphql:
+    icon:
+      glyph: ""
+      style: { foreground: "#E535AB" }
+
+  gresource:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  gv:
+    icon:
+      glyph: "󱁉"
+      style: { foreground: "#30638E" }
+
+  gz:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  h:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  haml:
+    icon:
+      glyph: ""
+      style: { foreground: "#EAEAE1" }
+
+  hbs:
+    icon:
+      glyph: ""
+      style: { foreground: "#F0772B" }
+
+  heex:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  hex:
+    icon:
+      glyph: ""
+      style: { foreground: "#2E63FF" }
+
+  hh:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  hpp:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  hrl:
+    icon:
+      glyph: ""
+      style: { foreground: "#B83998" }
+
+  hs:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  htm:
+    icon:
+      glyph: ""
+      style: { foreground: "#E34C26" }
+
+  html:
+    icon:
+      glyph: ""
+      style: { foreground: "#E44D26" }
+
+  http:
+    icon:
+      glyph: ""
+      style: { foreground: "#008EC7" }
+
+  huff:
+    icon:
+      glyph: "󰡘"
+      style: { foreground: "#4242C7" }
+
+  hurl:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF0288" }
+
+  hx:
+    icon:
+      glyph: ""
+      style: { foreground: "#EA8220" }
+
+  hxx:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  ical:
+    icon:
+      glyph: ""
+      style: { foreground: "#2B2E83" }
+
+  icalendar:
+    icon:
+      glyph: ""
+      style: { foreground: "#2B2E83" }
+
+  ico:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  ics:
+    icon:
+      glyph: ""
+      style: { foreground: "#2B2E83" }
+
+  ifb:
+    icon:
+      glyph: ""
+      style: { foreground: "#2B2E83" }
+
+  ifc:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  ige:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  iges:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  igs:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  image:
+    icon:
+      glyph: ""
+      style: { foreground: "#D0BEC8" }
+
+  img:
+    icon:
+      glyph: ""
+      style: { foreground: "#D0BEC8" }
+
+  import:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECECEC" }
+
+  info:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFCD" }
+
+  ini:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  ino:
+    icon:
+      glyph: ""
+      style: { foreground: "#56B6C2" }
+
+  ipynb:
+    icon:
+      glyph: ""
+      style: { foreground: "#F57D01" }
+
+  iso:
+    icon:
+      glyph: ""
+      style: { foreground: "#D0BEC8" }
+
+  ixx:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  jar:
+    icon:
+      glyph: ""
+      style: { foreground: "#ffaf67" }
+
+  java:
+    icon:
+      glyph: ""
+      style: { foreground: "#CC3E44" }
+
+  jl:
+    icon:
+      glyph: ""
+      style: { foreground: "#A270BA" }
+
+  jpeg:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  jpg:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  js:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  json:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  json5:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  jsonc:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  jsx:
+    icon:
+      glyph: ""
+      style: { foreground: "#20C2E3" }
+
+  jwmrc:
+    icon:
+      glyph: ""
+      style: { foreground: "#0078CD" }
+
+  jxl:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  kbx:
+    icon:
+      glyph: "󰯄"
+      style: { foreground: "#737672" }
+
+  kdb:
+    icon:
+      glyph: ""
+      style: { foreground: "#529B34" }
+
+  kdbx:
+    icon:
+      glyph: ""
+      style: { foreground: "#529B34" }
+
+  kdenlive:
+    icon:
+      glyph: ""
+      style: { foreground: "#83B8F2" }
+
+  kdenlivetitle:
+    icon:
+      glyph: ""
+      style: { foreground: "#83B8F2" }
+
+  kicad_dru:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  kicad_mod:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  kicad_pcb:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  kicad_prl:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  kicad_pro:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  kicad_sch:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  kicad_sym:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  kicad_wks:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFFF" }
+
+  ko:
+    icon:
+      glyph: ""
+      style: { foreground: "#DCDDD6" }
+
+  kpp:
+    icon:
+      glyph: ""
+      style: { foreground: "#F245FB" }
+
+  kra:
+    icon:
+      glyph: ""
+      style: { foreground: "#F245FB" }
+
+  krz:
+    icon:
+      glyph: ""
+      style: { foreground: "#F245FB" }
+
+  ksh:
+    icon:
+      glyph: ""
+      style: { foreground: "#4D5A5E" }
+
+  kt:
+    icon:
+      glyph: ""
+      style: { foreground: "#7F52FF" }
+
+  kts:
+    icon:
+      glyph: ""
+      style: { foreground: "#7F52FF" }
+
+  lck:
+    icon:
+      glyph: ""
+      style: { foreground: "#BBBBBB" }
+
+  leex:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  less:
+    icon:
+      glyph: ""
+      style: { foreground: "#563D7C" }
+
+  lff:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECECEC" }
+
+  lhs:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  lib:
+    icon:
+      glyph: ""
+      style: { foreground: "#4D2C0B" }
+
+  license:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  liquid:
+    icon:
+      glyph: ""
+      style: { foreground: "#95BF47" }
+
+  lock:
+    icon:
+      glyph: ""
+      style: { foreground: "#BBBBBB" }
+
+  log:
+    icon:
+      glyph: "󰌱"
+      style: { foreground: "#DDDDDD" }
+
+  lrc:
+    icon:
+      glyph: "󰨖"
+      style: { foreground: "#FFB713" }
+
+  lua:
+    icon:
+      glyph: ""
+      style: { foreground: "#51A0CF" }
+
+  luac:
+    icon:
+      glyph: ""
+      style: { foreground: "#51A0CF" }
+
+  luau:
+    icon:
+      glyph: ""
+      style: { foreground: "#00A2FF" }
+
+  m:
+    icon:
+      glyph: ""
+      style: { foreground: "#599EFF" }
+
+  m3u:
+    icon:
+      glyph: "󰲹"
+      style: { foreground: "#ED95AE" }
+
+  m3u8:
+    icon:
+      glyph: "󰲹"
+      style: { foreground: "#ED95AE" }
+
+  m4a:
+    icon:
+      glyph: ""
+      style: { foreground: "#00AFFF" }
+
+  m4v:
+    icon:
+      glyph: ""
+      style: { foreground: "#FD971F" }
+
+  magnet:
+    icon:
+      glyph: ""
+      style: { foreground: "#A51B16" }
+
+  makefile:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  markdown:
+    icon:
+      glyph: ""
+      style: { foreground: "#DDDDDD" }
+
+  material:
+    icon:
+      glyph: ""
+      style: { foreground: "#B83998" }
+
+  md:
+    icon:
+      glyph: ""
+      style: { foreground: "#DDDDDD" }
+
+  md5:
+    icon:
+      glyph: "󰕥"
+      style: { foreground: "#8C86AF" }
+
+  mdx:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  mint:
+    icon:
+      glyph: "󰌪"
+      style: { foreground: "#87C095" }
+
+  mjs:
+    icon:
+      glyph: ""
+      style: { foreground: "#F1E05A" }
+
+  mk:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  mkv:
+    icon:
+      glyph: ""
+      style: { foreground: "#FD971F" }
+
+  ml:
+    icon:
+      glyph: ""
+      style: { foreground: "#E37933" }
+
+  mli:
+    icon:
+      glyph: ""
+      style: { foreground: "#E37933" }
+
+  mm:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  mo:
+    icon:
+      glyph: ""
+      style: { foreground: "#9772FB" }
+
+  mobi:
+    icon:
+      glyph: ""
+      style: { foreground: "#EAB16D" }
+
+  mojo:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF4C1F" }
+
+  mov:
+    icon:
+      glyph: ""
+      style: { foreground: "#FD971F" }
+
+  mp3:
+    icon:
+      glyph: ""
+      style: { foreground: "#00AFFF" }
+
+  mp4:
+    icon:
+      glyph: ""
+      style: { foreground: "#FD971F" }
+
+  mpp:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  msf:
+    icon:
+      glyph: ""
+      style: { foreground: "#137BE1" }
+
+  mts:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  mustache:
+    icon:
+      glyph: ""
+      style: { foreground: "#E37933" }
+
+  nfo:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFFCD" }
+
+  nim:
+    icon:
+      glyph: ""
+      style: { foreground: "#F3D400" }
+
+  nix:
+    icon:
+      glyph: ""
+      style: { foreground: "#7EBAE4" }
+
+  norg:
+    icon:
+      glyph: ""
+      style: { foreground: "#4878BE" }
+
+  nswag:
+    icon:
+      glyph: ""
+      style: { foreground: "#85EA2D" }
+
+  nu:
+    icon:
+      glyph: ""
+      style: { foreground: "#3AA675" }
+
+  o:
+    icon:
+      glyph: ""
+      style: { foreground: "#9F0500" }
+
+  obj:
+    icon:
+      glyph: "󰆧"
+      style: { foreground: "#888888" }
+
+  odf:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF5A96" }
+
+  odg:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFFB57" }
+
+  odin:
+    icon:
+      glyph: "󰟢"
+      style: { foreground: "#3882D2" }
+
+  odp:
+    icon:
+      glyph: ""
+      style: { foreground: "#FE9C45" }
+
+  ods:
+    icon:
+      glyph: ""
+      style: { foreground: "#78FC4E" }
+
+  odt:
+    icon:
+      glyph: ""
+      style: { foreground: "#2DCBFD" }
+
+  oga:
+    icon:
+      glyph: ""
+      style: { foreground: "#0075AA" }
+
+  ogg:
+    icon:
+      glyph: ""
+      style: { foreground: "#0075AA" }
+
+  ogv:
+    icon:
+      glyph: ""
+      style: { foreground: "#FD971F" }
+
+  ogx:
+    icon:
+      glyph: ""
+      style: { foreground: "#FD971F" }
+
+  opus:
+    icon:
+      glyph: ""
+      style: { foreground: "#0075AA" }
+
+  org:
+    icon:
+      glyph: ""
+      style: { foreground: "#77AA99" }
+
+  otf:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECECEC" }
+
+  out:
+    icon:
+      glyph: ""
+      style: { foreground: "#9F0500" }
+
+  part:
+    icon:
+      glyph: ""
+      style: { foreground: "#44CDA8" }
+
+  patch:
+    icon:
+      glyph: ""
+      style: { foreground: "#41535B" }
+
+  pck:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  pcm:
+    icon:
+      glyph: ""
+      style: { foreground: "#0075AA" }
+
+  pdf:
+    icon:
+      glyph: ""
+      style: { foreground: "#B30B00" }
+
+  php:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  pl:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  pls:
+    icon:
+      glyph: "󰲹"
+      style: { foreground: "#ED95AE" }
+
+  ply:
+    icon:
+      glyph: "󰆧"
+      style: { foreground: "#888888" }
+
+  pm:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  png:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  po:
+    icon:
+      glyph: ""
+      style: { foreground: "#2596BE" }
+
+  pot:
+    icon:
+      glyph: ""
+      style: { foreground: "#2596BE" }
+
+  pp:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFA61A" }
+
+  ppt:
+    icon:
+      glyph: "󰈧"
+      style: { foreground: "#CB4A32" }
+
+  pptx:
+    icon:
+      glyph: "󰈧"
+      style: { foreground: "#CB4A32" }
+
+  prisma:
+    icon:
+      glyph: ""
+      style: { foreground: "#5A67D8" }
+
+  pro:
+    icon:
+      glyph: ""
+      style: { foreground: "#E4B854" }
+
+  ps1:
+    icon:
+      glyph: "󰨊"
+      style: { foreground: "#4273CA" }
+
+  psb:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  psd:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  psd1:
+    icon:
+      glyph: "󰨊"
+      style: { foreground: "#6975C4" }
+
+  psm1:
+    icon:
+      glyph: "󰨊"
+      style: { foreground: "#6975C4" }
+
+  pub:
+    icon:
+      glyph: "󰷖"
+      style: { foreground: "#E3C58E" }
+
+  pxd:
+    icon:
+      glyph: ""
+      style: { foreground: "#5AA7E4" }
+
+  pxi:
+    icon:
+      glyph: ""
+      style: { foreground: "#5AA7E4" }
+
+  py:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFBC03" }
+
+  pyc:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFE291" }
+
+  pyd:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFE291" }
+
+  pyi:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFBC03" }
+
+  pyo:
+    icon:
+      glyph: ""
+      style: { foreground: "#FFE291" }
+
+  pyw:
+    icon:
+      glyph: ""
+      style: { foreground: "#5AA7E4" }
+
+  pyx:
+    icon:
+      glyph: ""
+      style: { foreground: "#5AA7E4" }
+
+  qm:
+    icon:
+      glyph: ""
+      style: { foreground: "#2596BE" }
+
+  qml:
+    icon:
+      glyph: ""
+      style: { foreground: "#40CD52" }
+
+  qrc:
+    icon:
+      glyph: ""
+      style: { foreground: "#40CD52" }
+
+  qss:
+    icon:
+      glyph: ""
+      style: { foreground: "#40CD52" }
+
+  query:
+    icon:
+      glyph: ""
+      style: { foreground: "#90A850" }
+
+  rake:
+    icon:
+      glyph: ""
+      style: { foreground: "#701516" }
+
+  rar:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  rasi:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  razor:
+    icon:
+      glyph: "󱦘"
+      style: { foreground: "#512BD4" }
+
+  rb:
+    icon:
+      glyph: ""
+      style: { foreground: "#701516" }
+
+  res:
+    icon:
+      glyph: ""
+      style: { foreground: "#CC3E44" }
+
+  resi:
+    icon:
+      glyph: ""
+      style: { foreground: "#F55385" }
+
+  rkt:
+    icon:
+      glyph: "󰘧"
+      style: { foreground: "#9F1D20" }
+
+  rlib:
+    icon:
+      glyph: ""
+      style: { foreground: "#DEA584" }
+
+  rmd:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  rproj:
+    icon:
+      glyph: "󰗆"
+      style: { foreground: "#358A5B" }
+
+  rs:
+    icon:
+      glyph: ""
+      style: { foreground: "#DEA584" }
+
+  rss:
+    icon:
+      glyph: ""
+      style: { foreground: "#FB9D3B" }
+
+  s:
+    icon:
+      glyph: ""
+      style: { foreground: "#0071C5" }
+
+  sass:
+    icon:
+      glyph: ""
+      style: { foreground: "#F55385" }
+
+  sbt:
+    icon:
+      glyph: ""
+      style: { foreground: "#CC3E44" }
+
+  sc:
+    icon:
+      glyph: ""
+      style: { foreground: "#CC3E44" }
+
+  scad:
+    icon:
+      glyph: ""
+      style: { foreground: "#F9D72C" }
+
+  scala:
+    icon:
+      glyph: ""
+      style: { foreground: "#CC3E44" }
+
+  scm:
+    icon:
+      glyph: "󰘧"
+      style: { foreground: "#EEEEEE" }
+
+  scss:
+    icon:
+      glyph: ""
+      style: { foreground: "#F55385" }
+
+  sh:
+    icon:
+      glyph: ""
+      style: { foreground: "#4D5A5E" }
+
+  sha1:
+    icon:
+      glyph: "󰕥"
+      style: { foreground: "#8C86AF" }
+
+  sha224:
+    icon:
+      glyph: "󰕥"
+      style: { foreground: "#8C86AF" }
+
+  sha256:
+    icon:
+      glyph: "󰕥"
+      style: { foreground: "#8C86AF" }
+
+  sha384:
+    icon:
+      glyph: "󰕥"
+      style: { foreground: "#8C86AF" }
+
+  sha512:
+    icon:
+      glyph: "󰕥"
+      style: { foreground: "#8C86AF" }
+
+  sig:
+    icon:
+      glyph: "󰘧"
+      style: { foreground: "#E37933" }
+
+  signature:
+    icon:
+      glyph: "󰘧"
+      style: { foreground: "#E37933" }
+
+  skp:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  sldasm:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  sldprt:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  slim:
+    icon:
+      glyph: ""
+      style: { foreground: "#E34C26" }
+
+  sln:
+    icon:
+      glyph: ""
+      style: { foreground: "#854CC7" }
+
+  slnx:
+    icon:
+      glyph: ""
+      style: { foreground: "#854CC7" }
+
+  slvs:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  sml:
+    icon:
+      glyph: "󰘧"
+      style: { foreground: "#E37933" }
+
+  so:
+    icon:
+      glyph: ""
+      style: { foreground: "#DCDDD6" }
+
+  sol:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  spec.js:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  spec.jsx:
+    icon:
+      glyph: ""
+      style: { foreground: "#20C2E3" }
+
+  spec.ts:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  spec.tsx:
+    icon:
+      glyph: ""
+      style: { foreground: "#1354BF" }
+
+  spx:
+    icon:
+      glyph: ""
+      style: { foreground: "#0075AA" }
+
+  sql:
+    icon:
+      glyph: ""
+      style: { foreground: "#DAD8D8" }
+
+  sqlite:
+    icon:
+      glyph: ""
+      style: { foreground: "#DAD8D8" }
+
+  sqlite3:
+    icon:
+      glyph: ""
+      style: { foreground: "#DAD8D8" }
+
+  srt:
+    icon:
+      glyph: "󰨖"
+      style: { foreground: "#FFB713" }
+
+  ssa:
+    icon:
+      glyph: "󰨖"
+      style: { foreground: "#FFB713" }
+
+  ste:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  step:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  stl:
+    icon:
+      glyph: "󰆧"
+      style: { foreground: "#888888" }
+
+  stories.js:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF4785" }
+
+  stories.jsx:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF4785" }
+
+  stories.mjs:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF4785" }
+
+  stories.svelte:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF4785" }
+
+  stories.ts:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF4785" }
+
+  stories.tsx:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF4785" }
+
+  stories.vue:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF4785" }
+
+  stp:
+    icon:
+      glyph: "󰻫"
+      style: { foreground: "#839463" }
+
+  strings:
+    icon:
+      glyph: ""
+      style: { foreground: "#2596BE" }
+
+  styl:
+    icon:
+      glyph: ""
+      style: { foreground: "#8DC149" }
+
+  sub:
+    icon:
+      glyph: "󰨖"
+      style: { foreground: "#FFB713" }
+
+  sublime:
+    icon:
+      glyph: ""
+      style: { foreground: "#E37933" }
+
+  suo:
+    icon:
+      glyph: ""
+      style: { foreground: "#854CC7" }
+
+  sv:
+    icon:
+      glyph: "󰍛"
+      style: { foreground: "#019833" }
+
+  svelte:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF3E00" }
+
+  svg:
+    icon:
+      glyph: "󰜡"
+      style: { foreground: "#FFB13B" }
+
+  svgz:
+    icon:
+      glyph: "󰜡"
+      style: { foreground: "#FFB13B" }
+
+  svh:
+    icon:
+      glyph: "󰍛"
+      style: { foreground: "#019833" }
+
+  svx:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF0042" }
+
+  swift:
+    icon:
+      glyph: ""
+      style: { foreground: "#E37933" }
+
+  t:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  tbc:
+    icon:
+      glyph: "󰛓"
+      style: { foreground: "#1E5CB3" }
+
+  tcl:
+    icon:
+      glyph: "󰛓"
+      style: { foreground: "#1E5CB3" }
+
+  templ:
+    icon:
+      glyph: ""
+      style: { foreground: "#DBBD30" }
+
+  terminal:
+    icon:
+      glyph: ""
+      style: { foreground: "#31B53E" }
+
+  test.js:
+    icon:
+      glyph: ""
+      style: { foreground: "#CBCB41" }
+
+  test.jsx:
+    icon:
+      glyph: ""
+      style: { foreground: "#20C2E3" }
+
+  test.ts:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  test.tsx:
+    icon:
+      glyph: ""
+      style: { foreground: "#1354BF" }
+
+  tex:
+    icon:
+      glyph: ""
+      style: { foreground: "#3D6117" }
+
+  tf:
+    icon:
+      glyph: ""
+      style: { foreground: "#5F43E9" }
+
+  tfvars:
+    icon:
+      glyph: ""
+      style: { foreground: "#5F43E9" }
+
+  tgz:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  tmpl:
+    icon:
+      glyph: ""
+      style: { foreground: "#DBBD30" }
+
+  tmux:
+    icon:
+      glyph: ""
+      style: { foreground: "#14BA19" }
+
+  toml:
+    icon:
+      glyph: ""
+      style: { foreground: "#9C4221" }
+
+  torrent:
+    icon:
+      glyph: ""
+      style: { foreground: "#44CDA8" }
+
+  tres:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  ts:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  tscn:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  tsconfig:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF8700" }
+
+  tsx:
+    icon:
+      glyph: ""
+      style: { foreground: "#1354BF" }
+
+  ttf:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECECEC" }
+
+  twig:
+    icon:
+      glyph: ""
+      style: { foreground: "#8DC149" }
+
+  txt:
+    icon:
+      glyph: "󰈙"
+      style: { foreground: "#89E051" }
+
+  txz:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  typ:
+    icon:
+      glyph: ""
+      style: { foreground: "#0DBCC0" }
+
+  typoscript:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF8700" }
+
+  ui:
+    icon:
+      glyph: ""
+      style: { foreground: "#015BF0" }
+
+  v:
+    icon:
+      glyph: "󰍛"
+      style: { foreground: "#019833" }
+
+  vala:
+    icon:
+      glyph: ""
+      style: { foreground: "#7B3DB9" }
+
+  vert:
+    icon:
+      glyph: ""
+      style: { foreground: "#5586A6" }
+
+  vh:
+    icon:
+      glyph: "󰍛"
+      style: { foreground: "#019833" }
+
+  vhd:
+    icon:
+      glyph: "󰍛"
+      style: { foreground: "#019833" }
+
+  vhdl:
+    icon:
+      glyph: "󰍛"
+      style: { foreground: "#019833" }
+
+  vi:
+    icon:
+      glyph: ""
+      style: { foreground: "#FEC60A" }
+
+  vim:
+    icon:
+      glyph: ""
+      style: { foreground: "#019833" }
+
+  vsh:
+    icon:
+      glyph: ""
+      style: { foreground: "#5D87BF" }
+
+  vsix:
+    icon:
+      glyph: ""
+      style: { foreground: "#854CC7" }
+
+  vue:
+    icon:
+      glyph: ""
+      style: { foreground: "#8DC149" }
+
+  wasm:
+    icon:
+      glyph: ""
+      style: { foreground: "#5C4CDB" }
+
+  wav:
+    icon:
+      glyph: ""
+      style: { foreground: "#00AFFF" }
+
+  webm:
+    icon:
+      glyph: ""
+      style: { foreground: "#FD971F" }
+
+  webmanifest:
+    icon:
+      glyph: ""
+      style: { foreground: "#F1E05A" }
+
+  webp:
+    icon:
+      glyph: ""
+      style: { foreground: "#A074C4" }
+
+  webpack:
+    icon:
+      glyph: "󰜫"
+      style: { foreground: "#519ABA" }
+
+  wma:
+    icon:
+      glyph: ""
+      style: { foreground: "#00AFFF" }
+
+  wmv:
+    icon:
+      glyph: ""
+      style: { foreground: "#FD971F" }
+
+  woff:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECECEC" }
+
+  woff2:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECECEC" }
+
+  wrl:
+    icon:
+      glyph: "󰆧"
+      style: { foreground: "#888888" }
+
+  wrz:
+    icon:
+      glyph: "󰆧"
+      style: { foreground: "#888888" }
+
+  wv:
+    icon:
+      glyph: ""
+      style: { foreground: "#00AFFF" }
+
+  wvc:
+    icon:
+      glyph: ""
+      style: { foreground: "#00AFFF" }
+
+  x:
+    icon:
+      glyph: ""
+      style: { foreground: "#599EFF" }
+
+  xaml:
+    icon:
+      glyph: "󰙳"
+      style: { foreground: "#512BD4" }
+
+  xcf:
+    icon:
+      glyph: ""
+      style: { foreground: "#635B46" }
+
+  xcplayground:
+    icon:
+      glyph: ""
+      style: { foreground: "#E37933" }
+
+  xcstrings:
+    icon:
+      glyph: ""
+      style: { foreground: "#2596BE" }
+
+  xls:
+    icon:
+      glyph: "󰈛"
+      style: { foreground: "#207245" }
+
+  xlsx:
+    icon:
+      glyph: "󰈛"
+      style: { foreground: "#207245" }
+
+  xm:
+    icon:
+      glyph: ""
+      style: { foreground: "#519ABA" }
+
+  xml:
+    icon:
+      glyph: "󰗀"
+      style: { foreground: "#E37933" }
+
+  xpi:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF1B01" }
+
+  xslt:
+    icon:
+      glyph: "󰗀"
+      style: { foreground: "#33A9DC" }
+
+  xul:
+    icon:
+      glyph: ""
+      style: { foreground: "#E37933" }
+
+  xz:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  yaml:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  yml:
+    icon:
+      glyph: ""
+      style: { foreground: "#6D8086" }
+
+  zig:
+    icon:
+      glyph: ""
+      style: { foreground: "#F69A1B" }
+
+  zip:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  zsh:
+    icon:
+      glyph: ""
+      style: { foreground: "#89E051" }
+
+  zst:
+    icon:
+      glyph: ""
+      style: { foreground: "#ECA517" }
+
+  🔥:
+    icon:
+      glyph: ""
+      style: { foreground: "#FF4C1F" }
 
 punctuation: {foreground: "#575860"} # Palette 8 (Bright Black) 
 date: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
