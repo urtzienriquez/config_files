@@ -11,10 +11,22 @@ filekinds:
   mount_point: {foreground: "#719cd6"} # Palette 4 (Blue) 
 
 perms:
-  user_read: {foreground: "#3d2b5a"} # Palette 7 (White) 
-  user_write: {foreground: "#3d2b5a"} # Palette 4 (Blue) 
-  user_execute_file: {foreground: "#3d2b5a"} # Palette 2 (Green) 
-  user_execute_other: {foreground: "#3d2b5a"} # Palette 10 (Bright Green) 
+  user_read: 
+    foreground: "#3d2b5a"
+    is_bold: false
+    is_underline: false
+  user_write: 
+    foreground: "#3d2b5a"
+    is_bold: false
+    is_underline: false
+  user_execute_file: 
+    foreground: "#3d2b5a"
+    is_bold: false
+    is_underline: false
+  user_execute_other: 
+    foreground: "#3d2b5a"
+    is_bold: false
+    is_underline: false
   group_read: {foreground: "#719cd6"} # Foreground 
   group_write: {foreground: "#719cd6"} # Palette 4 (Blue) 
   group_execute: {foreground: "#719cd6"} # Palette 2 (Green) 
@@ -40,10 +52,16 @@ size:
   unit_huge: {foreground: "#719cd6"} # Palette 4 (Blue) 
 
 users:
-  user_you: {foreground: "#3d2b5a"} # Palette 7 (White) 
+  user_you: 
+    foreground: "#3d2b5a"
+    is_bold: false
+    is_underline: false
   user_root: {foreground: "#dbc074"} # Palette 1 (Red) 
   user_other: {foreground: "#575860"} # Palette 8 (Bright Black) 
-  group_yours: {foreground: "#3d2b5a"} # Palette 7 (White) 
+  group_yours: 
+    foreground: "#3d2b5a"
+    is_bold: false
+    is_underline: false
   group_other: {foreground: "#575860"} # Palette 8 (Bright Black) 
   group_root: {foreground: "#dbc074"} # Palette 1 (Red) 
 
