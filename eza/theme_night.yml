@@ -67,19 +67,50 @@ git_repo:
   git_dirty: {foreground: "#c94f6d"} # Palette 1 (Red) 
 
 file_type:
-  image: {foreground: "#9d79d6"} # Palette 5 (Magenta) 
-  video: {foreground: "#baa1e2"} # Palette 13 (Bright Magenta) 
-  music: {foreground: "#baa1e2"} # Palette 13 (Bright Magenta) 
-  lossless: {foreground: "#9d79d6"} # Palette 5 (Magenta) 
-  crypto: {foreground: "#dbc074"} # Palette 3 (Yellow) 
-  document: {foreground: "#dfdfe0"} # Palette 7 (White) 
-  compressed: {foreground: "#dbc074"} # Palette 3 (Yellow) 
-  temp: {foreground: "#575860"} # Palette 8 (Bright Black) 
-  compiled: {foreground: "#dfdfe0"} # Palette 7 (White) 
-  build: {foreground: "#dfdfe0"} # Palette 7 (White) 
+  image:
+    foreground: "#ffffff"
+    is_bold: false
+    is_underline: false
+  video:
+    foreground: "#ffffff"
+    is_bold: false
+    is_underline: false
+  music:
+    foreground: "#ffffff"
+    is_bold: false
+    is_underline: false
+  lossless:
+    foreground: "#ffffff"
+    is_bold: false
+    is_underline: false
+  crypto:
+    foreground: "#ffffff"
+    is_bold: false
+    is_underline: false
+  document:
+    foreground: "#ffffff"
+    is_bold: false
+    is_underline: false
+  compressed:
+    foreground: "#ffffff"
+    is_bold: false
+    is_underline: false
+  temp:
+    foreground: "#ffffff"
+    is_bold: false
+    is_underline: false
+  compiled:
+    foreground: "#ffffff"
+    is_bold: false
+    is_underline: false
+  build:
+    foreground: "#ffffff"
+    is_bold: false
+    is_underline: false
   source:
     foreground: "#ffffff"
     is_bold: false
+    is_underline: false
 
 extensions:
   3gp:
