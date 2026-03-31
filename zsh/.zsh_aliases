@@ -193,8 +193,8 @@ alias qs2='ssh -o RemoteCommand=none perian qstat -u urtzien'
 # image viewer
 alias iv='imv-x11'
 
-# alias for ranger 
-alias ra='ranger'
+# alias for yazi
+alias y='yazi'
 
 # alias for bat
 alias bt='bat -p'

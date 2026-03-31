@@ -69,32 +69,32 @@ config.set("content.notifications.enabled", True)
 # # never use proxy for youtube
 # config.set("content.proxy", "system", "*://youtube.com/")
 
-# use ranger as file picker
+# use yazi as file picker
 config.set("fileselect.handler", "external")
 config.set(
     "fileselect.single_file.command",
     [
         "ghostty",
-        "--x11-instance-name=ranger",
+        "--x11-instance-name=yazi",
         "--window-width=120",
         "--window-height=30",
         "-e",
         "zsh",
         "-lc",
-        "ranger --choosefile={}",
+        "yazi --chooser-file {}",
     ],
 )
 config.set(
     "fileselect.multiple_files.command",
     [
         "ghostty",
-        "--x11-instance-name=ranger",
+        "--x11-instance-name=yazi",
         "--window-width=120",
         "--window-height=30",
         "-e",
         "zsh",
         "-lc",
-        "ranger --choosefiles={}",
+        "yazi --chooser-file {}",
     ],
 )
 

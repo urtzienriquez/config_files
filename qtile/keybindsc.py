@@ -162,11 +162,11 @@ launcher_keys = [
     ),
     Key(
         [],
-        "r",
+        "y",
         lazy.spawn(
-            "ghostty --x11-instance-name='ranger' --window-height=30 --window-width=120 -e ranger"
+            "ghostty --x11-instance-name='yazi' --window-height=30 --window-width=120 -e yazi"
         ),
-        desc="Launch range file manager",
+        desc="Launch yazi file manager",
     ),
     Key(
         [],
@@ -192,7 +192,7 @@ launcher_keys = [
     ),
     Key(
         [],
-        "y",
+        "t",
         lazy.to_screen(0),
         lazy.group["5"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
         lazy.spawn(
