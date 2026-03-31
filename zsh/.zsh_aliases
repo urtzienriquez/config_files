@@ -64,7 +64,7 @@ ghosttyup() {
     # 4. Build and install to ~/.local
     git pull && \
     git submodule update --init --recursive && \
-    rm -rf .zig-cache zig-out && \
+    command rm -rf .zig-cache zig-out && \
     zig build -p "$HOME/.local" -Doptimize=ReleaseFast && \
     echo "✓ Ghostty updated successfully!"
     
@@ -194,7 +194,13 @@ alias qs2='ssh -o RemoteCommand=none perian qstat -u urtzien'
 alias iv='imv-x11'
 
 # alias for yazi
-alias y='yazi'
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	command rm -f -- "$tmp"
+}
 
 # alias for bat
 alias bt='bat -p'
