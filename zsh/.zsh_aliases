@@ -2,10 +2,10 @@
 alias zr='source ~/.config/zsh/.zshrc'
 
 # neovim alternative config aliases
-alias nv-neoffice='NVIM_APPNAME=nvim_neoffice nvim'
+alias vim-neoffice='NVIM_APPNAME=nvim_neoffice nvim'
 
 # nv switcher
-function nvs() {
+function vims() {
   local items=("default" "normal" "neoffice")
   local config
   config=$(printf "%s\n" "${items[@]}" | fzf --prompt=" config: " --height=20% --layout=reverse --border --exit-0)
@@ -27,7 +27,7 @@ function nvs() {
 }
 
 # update neovim
-nvup() {
+vimup() {
     local nvim_dir="/home/urtzi/Documents/GitHub/neovim/"
     echo "Updating neovim from $nvim_dir..."
     cd "$nvim_dir" || return 1
@@ -165,7 +165,7 @@ alias egrep='egrep --color=auto'
 alias mpm="/opt/mpm"
 
 # neovim alias
-alias nv='nvim'
+alias vim='nvim'
 
 # lazygit alias
 alias lg='lazygit'

@@ -141,6 +141,8 @@ export PERL_MB_OPT="--install_base $HOME/.perl5"
 export PERL_MM_OPT="INSTALL_BASE=$HOME/.perl5"
 export PERL5LIB="$HOME/.perl5/lib/perl5"
 export PATH="$HOME/.perl5/bin:$PATH"
+# opencode
+export PATH=/home/urtzi/.opencode/bin:$PATH
 # ZVM
 export ZVM_INSTALL="$HOME/.zvm/self"
 export PATH="$PATH:$HOME/.zvm/bin"
