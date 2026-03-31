@@ -143,7 +143,7 @@ vim.keymap.set("n", "<leader>gc", "<cmd>Git commit<cr>", { desc = "Git commit" }
 vim.keymap.set("n", "<leader>gP", "<cmd>Git push<cr>", { desc = "Git push" })
 vim.keymap.set("n", "<leader>gv", "<cmd>Gvdiffsplit!<cr>", { desc = "Git diff split" })
 vim.keymap.set("n", "<leader>gw", "<cmd>Gwrite<cr>", { desc = "Git write (stage)" })
-vim.keymap.set("n", "<leader>Gr", "<cmd>Gread<cr>", { desc = "Git read (checkout)" })
+vim.keymap.set("n", "<leader>gr", "<cmd>Gread<cr>", { desc = "Git read (checkout)" })
 
 -- gitsigns
 require("gitsigns").setup({
@@ -204,8 +204,8 @@ local function fzf(method, opts)
             ["<F8>"] = "preview-ts-ctx-dec",
             ["<F9>"] = "preview-ts-ctx-inc",
             ["<S-Left>"] = "preview-reset",
-            ["<M-S-j>"] = "preview-down",
-            ["<M-S-k>"] = "preview-up",
+            ["<C-d>"] = "preview-down",
+            ["<C-u>"] = "preview-up",
             ["ctrl-q"] = false,
           },
           fzf = {
