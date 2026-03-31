@@ -19,7 +19,7 @@ keybind = shift+control+l=scroll_to_bottom
 
 # padding
 window-padding-balance = true
-window-padding-color = background
+window-padding-color = extend-always
 window-padding-x = 0
 window-padding-y = 0
 
