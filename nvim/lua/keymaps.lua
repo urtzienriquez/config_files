@@ -1,6 +1,3 @@
--- Basic keymaps
--- ===============
-
 -- Arrow keys in normal mode → navigate quickfix
 vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
@@ -68,9 +65,10 @@ vim.keymap.set('n', '<leader>~', function()
   print("CWD: " .. dir)
 end, { desc = "Change CWD to current buffer's directory" })
 
--- ========================================
--- LSP KEYMAPS (set on LspAttach)
--- ========================================
+-- go to help page of the text under the cursor with help!
+vim.keymap.set("n", "vK", ":help!<CR>", { noremap = true, silent = true })
+
+-- lsp
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-attach-keymaps", { clear = true }),
   callback = function(event)
@@ -81,9 +79,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- ========================================
 -- love2d run
--- ========================================
 vim.api.nvim_create_autocmd("BufEnter", {
   group = vim.api.nvim_create_augroup("love2d-maps", { clear = true }),
   pattern = "*.lua",
@@ -100,7 +96,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 -- toggles
---
 vim.api.nvim_create_autocmd("UIEnter", {
   once = true,
   callback = function()
