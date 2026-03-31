@@ -40,27 +40,6 @@ def auto_show_screen(window):
         window.group.cmd_toscreen()
 
 
-@hook.subscribe.client_managed
-def center_sized_floating_window(window):
-    if window.floating:
-        center_these = ["ranger", "calendar"]
-        wm_class = window.get_wm_class()
-
-        if wm_class and any(cls in wm_class for cls in center_these):
-            # Use qtile's idle mechanism to center after window is fully sized
-            qtile.call_later(0.1, lambda: _center_window(window))
-
-
-def _center_window(window):
-    try:
-        screen = window.group.screen or qtile.current_screen
-        x = screen.x + (screen.width - window.width) // 2
-        y = screen.y + (screen.height - window.height) // 2
-        window.tweak_float(x=x, y=y)
-    except:
-        pass  # Window might have been closed
-
-
 @hook.subscribe.client_name_updated
 def shorten_pdf_names(window):
     if window.name and ".pdf" in window.name.lower():
