@@ -142,7 +142,7 @@ launcher_keys = [
     ),
     Key(
         [],
-        "t",
+        "q",
         lazy.spawn("gnome-terminal"),
         desc="Launch gnome terminal",
     ),
