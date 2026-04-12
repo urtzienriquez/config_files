@@ -23,6 +23,7 @@ end
 vim.pack.add({
   gh("folke/which-key.nvim"),
   gh("nvim-tree/nvim-web-devicons"),
+  gh("nvim-mini/mini.statusline"),
   gh("christoomey/vim-tmux-navigator"),
   gh("stevearc/oil.nvim"),
   gh("stevearc/quicker.nvim"),
@@ -71,6 +72,39 @@ require("which-key").add({
 
 -- nvim-web-devicons
 require("nvim-web-devicons").setup({})
+
+-- mini.statusline
+require("mini.statusline").setup({
+  content = {
+    active = function()
+      local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
+      local git = MiniStatusline.section_git({ trunc_width = 40 })
+      local diff = MiniStatusline.section_diff({ trunc_width = 75 })
+      local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75 })
+      local filename = MiniStatusline.section_filename({ trunc_width = 140 })
+      local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 999 })
+      local location = MiniStatusline.section_location({ trunc_width = 75 })
+      local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
+      local macro = ""
+      local reg = vim.fn.reg_recording()
+      if reg ~= "" then
+        macro = "recording @" .. reg
+      end
+
+      return MiniStatusline.combine_groups({
+        { hl = mode_hl, strings = { mode } },
+        { hl = "MiniStatuslineDevinfo", strings = { git, diff, diagnostics } },
+        "%<",
+        { hl = "MiniStatuslineFilename", strings = { filename } },
+        "%=",
+        { hl = "MiniStatuslineMode", strings = { macro } },
+        { hl = "MiniStatuslineFilename", strings = { fileinfo } },
+        { hl = mode_hl, strings = { search, location } },
+      })
+    end,
+  },
+  use_icons = true,
+})
 
 -- oil
 require("oil").setup({
@@ -593,7 +627,6 @@ vim.api.nvim_create_autocmd("FileType", {
 
 local dev = vim.fn.expand("~/Documents/GitHub")
 local my_packs = {
-  "nightfox.nvim",
   "citeref.nvim",
   "replent.nvim",
   "learnlua.nvim",
@@ -601,9 +634,6 @@ local my_packs = {
 for _, name in ipairs(my_packs) do
   vim.opt.rtp:prepend(dev .. "/" .. name)
 end
-
--- nightfox
-require("nightfox").setup()
 
 -- citeref
 require("citeref").setup({
