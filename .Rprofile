@@ -1,39 +1,39 @@
 options(
-    languageserver.server_capabilities = list(
-        completionProvider = FALSE,
-        completionItemResolve = FALSE,
-        hoverProvider = FALSE,
-        signatureHelpProvider = FALSE,
-        implementationProvider = TRUE,
-        definitionProvider = TRUE,
-        referencesProvider = TRUE
-    )
+  languageserver.server_capabilities = list(
+    completionProvider = FALSE,
+    completionItemResolve = FALSE,
+    hoverProvider = FALSE,
+    signatureHelpProvider = FALSE,
+    implementationProvider = TRUE,
+    definitionProvider = TRUE,
+    referencesProvider = TRUE
+  )
 )
 
 options(lintr.linter_file = "~/.lintr")
 
 if (interactive() || isatty(stdout())) {
-    options(
-        colorout.verbose = 0
+  options(
+    colorout.verbose = 0
+  )
+  if (require("colorout", quietly = TRUE)) {
+    colorout::setOutputColors(
+      index = 8, # gray
+      normal = 7, # text
+      number = 4, # blue
+      negnum = 16, # orange
+      zero = 6,
+      zero.limit = 1, # light blue
+      infinite = 5, # pink
+      string = 3, # yellow
+      date = 7, # text
+      const = 16, # orange,
+      true = 2, # green
+      false = 1, # red
+      warn = 16, # orange
+      stderror = 1, # red
+      error = 1, # red
+      verbose = FALSE
     )
-    if (require("colorout", quietly = TRUE)) {
-        # Nightfox
-        colorout::setOutputColors(
-            index    = "\x1b[38;2;113;131;155m",
-            normal   = "\x1b[38;2;79;214;190m",
-            number   = "\x1b[38;2;113;156;214m",
-            negnum   = "\x1b[38;2;201;79;109m",
-            zero     = "\x1b[38;2;99;205;207m",
-            infinite = "\x1b[38;2;244;162;97m",
-            string   = "\x1b[38;2;129;178;154m",
-            date     = "\x1b[38;2;219;192;116m",
-            const    = "\x1b[38;2;244;162;97m",
-            true     = "\x1b[38;2;129;178;154m",
-            false    = "\x1b[38;2;201;79;109m",
-            warn     = "\x1b[38;2;219;192;116m",
-            stderror = "\x1b[38;2;157;121;214m",
-            error    = "\x1b[38;2;201;79;109m",
-            verbose  = FALSE
-        )
-    }
+  }
 }
