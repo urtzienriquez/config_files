@@ -84,7 +84,7 @@ def update_fzf_config(is_dark: bool):
 --bind 'ctrl-u:preview-up,ctrl-d:preview-down'
 --bind 'ctrl-r:first,ctrl-e:last'
 """
-    color = "--color=pointer:#fce094,gutter:#14161b" if is_dark else "--color=pointer:#fce094,gutter:#e0e2ea"
+    color = "--color=dark,pointer:#fce094,gutter:#14161b" if is_dark else "--color=light,pointer:#fce094,gutter:#e0e2ea"
     FZF_CONFIG.write_text(f"{color}\n{base}")
 
 

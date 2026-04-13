@@ -267,15 +267,6 @@ local function fzf(method, opts)
         grep = { actions = { ["ctrl-f"] = { actions.grep_lgrep }, ["ctrl-g"] = false } },
         buffers = { actions = { ["ctrl-d"] = { fn = actions.buf_del, reload = true }, ["ctrl-x"] = false } },
         fzf_opts = { ["--multi"] = true, ["--bind"] = "tab:toggle+down,shift-tab:toggle+up" },
-        fzf_colors = {
-          ["fg"] = { "fg", "Normal" },
-          ["bg"] = { "bg", "Normal" },
-          ["fg+"] = { "fg", "Normal" },
-          ["bg+"] = { "bg", "CursorLine" },
-          ["hl"] = { "fg", "Comment" },
-          ["hl+"] = { "fg", "Statement" },
-          ["gutter"] = { "bg", "Normal" },
-        },
       })
     end
     require("fzf-lua")[method](opts)
