@@ -21,7 +21,7 @@ if (interactive() || isatty(stdout())) {
       index = 8, # gray
       normal = 7, # text
       number = 4, # blue
-      negnum = 16, # orange
+      negnum = 1, # red
       zero = 6,
       zero.limit = 1, # light blue
       infinite = 5, # pink
