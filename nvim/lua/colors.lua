@@ -16,6 +16,9 @@ set(0, "BlinkCmpMenu", { link = "Normal" })
 set(0, "BlinkCmpMenuBorder", { link = "Normal" })
 
 
+set(0, "@variable.parameter", { link = "Identifier" })
+
+
 set(0, "pandocCiteKey", { link = "Special", underline = false})
 set(0, "pandocCiteAnchor", { link = "Special" })
 set(0, "pandocCiteLocator", { link = "Special" })
