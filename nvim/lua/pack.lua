@@ -265,7 +265,7 @@ local function fzf(method, opts)
           },
         },
         grep = { actions = { ["ctrl-f"] = { actions.grep_lgrep }, ["ctrl-g"] = false } },
-        buffers = { actions = { ["ctrl-d"] = { fn = actions.buf_del, reload = true }, ["ctrl-x"] = false } },
+        buffers = { actions = { ["ctrl-x"] = { fn = actions.buf_del, reload = true } } },
         fzf_opts = { ["--multi"] = true, ["--bind"] = "tab:toggle+down,shift-tab:toggle+up" },
       })
     end
