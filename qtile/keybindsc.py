@@ -1,6 +1,7 @@
 import subprocess
 import os
 import json
+from pathlib import Path
 
 from libqtile import qtile
 from libqtile.config import Key, KeyChord
@@ -70,53 +71,77 @@ def toggle_headphones(qtile):
         )
 
 
+FZF_CONFIG = Path.home() / ".config/zsh/.fzf_config"
+
+
+def update_fzf_config(is_dark: bool):
+    FZF_CONFIG.parent.mkdir(parents=True, exist_ok=True)
+    base = """--height 85%
+--layout=reverse
+--preview-window '+{2}+4/3,<60(up),border-sharp'
+--scrollbar='█'
+--bind 'ctrl-v:toggle-preview'
+--bind 'ctrl-u:preview-up,ctrl-d:preview-down'
+--bind 'ctrl-r:first,ctrl-e:last'
+"""
+    color = "--color=pointer:#fce094,gutter:#14161b" if is_dark else "--color=pointer:#fce094,gutter:#e0e2ea"
+    FZF_CONFIG.write_text(f"{color}\n{base}")
+
+
 def toggle_colorscheme(qtile):
-    # Get the current GNOME color scheme
-    get_cmd = ["gsettings", "get", "org.gnome.desktop.interface", "color-scheme"]
+    # Get current GNOME color scheme
     current_scheme = (
-        subprocess.check_output(get_cmd).decode("utf-8").strip().replace("'", "")
+        subprocess.check_output(
+            ["gsettings", "get", "org.gnome.desktop.interface", "color-scheme"]
+        )
+        .decode("utf-8")
+        .strip()
+        .replace("'", "")
     )
 
-    # Determine the new scheme
-    if current_scheme == "prefer-dark":
-        new_scheme = "prefer-light"
-        notification = "Light Mode"
-    else:
-        new_scheme = "prefer-dark"
-        notification = "Dark Mode"
+    # Decide everything in ONE place
+    is_current_dark = current_scheme == "prefer-dark"
+    new_scheme = "prefer-light" if is_current_dark else "prefer-dark"
+    is_dark = not is_current_dark  # final state after toggle
 
-    # Set the new GNOME color scheme
-    set_cmd = [
-        "gsettings",
-        "set",
-        "org.gnome.desktop.interface",
-        "color-scheme",
-        new_scheme,
-    ]
-    subprocess.run(set_cmd)
+    notification = "Dark Mode" if is_dark else "Light Mode"
 
-    # Define eza paths
+    # Apply GNOME theme
+    subprocess.run(
+        [
+            "gsettings",
+            "set",
+            "org.gnome.desktop.interface",
+            "color-scheme",
+            new_scheme,
+        ]
+    )
+
+    # eza theme paths
     eza_config_dir = os.path.expanduser("~/.config/eza")
     theme_link = os.path.join(eza_config_dir, "theme.yml")
-    
-    if current_scheme == "prefer-dark":
-        new_scheme = "prefer-light"
-        eza_source = os.path.join(eza_config_dir, "theme_day.yml")
-        notification = "Light Mode"
-    else:
-        new_scheme = "prefer-dark"
-        eza_source = os.path.join(eza_config_dir, "theme_night.yml")
-        notification = "Dark Mode"
 
-    # Update eza theme via symlink
+    eza_source = os.path.join(
+        eza_config_dir,
+        "theme_night.yml" if is_dark else "theme_day.yml",
+    )
+
+    # Update eza symlink
     try:
         if os.path.lexists(theme_link):
             os.remove(theme_link)
         os.symlink(eza_source, theme_link)
     except Exception as e:
         subprocess.run(["notify-send", "Theme Error", f"Could not swap eza theme: {e}"])
-    # Optional: Send a notification so you know it worked
+
+    # Notify success
     subprocess.run(["notify-send", "Theme Toggled", f"Switched to {notification}"])
+
+    # Proper fzf update
+    try:
+        update_fzf_config(is_dark)
+    except Exception as e:
+        subprocess.run(["notify-send", "FZF Theme Error", str(e)])
 
 
 launcher_keys = [

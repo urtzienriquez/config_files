@@ -173,16 +173,9 @@ elif [[ "$HOST" == "archlinux" ]]; then
 	source /usr/share/fzf/completion.zsh
 fi
 
-export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -g "!node_modules" -g "!.git" -g "!go"'
+export FZF_DEFAULT_OPTS_FILE="$HOME/.config/zsh/.fzf_config"
 
-export FZF_DEFAULT_OPTS="
-  --height 85%
-  --layout=reverse
-  --preview-window '+{2}+4/3,<60(up),border-sharp'
-  --scrollbar='█'
-  --bind 'ctrl-v:toggle-preview'
-  --bind 'ctrl-u:preview-up,ctrl-d:preview-down'
-  --bind 'ctrl-r:first,ctrl-e:last'"
+export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -g "!node_modules" -g "!.git" -g "!go"'
 
 export FZF_CTRL_T_OPTS="
   --preview 'bat -p --color=always {}'
