@@ -78,7 +78,6 @@ def update_fzf_config(is_dark: bool):
     FZF_CONFIG.parent.mkdir(parents=True, exist_ok=True)
     base = """--height 85%
 --layout=reverse
---preview-window '+{2}+4/3,<60(up),border-sharp'
 --scrollbar='█'
 --bind 'ctrl-v:toggle-preview'
 --bind 'ctrl-u:preview-up,ctrl-d:preview-down'
