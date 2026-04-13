@@ -4,7 +4,40 @@ vim.g.maplocalleader = " "
 
 -- misc options
 vim.o.shell = "/usr/bin/zsh"
-require("vim._core.ui2").enable({ msg = { target = "msg" } })
+-- require("vim._core.ui2").enable({ msg = { target = "msg" } })
+require('vim._core.ui2').enable({
+  enable = true,
+  msg = {
+    targets = {
+      [''] = 'msg',
+      empty = 'msg',
+      bufwrite = 'msg',
+      confirm = 'msg',
+      emsg = 'msg',
+      echo = 'msg',
+      echomsg = 'msg',
+      echoerr = 'msg',
+      completion = 'msg',
+      list_cmd = 'cmd',
+      lua_error = 'cmd',
+      lua_print = 'cmd',
+      progress = 'msg',
+      rpc_error = 'msg',
+      quickfix = 'msg',
+      search_cmd = 'msg',
+      search_count = 'msg',
+      shell_cmd = 'cmd',
+      shell_err = 'cmd',
+      shell_out = 'cmd',
+      shell_ret = 'cmd',
+      undo = 'msg',
+      verbose = 'msg',
+      wildlist = 'msg',
+      wmsg = 'msg',
+      -- typed_cmd = 'msg',
+    },
+  },
+})
 vim.o.cmdheight = 0
 vim.opt.laststatus = 3
 vim.o.winborder = "rounded"
