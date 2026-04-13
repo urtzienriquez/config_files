@@ -3,7 +3,7 @@ import subprocess
 
 colors = {
     "bg": "#000000",
-    "primary": "#dbc074",
+    "primary": "#FCE094",
     "secondary": "#707880",
     "disabled": "#707880",
     "disabled_ws": "#63cdcf",
