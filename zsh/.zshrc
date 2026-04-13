@@ -27,9 +27,9 @@ autoload -Uz add-zsh-hook
 
 _sync_bat_theme() {
   if gsettings get org.gnome.desktop.interface color-scheme | grep -q light; then
-    export BAT_THEME="dayfox"
+    export BAT_THEME="nvim_light"
   else
-    export BAT_THEME="nightfox"
+    export BAT_THEME="nvim_dark"
   fi
 }
 

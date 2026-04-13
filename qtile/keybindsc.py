@@ -80,10 +80,10 @@ def toggle_colorscheme(qtile):
     # Determine the new scheme
     if current_scheme == "prefer-dark":
         new_scheme = "prefer-light"
-        notification = "Dayfox (Light Mode)"
+        notification = "Light Mode"
     else:
         new_scheme = "prefer-dark"
-        notification = "Nightfox (Dark Mode)"
+        notification = "Dark Mode"
 
     # Set the new GNOME color scheme
     set_cmd = [
@@ -102,11 +102,11 @@ def toggle_colorscheme(qtile):
     if current_scheme == "prefer-dark":
         new_scheme = "prefer-light"
         eza_source = os.path.join(eza_config_dir, "theme_day.yml")
-        notification = "Dayfox (Light Mode)"
+        notification = "Light Mode"
     else:
         new_scheme = "prefer-dark"
         eza_source = os.path.join(eza_config_dir, "theme_night.yml")
-        notification = "Nightfox (Dark Mode)"
+        notification = "Dark Mode"
 
     # Update eza theme via symlink
     try:
