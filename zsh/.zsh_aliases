@@ -91,10 +91,9 @@ alias ......='cd ../../../../..'
 alias .......='cd ../../../../../..'
 
 # ls aliases
-alias ls='eza --icons'
-alias ll='eza --icons -lgA'
-alias la='eza --icons -A'
-alias tree='eza --icons --tree'
+alias ls='ls -F --color=auto'
+alias ll='ls -lhA'
+alias la='ls -hA'
 
 # some git aliases
 alias gf='git fetch'
