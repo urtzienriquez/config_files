@@ -1,7 +1,7 @@
 filekinds:
   normal: {foreground: "#3d2b5a"} # Foreground 
-  directory: {foreground: "#719cd6"} # Palette 4 (Blue) 
-  symlink: {foreground: "#63cdcf"} # Palette 6 (Cyan) 
+  directory: {foreground: "#1A4C8C"} # Palette 4 (Blue) 
+  symlink: {foreground: "#1fa3a8"} # Palette 6 (Cyan) 
   pipe: {foreground: "#dbc074"} # Palette 3 (Yellow) 
   block_device: {foreground: "#dbc074"} # Palette 3 (Yellow) 
   char_device: {foreground: "#dbc074"} # Palette 3 (Yellow) 
@@ -155,6 +155,11 @@ extensions:
     icon:
       glyph: "󰟔"
       style: { foreground: "#1A4C8C" }
+
+  rdata:
+    icon:
+      glyph: ""
+      style: { foreground: "#6fc43a" }
 
   a:
     icon:

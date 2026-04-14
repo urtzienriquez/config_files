@@ -156,6 +156,11 @@ extensions:
       glyph: "󰟔"
       style: { foreground: "#2266BA" }
 
+  rdata:
+    icon:
+      glyph: ""
+      style: { foreground: "#89E051" }
+
   a:
     icon:
       glyph: ""
