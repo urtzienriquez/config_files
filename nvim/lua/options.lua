@@ -6,41 +6,7 @@ vim.g.maplocalleader = " "
 vim.o.shell = "/usr/bin/zsh"
 vim.opt.laststatus = 3
 vim.o.cmdheight = 0
--- require("vim._core.ui2").enable({ msg = { target = "cmd" } })
-require("vim._core.ui2").enable({
-  enable = true,
-  msg = {
-    targets = {
-      [""] = "msg",
-      empty = "msg",
-      bufwrite = "msg",
-      echo = "cmd",
-      echomsg = "cmd",
-      undo = "msg",
-      wmsg = "msg",
-      completion = "msg",
-      confirm = "msg",
-      confirm_sub = "msg",
-      echoerr = "cmd",
-      emsg = "cmd",
-      list_cmd = "cmd",
-      lua_error = "cmd",
-      lua_print = "cmd",
-      progress = "msg",
-      quickfix = "msg",
-      rpc_error = "msg",
-      search_cmd = "msg",
-      search_count = "msg",
-      shell_cmd = "cmd",
-      shell_err = "cmd",
-      shell_out = "cmd",
-      shell_ret = "cmd",
-      -- typed_cmd = "cmd",
-      verbose = "cmd",
-      wildlist = "cmd",
-    },
-  },
-})
+require("vim._core.ui2").enable({ msg = { target = "msg" } })
 vim.o.winborder = "rounded"
 vim.g.have_nerd_font = true
 vim.o.number = true
