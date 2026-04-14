@@ -2,17 +2,21 @@ palette = 0=#07080d
 palette = 1=#ffc0b9
 palette = 2=#b3f6c0
 palette = 3=#fce094
-palette = 4=#a6dbff
+# palette = 4=#a6dbff
+palette = 4=#6fbfff
 palette = 5=#ffcaff
-palette = 6=#8cf8f7
+# palette = 6=#8cf8f7
+palette = 6=#5ff1e8
 palette = 7=#eef1f8
 palette = 8=#4f5258
 palette = 9=#ffc0b9
 palette = 10=#b3f6c0
 palette = 11=#fce094
-palette = 12=#a6dbff
+# palette = 12=#a6dbff
+palette = 12=#6fbfff
 palette = 13=#ffcaff
-palette = 14=#8cf8f7
+# palette = 14=#8cf8f7
+palette = 14=#5ff1e8
 palette = 15=#eef1f8
 background = #14161b
 foreground = #e0e2ea
