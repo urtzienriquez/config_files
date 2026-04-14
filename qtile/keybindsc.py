@@ -98,7 +98,6 @@ def toggle_colorscheme(qtile):
         .replace("'", "")
     )
 
-    # Decide everything in ONE place
     is_current_dark = current_scheme == "prefer-dark"
     new_scheme = "prefer-light" if is_current_dark else "prefer-dark"
     is_dark = not is_current_dark  # final state after toggle
@@ -116,27 +115,10 @@ def toggle_colorscheme(qtile):
         ]
     )
 
-    # eza theme paths
-    eza_config_dir = os.path.expanduser("~/.config/eza")
-    theme_link = os.path.join(eza_config_dir, "theme.yml")
-
-    eza_source = os.path.join(
-        eza_config_dir,
-        "theme_night.yml" if is_dark else "theme_day.yml",
-    )
-
-    # Update eza symlink
-    try:
-        if os.path.lexists(theme_link):
-            os.remove(theme_link)
-        os.symlink(eza_source, theme_link)
-    except Exception as e:
-        subprocess.run(["notify-send", "Theme Error", f"Could not swap eza theme: {e}"])
-
     # Notify success
     subprocess.run(["notify-send", "Theme Toggled", f"Switched to {notification}"])
 
-    # Proper fzf update
+    # fzf update
     try:
         update_fzf_config(is_dark)
     except Exception as e:
