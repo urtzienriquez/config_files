@@ -25,12 +25,12 @@ if (interactive() || isatty(stdout())) {
       zero = 6,
       zero.limit = 1, # light blue
       infinite = 5, # pink
-      string = 3, # yellow
+      string = 2, # green
       date = 7, # text
-      const = 16, # orange,
+      const = 3, # yellow,
       true = 2, # green
       false = 1, # red
-      warn = 16, # orange
+      warn = 3, # yellow
       stderror = 1, # red
       error = 1, # red
       verbose = FALSE
