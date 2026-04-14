@@ -10,6 +10,7 @@ vim.schedule(function()
 
   noop("n", "<leader>rr")
   noop("n", "<leader>bf")
+  noop("n", "<leader>~")
   noop("n", "<leader><Enter>")
   noop("v", "<leader><Enter>")
   noop("n", "<leader><leader><Enter>")
@@ -18,6 +19,7 @@ vim.schedule(function()
   wk.add({
     { "<leader>rr", hidden = true, buffer = buf },
     { "<leader>bf", hidden = true, buffer = buf },
+    { "<leader>~", hidden = true, buffer = buf },
     { "<leader><CR>", hidden = true, buffer = buf },
     { "<leader><leader><CR>", hidden = true, buffer = buf },
   })
