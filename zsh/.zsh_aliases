@@ -96,6 +96,7 @@ alias ll='ls -lhA'
 alias la='ls -hA'
 
 # some git aliases
+alias gs='git status'
 alias gf='git fetch'
 alias gp='git pull'
 
