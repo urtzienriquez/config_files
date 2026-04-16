@@ -154,6 +154,12 @@ launcher_keys = [
     ),
     Key(
         [],
+        "e",
+        lazy.spawn("emacs"),
+        desc="Launch terminal",
+    ),
+    Key(
+        [],
         "c",
         lazy.spawn(
             "ghostty --x11-instance-name='calendar' --window-height=30 --window-width=120 -e calcurse"
