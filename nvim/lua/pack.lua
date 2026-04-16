@@ -630,6 +630,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 local dev = vim.fn.expand("~/Documents/GitHub")
 local my_packs = {
+  "nightfox.nvim",
   "citeref.nvim",
   "replent.nvim",
   "learnlua.nvim",
@@ -637,6 +638,8 @@ local my_packs = {
 for _, name in ipairs(my_packs) do
   vim.opt.rtp:prepend(dev .. "/" .. name)
 end
+
+require("nightfox").setup()
 
 -- citeref
 require("citeref").setup({
