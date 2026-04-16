@@ -287,6 +287,7 @@ end
 
 vim.keymap.set("n", "<leader>fp", fzf("builtin"), { desc = "Find picker" })
 vim.keymap.set("n", "<leader>ff", fzf("files"), { desc = "Find files" })
+vim.keymap.set("n", "<leader>fz", fzf("zoxide"), { desc = "Find directories and cwd with zoxide" })
 vim.keymap.set(
   "n",
   "<leader>f~",
