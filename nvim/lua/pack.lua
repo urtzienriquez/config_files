@@ -82,7 +82,7 @@ require("nvim-web-devicons").setup({})
 
 -- mini.statusline
 local hl_fg = vim.api.nvim_get_hl(0, { name = "Special" }).fg
-local hl_bg = vim.api.nvim_get_hl(0, { name = "StatuslineNC" }).bg
+local hl_bg = vim.api.nvim_get_hl(0, { name = "MinistatuslineFilename" }).bg
 vim.api.nvim_set_hl(0, "StatuslineRec", { fg = hl_fg, bg = hl_bg, bold = true })
 
 require("mini.statusline").setup({
