@@ -386,8 +386,10 @@ vim.api.nvim_create_autocmd("FileType", {
       { "if", "@function.inner", "Inside function" },
       { "al", "@loop.outer", "Around loop" },
       { "il", "@loop.inner", "Inside loop" },
-      { "ac", "@conditional.outer", "Around conditional" },
-      { "ic", "@conditional.inner", "Inside conditional" },
+      { "ai", "@conditional.outer", "Around conditional" },
+      { "ii", "@conditional.inner", "Inside conditional" },
+      { "ac", "@class.outer", "Around scope" },
+      { "ic", "@class.inner", "Inside scope" },
     }) do
       vim.keymap.set({ "x", "o" }, map[1], function()
         ts_select.select_textobject(map[2], "textobjects")
