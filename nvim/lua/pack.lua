@@ -527,6 +527,12 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
         ghost_text = { enabled = false },
       },
       signature = { enabled = true, window = { show_documentation = true } },
+      cmdline = {
+        enabled = true,
+        completion = {
+          menu = { auto_show = true },
+        },
+      },
     })
   end,
 })
