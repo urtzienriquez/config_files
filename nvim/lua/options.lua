@@ -3,6 +3,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- misc options
+vim.o.mouse = ""
 vim.o.shell = "/usr/bin/zsh"
 vim.opt.laststatus = 3
 vim.o.cmdheight = 0
