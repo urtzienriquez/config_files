@@ -40,9 +40,6 @@ vim.api.nvim_create_autocmd("FileType", {
   desc = "Remove q-to-close in man pages",
 })
 
--- Refresh git status
-vim.keymap.set("n", "<leader>gg", ":GitStatusRefresh<CR>", { silent = true, desc = "Refresh git status" })
-
 -- Add all case variants of a word to spellfile
 vim.api.nvim_create_user_command("ZgVariants", function()
   local word = vim.fn.expand("<cword>")
