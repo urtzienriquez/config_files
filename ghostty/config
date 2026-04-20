@@ -1,6 +1,6 @@
 # theme
 # theme = dark:nvim_dark,light:nvim_light
-theme = dark:Nightfox,light:Dayfox
+theme = dark:nightfox,light:dayfox
 font-size = 14
 config-file = ~/.config/ghostty/local.config
 
