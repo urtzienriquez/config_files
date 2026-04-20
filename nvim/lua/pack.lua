@@ -285,37 +285,37 @@ local function fzf(method, opts)
   end
 end
 
-vim.keymap.set("n", "<leader>fp", fzf("builtin"), { desc = "Find picker" })
-vim.keymap.set("n", "<leader>ff", fzf("files"), { desc = "Find files" })
-vim.keymap.set("n", "<leader>fz", fzf("zoxide"), { desc = "Find directories and cwd with zoxide" })
+vim.keymap.set("n", "<leader>fp", fzf("builtin"), { desc = "picker" })
+vim.keymap.set("n", "<leader>ff", fzf("files"), { desc = "files" })
+vim.keymap.set("n", "<leader>fz", fzf("zoxide"), { desc = "directories and cwd with zoxide" })
 vim.keymap.set(
   "n",
   "<leader>f~",
   fzf("files", { cwd = vim.fn.expand("~"), prompt = "Home files❯ ", hidden = true }),
   { desc = "Find files in ~" }
 )
-vim.keymap.set("n", "<leader>fg", fzf("live_grep"), { desc = "Find with grep" })
-vim.keymap.set("n", "<leader>fq", fzf("grep_quickfix"), { desc = "Grep quickfix" })
-vim.keymap.set("n", "<leader>fb", fzf("buffers"), { desc = "Find buffers" })
-vim.keymap.set("n", "<leader>fh", fzf("help_tags"), { desc = "Find help" })
-vim.keymap.set("n", "<leader>fk", fzf("keymaps"), { desc = "Find keymaps" })
-vim.keymap.set("n", "<leader>fw", fzf("grep_cword"), { desc = "Find word" })
-vim.keymap.set("n", "<leader>fd", fzf("diagnostics_document"), { desc = "Find diagnostics (buffer)" })
-vim.keymap.set("n", "<leader>fD", fzf("diagnostics_workspace"), { desc = "Find diagnostics (workspace)" })
-vim.keymap.set("n", "<leader>fl", fzf("lsp_definitions"), { desc = "Find LSP definitions" })
-vim.keymap.set("n", "<leader>fr", fzf("lsp_references"), { desc = "Find LSP references" })
-vim.keymap.set("n", "<leader>fS", fzf("lsp_document_symbols"), { desc = "Find LSP symbols" })
+vim.keymap.set("n", "<leader>fg", fzf("live_grep"), { desc = "with grep" })
+vim.keymap.set("n", "<leader>fq", fzf("grep_quickfix"), { desc = "grep quickfix" })
+vim.keymap.set("n", "<leader>fb", fzf("buffers"), { desc = "buffers" })
+vim.keymap.set("n", "<leader>fh", fzf("help_tags"), { desc = "help" })
+vim.keymap.set("n", "<leader>fk", fzf("keymaps"), { desc = "keymaps" })
+vim.keymap.set("n", "<leader>fw", fzf("grep_cword"), { desc = "word" })
+vim.keymap.set("n", "<leader>fd", fzf("diagnostics_document"), { desc = "diagnostics (buffer)" })
+vim.keymap.set("n", "<leader>fD", fzf("diagnostics_workspace"), { desc = "diagnostics (workspace)" })
+vim.keymap.set("n", "<leader>fl", fzf("lsp_definitions"), { desc = "LSP definitions" })
+vim.keymap.set("n", "<leader>fr", fzf("lsp_references"), { desc = "LSP references" })
+vim.keymap.set("n", "<leader>fS", fzf("lsp_document_symbols"), { desc = "LSP symbols" })
 vim.keymap.set(
   "n",
   "<leader>fs",
   fzf("lsp_document_symbols", { regex_filter = "Str.*" }),
-  { desc = "Find LSP symbols (strings)" }
+  { desc = "LSP symbols (strings)" }
 )
-vim.keymap.set("n", "<leader>ft", fzf("treesitter"), { desc = "Find Treesitter symbols" })
+vim.keymap.set("n", "<leader>ft", fzf("treesitter"), { desc = "Treesitter symbols" })
 vim.keymap.set("n", "<leader>fm", fzf("spell_suggest"), { desc = "Spell suggestions" })
-vim.keymap.set("n", "<leader>f'", fzf("marks"), { desc = "Find marks" })
+vim.keymap.set("n", "<leader>f'", fzf("marks"), { desc = "marks" })
 vim.keymap.set("n", "<leader>f,", fzf("resume"), { desc = "Resume picker" })
-vim.keymap.set("n", "<leader>f.", fzf("oldfiles"), { desc = "Find recent files" })
+vim.keymap.set("n", "<leader>f.", fzf("oldfiles"), { desc = "recent files" })
 vim.keymap.set("n", "<leader>gb", fzf("git_branches"), { desc = "Git branches" })
 vim.keymap.set("n", "<leader>gC", fzf("git_commits"), { desc = "Git commits" })
 
@@ -464,6 +464,7 @@ local r_opts = {
     implementation = false,
     definition = false,
     references = false,
+    rename = false,
   },
   objbr_mappings = {
     c = "class",
