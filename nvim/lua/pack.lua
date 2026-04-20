@@ -199,9 +199,9 @@ require("gitsigns").setup({
     local gs = package.loaded.gitsigns
 
     -- Navigation
-    vim.keymap.set("n", "]c", function()
+    vim.keymap.set("n", "]g", function()
       if vim.wo.diff then
-        return "]c"
+        return "]g"
       end
       vim.schedule(function()
         gs.next_hunk()
@@ -209,9 +209,9 @@ require("gitsigns").setup({
       return "<Ignore>"
     end, { expr = true, desc = "Next hunk" })
 
-    vim.keymap.set("n", "[c", function()
+    vim.keymap.set("n", "[g", function()
       if vim.wo.diff then
-        return "[c"
+        return "[g"
       end
       vim.schedule(function()
         gs.prev_hunk()
