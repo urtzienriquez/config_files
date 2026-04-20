@@ -10,6 +10,6 @@ screens = [
     Screen(
         wallpaper="~/Pictures/tux.png",
         wallpaper_mode="fill",
-        top=top_bar(fontsize=14, barheight=24),
+        top=top_bar(fontsize=10, barheight=14),
     ),
 ]
