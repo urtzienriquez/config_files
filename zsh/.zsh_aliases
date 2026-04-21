@@ -169,7 +169,17 @@ alias mpm="/opt/mpm"
 alias vim='nvim'
 
 # lazygit alias
-alias lg='lazygit'
+# alias lg='lazygit'
+lg() {
+  if [[ -n "$TMUX" ]]; then
+    tmux display-popup -E \
+      -xC -yC -w 85% -h 85% \
+      -d "#{pane_current_path}" \
+      lazygit
+  else
+    lazygit
+  fi
+}
 
 # qutebrowser alias
 alias qb='qutebrowser'
