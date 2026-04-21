@@ -21,7 +21,7 @@ old_files=("$resurrect_dir"/tmux_resurrect_*.txt)
 shopt -u nullglob
 
 # Trigger tmux-resurrect save (silently)
-tmux run-shell "$HOME/.config/tmux/plugins/tmux-resurrect/scripts/save.sh" >/dev/null 2>&1
+tmux run-shell "$HOME/.config/tmux/plugins/tmux-resurrect/scripts/save.sh quiet" >/dev/null 2>&1
 sleep 1
 
 # Check if 'last' file exists
@@ -73,7 +73,7 @@ for f in "${old_files[@]}"; do
     rm -f -- "$f" >/dev/null 2>&1 || true
 done
 
-# Show success message in popup using bash -c
-file_path="$saved_dir/$session.resurrect"
-tmux display-popup -E -w 80 -h 10 -T " Session Saved " \
-  bash -c "clear; echo ''; echo '   Session \"$session\" saved successfully!'; echo '   Saved to:'; echo '  $file_path'; echo ''; echo '  Press Enter to continue...'; read -r"
+# display saved message
+ORIGINAL_DISPLAY_TIME=$(tmux show-options -gv display-time)  
+tmux set-option -g display-time 2000 \; display-message 'Session "#{session_name}" saved!'  
+tmux set-option -g display-time "$ORIGINAL_DISPLAY_TIME"
