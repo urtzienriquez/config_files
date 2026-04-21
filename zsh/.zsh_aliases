@@ -26,6 +26,9 @@ function vims() {
   esac
 }
 
+# view with neovim
+alias view='nvim -R'
+
 # update neovim
 vimup() {
     local nvim_dir="/home/urtzi/Documents/GitHub/neovim/"
