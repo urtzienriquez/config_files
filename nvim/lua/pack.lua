@@ -503,8 +503,6 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
     require("blink.cmp").setup({
       keymap = {
         preset = "default",
-        ["<C-Space>"] = {},
-        ["<C-c>"] = { "show", "show_documentation", "hide_documentation" },
       },
       appearance = { use_nvim_cmp_as_default = true, nerd_font_variant = "mono" },
       sources = {
@@ -528,6 +526,12 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
         ghost_text = { enabled = false },
       },
       signature = { enabled = true, window = { show_documentation = true } },
+      cmdline = {
+        enabled = true,
+        completion = {
+          menu = { auto_show = false },
+        },
+      },
     })
   end,
 })
