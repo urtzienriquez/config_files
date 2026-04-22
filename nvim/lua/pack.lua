@@ -457,15 +457,6 @@ local r_opts = {
   bracketed_paste = false,
   R_args = { "--no-save --silent" },
   user_maps_only = true,
-  r_ls = {
-    completion = true,
-    hover = true,
-    signature = true,
-    implementation = false,
-    definition = false,
-    references = false,
-    rename = false,
-  },
   objbr_mappings = {
     c = "class",
     ["<leader>gp"] = "head({object}, n = 15)",

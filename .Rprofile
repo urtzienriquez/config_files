@@ -1,12 +1,14 @@
 options(
   languageserver.server_capabilities = list(
-    completionProvider = FALSE,
-    completionItemResolve = FALSE,
     hoverProvider = FALSE,
     signatureHelpProvider = FALSE,
-    implementationProvider = TRUE,
-    definitionProvider = TRUE,
-    referencesProvider = TRUE
+    completionProvider = FALSE,
+    completionItemResolve = FALSE,
+    definitionProvider = FALSE,
+    referencesProvider = FALSE,
+    implementationProvider = FALSE,
+    documentHighlightProvider = FALSE,
+    documentSymbolProvider = FALSE
   )
 )
 
