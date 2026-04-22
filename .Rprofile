@@ -9,7 +9,7 @@ options(
     referencesProvider = FALSE,
     implementationProvider = FALSE,
     documentHighlightProvider = FALSE,
-    documentSymbolProvider = FALSE
+    documentSymbolProvider = TRUE
   )
 )
 
