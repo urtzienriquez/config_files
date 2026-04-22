@@ -64,17 +64,17 @@ require("which-key").setup({
 })
 
 require("which-key").add({
-  { "<leader>f",  name = "Find" },
+  { "<leader>f", name = "Find" },
   { "<leader>fd", name = "diagnostics" },
-  { "<leader>b",  name = "Buffer" },
-  { "<leader>c",  name = "cd / code block" },
-  { "<leader>o",  name = "Open REPL" },
-  { "<leader>q",  name = "Close REPL" },
-  { "<leader>r",  name = "R / Render / Run" },
-  { "<leader>s",  name = "Send" },
-  { "<leader>u",  name = "UI toggle" },
-  { "<leader>a",  name = "Add" },
-  { "<leader>g",  name = "Git" },
+  { "<leader>b", name = "Buffer" },
+  { "<leader>c", name = "cd / code block" },
+  { "<leader>o", name = "Open REPL" },
+  { "<leader>q", name = "Close REPL" },
+  { "<leader>r", name = "R / Render / Run" },
+  { "<leader>s", name = "Send" },
+  { "<leader>u", name = "UI toggle" },
+  { "<leader>a", name = "Add" },
+  { "<leader>g", name = "Git" },
 })
 
 -- nvim-web-devicons
@@ -104,12 +104,12 @@ require("mini.statusline").setup({
       end
 
       return MiniStatusline.combine_groups({
-        { hl = mode_hl,                  strings = { mode } },
-        { hl = "MiniStatuslineDev",      strings = { git, diff, diagnostics, lsp } },
+        { hl = mode_hl, strings = { mode } },
+        { hl = "MiniStatuslineDev", strings = { git, diff, diagnostics, lsp } },
         { hl = "MiniStatuslineFilename", strings = { filename } },
         "%<",
         "%=",
-        { hl = "StatuslineRec",          strings = { macro } },
+        { hl = "StatuslineRec", strings = { macro } },
         { hl = "MiniStatuslineFilename", strings = { fileinfo } },
         { strings = { search, location } },
       })
@@ -382,14 +382,14 @@ vim.api.nvim_create_autocmd("FileType", {
 
     local ts_select = require("nvim-treesitter-textobjects.select")
     for _, map in ipairs({
-      { "af", "@function.outer",    "Around function" },
-      { "if", "@function.inner",    "Inside function" },
-      { "al", "@loop.outer",        "Around loop" },
-      { "il", "@loop.inner",        "Inside loop" },
+      { "af", "@function.outer", "Around function" },
+      { "if", "@function.inner", "Inside function" },
+      { "al", "@loop.outer", "Around loop" },
+      { "il", "@loop.inner", "Inside loop" },
       { "ai", "@conditional.outer", "Around conditional" },
       { "ii", "@conditional.inner", "Inside conditional" },
-      { "ac", "@class.outer",       "Around scope" },
-      { "ic", "@class.inner",       "Inside scope" },
+      { "ac", "@class.outer", "Around scope" },
+      { "ic", "@class.inner", "Inside scope" },
     }) do
       vim.keymap.set({ "x", "o" }, map[1], function()
         ts_select.select_textobject(map[2], "textobjects")
