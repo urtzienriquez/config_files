@@ -1,6 +1,7 @@
 options(
   languageserver.server_capabilities = list(
     hoverProvider = FALSE,
+    renameProvider = FALSE,
     signatureHelpProvider = FALSE,
     completionProvider = FALSE,
     completionItemResolve = FALSE,
