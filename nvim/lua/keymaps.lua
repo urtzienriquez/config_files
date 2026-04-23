@@ -3,7 +3,7 @@ vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
 
 -- Escape terminal mode
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<C-g><C-t>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- Remap C-k to C-d to insert digraphs
 vim.keymap.set("i", "<C-d>", "<C-k>", { noremap = true })
