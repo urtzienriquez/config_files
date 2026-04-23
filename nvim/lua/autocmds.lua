@@ -165,3 +165,11 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.spell = false
   end,
 })
+
+-- make terminal buffers listed always
+vim.api.nvim_create_autocmd("TermOpen", {
+  callback = function(ev)
+    vim.bo[ev.buf].buflisted = true
+    vim.opt_local.spell = false
+  end,
+})
