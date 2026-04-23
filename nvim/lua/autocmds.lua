@@ -173,3 +173,16 @@ vim.api.nvim_create_autocmd("TermOpen", {
     vim.opt_local.spell = false
   end,
 })
+
+-- no conceal for R-help files
+vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType" }, {
+  callback = function(ev)
+    local name = vim.api.nvim_buf_get_name(ev.buf)
+    if name:find("R Help on", 1, true) then
+      vim.schedule(function()
+        vim.opt_local.conceallevel = 0
+        vim.opt_local.concealcursor = ""
+      end)
+    end
+  end,
+})
