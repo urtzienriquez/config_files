@@ -38,7 +38,7 @@ vim.pack.add({
   gh("tpope/vim-fugitive"),
   gh("lewis6991/gitsigns.nvim"),
   gh("ibhagwan/fzf-lua"),
-  gh("nvim-treesitter/nvim-treesitter"),
+  { src = gh("nvim-treesitter/nvim-treesitter"), version = "4916d65" },
   gh("nvim-treesitter/nvim-treesitter-textobjects"),
   gh("nvim-lua/plenary.nvim"),
   gh("R-nvim/R.nvim"),
@@ -47,7 +47,7 @@ vim.pack.add({
 
 -- Lazy-loaded plugins (load = false, triggered by autocmd)
 vim.pack.add({
-  gh("saghen/blink.cmp"),
+  { src = gh("saghen/blink.cmp"), version = "v1" },
   gh("rafamadriz/friendly-snippets"),
   gh("mason-org/mason.nvim"),
   gh("stevearc/conform.nvim"),
