@@ -42,6 +42,7 @@ vim.pack.add({
   gh("nvim-treesitter/nvim-treesitter-textobjects"),
   gh("nvim-lua/plenary.nvim"),
   gh("R-nvim/R.nvim"),
+  gh("nickjvandyke/opencode.nvim"),
 })
 
 -- Lazy-loaded plugins (load = false, triggered by autocmd)
@@ -75,6 +76,7 @@ require("which-key").add({
   { "<leader>u", name = "UI toggle" },
   { "<leader>a", name = "Add" },
   { "<leader>g", name = "Git" },
+  { "<leader>i", name = "opencode (ai)" },
 })
 
 -- nvim-web-devicons
@@ -625,6 +627,21 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.g.slime_no_mappings = 1
   end,
 })
+
+-- opencode.nvim
+vim.keymap.set({ "n", "x" }, "<leader>ia", function()
+  require("opencode").ask("@this: ", { submit = true })
+end, { desc = "Ask opencode…" })
+vim.keymap.set({ "n", "x" }, "<leader>ix", function()
+  require("opencode").select()
+end, { desc = "Execute opencode action…" })
+vim.keymap.set({ "n" }, "<leader>ic", function()
+  require("opencode").toggle()
+end, { desc = "Toggle opencode" })
+
+vim.keymap.set({ "n", "x" }, "go", function()
+  return require("opencode").operator("@this ")
+end, { desc = "Add range to opencode", expr = true })
 
 -- my plugins
 
