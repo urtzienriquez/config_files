@@ -632,15 +632,18 @@ vim.api.nvim_create_autocmd("FileType", {
 
 ---@diagnostic disable: undefined-field
 
+vim.keymap.set("n", "<leader>io", function()
+  require("opencode").toggle()
+end, { desc = "Toggle opencode" })
 vim.keymap.set({ "n", "x" }, "<leader>ia", function()
   require("opencode").ask("@this: ", { submit = true })
+end, { desc = "Ask opencode…" })
+vim.keymap.set("n", "<leader>ib", function()
+  require("opencode").ask("@buffer: ", { submit = true })
 end, { desc = "Ask opencode…" })
 vim.keymap.set({ "n", "x" }, "<leader>ix", function()
   require("opencode").select()
 end, { desc = "Execute opencode action…" })
-vim.keymap.set({ "n" }, "<leader>io", function()
-  require("opencode").toggle()
-end, { desc = "Toggle opencode" })
 
 vim.keymap.set({ "n", "x" }, "go", function()
   return require("opencode").operator("@this ")
