@@ -629,6 +629,9 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- opencode.nvim
+
+---@diagnostic disable: undefined-field
+
 vim.keymap.set({ "n", "x" }, "<leader>ia", function()
   require("opencode").ask("@this: ", { submit = true })
 end, { desc = "Ask opencode…" })
@@ -642,6 +645,8 @@ end, { desc = "Toggle opencode" })
 vim.keymap.set({ "n", "x" }, "go", function()
   return require("opencode").operator("@this ")
 end, { desc = "Add range to opencode", expr = true })
+
+---@diagnostic enable: undefined-field
 
 -- my plugins
 
