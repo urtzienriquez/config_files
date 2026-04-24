@@ -98,6 +98,46 @@ alias ls='ls -F --color=auto'
 alias ll='ls -lhA'
 alias la='ls -hA'
 
+# git function to build git commit with aliases
+git() {
+  case "$1" in
+    st)
+      shift; command git status "$@"
+      ;;
+    c)
+      shift; command git commit "$@"
+      ;;
+    p)
+      shift; command git pull "$@"
+      ;;
+    P)
+      shift; command git push "$@"
+      ;;
+    f)
+      shift; command git fetch "$@"
+      ;;
+    a)
+      shift
+      if [ "$#" -eq 0 ]; then
+        command git add .
+      else
+        command git add "$@"
+      fi
+      ;;
+    co)
+      shift
+      if [ "$#" -eq 0 ]; then
+        command git branch
+      else
+        command git checkout "$@"
+      fi
+      ;;
+    *)
+      command git "$@"
+      ;;
+  esac
+}
+
 # rm alias (function) to always ask for permission
 rm() {
   if [[ $# -eq 0 ]]; then
