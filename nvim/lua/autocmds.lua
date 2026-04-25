@@ -186,3 +186,13 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType" }, {
     end
   end,
 })
+
+-- get a notification when sessions are loaded
+vim.api.nvim_create_autocmd("SessionLoadPost", {
+  group = vim.api.nvim_create_augroup("session-loaded", { clear = true }),
+  callback = function()
+    local session_name = vim.v.this_session
+    vim.notify("Session loaded:\n" .. session_name)
+  end,
+  desc = "report if loaded a session",
+})
