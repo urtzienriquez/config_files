@@ -169,7 +169,13 @@ vim.api.nvim_create_autocmd("FileType", {
 -- make terminal buffers listed always
 vim.api.nvim_create_autocmd("TermOpen", {
   callback = function(ev)
-    vim.bo[ev.buf].buflisted = true
+    local ft = vim.bo[ev.buf].filetype
+
+    -- Keep real user terminals listed, but leave fzf-lua picker terminals alone.
+    if ft ~= "fzf" then
+      vim.bo[ev.buf].buflisted = true
+    end
+
     vim.opt_local.spell = false
   end,
 })
@@ -185,14 +191,4 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType" }, {
       end)
     end
   end,
-})
-
--- get a notification when sessions are loaded
-vim.api.nvim_create_autocmd("SessionLoadPost", {
-  group = vim.api.nvim_create_augroup("session-loaded", { clear = true }),
-  callback = function()
-    local session_name = vim.v.this_session
-    vim.notify("Session loaded:\n" .. session_name)
-  end,
-  desc = "report if loaded a session",
 })
