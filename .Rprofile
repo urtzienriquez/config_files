@@ -13,6 +13,8 @@ options(
   )
 )
 
+options(nvimcom.build_messages = FALSE)
+
 options(lintr.linter_file = "~/.lintr")
 
 if (interactive() || isatty(stdout())) {
