@@ -248,96 +248,84 @@ require("gitsigns").setup({
 })
 
 -- fzf-lua
-local _fzf_loaded = false
-local function fzf(method, opts)
-  return function()
-    if not _fzf_loaded then
-      _fzf_loaded = true
-      local actions = require("fzf-lua").actions
-      require("fzf-lua").setup({
-        defaults = { no_header_i = true, actions = { ["ctrl-q"] = actions.file_sel_to_qf } },
-        keymap = {
-          builtin = {
-            false,
-            ["<M-Esc>"] = "hide",
-            ["<F1>"] = "toggle-help",
-            ["<F2>"] = "toggle-fullscreen",
-            ["<F3>"] = "toggle-preview-wrap",
-            ["<F4>"] = "toggle-preview",
-            ["<F5>"] = "toggle-preview-cw",
-            ["<F6>"] = "toggle-preview-behavior",
-            ["<F7>"] = "toggle-preview-ts-ctx",
-            ["<F8>"] = "preview-ts-ctx-dec",
-            ["<F9>"] = "preview-ts-ctx-inc",
-            ["<S-Left>"] = "preview-reset",
-            ["<C-d>"] = "preview-down",
-            ["<C-u>"] = "preview-up",
-            ["ctrl-q"] = false,
-          },
-          fzf = {
-            false,
-            ["ctrl-z"] = "abort",
-            ["ctrl-u"] = false,
-            ["ctrl-l"] = "unix-line-discard+first",
-            ["ctrl-a"] = "toggle-all",
-            ["ctrl-r"] = "first",
-            ["ctrl-e"] = "last",
-            ["ctrl-q"] = false,
-          },
-        },
-        actions = {
-          files = {
-            ["enter"] = actions.file_edit_or_qf,
-            ["ctrl-s"] = actions.file_split,
-            ["ctrl-v"] = actions.file_vsplit,
-            ["ctrl-j"] = actions.toggle_ignore,
-            ["ctrl-h"] = actions.toggle_hidden,
-            ["ctrl-f"] = actions.toggle_follow,
-            ["ctrl-t"] = actions.buf_tabedit,
-          },
-        },
-        grep = { actions = { ["ctrl-f"] = { actions.grep_lgrep }, ["ctrl-g"] = false } },
-        buffers = { actions = { ["ctrl-x"] = { fn = actions.buf_del, reload = true } } },
-        fzf_opts = { ["--multi"] = true, ["--bind"] = "tab:toggle+down,shift-tab:toggle+up" },
-      })
-    end
-    require("fzf-lua")[method](opts)
-  end
-end
+local actions = require("fzf-lua").actions
 
-vim.keymap.set("n", "<leader>fp", fzf("builtin"), { desc = "picker" })
-vim.keymap.set("n", "<leader>ff", fzf("files"), { desc = "files" })
-vim.keymap.set("n", "<leader>fz", fzf("zoxide"), { desc = "directories and cwd with zoxide" })
-vim.keymap.set(
-  "n",
-  "<leader>f~",
-  fzf("files", { cwd = vim.fn.expand("~"), prompt = "Home files❯ ", hidden = true }),
-  { desc = "Find files in ~" }
-)
-vim.keymap.set("n", "<leader>fg", fzf("live_grep"), { desc = "with grep" })
-vim.keymap.set("n", "<leader>fq", fzf("grep_quickfix"), { desc = "grep quickfix" })
-vim.keymap.set("n", "<leader>fb", fzf("buffers"), { desc = "buffers" })
-vim.keymap.set("n", "<leader>fh", fzf("help_tags"), { desc = "help" })
-vim.keymap.set("n", "<leader>fk", fzf("keymaps"), { desc = "keymaps" })
-vim.keymap.set("n", "<leader>fw", fzf("grep_cword"), { desc = "word" })
-vim.keymap.set("n", "<leader>fd", fzf("diagnostics_document"), { desc = "diagnostics (buffer)" })
-vim.keymap.set("n", "<leader>fD", fzf("diagnostics_workspace"), { desc = "diagnostics (workspace)" })
-vim.keymap.set("n", "<leader>fl", fzf("lsp_definitions"), { desc = "LSP definitions" })
-vim.keymap.set("n", "<leader>fr", fzf("lsp_references"), { desc = "LSP references" })
-vim.keymap.set("n", "<leader>fS", fzf("lsp_document_symbols"), { desc = "LSP symbols" })
-vim.keymap.set(
-  "n",
-  "<leader>fs",
-  fzf("lsp_document_symbols", { regex_filter = "Str.*" }),
-  { desc = "LSP symbols (strings)" }
-)
-vim.keymap.set("n", "<leader>ft", fzf("treesitter"), { desc = "Treesitter symbols" })
-vim.keymap.set("n", "<leader>fm", fzf("spell_suggest"), { desc = "Spell suggestions" })
-vim.keymap.set("n", "<leader>f'", fzf("marks"), { desc = "marks" })
-vim.keymap.set("n", "<leader>f,", fzf("resume"), { desc = "Resume picker" })
-vim.keymap.set("n", "<leader>f.", fzf("oldfiles"), { desc = "recent files" })
-vim.keymap.set("n", "<leader>gb", fzf("git_branches"), { desc = "Git branches" })
-vim.keymap.set("n", "<leader>gC", fzf("git_commits"), { desc = "Git commits" })
+require("fzf-lua").setup({
+  defaults = { no_header_i = true, actions = { ["ctrl-q"] = actions.file_sel_to_qf } },
+  keymap = {
+    builtin = {
+      false,
+      ["<M-Esc>"] = "hide",
+      ["<F1>"] = "toggle-help",
+      ["<F2>"] = "toggle-fullscreen",
+      ["<F3>"] = "toggle-preview-wrap",
+      ["<F4>"] = "toggle-preview",
+      ["<F5>"] = "toggle-preview-cw",
+      ["<F6>"] = "toggle-preview-behavior",
+      ["<F7>"] = "toggle-preview-ts-ctx",
+      ["<F8>"] = "preview-ts-ctx-dec",
+      ["<F9>"] = "preview-ts-ctx-inc",
+      ["<S-Left>"] = "preview-reset",
+      ["<C-d>"] = "preview-down",
+      ["<C-u>"] = "preview-up",
+      ["ctrl-q"] = false,
+    },
+    fzf = {
+      false,
+      ["ctrl-z"] = "abort",
+      ["ctrl-u"] = false,
+      ["ctrl-l"] = "unix-line-discard+first",
+      ["ctrl-a"] = "toggle-all",
+      ["ctrl-r"] = "first",
+      ["ctrl-e"] = "last",
+      ["ctrl-q"] = false,
+    },
+  },
+  actions = {
+    files = {
+      ["enter"] = actions.file_edit_or_qf,
+      ["ctrl-s"] = actions.file_split,
+      ["ctrl-v"] = actions.file_vsplit,
+      ["ctrl-j"] = actions.toggle_ignore,
+      ["ctrl-h"] = actions.toggle_hidden,
+      ["ctrl-f"] = actions.toggle_follow,
+      ["ctrl-t"] = actions.buf_tabedit,
+    },
+  },
+  grep = { actions = { ["ctrl-f"] = { actions.grep_lgrep }, ["ctrl-g"] = false } },
+  buffers = { actions = { ["ctrl-x"] = { fn = actions.buf_del, reload = true } } },
+  fzf_opts = { ["--multi"] = true, ["--bind"] = "tab:toggle+down,shift-tab:toggle+up" },
+})
+
+require("fzf-lua.providers.ui_select").register()
+
+vim.keymap.set("n", "<leader>fp", require("fzf-lua").builtin, { desc = "picker" })
+vim.keymap.set("n", "<leader>ff", require("fzf-lua").files, { desc = "files" })
+vim.keymap.set("n", "<leader>fz", require("fzf-lua").zoxide, { desc = "directories and cwd with zoxide" })
+vim.keymap.set("n", "<leader>f~", function()
+  require("fzf-lua").files({ cwd = vim.fn.expand("~"), prompt = "Home files❯ ", hidden = true })
+end, { desc = "Find files in ~" })
+vim.keymap.set("n", "<leader>fg", require("fzf-lua").live_grep, { desc = "with grep" })
+vim.keymap.set("n", "<leader>fq", require("fzf-lua").grep_quickfix, { desc = "grep quickfix" })
+vim.keymap.set("n", "<leader>fb", require("fzf-lua").buffers, { desc = "buffers" })
+vim.keymap.set("n", "<leader>fh", require("fzf-lua").help_tags, { desc = "help" })
+vim.keymap.set("n", "<leader>fk", require("fzf-lua").keymaps, { desc = "keymaps" })
+vim.keymap.set("n", "<leader>fw", require("fzf-lua").grep_cword, { desc = "word" })
+vim.keymap.set("n", "<leader>fd", require("fzf-lua").diagnostics_document, { desc = "diagnostics (buffer)" })
+vim.keymap.set("n", "<leader>fD", require("fzf-lua").diagnostics_workspace, { desc = "diagnostics (workspace)" })
+vim.keymap.set("n", "<leader>fl", require("fzf-lua").lsp_definitions, { desc = "LSP definitions" })
+vim.keymap.set("n", "<leader>fr", require("fzf-lua").lsp_references, { desc = "LSP references" })
+vim.keymap.set("n", "<leader>fS", require("fzf-lua").lsp_document_symbols, { desc = "LSP symbols" })
+vim.keymap.set("n", "<leader>fs", function()
+  require("fzf-lua").lsp_document_symbols({ regex_filter = "Str.*" })
+end, { desc = "LSP symbols (strings)" })
+vim.keymap.set("n", "<leader>ft", require("fzf-lua").treesitter, { desc = "Treesitter symbols" })
+vim.keymap.set("n", "<leader>fm", require("fzf-lua").spell_suggest, { desc = "Spell suggestions" })
+vim.keymap.set("n", "<leader>f'", require("fzf-lua").marks, { desc = "marks" })
+vim.keymap.set("n", "<leader>f,", require("fzf-lua").resume, { desc = "Resume picker" })
+vim.keymap.set("n", "<leader>f.", require("fzf-lua").oldfiles, { desc = "recent files" })
+vim.keymap.set("n", "<leader>gb", require("fzf-lua").git_branches, { desc = "Git branches" })
+vim.keymap.set("n", "<leader>gC", require("fzf-lua").git_commits, { desc = "Git commits" })
 
 -- Treesitter
 vim.api.nvim_create_autocmd("FileType", {
