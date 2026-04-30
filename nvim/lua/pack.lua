@@ -86,17 +86,18 @@ require("which-key").setup({
 
 require("which-key").add({
   { "<leader>f", name = "Find" },
-  { "<leader>fd", name = "diagnostics" },
   { "<leader>b", name = "Buffer" },
   { "<leader>c", name = "cd / code block" },
   { "<leader>o", name = "Open REPL" },
   { "<leader>q", name = "Close REPL" },
-  { "<leader>r", name = "R / Render / Run" },
-  { "<leader>s", name = "Send" },
-  { "<leader>u", name = "UI toggle" },
-  { "<leader>a", name = "Add" },
   { "<leader>g", name = "Git" },
-  { "<leader>i", name = "opencode (ai)" },
+  { "<leader>h", name = "GitHub" },
+  { "<leader>i", name = "AI" },
+  { "<leader>a", name = "Add" },
+  { "<leader>u", name = "UI" },
+  { "<leader>r", name = "REPL/Render" },
+  { "<leader>s", name = "Send" },
+  { "<leader>m", name = "Session manager" },
 })
 
 -- nvim-web-devicons
@@ -220,33 +221,37 @@ vim.keymap.set("v", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open selection i
 -- octo.nvim
 require("octo").setup({
   picker = "fzf-lua",
-  mappings_disable_default = true, -- Keep true to only use our selected mappings
+  mappings_disable_default = false,
   enable_builtin = true,
-  mappings = {
-    issue = {
-      add_comment = { lhs = "<localleader>ca", desc = "add comment" },
-      next_comment = { lhs = "]c", desc = "go to next comment" },
-      prev_comment = { lhs = "[c", desc = "go to previous comment" },
-      close_issue = { lhs = "<localleader>ic", desc = "close issue" },
-      reopen_issue = { lhs = "<localleader>io", desc = "reopen issue" },
-      open_in_browser = { lhs = "<C-b>", desc = "open issue in browser" },
-      copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
-      list_issues = { lhs = "<localleader>il", desc = "list open issues" },
-    },
-    pull_request = {
-      checkout_pr = { lhs = "<localleader>po", desc = "checkout PR" },
-      add_comment = { lhs = "<localleader>ca", desc = "add comment" },
-      next_comment = { lhs = "]c", desc = "go to next comment" },
-      prev_comment = { lhs = "[c", desc = "go to previous comment" },
-      open_in_browser = { lhs = "<C-b>", desc = "open PR in browser" },
-      copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
-      merge_pr = { lhs = "<localleader>pm", desc = "merge PR" },
-    },
-  },
+  -- mappings = {
+  --   issue = {
+  --     next_comment = { lhs = "]c", desc = "next comment" },
+  --     prev_comment = { lhs = "[c", desc = "prev comment" },
+  --     add_comment = { lhs = "<leader>ca", desc = "add comment" },
+  --     close_issue = { lhs = "<leader>ic", desc = "close issue" },
+  --     reopen_issue = { lhs = "<leader>io", desc = "reopen issue" },
+  --     list_issues = { lhs = "<leader>il", desc = "list issues" },
+  --     open_in_browser = { lhs = "<C-b>", desc = "open in browser" },
+  --     copy_url = { lhs = "<C-y>", desc = "copy url" },
+  --   },
+  --   pull_request = {
+  --     next_comment = { lhs = "]c", desc = "next comment" },
+  --     prev_comment = { lhs = "[c", desc = "prev comment" },
+  --     checkout_pr = { lhs = "<leader>pc", desc = "checkout PR" },
+  --     merge_pr = { lhs = "<leader>pm", desc = "merge PR" },
+  --     list_prs = { lhs = "<leader>pl", desc = "list PRs" },
+  --     add_comment = { lhs = "<leader>ca", desc = "add comment" },
+  --     open_in_browser = { lhs = "<C-b>", desc = "open in browser" },
+  --     copy_url = { lhs = "<C-y>", desc = "copy url" },
+  --   },
+  -- },
 })
 
--- Global keymap for :Octo command
-vim.keymap.set("n", "<leader>oc", ":Octo<CR>", { desc = "Octo command" })
+vim.keymap.set("n", "<leader>hh", "<cmd>Octo<CR>", { desc = "List octo actions" })
+vim.keymap.set("n", "<leader>hi", "<cmd>Octo issue list<CR>", { desc = "List issues" })
+vim.keymap.set("n", "<leader>hp", "<cmd>Octo pr list<CR>", { desc = "List PRs" })
+vim.keymap.set("n", "<leader>hs", "<cmd>Octo search<CR>", { desc = "Search GitHub" })
+vim.keymap.set("n", "<leader>hr", "<cmd>Octo repo view<CR>", { desc = "View repo" })
 
 -- gitsigns
 require("gitsigns").setup({
@@ -616,7 +621,7 @@ local function set_rnvim_keymaps()
   vim.keymap.set("n", "]]", "<Plug>RNextRChunk", o)
   vim.keymap.set("n", "[[", "<Plug>RPreviousRChunk", o)
   vim.keymap.set("i", "<C-a>c", "`r<Space>`<Esc>i", o)
-  vim.keymap.set("n", "<leader>ac", "i`r<Space>`<Esc>i", vim.tbl_extend("force", o, { desc = "Add inline code" }))
+  vim.keymap.set("n", "<leader>cc", "i`r<Space>`<Esc>i", vim.tbl_extend("force", o, { desc = "Add inline code" }))
   if vim.bo.filetype == "rmd" then
     vim.keymap.set("n", "<leader>rr", function()
       local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
@@ -679,13 +684,13 @@ vim.keymap.set("n", "<leader>io", function()
 end, { desc = "Toggle opencode" })
 vim.keymap.set({ "n", "x" }, "<leader>ia", function()
   require("opencode").ask("@this: ", { submit = true })
-end, { desc = "Ask opencode…" })
+end, { desc = "Ask AI (selection/this)" })
 vim.keymap.set("n", "<leader>ib", function()
   require("opencode").ask("@buffer: ", { submit = true })
-end, { desc = "Ask opencode…" })
+end, { desc = "Ask AI (buffer)" })
 vim.keymap.set({ "n", "x" }, "<leader>ix", function()
   require("opencode").select()
-end, { desc = "Execute opencode action…" })
+end, { desc = "Execute AI action" })
 
 vim.keymap.set({ "n", "x" }, "go", function()
   return require("opencode").operator("@this ")
