@@ -38,6 +38,7 @@ vim.pack.add({
   gh("stevearc/quicker.nvim"),
   gh("kylechui/nvim-surround"),
   gh("tpope/vim-fugitive"),
+  gh("tpope/vim-rhubarb"),
   gh("lewis6991/gitsigns.nvim"),
   gh("ibhagwan/fzf-lua"),
   { src = gh("nvim-treesitter/nvim-treesitter"), version = "4916d65" },
@@ -210,6 +211,10 @@ vim.keymap.set("n", "<leader>gP", "<cmd>Git push<cr>", { desc = "Git push" })
 vim.keymap.set("n", "<leader>gv", "<cmd>Gvdiffsplit!<cr>", { desc = "Git diff split" })
 vim.keymap.set("n", "<leader>gw", "<cmd>Gwrite<cr>", { desc = "Git write (stage)" })
 vim.keymap.set("n", "<leader>gr", "<cmd>Gread<cr>", { desc = "Git read (checkout)" })
+
+-- rhubarb
+vim.keymap.set("n", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open in GitHub" })
+vim.keymap.set("v", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open selection in GitHub" })
 
 -- gitsigns
 require("gitsigns").setup({
