@@ -39,6 +39,7 @@ vim.pack.add({
   gh("kylechui/nvim-surround"),
   gh("tpope/vim-fugitive"),
   gh("tpope/vim-rhubarb"),
+  gh("pwntester/octo.nvim"),
   gh("lewis6991/gitsigns.nvim"),
   gh("ibhagwan/fzf-lua"),
   { src = gh("nvim-treesitter/nvim-treesitter"), version = "4916d65" },
@@ -215,6 +216,37 @@ vim.keymap.set("n", "<leader>gr", "<cmd>Gread<cr>", { desc = "Git read (checkout
 -- rhubarb
 vim.keymap.set("n", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open in GitHub" })
 vim.keymap.set("v", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open selection in GitHub" })
+
+-- octo.nvim
+require("octo").setup({
+  picker = "fzf-lua",
+  mappings_disable_default = true, -- Keep true to only use our selected mappings
+  enable_builtin = true,
+  mappings = {
+    issue = {
+      add_comment = { lhs = "<localleader>ca", desc = "add comment" },
+      next_comment = { lhs = "]c", desc = "go to next comment" },
+      prev_comment = { lhs = "[c", desc = "go to previous comment" },
+      close_issue = { lhs = "<localleader>ic", desc = "close issue" },
+      reopen_issue = { lhs = "<localleader>io", desc = "reopen issue" },
+      open_in_browser = { lhs = "<C-b>", desc = "open issue in browser" },
+      copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
+      list_issues = { lhs = "<localleader>il", desc = "list open issues" },
+    },
+    pull_request = {
+      checkout_pr = { lhs = "<localleader>po", desc = "checkout PR" },
+      add_comment = { lhs = "<localleader>ca", desc = "add comment" },
+      next_comment = { lhs = "]c", desc = "go to next comment" },
+      prev_comment = { lhs = "[c", desc = "go to previous comment" },
+      open_in_browser = { lhs = "<C-b>", desc = "open PR in browser" },
+      copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
+      merge_pr = { lhs = "<localleader>pm", desc = "merge PR" },
+    },
+  },
+})
+
+-- Global keymap for :Octo command
+vim.keymap.set("n", "<leader>oc", ":Octo<CR>", { desc = "Octo command" })
 
 -- gitsigns
 require("gitsigns").setup({
