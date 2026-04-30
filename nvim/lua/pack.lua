@@ -30,7 +30,7 @@ end
 
 -- Core plugins (always loaded)
 vim.pack.add({
-  gh("folke/which-key.nvim"),
+  gh("nvim-mini/mini.clue"),
   gh("nvim-tree/nvim-web-devicons"),
   gh("nvim-mini/mini.statusline"),
   gh("christoomey/vim-tmux-navigator"),
@@ -76,28 +76,43 @@ end
 ----------------------------------------
 -- configuration
 
--- which-key
-require("which-key").setup({
-  plugins = { spelling = { enabled = false } },
-  delay = 0,
-  preset = "helix",
-  icons = { mappings = vim.g.have_nerd_font },
-})
-
-require("which-key").add({
-  { "<leader>f", name = "Find" },
-  { "<leader>b", name = "Buffer" },
-  { "<leader>c", name = "cd / code block" },
-  { "<leader>o", name = "Open REPL" },
-  { "<leader>q", name = "Close REPL" },
-  { "<leader>g", name = "Git" },
-  { "<leader>h", name = "GitHub" },
-  { "<leader>i", name = "AI" },
-  { "<leader>a", name = "Add" },
-  { "<leader>u", name = "UI" },
-  { "<leader>r", name = "REPL/Render" },
-  { "<leader>s", name = "Send" },
-  { "<leader>m", name = "Session manager" },
+-- mini.clue
+local mini_clue = require("mini.clue")
+mini_clue.setup({
+  triggers = {
+    { mode = "n", keys = "<Leader>" },
+    { mode = "x", keys = "<Leader>" },
+    { mode = "i", keys = "<C-x>" },
+    { mode = "n", keys = "g" },
+    { mode = "x", keys = "g" },
+    { mode = "n", keys = "'" },
+    { mode = "n", keys = "`" },
+    { mode = "x", keys = "'" },
+    { mode = "x", keys = "`" },
+    { mode = "n", keys = '"' },
+    { mode = "x", keys = '"' },
+    { mode = "i", keys = "<C-r>" },
+    { mode = "c", keys = "<C-r>" },
+    { mode = "n", keys = "<C-w>" },
+    { mode = "n", keys = "z" },
+    { mode = "x", keys = "z" },
+    { mode = "n", keys = "[" },
+    { mode = "n", keys = "]" },
+  },
+  clues = {
+    mini_clue.gen_clues.builtin_completion(),
+    mini_clue.gen_clues.g(),
+    mini_clue.gen_clues.marks(),
+    mini_clue.gen_clues.registers(),
+    mini_clue.gen_clues.windows(),
+    mini_clue.gen_clues.z(),
+  },
+  window = {
+    delay = 0,
+    config = {
+      width = "auto",
+    },
+  },
 })
 
 -- nvim-web-devicons
@@ -610,18 +625,22 @@ vim.api.nvim_create_autocmd("FileType", {
 -- R.nvim
 local function set_rnvim_keymaps()
   local o = { noremap = true, silent = true, buffer = true }
-  vim.keymap.set("n", "<leader>or", "<Plug>RStart", o)
-  vim.keymap.set("n", "<leader>qr", "<Plug>RClose", o)
-  vim.keymap.set("n", "<leader>cd", "<Plug>RSetwd", o)
-  vim.keymap.set("n", "<Enter>", "<Plug>RDSendLine", o)
-  vim.keymap.set("v", "<Enter>", "<Plug>RSendSelection", o)
-  vim.keymap.set("n", "<leader>sb", "<Plug>RSendFile", o)
-  vim.keymap.set("n", "<leader>rh", "<Plug>RHelp", o)
-  vim.keymap.set("n", "<leader>ro", "<Plug>ROBToggle", o)
-  vim.keymap.set("n", "]]", "<Plug>RNextRChunk", o)
-  vim.keymap.set("n", "[[", "<Plug>RPreviousRChunk", o)
-  vim.keymap.set("i", "<C-a>c", "`r<Space>`<Esc>i", o)
-  vim.keymap.set("n", "<leader>cc", "i`r<Space>`<Esc>i", vim.tbl_extend("force", o, { desc = "Add inline code" }))
+  local function opts(desc)
+    return vim.tbl_extend("force", o, { desc = desc })
+  end
+  vim.keymap.set("n", "<leader>or", "<Plug>RStart", opts("Start R"))
+  vim.keymap.set("n", "<leader>qr", "<Plug>RClose", opts("Close R"))
+  vim.keymap.set("n", "<leader>cd", "<Plug>RSetwd", opts("Set working directory"))
+  vim.keymap.set("n", "<Enter>", "<Plug>RDSendLine", opts("Send line to R"))
+  vim.keymap.set("v", "<Enter>", "<Plug>RSendSelection", opts("Send selection to R"))
+  vim.keymap.set("n", "<leader>sb", "<Plug>RSendFile", opts("Send buffer to R"))
+  vim.keymap.set("n", "<leader>rh", "<Plug>RHelp", opts("R help"))
+  vim.keymap.set("n", "<leader>ro", "<Plug>ROBToggle", opts("Toggle object browser"))
+  vim.keymap.set("n", "]]", "<Plug>RNextRChunk", opts("Next R chunk"))
+  vim.keymap.set("n", "[[", "<Plug>RPreviousRChunk", opts("Previous R chunk"))
+  vim.keymap.set("i", "<C-a>c", "`r<Space>`<Esc>i", opts("Add inline R code"))
+  vim.keymap.set("n", "<leader>cc", "i`r<Space>`<Esc>i", opts("Add inline R code"))
+
   if vim.bo.filetype == "rmd" then
     vim.keymap.set("n", "<leader>rr", function()
       local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
@@ -636,7 +655,7 @@ local function set_rnvim_keymaps()
       else
         vim.cmd('RSend rmarkdown::render("' .. file .. '")')
       end
-    end, { desc = "Render R Markdown" })
+    end, opts("Render R Markdown"))
   end
 end
 
