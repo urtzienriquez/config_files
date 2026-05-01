@@ -30,7 +30,7 @@ end
 
 -- Core plugins (always loaded)
 vim.pack.add({
-  gh("nvim-mini/mini.clue"),
+  gh("folke/which-key.nvim"),
   gh("nvim-tree/nvim-web-devicons"),
   gh("nvim-mini/mini.statusline"),
   gh("christoomey/vim-tmux-navigator"),
@@ -76,43 +76,31 @@ end
 ----------------------------------------
 -- configuration
 
--- mini.clue
-local mini_clue = require("mini.clue")
-mini_clue.setup({
+-- which-key
+require("which-key").setup({
+  plugins = { spelling = { enabled = false } },
+  preset = "helix",
+  delay = 0,
   triggers = {
-    { mode = "n", keys = "<Leader>" },
-    { mode = "x", keys = "<Leader>" },
-    { mode = "i", keys = "<C-x>" },
-    { mode = "n", keys = "g" },
-    { mode = "x", keys = "g" },
-    { mode = "n", keys = "'" },
-    { mode = "n", keys = "`" },
-    { mode = "x", keys = "'" },
-    { mode = "x", keys = "`" },
-    { mode = "n", keys = '"' },
-    { mode = "x", keys = '"' },
-    { mode = "i", keys = "<C-r>" },
-    { mode = "c", keys = "<C-r>" },
-    { mode = "n", keys = "<C-w>" },
-    { mode = "n", keys = "z" },
-    { mode = "x", keys = "z" },
-    { mode = "n", keys = "[" },
-    { mode = "n", keys = "]" },
+    { "<auto>", mode = "nxso" },
+    { "<localleader>", mode = "n" },
   },
-  clues = {
-    mini_clue.gen_clues.builtin_completion(),
-    mini_clue.gen_clues.g(),
-    mini_clue.gen_clues.marks(),
-    mini_clue.gen_clues.registers(),
-    mini_clue.gen_clues.windows(),
-    mini_clue.gen_clues.z(),
-  },
-  window = {
-    delay = 0,
-    config = {
-      width = "auto",
-    },
-  },
+})
+
+require("which-key").add({
+  { "<leader>f", name = "Find" },
+  { "<leader>b", name = "Buffer" },
+  { "<leader>c", name = "cd/code" },
+  { "<leader>o", name = "Open REPL" },
+  { "<leader>q", name = "Close REPL" },
+  { "<leader>g", name = "Git" },
+  { "<leader>h", name = "GitHub" },
+  { "<leader>i", name = "opencode" },
+  { "<leader>a", name = "Add" },
+  { "<leader>u", name = "UI" },
+  { "<leader>r", name = "REPL/Render" },
+  { "<leader>s", name = "Send" },
+  { "<leader>m", name = "Session manager" },
 })
 
 -- nvim-web-devicons
@@ -238,28 +226,6 @@ require("octo").setup({
   picker = "fzf-lua",
   mappings_disable_default = false,
   enable_builtin = true,
-  -- mappings = {
-  --   issue = {
-  --     next_comment = { lhs = "]c", desc = "next comment" },
-  --     prev_comment = { lhs = "[c", desc = "prev comment" },
-  --     add_comment = { lhs = "<leader>ca", desc = "add comment" },
-  --     close_issue = { lhs = "<leader>ic", desc = "close issue" },
-  --     reopen_issue = { lhs = "<leader>io", desc = "reopen issue" },
-  --     list_issues = { lhs = "<leader>il", desc = "list issues" },
-  --     open_in_browser = { lhs = "<C-b>", desc = "open in browser" },
-  --     copy_url = { lhs = "<C-y>", desc = "copy url" },
-  --   },
-  --   pull_request = {
-  --     next_comment = { lhs = "]c", desc = "next comment" },
-  --     prev_comment = { lhs = "[c", desc = "prev comment" },
-  --     checkout_pr = { lhs = "<leader>pc", desc = "checkout PR" },
-  --     merge_pr = { lhs = "<leader>pm", desc = "merge PR" },
-  --     list_prs = { lhs = "<leader>pl", desc = "list PRs" },
-  --     add_comment = { lhs = "<leader>ca", desc = "add comment" },
-  --     open_in_browser = { lhs = "<C-b>", desc = "open in browser" },
-  --     copy_url = { lhs = "<C-y>", desc = "copy url" },
-  --   },
-  -- },
 })
 
 vim.keymap.set("n", "<leader>hh", "<cmd>Octo<CR>", { desc = "List octo actions" })
@@ -703,13 +669,13 @@ vim.keymap.set("n", "<leader>io", function()
 end, { desc = "Toggle opencode" })
 vim.keymap.set({ "n", "x" }, "<leader>ia", function()
   require("opencode").ask("@this: ", { submit = true })
-end, { desc = "Ask AI (selection/this)" })
+end, { desc = "Ask opencode (selection/this)" })
 vim.keymap.set("n", "<leader>ib", function()
   require("opencode").ask("@buffer: ", { submit = true })
-end, { desc = "Ask AI (buffer)" })
+end, { desc = "Ask opencode (buffer)" })
 vim.keymap.set({ "n", "x" }, "<leader>ix", function()
   require("opencode").select()
-end, { desc = "Execute AI action" })
+end, { desc = "Execute opencode action" })
 
 vim.keymap.set({ "n", "x" }, "go", function()
   return require("opencode").operator("@this ")

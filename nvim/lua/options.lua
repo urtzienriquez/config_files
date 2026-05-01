@@ -1,6 +1,6 @@
 -- map leaders
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = "\\"
 
 -- misc options
 vim.o.mouse = ""

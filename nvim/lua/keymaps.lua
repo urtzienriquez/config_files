@@ -33,9 +33,9 @@ vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("lua-keymaps", { clear = true }),
   pattern = "lua",
   callback = function()
-    vim.keymap.set("n", "<leader><leader><Enter>", "<CMD>silent update<BAR>source %<CR>", { desc = "exec lua file" })
-    vim.keymap.set("n", "<leader><Enter>", ":.lua<CR>", { desc = "exec lua line" })
-    vim.keymap.set("v", "<leader><Enter>", ":lua<CR>", { desc = "exec lua block" })
+    vim.keymap.set("n", "<localleader><localleader><Enter>", "<CMD>silent update<BAR>source %<CR>", { desc = "exec lua file" })
+    vim.keymap.set("n", "<localleader><Enter>", ":.lua<CR>", { desc = "exec lua line" })
+    vim.keymap.set("v", "<localleader><Enter>", ":lua<CR>", { desc = "exec lua block" })
   end,
   desc = "Remove q-to-close in man pages",
 })

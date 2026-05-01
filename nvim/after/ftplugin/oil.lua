@@ -1,9 +1,26 @@
 vim.b.completion = false
 
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("oil-clues", { clear = true }),
-  pattern = "oil",
-  callback = function()
-    require("mini.clue").ensure_buf_triggers()
-  end,
-})
+vim.schedule(function()
+  local buf = vim.api.nvim_get_current_buf()
+  local wk = require("which-key")
+
+  local noop = function(mode, lhs)
+    vim.keymap.set(mode, lhs, "<Nop>", { buffer = buf, silent = true })
+  end
+
+  noop("n", "<leader>rr")
+  noop("n", "<leader>bf")
+  noop("n", "<leader>~")
+  noop("n", "<leader><Enter>")
+  noop("v", "<leader><Enter>")
+  noop("n", "<leader><leader><Enter>")
+
+  -- Hide from which-key in this buffer
+  wk.add({
+    { "<leader>rr", hidden = true, buffer = buf },
+    { "<leader>bf", hidden = true, buffer = buf },
+    { "<leader>~", hidden = true, buffer = buf },
+    { "<leader><CR>", hidden = true, buffer = buf },
+    { "<leader><leader><CR>", hidden = true, buffer = buf },
+  })
+end)
