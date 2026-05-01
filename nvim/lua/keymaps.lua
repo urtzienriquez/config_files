@@ -60,7 +60,7 @@ vim.keymap.set('n', '<leader>~', function()
   local dir = vim.fn.expand('%:p:h')
   vim.api.nvim_set_current_dir(dir)
   print("CWD: " .. dir)
-end, { desc = "Change CWD to current buffer's directory" })
+end, { desc = "CWD to buffer" })
 
 -- go to help page of the text under the cursor with help!
 vim.keymap.set("n", "vK", ":help!<CR>", { noremap = true, silent = true })

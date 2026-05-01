@@ -28,35 +28,30 @@ local gh = function(x)
   return "https://github.com/" .. x
 end
 
--- Core plugins (always loaded)
 vim.pack.add({
   gh("folke/which-key.nvim"),
   gh("nvim-tree/nvim-web-devicons"),
   gh("nvim-mini/mini.statusline"),
   gh("christoomey/vim-tmux-navigator"),
-  gh("stevearc/oil.nvim"),
-  gh("stevearc/quicker.nvim"),
   gh("kylechui/nvim-surround"),
-  gh("tpope/vim-fugitive"),
-  gh("tpope/vim-rhubarb"),
-  gh("pwntester/octo.nvim"),
   gh("lewis6991/gitsigns.nvim"),
   gh("ibhagwan/fzf-lua"),
   { src = gh("nvim-treesitter/nvim-treesitter"), version = "4916d65" },
   gh("nvim-treesitter/nvim-treesitter-textobjects"),
   gh("nvim-lua/plenary.nvim"),
-  gh("R-nvim/R.nvim"),
-  gh("nickjvandyke/opencode.nvim"),
-})
-
--- Lazy-loaded plugins (load = false, triggered by autocmd)
-vim.pack.add({
   { src = gh("saghen/blink.cmp"), version = "v1" },
   gh("rafamadriz/friendly-snippets"),
   gh("mason-org/mason.nvim"),
   gh("stevearc/conform.nvim"),
   gh("jpalardy/vim-slime"),
-}, { load = false })
+  gh("stevearc/oil.nvim"),
+  gh("stevearc/quicker.nvim"),
+  gh("tpope/vim-fugitive"),
+  gh("tpope/vim-rhubarb"),
+  gh("pwntester/octo.nvim"),
+  gh("R-nvim/R.nvim"),
+  gh("nickjvandyke/opencode.nvim"),
+})
 
 ----------------------------------------
 -- my plugins
@@ -98,9 +93,9 @@ require("which-key").add({
   { "<leader>i", name = "opencode" },
   { "<leader>a", name = "Add" },
   { "<leader>u", name = "UI" },
-  { "<leader>r", name = "REPL/Render" },
+  { "<leader>r", name = "R/Render" },
   { "<leader>s", name = "Send" },
-  { "<leader>m", name = "Session manager" },
+  { "<leader>m", name = "Session" },
 })
 
 -- nvim-web-devicons
@@ -144,48 +139,63 @@ require("mini.statusline").setup({
   use_icons = true,
 })
 
--- oil
-require("oil").setup({
-  default_file_explorer = true,
-  use_default_keymaps = true,
-  view_options = { show_hidden = true },
-  keymaps = {
-    ["t"] = { "actions.parent", mode = "n" },
-    ["<C-h>"] = false,
-    ["<C-l>"] = false,
-    ["<C-s>"] = { "actions.select", opts = { horizontal = true }, desc = "Open in horizontal split" },
-    ["<C-v>"] = { "actions.select", opts = { vertical = true }, desc = "Open in vertical split" },
-    ["<leader>l"] = "actions.refresh",
-  },
-})
-
+-- oil (lazy-loaded on keymap)
 vim.keymap.set("n", "<leader>t", function()
+  require("oil").setup({
+    default_file_explorer = true,
+    use_default_keymaps = true,
+    view_options = { show_hidden = true },
+    keymaps = {
+      ["t"] = { "actions.parent", mode = "n" },
+      ["<C-h>"] = false,
+      ["<C-l>"] = false,
+      ["<C-s>"] = { "actions.select", opts = { horizontal = true }, desc = "Open in horizontal split" },
+      ["<C-v>"] = { "actions.select", opts = { vertical = true }, desc = "Open in vertical split" },
+      ["<leader>l"] = "actions.refresh",
+    },
+  })
+
   local oil = require("oil")
   if vim.bo.filetype == "oil" then
     oil.close()
   else
     oil.open()
   end
-end, { desc = "Toggle Oil file explorer" })
 
--- quicker
-require("quicker").setup({
-  keys = {
-    {
-      ">",
-      function()
-        require("quicker").expand({ before = 2, after = 2, add_to_existing = true })
-      end,
-      desc = "Expand quickfix context",
-    },
-    {
-      "<",
-      function()
-        require("quicker").collapse()
-      end,
-      desc = "Collapse quickfix context",
-    },
-  },
+  -- Update the keymap to use the loaded oil directly
+  vim.keymap.set("n", "<leader>t", function()
+    if vim.bo.filetype == "oil" then
+      oil.close()
+    else
+      oil.open()
+    end
+  end, { desc = "Oil toggle" })
+end, { desc = "Oil toggle" })
+
+-- quicker (lazy-loaded on quickfix FileType)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "qf",
+  once = true,
+  callback = function()
+    require("quicker").setup({
+      keys = {
+        {
+          ">",
+          function()
+            require("quicker").expand({ before = 2, after = 2, add_to_existing = true })
+          end,
+          desc = "Expand quickfix context",
+        },
+        {
+          "<",
+          function()
+            require("quicker").collapse()
+          end,
+          desc = "Collapse quickfix context",
+        },
+      },
+    })
+  end,
 })
 
 -- nvim-surround
@@ -221,18 +231,41 @@ vim.keymap.set("n", "<leader>gr", "<cmd>Gread<cr>", { desc = "Git read (checkout
 vim.keymap.set("n", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open in GitHub" })
 vim.keymap.set("v", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open selection in GitHub" })
 
--- octo.nvim
-require("octo").setup({
-  picker = "fzf-lua",
-  mappings_disable_default = false,
-  enable_builtin = true,
+-- octo.nvim (lazy-load on command or keymap)
+local function load_octo()
+  require("octo").setup({
+    picker = "fzf-lua",
+    mappings_disable_default = false,
+    enable_builtin = true,
+  })
+end
+
+vim.api.nvim_create_user_command("Octo", function(opts)
+  load_octo()
+  vim.cmd("Octo " .. opts.args)
+end, {
+  nargs = "*",
+  complete = function()
+    return {}
+  end,
 })
 
-vim.keymap.set("n", "<leader>hh", "<cmd>Octo<CR>", { desc = "List octo actions" })
-vim.keymap.set("n", "<leader>hi", "<cmd>Octo issue list<CR>", { desc = "List issues" })
-vim.keymap.set("n", "<leader>hp", "<cmd>Octo pr list<CR>", { desc = "List PRs" })
-vim.keymap.set("n", "<leader>hs", "<cmd>Octo search<CR>", { desc = "Search GitHub" })
-vim.keymap.set("n", "<leader>hr", "<cmd>Octo repo view<CR>", { desc = "View repo" })
+local octo_keymaps = {
+  { "<leader>hh", "<cmd>Octo<CR>", "List octo actions" },
+  { "<leader>hi", "<cmd>Octo issue list<CR>", "List issues" },
+  { "<leader>hp", "<cmd>Octo pr list<CR>", "List PRs" },
+  { "<leader>hs", "<cmd>Octo search<CR>", "Search GitHub" },
+  { "<leader>hr", "<cmd>Octo repo view<CR>", "View repo" },
+}
+
+for _, map in ipairs(octo_keymaps) do
+  vim.keymap.set("n", map[1], function()
+    load_octo()
+    vim.cmd(map[2]:gsub("^<cmd>", ""):gsub("<CR>$", ""))
+    -- Update keymap after first load
+    vim.keymap.set("n", map[1], map[2], { desc = map[3] })
+  end, { desc = map[3] })
+end
 
 -- gitsigns
 require("gitsigns").setup({
@@ -324,7 +357,7 @@ require("fzf-lua.providers.ui_select").register()
 
 vim.keymap.set("n", "<leader>fp", require("fzf-lua").builtin, { desc = "picker" })
 vim.keymap.set("n", "<leader>ff", require("fzf-lua").files, { desc = "files" })
-vim.keymap.set("n", "<leader>fz", require("fzf-lua").zoxide, { desc = "directories and cwd with zoxide" })
+vim.keymap.set("n", "<leader>fz", require("fzf-lua").zoxide, { desc = "zoxide" })
 vim.keymap.set("n", "<leader>f~", function()
   require("fzf-lua").files({ cwd = vim.fn.expand("~"), prompt = "Home files❯ ", hidden = true })
 end, { desc = "Find files in ~" })
@@ -669,10 +702,10 @@ vim.keymap.set("n", "<leader>io", function()
 end, { desc = "Toggle opencode" })
 vim.keymap.set({ "n", "x" }, "<leader>ia", function()
   require("opencode").ask("@this: ", { submit = true })
-end, { desc = "Ask opencode (selection/this)" })
+end, { desc = "Ask opencode @this" })
 vim.keymap.set("n", "<leader>ib", function()
   require("opencode").ask("@buffer: ", { submit = true })
-end, { desc = "Ask opencode (buffer)" })
+end, { desc = "Ask opencode @buffer" })
 vim.keymap.set({ "n", "x" }, "<leader>ix", function()
   require("opencode").select()
 end, { desc = "Execute opencode action" })
