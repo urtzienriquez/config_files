@@ -719,7 +719,7 @@ require("citeref").setup({
 -- replent
 require("replent").setup({
   strategy = "tmux",
-  repl_commands = { python = "python" },
+  repl_commands = { python = "PYTHON_HISTORY=/dev/null python3 -q" },
 })
 
 -- sessman
