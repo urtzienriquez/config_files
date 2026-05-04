@@ -125,11 +125,14 @@ git() {
       fi
       ;;
     co)
+      shift; command git checkout "$@"
+      ;;
+    b)
       shift
       if [ "$#" -eq 0 ]; then
-        command git branch
+        command git branch -a
       else
-        command git checkout "$@"
+        command git branch "$@"
       fi
       ;;
     *)
@@ -456,3 +459,6 @@ quarto-hugo() {
 
 # alias udisksctl
 alias disk='udisksctl'
+
+# alias udisksctl
+alias wtw='wtwitch'
