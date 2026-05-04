@@ -34,6 +34,7 @@ vim.o.softtabstop = 2
 -- for diffing two files
 -- wrap text and always center text: improves comparing markdown files
 vim.opt.diffopt:append("followwrap")
+vim.opt.diffopt:remove("linematch:40")
 
 -- code folding
 vim.o.foldcolumn = "0"
