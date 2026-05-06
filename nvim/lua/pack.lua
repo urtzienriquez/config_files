@@ -536,6 +536,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         yaml = { "prettier" },
         markdown = { "prettier" },
         quarto = { "injected", "prettier" },
+        rmd = { "latexindent_rmd", "styler" },
         javascript = { "prettier" },
         typescript = { "prettier" },
         lua = { "stylua" },
@@ -549,7 +550,18 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
           condition = function()
             return true
           end,
-          options = { ignore_errors = false, lang_to_formatters = {} },
+          options = {
+            ignore_errors = false,
+            lang_to_formatters = {
+              yaml = { "prettier" },
+              latex = { "latexindent" },
+              r = { "styler" },
+            },
+          },
+        },
+        latexindent_rmd = {
+          command = "latexindent-rmd",
+          stdin = true,
         },
         styler = {
           command = "R",
