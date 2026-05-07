@@ -8,30 +8,6 @@ return {
   },
   settings = {
     texlab = {
-      -- build = {
-      --   executable = "latexmk",
-      --   args = {
-      --     "-pdf",
-      --     "-interaction=nonstopmode",
-      --     "-synctex=1",
-      --     "%f",
-      --   },
-      --   onSave = true,
-      -- },
-      --   build = {
-      --     executable = "sh",
-      --     args = {
-      --       "-c",
-      --       [[
-      --   latexmk -pdf -interaction=nonstopmode -synctex=1 "$1" &&
-      --   latexmk -c "$1" &&
-      --   rm -f "${1%.tex}.synctex.gz"
-      -- ]],
-      --       "sh",
-      --       "%f",
-      --     },
-      --     onSave = true,
-      --   },
       build = {
         executable = "sh",
         args = {
