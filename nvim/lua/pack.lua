@@ -11,6 +11,9 @@ vim.api.nvim_create_autocmd("PackChanged", {
     if name == "blink.cmp" and (kind == "install" or kind == "update") then
       vim.system({ "cargo", "build", "--release" }, { cwd = ev.data.path }):wait()
     end
+    if name == "LuaSnip" and (kind == "install" or kind == "update") then
+      vim.system({ "make", "install_jsregexp" }, { cwd = ev.data.path }):wait()
+    end
   end,
 })
 
@@ -41,6 +44,7 @@ vim.pack.add({
   gh("nvim-lua/plenary.nvim"),
   { src = gh("saghen/blink.cmp"), version = "v1" },
   gh("rafamadriz/friendly-snippets"),
+  gh("L3MON4D3/LuaSnip"),
   gh("mason-org/mason.nvim"),
   gh("stevearc/conform.nvim"),
   gh("jpalardy/vim-slime"),
@@ -475,16 +479,28 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
   once = true,
   callback = function()
+    pcall(vim.cmd, "packadd LuaSnip")
+    local loader = require("luasnip.loaders.from_vscode")
+    loader.lazy_load({
+      paths = { vim.fn.stdpath("config") .. "/snippets" },
+    })
+    loader.lazy_load()
     require("blink.cmp").setup({
       keymap = {
         preset = "default",
       },
       appearance = { use_nvim_cmp_as_default = true, nerd_font_variant = "mono" },
+      snippets = {
+        preset = "luasnip",
+      },
       sources = {
         default = { "lsp", "path", "snippets", "buffer" },
         providers = {
           citeref = { name = "citeref", module = "citeref.backends.blink" },
-          snippets = { name = "snippets", opts = { score_offset = 100 } },
+          snippets = {
+            name = "snippets",
+            score_offset = 100,
+          },
         },
         per_filetype = {
           markdown = { inherit_defaults = true, "citeref" },
