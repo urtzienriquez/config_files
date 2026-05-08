@@ -535,6 +535,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         markdown = { "prettier" },
         quarto = { "injected", "prettier" },
         rmd = { "latexindent_rmd", "styler" },
+        tex = { "latexindent_rmd" },
         javascript = { "prettier" },
         typescript = { "prettier" },
         lua = { "stylua" },
