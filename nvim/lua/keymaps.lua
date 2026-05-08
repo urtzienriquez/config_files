@@ -33,7 +33,12 @@ vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("lua-keymaps", { clear = true }),
   pattern = "lua",
   callback = function()
-    vim.keymap.set("n", "<localleader><localleader><Enter>", "<CMD>silent update<BAR>source %<CR>", { desc = "exec lua file" })
+    vim.keymap.set(
+      "n",
+      "<localleader><localleader><Enter>",
+      "<CMD>silent update<BAR>source %<CR>",
+      { desc = "exec lua file" }
+    )
     vim.keymap.set("n", "<localleader><Enter>", ":.lua<CR>", { desc = "exec lua line" })
     vim.keymap.set("v", "<localleader><Enter>", ":lua<CR>", { desc = "exec lua block" })
   end,
@@ -56,8 +61,8 @@ end, {})
 vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
 
 -- cd to current buffers directory
-vim.keymap.set('n', '<leader>~', function()
-  local dir = vim.fn.expand('%:p:h')
+vim.keymap.set("n", "<leader>~", function()
+  local dir = vim.fn.expand("%:p:h")
   vim.api.nvim_set_current_dir(dir)
   print("CWD: " .. dir)
 end, { desc = "CWD to buffer" })
@@ -73,6 +78,42 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "<leader>k", function()
       vim.diagnostic.open_float({ border = "single" })
     end, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
+  end,
+})
+
+-- Render LaTeX documents and clean up ALL auxiliary files (including Beamer)
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("latex-render", { clear = true }),
+  pattern = { "tex", "latex" },
+  callback = function()
+    vim.keymap.set("n", "<leader>rr", function()
+      local file = vim.fn.expand("%")
+      local base = vim.fn.expand("%:r")
+      vim.cmd("write")
+      vim.notify("Rendering LaTeX...", vim.log.levels.INFO)
+      local cmd = string.format(
+        "latexmk -pdf -interaction=nonstopmode %s && "
+          .. "latexmk -c %s && "
+          .. "rm -f %s.nav %s.snm %s.vrb %s.bbl %s.run.xml %s-blx.bib",
+        file,
+        file,
+        base,
+        base,
+        base,
+        base,
+        base,
+        base
+      )
+      vim.fn.jobstart(cmd, {
+        on_exit = function(_, exit_code)
+          if exit_code == 0 then
+            vim.notify("LaTeX rendered and deep-cleaned!", vim.log.levels.INFO)
+          else
+            vim.notify("LaTeX rendering failed!", vim.log.levels.ERROR)
+          end
+        end,
+      })
+    end, { buffer = true, desc = "Render LaTeX and deep cleanup" })
   end,
 })
 
