@@ -43,15 +43,6 @@
     ],
     "description": "add yaml header"
   },
-  "Begin-End Environment": {
-    "prefix": "begin",
-    "body": [
-      "\\begin{${1:environment}}",
-      "\t$0",
-      "\\end{$1}"
-    ],
-    "description": "LaTeX begin/end block"
-  },
   "Equation": {
     "prefix": "beq",
     "body": [
@@ -111,5 +102,27 @@
       "$$"
     ],
     "description": "Display math block"
+  },
+  "Latex Figure": {
+    "prefix": "figure",
+    "body": [
+      "\\begin{figure}",
+      "\t\\begin{center}",
+      "\t\t\\includegraphics[width=0.95\\textwidth]{figures/$1}",
+      "\t\\end{center}",
+      "\t\\caption{$3}\\label{fig:$4}",
+      "\\end{figure}",
+      "$0"
+    ],
+    "description": "Add a figure"
+  },
+  "\\begin{}…\\end{}": {
+    "prefix": "begin",
+    "body": [
+      "\\\\begin{${1:env}}",
+      "\t${1/(enumerate|itemize|list)|(description)|(.*)/${1:+\\item }${2:+\\item[] }${3:+}/}$0",
+      "\\\\end{${1:env}}"
+    ],
+    "description": "Begin - End"
   }
 }
