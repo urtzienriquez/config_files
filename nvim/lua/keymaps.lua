@@ -67,6 +67,21 @@ vim.keymap.set("n", "<leader>~", function()
   print("CWD: " .. dir)
 end, { desc = "CWD to buffer" })
 
+-- expand path
+vim.keymap.set("n", "<leader>ep", function()
+  local rel = vim.fn.expand("<cfile>")
+  -- search upward and downward from current file dir
+  local found = vim.fn.findfile(rel, ".;")
+  if found == "" then
+    vim.notify("File not found: " .. rel, vim.log.levels.ERROR)
+    return
+  end
+  local abs = vim.fn.fnamemodify(found, ":p")
+  local line = vim.api.nvim_get_current_line()
+  local new = line:gsub(vim.pesc(rel), abs, 1)
+  vim.api.nvim_set_current_line(new)
+end)
+
 -- go to help page of the text under the cursor with help!
 vim.keymap.set("n", "vK", ":help!<CR>", { noremap = true, silent = true })
 
