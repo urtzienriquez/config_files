@@ -364,10 +364,7 @@ vim.keymap.set("n", "<leader>fd", require("fzf-lua").diagnostics_document, { des
 vim.keymap.set("n", "<leader>fD", require("fzf-lua").diagnostics_workspace, { desc = "diagnostics (workspace)" })
 vim.keymap.set("n", "<leader>fl", require("fzf-lua").lsp_definitions, { desc = "LSP definitions" })
 vim.keymap.set("n", "<leader>fr", require("fzf-lua").lsp_references, { desc = "LSP references" })
-vim.keymap.set("n", "<leader>fS", require("fzf-lua").lsp_document_symbols, { desc = "LSP symbols" })
-vim.keymap.set("n", "<leader>fs", function()
-  require("fzf-lua").lsp_document_symbols({ regex_filter = "Str.*" })
-end, { desc = "LSP symbols (strings)" })
+vim.keymap.set("n", "<leader>fs", require("fzf-lua").lsp_document_symbols, { desc = "LSP symbols" })
 vim.keymap.set("n", "<leader>ft", require("fzf-lua").treesitter, { desc = "Treesitter symbols" })
 vim.keymap.set("n", "<leader>fm", require("fzf-lua").spell_suggest, { desc = "Spell suggestions" })
 vim.keymap.set("n", "<leader>f'", require("fzf-lua").marks, { desc = "marks" })
@@ -507,6 +504,7 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
           rmd = { inherit_defaults = true, "citeref" },
           quarto = { inherit_defaults = true, "citeref" },
           tex = { inherit_defaults = true, "citeref" },
+          rnoweb = { inherit_defaults = true, "citeref" },
         },
       },
       completion = {
@@ -551,6 +549,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         markdown = { "prettier" },
         quarto = { "injected", "prettier" },
         rmd = { "latexindent_rmd", "styler" },
+        rnoweb = { "latexindent_rmd", "styler" },
         tex = { "latexindent_rmd" },
         javascript = { "prettier" },
         typescript = { "prettier" },
@@ -673,6 +672,14 @@ local function set_rnvim_keymaps()
         vim.cmd('RSend rmarkdown::render("' .. file .. '")')
       end
     end, opts("Render R Markdown"))
+  elseif vim.bo.filetype == "rnoweb" then
+    vim.keymap.set("n", "<leader>rr", function()
+      local file = vim.fn.expand("%")
+      local tex_file = file:gsub(".Rnw$", ".tex")
+      local r_cmd = string.format('knitr::knit("%s"); system("latexmk -pdf -bibtex -f %s")', file, tex_file)
+      vim.cmd("RSend " .. r_cmd)
+      vim.api.nvim_echo({ { "Compiling with latexmk...", "Normal" } }, false, {})
+    end, opts("Render Rnoweb with latexmk"))
   end
 end
 
