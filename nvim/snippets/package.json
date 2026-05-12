@@ -3,7 +3,8 @@
   "contributes": {
     "snippets": [
       { "language": "quarto", "path": "./quarto.json" },
-      { "language": "rmd", "path": "./rmd.json" }
+      { "language": "rmd", "path": "./rmd.json" },
+      { "language": "rnoweb", "path": "./rnoweb.json" }
     ]
   }
 }
