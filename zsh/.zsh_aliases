@@ -445,9 +445,15 @@ function koff() {
     pkill -f screenkey
 }
 
-# get paper template
-function rticle() {
+# get rmd paper template
+function rti() {
     git clone https://github.com/urtzienriquez/paper_template ./manuscript
+    command rm -rf manuscript/(.git|README.md)
+}
+
+# get latex/rnoweb paper template
+function lti() {
+    git clone https://github.com/urtzienriquez/latex_paper_template ./manuscript
     command rm -rf manuscript/(.git|README.md)
 }
 
@@ -460,5 +466,8 @@ quarto-hugo() {
 # alias udisksctl
 alias disk='udisksctl'
 
-# alias udisksctl
+# alias wtwitch
 alias wtw='wtwitch'
+
+# alias loffice
+alias lo='loffice'
