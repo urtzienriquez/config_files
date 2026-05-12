@@ -3,6 +3,7 @@ vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("prose-wrap", { clear = true }),
   pattern = {
     "markdown",
+    "rnoweb",
     "text",
     "rmd",
     "jmd",
@@ -130,6 +131,7 @@ vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("prose-nav", { clear = true }),
   pattern = {
     "markdown",
+    "rnoweb",
     "text",
     "quarto",
     "rmd",
