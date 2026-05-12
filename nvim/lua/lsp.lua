@@ -11,6 +11,7 @@ local servers = {
   "marksman",
   "yamlls",
   "jsonls",
+  "texlab",
 }
 
 vim.lsp.enable(servers)
