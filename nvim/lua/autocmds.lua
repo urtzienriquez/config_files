@@ -42,6 +42,20 @@ vim.api.nvim_create_autocmd("BufEnter", {
   desc = "Set pandoc syntax for markdown-like files",
 })
 
+-- Set tex syntax for plaintex files
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("latex-syntax", { clear = true }),
+  pattern = { "*.tex" },
+  callback = function()
+    local ft = vim.bo.filetype
+    if ft == "plaintex" then
+      vim.schedule(function()
+        vim.cmd("setlocal syntax=tex")
+      end)
+    end
+  end,
+  desc = "Set pandoc syntax for markdown-like files",
+})
 -- Diagnostics: signs and virtual text
 vim.api.nvim_create_autocmd("VimEnter", {
   group = vim.api.nvim_create_augroup("diagnostics-config", { clear = true }),
