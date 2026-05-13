@@ -25,6 +25,9 @@ return {
       bibtexFormatter = "none",
 
       -- Everything else (hover, completion, definitions) stays on by default
+      diagnostics = {
+        ignoredPatterns = { "Duplicate label" },
+      },
     },
   },
 }
