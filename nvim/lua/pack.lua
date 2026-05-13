@@ -680,6 +680,13 @@ local function set_rnvim_keymaps()
       vim.cmd("RSend " .. r_cmd)
       vim.api.nvim_echo({ { "Compiling with latexmk...", "Normal" } }, false, {})
     end, opts("Render Rnoweb with latexmk"))
+    vim.keymap.set("n", "<leader>ri", function()
+      local file = "1_index.Rnw"
+      local tex_file = "1_index.tex"
+      local r_cmd = string.format('knitr::knit("%s"); system("latexmk -pdf -bibtex -f %s")', file, tex_file)
+      vim.cmd("RSend " .. r_cmd)
+      vim.api.nvim_echo({ { "Compiling 1_index.Rnw with latexmk...", "Normal" } }, false, {})
+    end, opts("Compile 1_index.Rnw"))
   end
 end
 
