@@ -687,6 +687,50 @@ local function set_rnvim_keymaps()
       vim.cmd("RSend " .. r_cmd)
       vim.api.nvim_echo({ { "Compiling 1_index.Rnw with latexmk...", "Normal" } }, false, {})
     end, opts("Compile 1_index.Rnw"))
+    vim.keymap.set("n", "<leader>rc", function()
+      local file_dir = vim.fn.expand("%:p:h")
+      local file_name = vim.fn.expand("%:t:r")
+      local extensions = {
+        "aux",
+        "bcf",
+        "run.xml",
+        "log",
+        "listing",
+        "out",
+        "toc",
+        "nav",
+        "snm",
+        "vrb",
+        "fls",
+        "fdb_latexmk",
+        "blg",
+        "bbl",
+        "synctex.gz",
+      }
+      local extra_files = {
+        file_name .. "-tikzDictionary",
+      }
+      local count = 0
+      for _, ext in ipairs(extensions) do
+        local target = file_dir .. "/" .. file_name .. "." .. ext
+        if vim.fn.filereadable(target) == 1 then
+          os.remove(target)
+          count = count + 1
+        end
+      end
+      for _, extra in ipairs(extra_files) do
+        local target = file_dir .. "/" .. extra
+        if vim.fn.filereadable(target) == 1 then
+          os.remove(target)
+          count = count + 1
+        end
+      end
+      if count > 0 then
+        print("Cleaned " .. count .. " auxiliary files.")
+      else
+        print("No auxiliary files found to clean.")
+      end
+    end, { desc = "Clean LaTeX/Rnoweb auxiliary files" })
   end
 end
 
