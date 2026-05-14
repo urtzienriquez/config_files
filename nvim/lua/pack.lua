@@ -676,14 +676,22 @@ local function set_rnvim_keymaps()
     vim.keymap.set("n", "<leader>rr", function()
       local file = vim.fn.expand("%")
       local tex_file = file:gsub(".Rnw$", ".tex")
-      local r_cmd = string.format('knitr::knit("%s"); system("latexmk -pdf -bibtex -f %s")', file, tex_file)
+      local r_cmd = string.format(
+        'knitr::knit("%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
+        file,
+        tex_file
+      )
       vim.cmd("RSend " .. r_cmd)
       vim.api.nvim_echo({ { "Compiling with latexmk...", "Normal" } }, false, {})
     end, opts("Render Rnoweb with latexmk"))
     vim.keymap.set("n", "<leader>ri", function()
       local file = "1_index.Rnw"
       local tex_file = "1_index.tex"
-      local r_cmd = string.format('knitr::knit("%s"); system("latexmk -pdf -bibtex -f %s")', file, tex_file)
+      local r_cmd = string.format(
+        'knitr::knit("%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
+        file,
+        tex_file
+      )
       vim.cmd("RSend " .. r_cmd)
       vim.api.nvim_echo({ { "Compiling 1_index.Rnw with latexmk...", "Normal" } }, false, {})
     end, opts("Compile 1_index.Rnw"))

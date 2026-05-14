@@ -107,7 +107,7 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.cmd("write")
       vim.notify("Rendering LaTeX...", vim.log.levels.INFO)
       local cmd = string.format(
-        "latexmk -pdf -interaction=nonstopmode %s && "
+        "latexmk -lualatex -interaction=nonstopmode %s && "
           .. "latexmk -c %s && "
           .. "rm -f %s.nav %s.snm %s.vrb %s.bbl %s.run.xml %s-blx.bib",
         file,
