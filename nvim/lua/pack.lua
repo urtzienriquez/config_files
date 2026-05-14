@@ -354,7 +354,7 @@ vim.keymap.set("n", "<leader>fz", require("fzf-lua").zoxide, { desc = "zoxide" }
 vim.keymap.set("n", "<leader>f~", function()
   require("fzf-lua").files({ cwd = vim.fn.expand("~"), prompt = "Home files❯ ", hidden = true })
 end, { desc = "Find files in ~" })
-vim.keymap.set("n", "<leader>fg", require("fzf-lua").live_grep, { desc = "with grep" })
+vim.keymap.set("n", "<leader>fg", require("fzf-lua").live_grep_native, { desc = "with grep" })
 vim.keymap.set("n", "<leader>fq", require("fzf-lua").grep_quickfix, { desc = "grep quickfix" })
 vim.keymap.set("n", "<leader>fb", require("fzf-lua").buffers, { desc = "buffers" })
 vim.keymap.set("n", "<leader>fh", require("fzf-lua").help_tags, { desc = "help" })
