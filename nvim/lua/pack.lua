@@ -674,24 +674,56 @@ local function set_rnvim_keymaps()
     end, opts("Render R Markdown"))
   elseif vim.bo.filetype == "rnoweb" then
     vim.keymap.set("n", "<leader>rr", function()
+      local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
+      vim.api.nvim_echo({ { "" } }, false, {})
+      if filename == "__CANCEL__" then
+        return
+      end
       local file = vim.fn.expand("%")
-      local tex_file = file:gsub(".Rnw$", ".tex")
-      local r_cmd = string.format(
-        'knitr::knit("%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
-        file,
-        tex_file
-      )
+      local tex_file, r_cmd
+      if filename ~= "" then
+        tex_file = filename .. ".tex"
+        r_cmd = string.format(
+          'knitr::knit("%s", output = "%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
+          file,
+          tex_file,
+          tex_file
+        )
+      else
+        tex_file = file:gsub(".Rnw$", ".tex")
+        r_cmd = string.format(
+          'knitr::knit("%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
+          file,
+          tex_file
+        )
+      end
       vim.cmd("RSend " .. r_cmd)
       vim.api.nvim_echo({ { "Compiling with latexmk...", "Normal" } }, false, {})
     end, opts("Render Rnoweb with latexmk"))
     vim.keymap.set("n", "<leader>ri", function()
+      local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
+      vim.api.nvim_echo({ { "" } }, false, {})
+      if filename == "__CANCEL__" then
+        return
+      end
       local file = "1_index.Rnw"
-      local tex_file = "1_index.tex"
-      local r_cmd = string.format(
-        'knitr::knit("%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
-        file,
-        tex_file
-      )
+      local tex_file, r_cmd
+      if filename ~= "" then
+        tex_file = filename .. ".tex"
+        r_cmd = string.format(
+          'knitr::knit("%s", output = "%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
+          file,
+          tex_file,
+          tex_file
+        )
+      else
+        tex_file = "1_index.tex"
+        r_cmd = string.format(
+          'knitr::knit("%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
+          file,
+          tex_file
+        )
+      end
       vim.cmd("RSend " .. r_cmd)
       vim.api.nvim_echo({ { "Compiling 1_index.Rnw with latexmk...", "Normal" } }, false, {})
     end, opts("Compile 1_index.Rnw"))
