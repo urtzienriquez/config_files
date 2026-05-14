@@ -101,7 +101,7 @@ vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("latex-render", { clear = true }),
   pattern = { "tex", "latex" },
   callback = function()
-    vim.keymap.set("n", "<leader>rr", function()
+    vim.keymap.set("n", "<leader>lr", function()
       local file = vim.fn.expand("%")
       local base = vim.fn.expand("%:r")
       vim.cmd("write")
