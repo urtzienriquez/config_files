@@ -99,7 +99,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- Render LaTeX documents and clean up ALL auxiliary files (including Beamer)
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("latex-render", { clear = true }),
-  pattern = { "tex", "latex" },
+  pattern = { "tex", "latex", "plaintex" },
   callback = function()
     vim.keymap.set("n", "<leader>lr", function()
       local file = vim.fn.expand("%")
