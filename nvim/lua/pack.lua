@@ -849,6 +849,7 @@ require("citeref").setup({
   backend = "fzf",
   bib_files = { "~/Documents/zotero.bib" },
   default_latex_format = "parencite",
+  picker = { rnoweb_labels = "tex_only" },
 })
 
 -- replent
