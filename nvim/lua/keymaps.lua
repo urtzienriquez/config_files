@@ -96,21 +96,34 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- Render LaTeX documents and clean up ALL auxiliary files (including Beamer)
+-- Render and clean LaTeX documents
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("latex-render", { clear = true }),
   pattern = { "tex", "latex", "plaintex" },
   callback = function()
+    -- Render LaTeX document
     vim.keymap.set("n", "<leader>lr", function()
       local file = vim.fn.expand("%")
-      local base = vim.fn.expand("%:r")
       vim.cmd("write")
       vim.notify("Rendering LaTeX...", vim.log.levels.INFO)
+      local cmd = string.format("latexmk -lualatex -interaction=nonstopmode %s", file)
+      vim.fn.jobstart(cmd, {
+        on_exit = function(_, exit_code)
+          if exit_code == 0 then
+            vim.notify("LaTeX rendered successfully!", vim.log.levels.INFO)
+          else
+            vim.notify("LaTeX rendering failed!", vim.log.levels.ERROR)
+          end
+        end,
+      })
+    end, { buffer = true, desc = "Render LaTeX" })
+    -- Clean LaTeX auxiliary files
+    vim.keymap.set("n", "<leader>lc", function()
+      local file = vim.fn.expand("%")
+      local base = vim.fn.expand("%:r")
+      vim.notify("Cleaning LaTeX auxiliary files...", vim.log.levels.INFO)
       local cmd = string.format(
-        "latexmk -lualatex -interaction=nonstopmode %s && "
-          .. "latexmk -c %s && "
-          .. "rm -f %s.nav %s.snm %s.vrb %s.bbl %s.run.xml %s-blx.bib",
-        file,
+        "latexmk -c %s && " .. "rm -f %s.nav %s.snm %s.vrb %s.bbl %s.run.xml %s-blx.bib",
         file,
         base,
         base,
@@ -122,13 +135,13 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.fn.jobstart(cmd, {
         on_exit = function(_, exit_code)
           if exit_code == 0 then
-            vim.notify("LaTeX rendered and deep-cleaned!", vim.log.levels.INFO)
+            vim.notify("LaTeX files deep-cleaned!", vim.log.levels.INFO)
           else
-            vim.notify("LaTeX rendering failed!", vim.log.levels.ERROR)
+            vim.notify("Cleanup failed!", vim.log.levels.ERROR)
           end
         end,
       })
-    end, { buffer = true, desc = "Render LaTeX and deep cleanup" })
+    end, { buffer = true, desc = "Clean LaTeX auxiliary files" })
   end,
 })
 
