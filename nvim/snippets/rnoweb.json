@@ -391,5 +391,10 @@
         "prefix": "empty",
         "body": ["\\null\\thispagestyle{empty}", "\\newpage", "$0"],
         "description": "Add a empty page"
+    },
+    "Teletype Text": {
+        "prefix": "teletype",
+        "body": "\\texttt{$1}$0",
+        "description": "Insert teletype text."
     }
 }
