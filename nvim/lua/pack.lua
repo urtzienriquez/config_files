@@ -198,6 +198,15 @@ require("nvim-surround").setup({
     ["c"] = { add = { "*", "*" }, find = "%*.-%*", delete = "^(%*)(.-)(%*)$" },
     ["n"] = { add = { "**", "**" }, find = "%*%*.-%*%*", delete = "^(%*%*)(.-)(%*%*)$" },
     ["g"] = { add = { "***", "***" }, find = "%*%*%*.-%*%*%*", delete = "^(%*%*%*)(.-)(%*%*%*)$" },
+    ["l"] = {
+      add = function()
+        local config = require("nvim-surround.config")
+        local result = config.get_input("Enter LaTeX command: ")
+        if result then
+          return { { "\\" .. result .. "{" }, { "}" } }
+        end
+      end,
+    },
   },
 })
 
