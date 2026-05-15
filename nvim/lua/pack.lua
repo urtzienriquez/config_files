@@ -689,6 +689,14 @@ local function set_rnvim_keymaps()
         return
       end
       local file = vim.fn.expand("%")
+      local lines = vim.api.nvim_buf_get_lines(0, 0, 10, false)
+      for _, line in ipairs(lines) do
+        local root = line:match("^%% *!%a+ *root *= *(%S+)")
+        if root then
+          file = root
+          break
+        end
+      end
       local tex_file, r_cmd
       if filename ~= "" then
         tex_file = filename .. ".tex"
@@ -707,35 +715,8 @@ local function set_rnvim_keymaps()
         )
       end
       vim.cmd("RSend " .. r_cmd)
-      vim.api.nvim_echo({ { "Compiling with latexmk...", "Normal" } }, false, {})
+      vim.api.nvim_echo({ { "Compiling with latexmk using root: " .. file, "Normal" } }, false, {})
     end, opts("Render Rnoweb with latexmk"))
-    vim.keymap.set("n", "<leader>ri", function()
-      local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
-      vim.api.nvim_echo({ { "" } }, false, {})
-      if filename == "__CANCEL__" then
-        return
-      end
-      local file = "1_index.Rnw"
-      local tex_file, r_cmd
-      if filename ~= "" then
-        tex_file = filename .. ".tex"
-        r_cmd = string.format(
-          'knitr::knit("%s", output = "%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
-          file,
-          tex_file,
-          tex_file
-        )
-      else
-        tex_file = "1_index.tex"
-        r_cmd = string.format(
-          'knitr::knit("%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
-          file,
-          tex_file
-        )
-      end
-      vim.cmd("RSend " .. r_cmd)
-      vim.api.nvim_echo({ { "Compiling 1_index.Rnw with latexmk...", "Normal" } }, false, {})
-    end, opts("Compile 1_index.Rnw"))
     vim.keymap.set("n", "<leader>rc", function()
       local file_dir = vim.fn.expand("%:p:h")
       local file_name = vim.fn.expand("%:t:r")

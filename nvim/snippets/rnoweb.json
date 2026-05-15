@@ -1,4 +1,20 @@
 {
+  "Code Chunk": {
+    "prefix": "rco",
+    "body": [
+      "<<$1>>=",
+      "$0",
+      "@"
+    ],
+    "description": "add code chunk"
+  },
+  "inline r code": {
+    "prefix": "sex",
+    "body": [
+      "\\Sexpr{$1}$0"
+    ],
+    "description": "add code chunk"
+  },
     "Align(ed)": {
         "prefix": "ali",
         "body": ["\\begin{align}", "\t$0", "\\end{align}"],
