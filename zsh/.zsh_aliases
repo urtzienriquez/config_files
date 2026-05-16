@@ -446,15 +446,62 @@ function koff() {
 }
 
 # get rmd paper template
-function rti() {
-    git clone https://github.com/urtzienriquez/paper_template ./manuscript
+function rtem() {
+    git clone --quiet https://github.com/urtzienriquez/paper_template ./manuscript
     command rm -rf manuscript/(.git|README.md)
+    echo "paper_template cloned!"
 }
 
 # get latex/rnoweb paper template
-function lti() {
-    git clone https://github.com/urtzienriquez/latex_paper_template ./manuscript
+function ltem() {
+    git clone --quiet https://github.com/urtzienriquez/latex_paper_template ./manuscript
     command rm -rf manuscript/(.git|README.md)
+    echo "latex_paper_template cloned!"
+}
+
+# create paper directory with the template
+function ltp() {
+    local paper_dir="${1:-my_paper}"
+    
+    # Create directory structure
+    mkdir -p "$paper_dir"/{figures/{1_base,2_final},R}
+    
+    # Clone template using existing lti function
+    (cd "$paper_dir" && ltem) 
+
+    # Create R script with mock figure
+    cat > "$paper_dir/R/0X_figures.R" << 'EOF'
+library(tikzDevice)
+
+# # Set paths relative to project root
+# fig_folder <- "../figures/1_base/"
+# tex_file_path <- paste0(fig_folder, "mock_figure.tex")
+
+# Create figure
+# tikz(tex_file_path, width = 7, height = 3.5, standAlone = TRUE)
+X11(width = 7, height = 3.5)
+
+plot(1, 1, pch = 19, cex = 2, 
+     xlab = "X axis", ylab = "Y axis",
+     main = "Mock Figure")
+
+dev.off()
+
+# # Save current directory and switch to target directory
+# old_wd <- getwd()
+# setwd(fig_folder)
+
+# # Compile (PDF will be created in fig_folder)
+# tools::texi2pdf("mock_figure.tex", clean = TRUE)
+
+# # Return to original directory
+# setwd(old_wd)
+
+# # Delete the .tex file
+# unlink(tex_file_path)
+EOF
+    
+    echo "Paper structure created in: $paper_dir"
 }
 
 # render quarto and fix paths for hugo site
