@@ -103,11 +103,13 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     -- Render LaTeX document
     vim.keymap.set("n", "<leader>lr", function()
-      local file = vim.fn.expand("%")
+      local file = vim.fn.expand("%:t") -- Just the filename
+      local dir = vim.fn.expand("%:p:h") -- Absolute path to the file's directory
       vim.cmd("write")
       vim.notify("Rendering LaTeX...", vim.log.levels.INFO)
       local cmd = string.format("latexmk -lualatex -interaction=nonstopmode %s", file)
       vim.fn.jobstart(cmd, {
+        cwd = dir, -- Run in the file's directory
         on_exit = function(_, exit_code)
           if exit_code == 0 then
             vim.notify("LaTeX rendered successfully!", vim.log.levels.INFO)
@@ -119,8 +121,9 @@ vim.api.nvim_create_autocmd("FileType", {
     end, { buffer = true, desc = "Render LaTeX" })
     -- Clean LaTeX auxiliary files
     vim.keymap.set("n", "<leader>lc", function()
-      local file = vim.fn.expand("%")
-      local base = vim.fn.expand("%:r")
+      local file = vim.fn.expand("%:t") -- Just the filename
+      local base = vim.fn.expand("%:t:r") -- Filename without extension
+      local dir = vim.fn.expand("%:p:h") -- Absolute path to the file's directory
       vim.notify("Cleaning LaTeX auxiliary files...", vim.log.levels.INFO)
       local cmd = string.format(
         "latexmk -c %s && " .. "rm -f %s.nav %s.snm %s.vrb %s.bbl %s.run.xml %s-blx.bib",
@@ -133,6 +136,7 @@ vim.api.nvim_create_autocmd("FileType", {
         base
       )
       vim.fn.jobstart(cmd, {
+        cwd = dir, -- Run in the file's directory
         on_exit = function(_, exit_code)
           if exit_code == 0 then
             vim.notify("LaTeX files deep-cleaned!", vim.log.levels.INFO)
