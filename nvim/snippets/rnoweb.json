@@ -235,7 +235,7 @@
     "Section": {
         "prefix": "sec",
         "body": [
-            "\\section{$1}\\label{sec:${1/([a-zA-Z]+)|([^a-zA-Z]+)/${1:/downcase}${2:+_}/g}}",
+            "\\section{$1}",
             "${0:$TM_SELECTED_TEXT}"
         ],
         "description": "Section"
@@ -412,5 +412,15 @@
         "prefix": "teletype",
         "body": "\\texttt{$1}$0",
         "description": "Insert teletype text."
+    },
+    "Bold Text": {
+        "prefix": "bold",
+        "body": "\\textbf{$1}$0",
+        "description": "Insert bold text."
+    },
+    "Emphasized Text": {
+        "prefix": "emph",
+        "body": "\\emph{$1}$0",
+        "description": "Insert emphasized text (italics when upright, and upright when italic)."
     }
 }
