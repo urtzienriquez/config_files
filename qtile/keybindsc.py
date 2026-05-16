@@ -37,6 +37,29 @@ def swap_screens():
     return __inner
 
 
+def scale_floating_window(scale_factor):
+    @lazy.function
+    def _inner(qtile):
+        window = qtile.current_window
+        if window and window.floating:
+            # Get current dimensions
+            current_width = window.width
+            current_height = window.height
+
+            # Calculate new dimensions (scaled proportionally)
+            new_width = int(current_width * scale_factor)
+            new_height = int(current_height * scale_factor)
+
+            # Calculate deltas
+            delta_width = new_width - current_width
+            delta_height = new_height - current_height
+
+            # Resize
+            window.cmd_resize_floating(delta_width, delta_height)
+
+    return _inner
+
+
 config_dir = os.path.expanduser("~/.config/qtile/")
 local_settings_path = os.path.join(config_dir, "local_settings.json")
 
@@ -83,7 +106,11 @@ def update_fzf_config(is_dark: bool):
 --bind 'ctrl-u:preview-up,ctrl-d:preview-down'
 --bind 'ctrl-r:first,ctrl-e:last'
 """
-    color = "--color=dark,pointer:#fce094,gutter:#192330" if is_dark else "--color=light,pointer:#fce094,gutter:#f6f2ee"
+    color = (
+        "--color=dark,pointer:#fce094,gutter:#192330"
+        if is_dark
+        else "--color=light,pointer:#fce094,gutter:#f6f2ee"
+    )
     FZF_CONFIG.write_text(f"{color}\n{base}")
 
 
@@ -394,6 +421,44 @@ keys = [
         "n",
         lazy.layout.normalize(),
         desc="Reset all window sizes",
+    ),
+    # Move floating windows with keyboard (using mod+shift+alt)
+    Key(
+        [mod, "shift", alt],
+        "h",
+        lazy.window.move_floating(-100, 0),
+        desc="Move floating window left",
+    ),
+    Key(
+        [mod, "shift", alt],
+        "l",
+        lazy.window.move_floating(100, 0),
+        desc="Move floating window right",
+    ),
+    Key(
+        [mod, "shift", alt],
+        "j",
+        lazy.window.move_floating(0, 100),
+        desc="Move floating window down",
+    ),
+    Key(
+        [mod, "shift", alt],
+        "k",
+        lazy.window.move_floating(0, -100),
+        desc="Move floating window up",
+    ),
+    # Resize floating windows proportionally
+    Key(
+        [mod, "shift", alt],
+        "i",
+        scale_floating_window(1.1),
+        desc="Grow floating window (keep proportions)",
+    ),
+    Key(
+        [mod, "shift", alt],
+        "u",
+        scale_floating_window(0.9),
+        desc="Shrink floating window (keep proportions)",
     ),
     Key(
         [mod, "shift"],
