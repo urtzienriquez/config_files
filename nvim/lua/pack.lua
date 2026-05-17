@@ -330,9 +330,9 @@ require("fzf-lua").setup({
     },
     fzf = {
       false,
-      ["ctrl-z"] = "abort",
+      -- ["ctrl-z"] = "abort",
       ["ctrl-u"] = false,
-      ["ctrl-l"] = "unix-line-discard+first",
+      ["ctrl-z"] = "unix-line-discard+first",
       ["ctrl-a"] = "toggle-all",
       ["ctrl-r"] = "first",
       ["ctrl-e"] = "last",
