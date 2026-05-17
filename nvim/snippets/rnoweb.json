@@ -160,9 +160,14 @@
         "body": ["${1:Algorithm}~\\ref{algo:$2}$0"],
         "desciption": "Ref for Algorithm"
     },
+    "Equation:Ref": {
+        "prefix": "eq:ref",
+        "body": ["${1:Equation}~\\ref{eq:$2}$0"],
+        "desciption": "Ref for Equation"
+    },
     "Figure:Ref": {
-        "prefix": "figure:ref",
-        "body": ["${1:Figure}~\\ref{fig:$2}$0"],
+        "prefix": "fig",
+        "body": ["${1:Fig.}~$0"],
         "description": "Ref for Figure"
     },
     "Gather(ed)": {
@@ -171,9 +176,14 @@
         "description": "Gather(ed)"
     },
     "Itemize": {
-        "prefix": "item",
+        "prefix": "itemize",
         "body": ["\\\\begin{itemize}", "\t\\item $0", "\\\\end{itemize}"],
         "description": "Itemize"
+    },
+    "Item": {
+        "prefix": "ii",
+        "body": ["\n\\item $0"],
+        "description": "Insert item"
     },
     "Listing:Ref": {
         "prefix": "listing:ref",
@@ -252,34 +262,23 @@
     "Sub Section": {
         "prefix": "sub",
         "body": [
-            "\\subsection{$1}\\label{sub:${1/([a-zA-Z]+)|([^a-zA-Z]+)/${1:/downcase}${2:+_}/g}} % (fold)",
-            "${0:$TM_SELECTED_TEXT}",
-            "% subsection $1 (end)"
+            "\\subsection{$1}",
+            "${0:$TM_SELECTED_TEXT}"
         ],
         "description": "Sub Section"
     },
     "Sub Sub Section": {
         "prefix": "subs",
         "body": [
-            "\\subsubsection{${1:subsubsection name}}\\label{sec:${1/([a-zA-Z]+)|([^a-zA-Z]+)/${1:/downcase}${2:+_}/g}} % (fold)",
-            "${0:$TM_SELECTED_TEXT}",
-            "% subsubsection $1 (end)"
+            "\\subsubsection{${1:subsubsection name}}",
+            "${0:$TM_SELECTED_TEXT}"
         ],
         "description": "Sub Sub Section"
     },
     "Table:Ref": {
-        "prefix": "table:ref",
-        "body": ["${1:Table}~\\ref{tab:$2}$0"],
-        "description": "Table Reference"
-    },
-    "Tabular": {
         "prefix": "tab",
-        "body": [
-            "\\\\begin{${1:t}${1/(t)$|(a)$|(.*)/(?1:abular)(?2:rray)/}}{${2:c}}",
-            "$0${2/((?<=[clr])([ |]*(c|l|r)))|./(?1: & )/g}",
-            "\\\\end{${1:t}${1/(t)$|(a)$|(.*)/(?1:abular)(?2:rray)/}}"
-        ],
-        "description": "Tabular"
+        "body": ["${1:Table}~$0"],
+        "description": "Table Reference"
     },
     "\\begin{}…\\end{}": {
         "prefix": "begin",
@@ -302,86 +301,6 @@
             "$0"
         ],
         "description": "Add a figure"
-    },
-    "Figure:ACM": {
-        "prefix": "figure:acm",
-        "body": [
-            "\\begin{figure}",
-            "\t\\includegraphics[width=0.45\\textwidth]{figures/$1}",
-            "\t\\caption{$2}\\label{fig:$3}",
-            "\\end{figure}",
-            "$0"
-        ],
-        "description": "Add a figure (ACM)"
-    },
-    "Figure:ACM:*": {
-        "prefix": "figure:acm:*",
-        "body": [
-            "\\begin{figure*}",
-            "\t\\includegraphics[width=0.45\\textwidth]{figures/$1}",
-            "\t\\caption{$2}\\label{fig:$3}",
-            "\\end{figure*}",
-            "$0"
-        ],
-        "description": "Add a figure (ACM)"
-    },
-    "Table": {
-        "prefix": "table",
-        "body": [
-            "\\begin{table}",
-            "\t\\caption{$1}\\label{tab:$2}",
-            "\t\\begin{center}",
-            "\t\t\\begin{tabular}[c]{l|l}",
-            "\t\t\t\\hline",
-            "\t\t\t\\multicolumn{1}{c|}{\\textbf{$3}} & ",
-            "\t\t\t\\multicolumn{1}{c}{\\textbf{$4}} \\\\\\\\",
-            "\t\t\t\\hline",
-            "\t\t\ta & b \\\\\\\\",
-            "\t\t\tc & d \\\\\\\\",
-            "\t\t\t$5",
-            "\t\t\t\\hline",
-            "\t\t\\end{tabular}",
-            "\t\\end{center}",
-            "\\end{table}",
-            "$0"
-        ],
-        "description": "Add a table"
-    },
-    "Table:ACM": {
-        "prefix": "table:acm",
-        "body": [
-            "\\begin{table}",
-            "\t\\caption{$1}\\label{tab:$2}",
-            "\t\\begin{tabular}{${3:ccl}}",
-            "\t\t\\toprule",
-            "\t\t$4",
-            "\t\ta & b & c \\\\\\\\",
-            "\t\t\\midrule",
-            "\t\td & e & f \\\\\\\\",
-            "\t\t\\bottomrule",
-            "\t\\end{tabular}",
-            "\\end{table}",
-            "$0"
-        ],
-        "description": "Add a table (ACM)"
-    },
-    "Table:ACM:*": {
-        "prefix": "table:acm:*",
-        "body": [
-            "\\begin{table*}",
-            "\t\\caption{$1}\\label{tab:$2}",
-            "\t\\begin{tabular}{${3:ccl}}",
-            "\t\t\\toprule",
-            "\t\t$4",
-            "\t\ta & b & c \\\\\\\\",
-            "\t\t\\midrule",
-            "\t\td & e & f \\\\\\\\",
-            "\t\t\\bottomrule",
-            "\t\\end{tabular}",
-            "\\end{table*}",
-            "$0"
-        ],
-        "description": "Add a table (ACM)"
     },
     "Enumerate": {
         "prefix": "enumerate",
