@@ -473,11 +473,9 @@ function ltp() {
     cat > "$paper_dir/R/0X_figures.R" << 'EOF'
 library(tikzDevice)
 
-# # Set paths relative to project root
 # fig_folder <- "../figures/1_base/"
 # tex_file_path <- paste0(fig_folder, "mock_figure.tex")
 
-# Create figure
 # tikz(tex_file_path, width = 7, height = 3.5, standAlone = TRUE)
 X11(width = 7, height = 3.5)
 
@@ -487,11 +485,10 @@ plot(1, 1, pch = 19, cex = 2,
 
 dev.off()
 
-# # Save current directory and switch to target directory
 # old_wd <- getwd()
 # setwd(fig_folder)
 
-# # Compile (PDF will be created in fig_folder)
+# # Compile PDF
 # tools::texi2pdf("mock_figure.tex", clean = TRUE)
 
 # # Return to original directory
@@ -499,6 +496,24 @@ dev.off()
 
 # # Delete the .tex file
 # unlink(tex_file_path)
+EOF
+
+    cat > "$paper_dir/figures/figureX.tex" << 'EOF'
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{graphicx}
+
+\begin{document}
+
+\begin{tikzpicture}
+  \node[anchor=south west, inner sep=0] (plot) at (0,0) {\includegraphics{../1_base/name_of_file.pdf}};
+  \begin{scope}[x={(plot.south east)}, y={(plot.north west)}]
+    % TikZ code here!
+    % \draw[help lines, step=0.1] (0,0) grid (1,1);
+  \end{scope}
+\end{tikzpicture}
+
+\end{document}
 EOF
     
     echo "Paper structure created in: $paper_dir"
