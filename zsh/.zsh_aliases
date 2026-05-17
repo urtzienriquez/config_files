@@ -474,14 +474,12 @@ function ltp() {
 library(tikzDevice)
 
 # fig_folder <- "../figures/1_base/"
-# tex_file_path <- paste0(fig_folder, "mock_figure.tex")
+# tex_file_path <- paste0(fig_folder, "name_of_file.tex")
 
 # tikz(tex_file_path, width = 7, height = 3.5, standAlone = TRUE)
 X11(width = 7, height = 3.5)
 
-plot(1, 1, pch = 19, cex = 2, 
-     xlab = "X axis", ylab = "Y axis",
-     main = "Mock Figure")
+plot(1, 1, xlab = "X axis", ylab = "Y axis")
 
 dev.off()
 
@@ -489,7 +487,7 @@ dev.off()
 # setwd(fig_folder)
 
 # # Compile PDF
-# tools::texi2pdf("mock_figure.tex", clean = TRUE)
+# tools::texi2pdf("name_of_file.tex", clean = TRUE)
 
 # # Return to original directory
 # setwd(old_wd)
@@ -498,7 +496,7 @@ dev.off()
 # unlink(tex_file_path)
 EOF
 
-    cat > "$paper_dir/figures/figureX.tex" << 'EOF'
+    cat > "$paper_dir/figures/2_final/figureX.tex" << 'EOF'
 \documentclass{standalone}
 \usepackage{tikz}
 \usepackage{graphicx}
