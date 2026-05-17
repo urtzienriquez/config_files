@@ -294,13 +294,44 @@
         "body": [
             "\\begin{figure}",
             "\t\\begin{center}",
-            "\t\t\\includegraphics[width=0.95\\textwidth]{figures/$1}",
+            "\t\t\\includegraphics[width=0.95\\textwidth]{figures/$3}",
             "\t\\end{center}",
-            "\t\\caption{$3}\\label{fig:$4}",
+            "\t\\caption{$1}\\label{fig:$2}",
             "\\end{figure}",
             "$0"
         ],
         "description": "Add a figure"
+    },
+    "Figure:Rnoweb": {
+        "prefix": "figurernow",
+        "body": [
+            "\\begin{figure}",
+            "\t\\begin{center}",
+            "<<$2>>=",
+            "$3",
+            "@",
+            "\t\\end{center}",
+            "\t\\caption{$1}\\label{fig:$2}",
+            "\\end{figure}",
+            "$0"
+        ],
+        "description": "Add a figure"
+    },
+    "Table": {
+        "prefix": "table",
+        "body": [
+            "\\begin{table}",
+            "\t\\caption{$1}\\label{tab:$2}",
+            "\t\\begin{center}",
+            "<<$2>>=",
+            "#| results: \"asis\"",
+            "$3",
+            "@",
+            "\t\\end{center}",
+            "\\end{table}",
+            "$0"
+        ],
+        "description": "Add a table"
     },
     "Enumerate": {
         "prefix": "enumerate",
