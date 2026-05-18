@@ -1,0 +1,1 @@
+/home/urtzi/Documents/GitHub/tree-sitter-jnoweb/queries/injections.scm

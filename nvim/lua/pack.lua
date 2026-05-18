@@ -637,7 +637,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 
 -- vim-slime
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "python", "julia", "matlab", "quarto" },
+  pattern = { "python", "julia", "matlab", "quarto", "jnoweb" },
   once = true,
   callback = function()
     vim.g.slime_target = "tmux"
@@ -779,7 +779,7 @@ local r_opts = {
   },
   hook = {
     on_filetype = function()
-      if vim.bo.filetype ~= "quarto" then
+      if vim.bo.filetype ~= "quarto" and vim.bo.filetype ~= "jnoweb" then
         set_rnvim_keymaps()
         return
       end
@@ -821,6 +821,19 @@ vim.keymap.set({ "n", "x" }, "go", function()
 end, { desc = "Add range to opencode", expr = true })
 
 ---@diagnostic enable: undefined-field
+
+-- Register jnoweb parser with both built-in and nvim-treesitter
+vim.treesitter.language.add("jnoweb")
+require("nvim-treesitter.parsers").jnoweb = {
+  install_info = {
+    url = "https://github.com/urtzienriquez/tree-sitter-jnoweb",
+    revision = "102cd03e6ddd58a2799485ed65c7a2c40b1891a2",
+    files = { "src/parser.c", "src/scanner.c" },
+    generate = false,
+  },
+  filetype = "jnoweb",
+  tier = 2,
+}
 
 -- nightfox
 require("nightfox").setup()

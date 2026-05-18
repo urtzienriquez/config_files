@@ -4,6 +4,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = {
     "markdown",
     "rnoweb",
+    "jnoweb",
     "text",
     "rmd",
     "jmd",
@@ -146,6 +147,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = {
     "markdown",
     "rnoweb",
+    "jnoweb",
     "text",
     "quarto",
     "rmd",
@@ -194,6 +196,16 @@ vim.api.nvim_create_autocmd("TermOpen", {
 
     vim.opt_local.spell = false
   end,
+})
+
+-- Set filetype=jnoweb for .jnw files
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  group = vim.api.nvim_create_augroup("jnoweb-ftdetect", { clear = true }),
+  pattern = "*.jnw",
+  callback = function()
+    vim.bo.filetype = "jnoweb"
+  end,
+  desc = "Set filetype=jnoweb for .jnw files",
 })
 
 -- no conceal for R-help files
