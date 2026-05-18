@@ -405,7 +405,6 @@ vim.api.nvim_create_autocmd("FileType", {
       "python",
       "query",
       "r",
-      "rnoweb",
       "vim",
       "vimdoc",
       "yaml",
@@ -466,6 +465,16 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
     end
   end,
+})
+
+-- add tree-sitter-jnoweb
+vim.filetype.add({
+  extension = {
+    jnw = "jnoweb",
+  },
+})
+vim.treesitter.language.add("jnoweb", {
+  path = "/home/urtzi/.local/share/nvim/site/parser/jnoweb.so"
 })
 
 -- Plenary test runner
@@ -821,19 +830,6 @@ vim.keymap.set({ "n", "x" }, "go", function()
 end, { desc = "Add range to opencode", expr = true })
 
 ---@diagnostic enable: undefined-field
-
--- Register jnoweb parser with both built-in and nvim-treesitter
-vim.treesitter.language.add("jnoweb")
-require("nvim-treesitter.parsers").jnoweb = {
-  install_info = {
-    url = "https://github.com/urtzienriquez/tree-sitter-jnoweb",
-    revision = "102cd03e6ddd58a2799485ed65c7a2c40b1891a2",
-    files = { "src/parser.c", "src/scanner.c" },
-    generate = false,
-  },
-  filetype = "jnoweb",
-  tier = 2,
-}
 
 -- nightfox
 require("nightfox").setup()
