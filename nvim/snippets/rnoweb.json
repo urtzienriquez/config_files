@@ -1,6 +1,6 @@
 {
   "Code Chunk": {
-    "prefix": "rco",
+    "prefix": "code",
     "body": [
       "<<$1>>=",
       "$0",
@@ -9,7 +9,7 @@
     "description": "add code chunk"
   },
   "inline r code": {
-    "prefix": "sex",
+    "prefix": "incode",
     "body": [
       "\\Sexpr{$1}$0"
     ],
@@ -323,8 +323,7 @@
             "\\begin{table}",
             "\t\\caption{$1}\\label{tab:$2}",
             "\t\\begin{center}",
-            "<<$2>>=",
-            "#| results: \"asis\"",
+            "<<$2, results=\"asis\">>=",
             "$3",
             "@",
             "\t\\end{center}",
