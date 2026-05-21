@@ -567,9 +567,9 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         yaml = { "prettier" },
         markdown = { "prettier" },
         quarto = { "injected", "prettier" },
-        rmd = { "latexindent_rmd", "styler" },
-        rnoweb = { "latexindent_rmd", "styler" },
-        tex = { "latexindent_rmd" },
+        rmd = { "literateR_fmt" },
+        rnoweb = { "literateR_fmt" },
+        tex = { "literateR_fmt" },
         jnoweb = { "jnoweb_fmt" },
         javascript = { "prettier" },
         typescript = { "prettier" },
@@ -593,8 +593,8 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
             },
           },
         },
-        latexindent_rmd = {
-          command = "latexindent-rmd",
+        literateR_fmt = {
+          command = "literateR-fmt",
           stdin = true,
         },
         jnoweb_fmt = {

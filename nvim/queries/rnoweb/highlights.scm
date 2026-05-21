@@ -1,3 +1,1 @@
-; Highlight the \Sexpr command
-(rinline
-  (command_name) @module)
+/home/urtzi/Documents/GitHub/tree-sitter-rnoweb/queries/highlights.scm
