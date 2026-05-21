@@ -1,6 +1,6 @@
 return {
   cmd = { vim.fn.stdpath("data") .. "/mason/bin/texlab" },
-  filetypes = { "tex", "plaintex", "bib", "rnoweb" },
+  filetypes = { "tex", "plaintex", "bib", "rnoweb", "jnoweb" },
   root_markers = { ".latexmkrc", ".texlabroot", ".git" },
 
   -- This part tells Neovim: "Don't use this LSP for formatting"

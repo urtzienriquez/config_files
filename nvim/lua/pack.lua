@@ -55,6 +55,7 @@ vim.pack.add({
   gh("pwntester/octo.nvim"),
   gh("R-nvim/R.nvim"),
   gh("nickjvandyke/opencode.nvim"),
+  gh("JuliaEditorSupport/julia-vim"),
 })
 
 ----------------------------------------
@@ -474,7 +475,7 @@ vim.filetype.add({
   },
 })
 vim.treesitter.language.add("jnoweb", {
-  path = "/home/urtzi/.local/share/nvim/site/parser/jnoweb.so"
+  path = "/home/urtzi/.local/share/nvim/site/parser/jnoweb.so",
 })
 
 -- Plenary test runner
@@ -569,6 +570,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         rmd = { "latexindent_rmd", "styler" },
         rnoweb = { "latexindent_rmd", "styler" },
         tex = { "latexindent_rmd" },
+        jnoweb = { "latexindent_jnoweb" },
         javascript = { "prettier" },
         typescript = { "prettier" },
         lua = { "stylua" },
@@ -593,6 +595,10 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         },
         latexindent_rmd = {
           command = "latexindent-rmd",
+          stdin = true,
+        },
+        latexindent_jnoweb = {
+          command = "latexindent-jnoweb",
           stdin = true,
         },
         styler = {
@@ -709,19 +715,10 @@ local function set_rnvim_keymaps()
       local tex_file, r_cmd
       if filename ~= "" then
         tex_file = filename .. ".tex"
-        r_cmd = string.format(
-          'knitr::knit("%s", output = "%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
-          file,
-          tex_file,
-          tex_file
-        )
+        r_cmd = string.format('knitrmini::knit("%s", output = "%s")', file, tex_file, tex_file)
       else
         tex_file = file:gsub(".Rnw$", ".tex")
-        r_cmd = string.format(
-          'knitr::knit("%s"); system("latexmk -lualatex -bibtex -interaction=nonstopmode -synctex=1 -f %s")',
-          file,
-          tex_file
-        )
+        r_cmd = string.format('knitrmini::knit("%s")', file, tex_file)
       end
       vim.cmd("RSend " .. r_cmd)
       vim.api.nvim_echo({ { "Compiling with latexmk using root: " .. file, "Normal" } }, false, {})
