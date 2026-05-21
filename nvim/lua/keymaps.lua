@@ -134,6 +134,58 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Render and clean Jnoweb documents
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("jnoweb-render", { clear = true }),
+  pattern = "jnoweb",
+  callback = function()
+    vim.keymap.set("n", "<leader>rr", function()
+      local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
+      vim.api.nvim_echo({ { "" } }, false, {})
+      if filename == "__CANCEL__" then return end
+      local file = vim.fn.expand("%")
+      vim.cmd("write")
+      local cmd
+      if filename ~= "" then
+        cmd = string.format('using Knit; knit("%s"; out_name="%s", compile=true)', file, filename)
+      else
+        cmd = string.format('using Knit; knit("%s"; compile=true)', file)
+      end
+      vim.notify("Compiling Jnoweb with latexmk using: " .. file, vim.log.levels.INFO)
+      require("replent.actions").slime_send(cmd .. "\n")
+    end, { buffer = true, desc = "Render Jnoweb" })
+    vim.keymap.set("n", "<leader>rc", function()
+      local file_dir = vim.fn.expand("%:p:h")
+      local file_name = vim.fn.expand("%:t:r")
+      local extensions = {
+        "aux", "bcf", "run.xml", "log", "listing", "out", "toc",
+        "nav", "snm", "vrb", "fls", "fdb_latexmk", "blg", "bbl", "synctex.gz",
+      }
+      local extra_files = { file_name .. "-tikzDictionary" }
+      local count = 0
+      for _, ext in ipairs(extensions) do
+        local target = file_dir .. "/" .. file_name .. "." .. ext
+        if vim.fn.filereadable(target) == 1 then
+          os.remove(target)
+          count = count + 1
+        end
+      end
+      for _, extra in ipairs(extra_files) do
+        local target = file_dir .. "/" .. extra
+        if vim.fn.filereadable(target) == 1 then
+          os.remove(target)
+          count = count + 1
+        end
+      end
+      if count > 0 then
+        print("Cleaned " .. count .. " auxiliary files.")
+      else
+        print("No auxiliary files found to clean.")
+      end
+    end, { buffer = true, desc = "Clean Jnoweb auxiliary files" })
+  end,
+})
+
 -- love2d run
 vim.api.nvim_create_autocmd("BufEnter", {
   group = vim.api.nvim_create_augroup("love2d-maps", { clear = true }),
