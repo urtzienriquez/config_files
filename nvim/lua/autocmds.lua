@@ -198,16 +198,6 @@ vim.api.nvim_create_autocmd("TermOpen", {
   end,
 })
 
--- Set filetype=jnoweb for .jnw files
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-  group = vim.api.nvim_create_augroup("jnoweb-ftdetect", { clear = true }),
-  pattern = "*.jnw",
-  callback = function()
-    vim.bo.filetype = "jnoweb"
-  end,
-  desc = "Set filetype=jnoweb for .jnw files",
-})
-
 -- no conceal for R-help files
 vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType" }, {
   callback = function(ev)

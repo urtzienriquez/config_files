@@ -570,7 +570,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         rmd = { "latexindent_rmd", "styler" },
         rnoweb = { "latexindent_rmd", "styler" },
         tex = { "latexindent_rmd" },
-        jnoweb = { "latexindent_jnoweb" },
+        jnoweb = { "jnoweb_fmt" },
         javascript = { "prettier" },
         typescript = { "prettier" },
         lua = { "stylua" },
@@ -597,8 +597,8 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
           command = "latexindent-rmd",
           stdin = true,
         },
-        latexindent_jnoweb = {
-          command = "latexindent-jnoweb",
+        jnoweb_fmt = {
+          command = "jnoweb-fmt",
           stdin = true,
         },
         styler = {
