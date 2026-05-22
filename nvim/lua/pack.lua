@@ -570,6 +570,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
         rmd = { "literateR_fmt" },
         rnoweb = { "literateR_fmt" },
         tex = { "literateR_fmt" },
+        plaintex = { "literateR_fmt" },
         jnoweb = { "jnoweb_fmt" },
         javascript = { "prettier" },
         typescript = { "prettier" },
