@@ -520,7 +520,12 @@ EOF
 # render quarto and fix paths for hugo site
 quarto-hugo() {
     local filename="${1%.*}"  # Remove extension if present
-    quarto render "$1" && ~/Documents/GitHub/urtzienriquez.github.io/util/fix-hugo-images.sh "${filename}.md"
+    quarto render "$1" && {
+        # Only fix paths for knitr-rendered qmd files (R), not Jupyter-based ones (Julia/Python)
+        if ! sed -n '/^---$/,/^---$/p' "$1" 2>/dev/null | grep -q '^jupyter:'; then
+            ~/Documents/GitHub/urtzienriquez.github.io/util/fix-hugo-images.sh "${filename}.md"
+        fi
+    }
 }
 
 # alias udisksctl
