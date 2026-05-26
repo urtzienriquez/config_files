@@ -716,10 +716,10 @@ local function set_rnvim_keymaps()
       local tex_file, r_cmd
       if filename ~= "" then
         tex_file = filename .. ".tex"
-        r_cmd = string.format('knitrmini::knit("%s", output = "%s")', file, tex_file, tex_file)
+        r_cmd = string.format('knitrmini::knit("%s", output = "%s", engine = "lualatex")', file, tex_file, tex_file)
       else
         tex_file = file:gsub(".Rnw$", ".tex")
-        r_cmd = string.format('knitrmini::knit("%s")', file, tex_file)
+        r_cmd = string.format('knitrmini::knit("%s", engine = "lualatex")', file, tex_file)
       end
       vim.cmd("RSend " .. r_cmd)
       vim.api.nvim_echo({ { "Compiling with latexmk using root: " .. file, "Normal" } }, false, {})
