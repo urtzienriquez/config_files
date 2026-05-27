@@ -55,7 +55,6 @@ vim.pack.add({
   gh("pwntester/octo.nvim"),
   gh("R-nvim/R.nvim"),
   gh("nickjvandyke/opencode.nvim"),
-  gh("JuliaEditorSupport/julia-vim"),
 })
 
 ----------------------------------------
