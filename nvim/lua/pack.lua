@@ -54,7 +54,7 @@ vim.pack.add({
   gh("tpope/vim-rhubarb"),
   gh("pwntester/octo.nvim"),
   gh("R-nvim/R.nvim"),
-  gh("nickjvandyke/opencode.nvim"),
+  -- gh("nickjvandyke/opencode.nvim"),
 })
 
 ----------------------------------------
@@ -66,6 +66,7 @@ local my_packs = {
   "citeref.nvim",
   "replent.nvim",
   "sessman.nvim",
+  "opencode.nvim",
   "learnlua.nvim",
 }
 for _, name in ipairs(my_packs) do
@@ -807,7 +808,6 @@ end
 require("r").setup(r_opts)
 
 -- opencode.nvim
----@diagnostic disable: undefined-field
 
 vim.keymap.set("n", "<leader>io", function()
   require("opencode").toggle()
@@ -821,12 +821,10 @@ end, { desc = "Ask opencode @buffer" })
 vim.keymap.set({ "n", "x" }, "<leader>ix", function()
   require("opencode").select()
 end, { desc = "Execute opencode action" })
-
 vim.keymap.set({ "n", "x" }, "go", function()
   return require("opencode").operator("@this ")
 end, { desc = "Add range to opencode", expr = true })
 
----@diagnostic enable: undefined-field
 
 -- nightfox
 require("nightfox").setup()
