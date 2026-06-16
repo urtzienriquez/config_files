@@ -156,6 +156,9 @@ esac
 # luarocks paths
 export PATH="$HOME/.luarocks/bin:$PATH"
 eval "$(luarocks path)"
+# texlive
+export PATH="$PATH:/usr/local/texlive/2026/bin/x86_64-linux"
+export TEXMFHOME=$HOME/.texmf
 
 # -------------------------------
 # R configuration
