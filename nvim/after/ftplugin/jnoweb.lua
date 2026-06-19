@@ -1,25 +1,3 @@
-vim.cmd("packadd julia-vim")
-
--- Source julia-vim's ftplugin and autoload features for this buffer
-vim.cmd([[
-  runtime! ftplugin/julia.vim
-  runtime! syntax/julia.vim
-  setlocal shiftwidth=4 expandtab
-  let g:julia_blocks = 1
-  call julia_blocks#init_mappings()
-]])
-
--- Enable LaTeX-to-Unicode for jnoweb
-local file_types = vim.g.latex_to_unicode_file_types or { "julia" }
-if type(file_types) == "string" then
-  file_types = { file_types }
-end
-if not vim.tbl_contains(file_types, "jnoweb") then
-  table.insert(file_types, "jnoweb")
-end
-vim.g.latex_to_unicode_file_types = file_types
-vim.cmd([[call LaTeXtoUnicode#Refresh() | call LaTeXtoUnicode#Init(0)]])
-
 local ns = vim.api.nvim_create_namespace("jnoweb_chunk")
 
 local function hl_code()
@@ -61,3 +39,5 @@ vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "InsertLeave" }, {
   buffer = 0,
   callback = hl_code,
 })
+
+require("julia_latex").setup(0)
