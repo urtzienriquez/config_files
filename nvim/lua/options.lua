@@ -20,7 +20,7 @@ vim.o.clipboard = "unnamedplus"
 vim.o.termguicolors = true
 vim.o.signcolumn = "yes:1"
 vim.o.cursorline = true
-vim.o.cursorlineopt = "number"
+-- vim.o.cursorlineopt = "number"
 vim.o.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20,t:block"
 
 -- indentation
