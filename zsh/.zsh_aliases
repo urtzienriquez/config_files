@@ -536,3 +536,27 @@ alias wtw='wtwitch'
 
 # alias loffice
 alias lo='loffice'
+
+# alias to start/stop zotero as daemon
+zotero() {
+    case "$1" in
+        start)
+            systemctl --user start zotero.service
+            echo "Zotero headless started."
+            ;;
+        stop)
+            systemctl --user stop zotero.service
+            echo "Zotero headless stopped."
+            ;;
+        status)
+            systemctl --user status zotero.service
+            ;;
+        restart)
+            systemctl --user restart zotero.service
+            echo "Zotero headless restarted."
+            ;;
+        *)
+            echo "Usage: zotero {start|stop|status|restart}"
+            ;;
+    esac
+}
