@@ -63,6 +63,7 @@ vim.pack.add({
 local dev = vim.fn.expand("~/Documents/GitHub")
 local my_packs = {
   "nightfox.nvim",
+  "zotero.nvim",
   "citeref.nvim",
   "replent.nvim",
   "sessman.nvim",
@@ -828,6 +829,11 @@ end, { desc = "Add range to opencode", expr = true })
 
 -- nightfox
 require("nightfox").setup()
+
+-- zotero.nvim
+require("zotero").setup({
+  backend = "fzf",
+})
 
 -- citeref
 require("citeref").setup({
