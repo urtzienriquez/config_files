@@ -3,7 +3,6 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 -- misc options
-vim.o.packlockfile = vim.fs.joinpath(vim.fn.stdpath('config'), 'nvim-pack-lock.json')
 vim.o.mouse = ""
 vim.o.shell = "/usr/bin/zsh"
 vim.opt.laststatus = 3
