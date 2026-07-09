@@ -58,7 +58,7 @@ vim.api.nvim_create_user_command("ZgVariants", function()
   end
   vim.notify("Added variants of '" .. word .. "' to spellfile", vim.log.levels.INFO)
 end, {})
-vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true, desc = "add variants of words to spellfile" })
 
 -- cd to current buffers directory
 vim.keymap.set("n", "<leader>~", function()

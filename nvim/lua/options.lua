@@ -3,6 +3,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 -- misc options
+vim.o.packlockfile = vim.fs.joinpath(vim.fn.stdpath('config'), 'nvim-pack-lock.json')
 vim.o.mouse = ""
 vim.o.shell = "/usr/bin/zsh"
 vim.opt.laststatus = 3
@@ -20,7 +21,7 @@ vim.o.clipboard = "unnamedplus"
 vim.o.termguicolors = true
 vim.o.signcolumn = "yes:1"
 vim.o.cursorline = true
--- vim.o.cursorlineopt = "number"
+vim.o.cursorlineopt = "number"
 vim.o.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20,t:block"
 
 -- indentation
