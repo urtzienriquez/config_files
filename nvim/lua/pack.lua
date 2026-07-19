@@ -39,7 +39,7 @@ vim.pack.add({
   gh("kylechui/nvim-surround"),
   gh("lewis6991/gitsigns.nvim"),
   gh("ibhagwan/fzf-lua"),
-  { src = gh("nvim-treesitter/nvim-treesitter"), version = "4916d65" },
+  gh("nvim-treesitter/nvim-treesitter"),
   gh("nvim-treesitter/nvim-treesitter-textobjects"),
   gh("nvim-lua/plenary.nvim"),
   { src = gh("saghen/blink.cmp"), version = "v1" },
@@ -833,6 +833,7 @@ require("nightfox").setup()
 -- zotero.nvim
 require("zotero").setup({
   backend = "fzf",
+  max_items = "3000",
 })
 
 -- citeref
