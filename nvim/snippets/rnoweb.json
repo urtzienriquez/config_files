@@ -371,5 +371,10 @@
         "prefix": "emph",
         "body": "\\emph{$1}$0",
         "description": "Insert emphasized text (italics when upright, and upright when italic)."
+    },
+    "Italic Text": {
+        "prefix": "italic",
+        "body": "\\textit{$1}$0",
+        "description": "Insert italic text."
     }
 }
