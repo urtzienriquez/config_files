@@ -7,11 +7,6 @@ config-file = ~/.config/ghostty/local.config
 # default shell
 command = /usr/bin/zsh
 
-# cursor
-cursor-style = block
-cursor-style-blink = false
-shell-integration-features = no-cursor
-
 # keybindings
 keybind = shift+control+k=scroll_page_lines:-1
 keybind = shift+control+j=scroll_page_lines:1

@@ -13,14 +13,26 @@ zstyle ':vcs_info:git:*' formats ' %F{244} %b %f'
 setopt prompt_subst
 
 # -------------------------------
-# Vi mode indicator
+# Vi mode indicator + cursor shape
 # -------------------------------
 function zle-line-init zle-keymap-select {
     VI_MODE_SYMBOL="${${KEYMAP/vicmd/}/(main|viins)/}"
+
+    case $KEYMAP in
+        vicmd)      echo -ne '\e[2 q' ;;  # normal -> steady block
+        viins|main) echo -ne '\e[6 q' ;;  # insert  -> steady bar
+    esac
+
     zle reset-prompt
 }
 zle -N zle-line-init
 zle -N zle-keymap-select
+
+function _cursor_beam_preexec { echo -ne '\e[6 q' }
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec _cursor_beam_preexec
+
+echo -ne '\e[6 q'  # set cursor on shell startup
 
 # -------------------------------
 # Prompt
