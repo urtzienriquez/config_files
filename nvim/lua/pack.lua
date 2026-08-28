@@ -826,7 +826,6 @@ vim.keymap.set({ "n", "x" }, "go", function()
   return require("opencode").operator("@this ")
 end, { desc = "Add range to opencode", expr = true })
 
-
 -- nightfox
 require("nightfox").setup()
 
