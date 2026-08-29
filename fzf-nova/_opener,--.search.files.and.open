@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 # modified from https://github.com/gotbletu/fzf-nova
+FZF_CONFIG="${FZF_CONFIG:-$HOME/.config/zsh/.fzf_config}"
+: "${FZF_THEME_OPTS:=$(grep -m1 '^--color' "$FZF_CONFIG" 2>/dev/null)}"
+export FZF_THEME_OPTS
 
 export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -e -i --reverse --info=right --scroll-off=5 --tiebreak=index --bind 'home:first,end:last' --bind 'ctrl-t:first,ctrl-b:last' --header 'only searching /home and /media'"
 find ~ -type f \

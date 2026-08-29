@@ -1,4 +1,7 @@
 #!/bin/bash
+FZF_CONFIG="${FZF_CONFIG:-$HOME/.config/zsh/.fzf_config}"
+: "${FZF_THEME_OPTS:=$(grep -m1 '^--color' "$FZF_CONFIG" 2>/dev/null)}"
+export FZF_THEME_OPTS
 
 export FZF_DEFAULT_OPTS="
     $FZF_THEME_OPTS
