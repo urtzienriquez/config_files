@@ -235,41 +235,18 @@ vim.keymap.set("n", "<leader>gr", "<cmd>Gread<cr>", { desc = "Git read (checkout
 vim.keymap.set("n", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open in GitHub" })
 vim.keymap.set("v", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open selection in GitHub" })
 
--- octo.nvim (lazy-load on command or keymap)
-local function load_octo()
-  require("octo").setup({
-    picker = "fzf-lua",
-    mappings_disable_default = false,
-    enable_builtin = true,
-  })
-end
-
-vim.api.nvim_create_user_command("Octo", function(opts)
-  load_octo()
-  vim.cmd("Octo " .. opts.args)
-end, {
-  nargs = "*",
-  complete = function()
-    return {}
-  end,
+-- octo.nvim
+require("octo").setup({
+  picker = "fzf-lua",
+  mappings_disable_default = false,
+  enable_builtin = true,
 })
 
-local octo_keymaps = {
-  { "<leader>hh", "<cmd>Octo<CR>", "List octo actions" },
-  { "<leader>hi", "<cmd>Octo issue list<CR>", "List issues" },
-  { "<leader>hp", "<cmd>Octo pr list<CR>", "List PRs" },
-  { "<leader>hs", "<cmd>Octo search<CR>", "Search GitHub" },
-  { "<leader>hr", "<cmd>Octo repo view<CR>", "View repo" },
-}
-
-for _, map in ipairs(octo_keymaps) do
-  vim.keymap.set("n", map[1], function()
-    load_octo()
-    vim.cmd(map[2]:gsub("^<cmd>", ""):gsub("<CR>$", ""))
-    -- Update keymap after first load
-    vim.keymap.set("n", map[1], map[2], { desc = map[3] })
-  end, { desc = map[3] })
-end
+vim.keymap.set("n", "<leader>hh", "<cmd>Octo<CR>", { desc = "List octo actions" })
+vim.keymap.set("n", "<leader>hi", "<cmd>Octo issue list<CR>", { desc = "List issues" })
+vim.keymap.set("n", "<leader>hp", "<cmd>Octo pr list<CR>", { desc = "List PRs" })
+vim.keymap.set("n", "<leader>hs", "<cmd>Octo search<CR>", { desc = "Search GitHub" })
+vim.keymap.set("n", "<leader>hr", "<cmd>Octo repo view<CR>", { desc = "View repo" })
 
 -- gitsigns
 require("gitsigns").setup({
