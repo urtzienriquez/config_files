@@ -12,7 +12,6 @@ vim.o.winborder = "rounded"
 vim.g.have_nerd_font = true
 vim.o.number = true
 vim.o.relativenumber = true
-vim.o.scrolloff = 2
 vim.o.backspace = "indent,eol,start"
 vim.o.ignorecase = true
 vim.o.smartcase = true
