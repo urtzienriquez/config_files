@@ -18,7 +18,7 @@ vim.o.smartcase = true
 vim.o.clipboard = "unnamedplus"
 vim.o.termguicolors = true
 vim.o.signcolumn = "yes"
-vim.opt.statuscolumn = '%C%s%=%l%{%v:virtnum>0?"%#NFWrap#↳":""%}%{&buftype!="terminal"?" ":""}'
+vim.opt.statuscolumn = '%C%s%=%l%{%v:virtnum>0?"%#NonText#↳":""%}%{&buftype!="terminal"?" ":""}'
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
 vim.o.guicursor = "n-v-c-sm:block,i-ci-ve-t:ver25,r-cr-o:hor20"
