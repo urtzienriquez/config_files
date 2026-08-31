@@ -51,7 +51,6 @@ vim.pack.add({
   gh("stevearc/oil.nvim"),
   gh("stevearc/quicker.nvim"),
   gh("tpope/vim-fugitive"),
-  gh("tpope/vim-rhubarb"),
   gh("pwntester/octo.nvim"),
   gh("R-nvim/R.nvim"),
   -- gh("nickjvandyke/opencode.nvim"),
@@ -241,10 +240,6 @@ vim.keymap.set("n", "<leader>gP", "<cmd>Git push<cr>", { desc = "Git push" })
 vim.keymap.set("n", "<leader>gv", "<cmd>Gvdiffsplit!<cr>", { desc = "Git diff split" })
 vim.keymap.set("n", "<leader>gw", "<cmd>Gwrite<cr>", { desc = "Git write (stage)" })
 vim.keymap.set("n", "<leader>gr", "<cmd>Gread<cr>", { desc = "Git read (checkout)" })
-
--- rhubarb
-vim.keymap.set("n", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open in GitHub" })
-vim.keymap.set("v", "<leader>go", "<cmd>GBrowse<cr>", { desc = "Open selection in GitHub" })
 
 -- octo.nvim
 require("octo").setup({
