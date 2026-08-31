@@ -202,11 +202,3 @@ if [ -z "$TMUX" ]; then
   session="term_${tty_id}"
   tmux new-session -A -s "$session"
 fi
-
-# -------------------------------
-# venv
-# -------------------------------
-# re-activate python virtual environments in new panes/windows
-if [ -n "$VIRTUAL_ENV" ]; then
-    source $VIRTUAL_ENV/bin/activate;
-fi
