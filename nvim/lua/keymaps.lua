@@ -35,12 +35,12 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.keymap.set(
       "n",
-      "<localleader><localleader><Enter>",
+      "<localleader><localleader>e",
       "<CMD>silent update<BAR>source %<CR>",
       { desc = "exec lua file" }
     )
-    vim.keymap.set("n", "<localleader><Enter>", ":.lua<CR>", { desc = "exec lua line" })
-    vim.keymap.set("v", "<localleader><Enter>", ":lua<CR>", { desc = "exec lua block" })
+    vim.keymap.set("n", "<localleader>e", ":.lua<CR>", { desc = "exec lua line" })
+    vim.keymap.set("v", "<localleader>e", ":lua<CR>", { desc = "exec lua block" })
   end,
   desc = "Execute Lua keymaps in Lua buffers",
 })
