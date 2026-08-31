@@ -210,3 +210,15 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType" }, {
     end
   end,
 })
+
+-- Enable mini.clue triggers in unlisted buffers
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("mini-clue-unlisted", { clear = true }),
+  pattern = { "oil", "zotero-collections", "zotero-items", "zotero-detail" },
+  callback = function(ev)
+    vim.schedule(function()
+      require("mini.clue").ensure_buf_triggers(ev.buf)
+    end)
+  end,
+  desc = "Enable mini.clue triggers in unlisted buffers",
+})
