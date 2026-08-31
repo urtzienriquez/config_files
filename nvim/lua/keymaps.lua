@@ -42,7 +42,7 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "<localleader><Enter>", ":.lua<CR>", { desc = "exec lua line" })
     vim.keymap.set("v", "<localleader><Enter>", ":lua<CR>", { desc = "exec lua block" })
   end,
-  desc = "Remove q-to-close in man pages",
+  desc = "Execute Lua keymaps in Lua buffers",
 })
 
 -- Add all case variants of a word to spellfile

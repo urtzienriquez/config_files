@@ -110,21 +110,18 @@ miniclue.setup({
     miniclue.gen_clues.registers(),
     miniclue.gen_clues.windows(),
     miniclue.gen_clues.z(),
+    { mode = { "n", "x" }, keys = "go", desc = "Add range to opencode" },
 
-    -- leader groups
+    -- leader groups (universal only; filetype-specific groups are declared
+    -- buffer-locally in the relevant ftplugin files via vim.b.miniclue_config)
     { mode = "n", keys = "<Leader>f", desc = "(Find commands)" },
-    { mode = "n", keys = "<Leader>b", desc = "(Buffer)" },
-    { mode = "n", keys = "<Leader>c", desc = "(cd/code)" },
-    { mode = "n", keys = "<Leader>o", desc = "(Open REPL)" },
-    { mode = "n", keys = "<Leader>q", desc = "(Close REPL)" },
     { mode = "n", keys = "<Leader>g", desc = "(Git commands)" },
     { mode = "n", keys = "<Leader>h", desc = "(GitHub)" },
     { mode = "n", keys = "<Leader>i", desc = "(opencode)" },
-    { mode = "n", keys = "<Leader>a", desc = "(Add)" },
     { mode = "n", keys = "<Leader>u", desc = "(UI)" },
-    { mode = "n", keys = "<Leader>r", desc = "(R/Render)" },
-    { mode = "n", keys = "<Leader>s", desc = "(Send)" },
+    { mode = "n", keys = "<Leader>b", desc = "(Buffer format)" },
     { mode = "n", keys = "<Leader>m", desc = "(Session)" },
+    { mode = "n", keys = "<Leader>z", desc = "(Zotero)" },
   },
 })
 
@@ -288,11 +285,11 @@ require("gitsigns").setup({
       return "<Ignore>"
     end, { expr = true, desc = "Prev hunk" })
 
-    vim.keymap.set("n", "<leader>ss", gs.preview_hunk, { buffer = bufnr, desc = "Git diff (hunk)" })
-    vim.keymap.set("n", "<leader>sr", gs.reset_hunk, { desc = "Reset hunk" })
-    vim.keymap.set("v", "<leader>sr", function()
+    vim.keymap.set("n", "<leader>gS", gs.preview_hunk, { buffer = bufnr, desc = "Git diff (hunk)" })
+    vim.keymap.set("n", "<leader>gR", gs.reset_hunk, { buffer = bufnr, desc = "Reset hunk" })
+    vim.keymap.set("v", "<leader>gR", function()
       gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-    end, { desc = "Reset selection" })
+    end, { buffer = bufnr, desc = "Reset selection" })
   end,
 })
 

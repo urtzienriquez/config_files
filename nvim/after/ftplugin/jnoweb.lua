@@ -1,3 +1,15 @@
+-- mini.clue: replent REPL (Julia) + render + citeref (only for jnoweb files)
+vim.b.miniclue_config = {
+  clues = {
+    { mode = "n", keys = "<Leader>o", desc = "(Open REPL)" },
+    { mode = "n", keys = "<Leader>q", desc = "(Close REPL)" },
+    { mode = "n", keys = "<Leader>s", desc = "(Send)" },
+    { mode = "n", keys = "<Leader>c", desc = "(cd/code)" },
+    { mode = "n", keys = "<Leader>r", desc = "(Render)" },
+    { mode = "n", keys = "<Leader>a", desc = "(Add citation)" },
+  },
+}
+
 local ns = vim.api.nvim_create_namespace("jnoweb_chunk")
 
 local function hl_code()
