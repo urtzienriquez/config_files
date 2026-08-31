@@ -108,41 +108,36 @@ require("which-key").add({
 require("nvim-web-devicons").setup({})
 
 -- mini.statusline
-local hl_fg = vim.api.nvim_get_hl(0, { name = "Special" }).fg
-local hl_bg = vim.api.nvim_get_hl(0, { name = "MinistatuslineFilename" }).bg
-vim.api.nvim_set_hl(0, "StatuslineRec", { fg = hl_fg, bg = hl_bg, bold = true })
+local statusline = require('mini.statusline')
 
-require("mini.statusline").setup({
-  content = {
-    active = function()
-      local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
-      local git = MiniStatusline.section_git({ trunc_width = 40 })
-      local diff = MiniStatusline.section_diff({ trunc_width = 75 })
-      local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75 })
-      local lsp = MiniStatusline.section_lsp({ trunc_width = 75 })
-      local filename = MiniStatusline.section_filename({ trunc_width = 140 })
-      local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 999 })
-      local location = MiniStatusline.section_location({ trunc_width = 75 })
-      local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
-      local macro = ""
-      local reg = vim.fn.reg_recording()
-      if reg ~= "" then
-        macro = "recording @" .. reg
-      end
+local fileinfo = function()
+    local filetype = vim.bo.filetype
+    local devicons = require('nvim-web-devicons')
+    local icon = devicons.get_icon(vim.fn.expand('%:t'), nil, { default = true }) .. ' '
+    return string.format('%s%s', icon, filetype)
+end
 
-      return MiniStatusline.combine_groups({
-        { hl = mode_hl, strings = { mode } },
-        { hl = "MiniStatuslineDev", strings = { git, diff, diagnostics, lsp } },
-        { hl = "MiniStatuslineFilename", strings = { filename } },
-        "%<",
-        "%=",
-        { hl = "StatuslineRec", strings = { macro } },
-        { hl = "MiniStatuslineFilename", strings = { fileinfo } },
-        { strings = { search, location } },
-      })
-    end,
-  },
-  use_icons = true,
+local contents = function()
+    local mode, mode_hl = statusline.section_mode({ trunc_width = 50 })
+    local diagnostics   = statusline.section_diagnostics({ trunc_width = 75 })
+    local lsp           = statusline.section_lsp({ trunc_width = 75 })
+    local filename      = statusline.section_filename({ trunc_width = 100 })
+    local location      = '%l,%2v'
+    local search        = statusline.section_searchcount({ trunc_width = 75 })
+
+  return statusline.combine_groups({
+    { hl = mode_hl, strings = { mode } },
+    { hl = "MiniStatuslineDevinfo", strings = { diagnostics, lsp } },
+    "%<", -- Mark general truncate point
+    { hl = "MiniStatuslineFilename", strings = { filename } },
+    "%=", -- End left alignment
+    { hl = "MiniStatuslineFileinfo", strings = { fileinfo() } },
+    { hl = mode_hl, strings = { search, location } },
+  })
+end
+
+statusline.setup({
+    content = { active = contents },
 })
 
 -- oil
