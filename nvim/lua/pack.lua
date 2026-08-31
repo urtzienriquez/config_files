@@ -32,8 +32,8 @@ local gh = function(x)
 end
 
 vim.pack.add({
-  gh("folke/which-key.nvim"),
   gh("nvim-tree/nvim-web-devicons"),
+  gh("nvim-mini/mini.clue"),
   gh("nvim-mini/mini.statusline"),
   gh("christoomey/vim-tmux-navigator"),
   gh("kylechui/nvim-surround"),
@@ -77,35 +77,62 @@ end
 ----------------------------------------
 -- configuration
 
--- which-key
-require("which-key").setup({
-  plugins = { spelling = { enabled = false } },
-  preset = "helix",
-  delay = 0,
+-- nvim-web-devicons
+require("nvim-web-devicons").setup({})
+
+-- mini.clue
+require("mini.clue").setup({
   triggers = {
-    { "<auto>", mode = "nxso" },
-    { "<localleader>", mode = "n" },
+    { mode = { "n", "x", "o", "s" }, keys = "<Leader>" },
+    { mode = "n", keys = "<LocalLeader>" },
+    { mode = { "n", "x" }, keys = "g" },
+    { mode = { "n", "x" }, keys = "z" },
+    { mode = { "n", "x" }, keys = "'" },
+    { mode = { "n", "x" }, keys = "`" },
+    { mode = { "n", "x" }, keys = '"' },
+    { mode = "i", keys = "<C-r>" },
+    { mode = "n", keys = "<C-w>" },
+  },
+
+  clues = {
+    -- leader groups
+    { mode = "n", keys = "<Leader>f", desc = "+Find" },
+    { mode = "n", keys = "<Leader>b", desc = "+Buffer" },
+    { mode = "n", keys = "<Leader>c", desc = "+cd/code" },
+    { mode = "n", keys = "<Leader>o", desc = "+Open REPL" },
+    { mode = "n", keys = "<Leader>q", desc = "+Close REPL" },
+    { mode = "n", keys = "<Leader>g", desc = "+Git" },
+    { mode = "n", keys = "<Leader>h", desc = "+GitHub" },
+    { mode = "n", keys = "<Leader>i", desc = "+opencode" },
+    { mode = "n", keys = "<Leader>a", desc = "+Add" },
+    { mode = "n", keys = "<Leader>u", desc = "+UI" },
+    { mode = "n", keys = "<Leader>r", desc = "+R/Render" },
+    { mode = "n", keys = "<Leader>s", desc = "+Send" },
+    { mode = "n", keys = "<Leader>m", desc = "+Session" },
+
+    require("mini.clue").gen_clues.g(),
+    require("mini.clue").gen_clues.z(),
+    require("mini.clue").gen_clues.marks(),
+    require("mini.clue").gen_clues.registers(),
+    require("mini.clue").gen_clues.windows(),
+  },
+
+  window = {
+    delay = 0,
+    config = { width = "auto" },
   },
 })
 
-require("which-key").add({
-  { "<leader>f", name = "Find" },
-  { "<leader>b", name = "Buffer" },
-  { "<leader>c", name = "cd/code" },
-  { "<leader>o", name = "Open REPL" },
-  { "<leader>q", name = "Close REPL" },
-  { "<leader>g", name = "Git" },
-  { "<leader>h", name = "GitHub" },
-  { "<leader>i", name = "opencode" },
-  { "<leader>a", name = "Add" },
-  { "<leader>u", name = "UI" },
-  { "<leader>r", name = "R/Render" },
-  { "<leader>s", name = "Send" },
-  { "<leader>m", name = "Session" },
+-- ensure triggers in special buffers (octo, etc.)
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("mini-clue-triggers", { clear = true }),
+  pattern = { "octo" },
+  callback = function()
+    vim.schedule(function()
+      require("mini.clue").ensure_buf_triggers()
+    end)
+  end,
 })
-
--- nvim-web-devicons
-require("nvim-web-devicons").setup({})
 
 -- mini.statusline
 local statusline = require('mini.statusline')
