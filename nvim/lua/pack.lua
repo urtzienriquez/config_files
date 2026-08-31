@@ -123,17 +123,6 @@ require("mini.clue").setup({
   },
 })
 
--- ensure triggers in special buffers (octo, etc.)
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("mini-clue-triggers", { clear = true }),
-  pattern = { "octo" },
-  callback = function()
-    vim.schedule(function()
-      require("mini.clue").ensure_buf_triggers()
-    end)
-  end,
-})
-
 -- mini.statusline
 local statusline = require('mini.statusline')
 
