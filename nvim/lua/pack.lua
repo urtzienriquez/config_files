@@ -80,45 +80,51 @@ end
 require("nvim-web-devicons").setup({})
 
 -- mini.clue
-require("mini.clue").setup({
+local miniclue = require("mini.clue")
+miniclue.setup({
   triggers = {
-    { mode = { "n", "x", "o", "s" }, keys = "<Leader>" },
+    { mode = { "n", "x" }, keys = "<Leader>" },
     { mode = "n", keys = "<LocalLeader>" },
+    { mode = "n", keys = "t" },
+    { mode = "n", keys = "c" },
+    { mode = "n", keys = "d" },
+    { mode = "i", keys = "<C-x>" },
     { mode = { "n", "x" }, keys = "g" },
-    { mode = { "n", "x" }, keys = "z" },
     { mode = { "n", "x" }, keys = "'" },
     { mode = { "n", "x" }, keys = "`" },
     { mode = { "n", "x" }, keys = '"' },
-    { mode = "i", keys = "<C-r>" },
+    { mode = { "i", "c" }, keys = "<C-r>" },
     { mode = "n", keys = "<C-w>" },
-  },
-
-  clues = {
-    -- leader groups
-    { mode = "n", keys = "<Leader>f", desc = "+Find" },
-    { mode = "n", keys = "<Leader>b", desc = "+Buffer" },
-    { mode = "n", keys = "<Leader>c", desc = "+cd/code" },
-    { mode = "n", keys = "<Leader>o", desc = "+Open REPL" },
-    { mode = "n", keys = "<Leader>q", desc = "+Close REPL" },
-    { mode = "n", keys = "<Leader>g", desc = "+Git" },
-    { mode = "n", keys = "<Leader>h", desc = "+GitHub" },
-    { mode = "n", keys = "<Leader>i", desc = "+opencode" },
-    { mode = "n", keys = "<Leader>a", desc = "+Add" },
-    { mode = "n", keys = "<Leader>u", desc = "+UI" },
-    { mode = "n", keys = "<Leader>r", desc = "+R/Render" },
-    { mode = "n", keys = "<Leader>s", desc = "+Send" },
-    { mode = "n", keys = "<Leader>m", desc = "+Session" },
-
-    require("mini.clue").gen_clues.g(),
-    require("mini.clue").gen_clues.z(),
-    require("mini.clue").gen_clues.marks(),
-    require("mini.clue").gen_clues.registers(),
-    require("mini.clue").gen_clues.windows(),
+    { mode = { "n", "x" }, keys = "z" },
   },
 
   window = {
-    delay = 0,
-    config = { width = "auto" },
+    delay = 500,
+    config = { width = 50 },
+  },
+
+  clues = {
+    miniclue.gen_clues.g(),
+    miniclue.gen_clues.builtin_completion(),
+    miniclue.gen_clues.marks(),
+    miniclue.gen_clues.registers(),
+    miniclue.gen_clues.windows(),
+    miniclue.gen_clues.z(),
+
+    -- leader groups
+    { mode = "n", keys = "<Leader>f", desc = "(Find commands)" },
+    { mode = "n", keys = "<Leader>b", desc = "(Buffer)" },
+    { mode = "n", keys = "<Leader>c", desc = "(cd/code)" },
+    { mode = "n", keys = "<Leader>o", desc = "(Open REPL)" },
+    { mode = "n", keys = "<Leader>q", desc = "(Close REPL)" },
+    { mode = "n", keys = "<Leader>g", desc = "(Git commands)" },
+    { mode = "n", keys = "<Leader>h", desc = "(GitHub)" },
+    { mode = "n", keys = "<Leader>i", desc = "(opencode)" },
+    { mode = "n", keys = "<Leader>a", desc = "(Add)" },
+    { mode = "n", keys = "<Leader>u", desc = "(UI)" },
+    { mode = "n", keys = "<Leader>r", desc = "(R/Render)" },
+    { mode = "n", keys = "<Leader>s", desc = "(Send)" },
+    { mode = "n", keys = "<Leader>m", desc = "(Session)" },
   },
 })
 
