@@ -164,14 +164,13 @@ require("oil").setup({
   use_default_keymaps = true,
   view_options = { show_hidden = true },
   keymaps = {
-    ["t"] = { "actions.parent", mode = "n" },
     ["<C-h>"] = false,
     ["<C-l>"] = false,
     ["<leader>l"] = "actions.refresh",
   },
 })
 
-vim.keymap.set("n", "<leader>t", function()
+vim.keymap.set("n", "<leader>o", function()
   local oil = require("oil")
   if vim.bo.filetype == "oil" then
     oil.close()
