@@ -57,6 +57,22 @@ vim.pack.add({
 })
 
 ----------------------------------------
+-- vim-tmux-navigator: use Alt instead of Ctrl
+vim.g.tmux_navigator_no_mappings = 1
+
+local navigator_dirs = {
+  { "h", "Left" },
+  { "j", "Down" },
+  { "k", "Up" },
+  { "l", "Right" },
+}
+for _, dir in ipairs(navigator_dirs) do
+  local cmd = "<cmd>TmuxNavigate" .. dir[2] .. "<CR>"
+  vim.keymap.set("n", "<M-" .. dir[1] .. ">", cmd, { desc = "Navigate " .. dir[2] })
+  vim.keymap.set("t", "<M-" .. dir[1] .. ">", "<C-\\><C-N>" .. cmd, { desc = "Navigate " .. dir[2] })
+end
+
+----------------------------------------
 -- my plugins
 
 local dev = vim.fn.expand("~/Documents/GitHub")
@@ -165,9 +181,8 @@ require("oil").setup({
   view_options = { show_hidden = true },
   keymaps = {
     ["<C-c>"] = { "actions.close", mode = "n", nowait = true },
-    ["<C-h>"] = false,
-    ["<C-l>"] = false,
-    ["<leader>l"] = "actions.refresh",
+    ["<C-h>"] = { "actions.select", opts = { vertical = true } },
+    ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
   },
 })
 
