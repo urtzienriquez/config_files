@@ -292,7 +292,7 @@ keys = [
     ),
     Key(
         [mod, "control"],
-        "h",
+        "p",
         lazy.function(toggle_headphones),
         desc="Toggle Marshall Headphones",
     ),
