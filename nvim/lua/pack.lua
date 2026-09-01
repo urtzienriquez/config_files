@@ -126,22 +126,22 @@ miniclue.setup({
 })
 
 -- mini.statusline
-local statusline = require('mini.statusline')
+local statusline = require("mini.statusline")
 
 local fileinfo = function()
-    local filetype = vim.bo.filetype
-    local devicons = require('nvim-web-devicons')
-    local icon = devicons.get_icon(vim.fn.expand('%:t'), nil, { default = true }) .. ' '
-    return string.format('%s%s', icon, filetype)
+  local filetype = vim.bo.filetype
+  local devicons = require("nvim-web-devicons")
+  local icon = devicons.get_icon(vim.fn.expand("%:t"), nil, { default = true }) .. " "
+  return string.format("%s%s", icon, filetype)
 end
 
 local contents = function()
-    local mode, mode_hl = statusline.section_mode({ trunc_width = 50 })
-    local diagnostics   = statusline.section_diagnostics({ trunc_width = 75 })
-    local lsp           = statusline.section_lsp({ trunc_width = 75 })
-    local filename      = statusline.section_filename({ trunc_width = 100 })
-    local location      = '%l,%2v'
-    local search        = statusline.section_searchcount({ trunc_width = 75 })
+  local mode, mode_hl = statusline.section_mode({ trunc_width = 50 })
+  local diagnostics = statusline.section_diagnostics({ trunc_width = 75 })
+  local lsp = statusline.section_lsp({ trunc_width = 75 })
+  local filename = statusline.section_filename({ trunc_width = 100 })
+  local location = "%l,%2v"
+  local search = statusline.section_searchcount({ trunc_width = 75 })
 
   return statusline.combine_groups({
     { hl = mode_hl, strings = { mode } },
@@ -155,7 +155,7 @@ local contents = function()
 end
 
 statusline.setup({
-    content = { active = contents },
+  content = { active = contents },
 })
 
 -- oil
