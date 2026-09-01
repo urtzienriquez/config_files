@@ -164,20 +164,12 @@ require("oil").setup({
   use_default_keymaps = true,
   view_options = { show_hidden = true },
   keymaps = {
+    ["<C-c>"] = { "actions.close", mode = "n", nowait = true },
     ["<C-h>"] = false,
     ["<C-l>"] = false,
     ["<leader>l"] = "actions.refresh",
   },
 })
-
-vim.keymap.set("n", "<leader>o", function()
-  local oil = require("oil")
-  if vim.bo.filetype == "oil" then
-    oil.close()
-  else
-    oil.open()
-  end
-end, { desc = "Oil toggle" })
 
 -- quicker (lazy-loaded on quickfix FileType)
 vim.api.nvim_create_autocmd("FileType", {
