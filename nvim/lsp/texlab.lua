@@ -1,5 +1,5 @@
 return {
-  cmd = { vim.fn.stdpath("data") .. "/mason/bin/texlab" },
+  cmd = { "texlab" },
   filetypes = { "tex", "plaintex", "bib", "rnoweb", "jnoweb" },
   root_markers = { ".latexmkrc", ".texlabroot", ".git" },
 

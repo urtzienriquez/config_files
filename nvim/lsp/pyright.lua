@@ -1,6 +1,6 @@
 return {
   cmd = {
-    vim.fn.stdpath("data") .. "/mason/bin/pyright-langserver",
+    "pyright-langserver",
     "--stdio",
   },
   filetypes = { "python" },

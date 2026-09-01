@@ -561,6 +561,12 @@ vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
 })
 
 -- conform
+-- make mason-installed formatters/linters resolvable by conform
+local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+if vim.fn.isdirectory(mason_bin) == 1 and not vim.env.PATH:find(mason_bin, 1, true) then
+  vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
+end
+
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
   once = true,
   callback = function()

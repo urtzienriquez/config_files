@@ -1,6 +1,6 @@
 return {
   cmd = {
-    vim.fn.stdpath("data") .. "/mason/bin/fortls",
+    "fortls",
     "--lowercase_intrinsics",
     "--notify_init",
     "--hover_signature",

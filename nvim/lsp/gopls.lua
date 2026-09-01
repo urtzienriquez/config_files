@@ -1,5 +1,5 @@
 return {
-  cmd = { vim.fn.stdpath("data") .. "/mason/bin/gopls" },
+  cmd = { "gopls" },
   filetypes = { "go", "gomod" },
   root_markers = { "go.mod", ".git" },
 }

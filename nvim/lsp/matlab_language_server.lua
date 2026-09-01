@@ -1,6 +1,6 @@
 return {
   cmd = {
-    vim.fn.stdpath("data") .. "/mason/bin/matlab-language-server",
+    "matlab-language-server",
     "--stdio",
   },
   filetypes = { "matlab" },
