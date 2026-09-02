@@ -96,6 +96,13 @@ end
 require("nvim-web-devicons").setup({})
 
 -- mini.clue
+
+-- Restore the builtin "Q" (multicursor toggle), hiding mini.clue's macro-replay "Q".
+vim.keymap.set("n", "Q", function()
+  local c = vim.v.count
+  vim.cmd("normal! " .. (c > 0 and c .. "" or "") .. "Q")
+end, { desc = "Multicursor: Q" })
+
 local miniclue = require("mini.clue")
 miniclue.setup({
   triggers = {
@@ -180,7 +187,6 @@ require("oil").setup({
   use_default_keymaps = true,
   view_options = { show_hidden = true },
   keymaps = {
-    ["<C-c>"] = { "actions.close", mode = "n", nowait = true },
     ["<C-h>"] = { "actions.select", opts = { vertical = true } },
     ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
   },
@@ -666,6 +672,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 })
 
 -- vim-slime
+vim.g.slime_no_mappings = 1
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "python", "julia", "matlab", "quarto", "jnoweb" },
   once = true,
@@ -673,7 +680,6 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.g.slime_target = "tmux"
     vim.g.slime_default_config = { socket_name = "default", target_pane = "{last}" }
     vim.g.slime_dont_ask_default = 1
-    vim.g.slime_no_mappings = 1
   end,
 })
 
