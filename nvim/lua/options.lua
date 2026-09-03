@@ -5,9 +5,14 @@ vim.g.maplocalleader = "\\"
 -- misc options
 vim.o.mouse = ""
 vim.o.shell = "/usr/bin/zsh"
--- vim.opt.laststatus = 3
--- vim.o.cmdheight = 0
-require("vim._core.ui2").enable()
+require("vim._core.ui2").enable({
+  msg = {
+    targets = {
+      default = "cmd",
+      lsp = "msg",
+    },
+  },
+})
 vim.o.winborder = "rounded"
 vim.g.have_nerd_font = true
 vim.o.number = true
