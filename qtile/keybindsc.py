@@ -94,6 +94,20 @@ def toggle_headphones(qtile):
         )
 
 
+def toggle_smartlock(qtile):
+    result = subprocess.run(["pgrep", "-f", "smartlock.sh"], capture_output=True)
+
+    if result.returncode == 0:
+        subprocess.run(["pkill", "-f", "smartlock.sh"])
+        subprocess.run(["notify-send", "Smartlock", "Suspend disabled"])
+    else:
+        subprocess.Popen(
+            [os.path.expanduser("~/.config/qtile/smartlock.sh")],
+            start_new_session=True,
+        )
+        subprocess.run(["notify-send", "Smartlock", "Suspend enabled"])
+
+
 FZF_CONFIG = Path.home() / ".config/zsh/.fzf_config"
 
 
@@ -279,6 +293,12 @@ keys = [
         "b",
         lazy.function(toggle_colorscheme),
         desc="Toggle between Dark (Nightfox) and Light (Dayfox) themes",
+    ),
+    Key(
+        [mod],
+        "s",
+        lazy.function(toggle_smartlock),
+        desc="Toggle smartlock suspend",
     ),
     Key(
         [mod, alt],
