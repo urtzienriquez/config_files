@@ -165,13 +165,17 @@ vim.api.nvim_create_autocmd("FileType", {
     "gitcommit",
   },
   callback = function()
-    local opts = { buffer = true }
-    vim.keymap.set("n", "j", "gj", vim.tbl_extend("force", opts, { desc = "Move down by visual line" }))
-    vim.keymap.set("n", "k", "gk", vim.tbl_extend("force", opts, { desc = "Move up by visual line" }))
-    vim.keymap.set("v", "j", "gj", vim.tbl_extend("force", opts, { desc = "Move down by visual line" }))
-    vim.keymap.set("v", "k", "gk", vim.tbl_extend("force", opts, { desc = "Move up by visual line" }))
-    vim.keymap.set("n", "gj", "j", vim.tbl_extend("force", opts, { desc = "Move down by logical line" }))
-    vim.keymap.set("n", "gk", "k", vim.tbl_extend("force", opts, { desc = "Move up by logical line" }))
+    local function down_motion()
+      return vim.v.count == 0 and "gj" or "j"
+    end
+    local function up_motion()
+      return vim.v.count == 0 and "gk" or "k"
+    end
+    local opts = { buffer = true, expr = true }
+    vim.keymap.set("n", "j", down_motion, vim.tbl_extend("force", opts, { desc = "Visual line down; logical with count" }))
+    vim.keymap.set("n", "k", up_motion, vim.tbl_extend("force", opts, { desc = "Visual line up; logical with count" }))
+    vim.keymap.set("v", "j", down_motion, vim.tbl_extend("force", opts, { desc = "Visual line down; logical with count" }))
+    vim.keymap.set("v", "k", up_motion, vim.tbl_extend("force", opts, { desc = "Visual line up; logical with count" }))
   end,
   desc = "Use visual-line navigation in prose files",
 })
