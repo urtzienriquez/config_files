@@ -345,7 +345,6 @@ require("fzf-lua").setup({
     },
     fzf = {
       false,
-      -- ["ctrl-z"] = "abort",
       ["ctrl-u"] = false,
       ["ctrl-z"] = "unix-line-discard+first",
       ["ctrl-a"] = "toggle-all",
@@ -369,8 +368,6 @@ require("fzf-lua").setup({
   buffers = { actions = { ["ctrl-x"] = { fn = actions.buf_del, reload = true } } },
   fzf_opts = { ["--multi"] = true, ["--bind"] = "tab:toggle+down,shift-tab:toggle+up" },
 })
-
-require("fzf-lua.providers.ui_select").register()
 
 vim.keymap.set("n", "<leader>fp", require("fzf-lua").builtin, { desc = "picker" })
 vim.keymap.set("n", "<leader>ff", require("fzf-lua").files, { desc = "files" })
