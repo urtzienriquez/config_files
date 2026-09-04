@@ -158,8 +158,9 @@ local fileinfo = function()
   return string.format("%s%s", icon, filetype)
 end
 
-local contents = function()
+local contents = function()  
   local mode, mode_hl = statusline.section_mode({ trunc_width = 50 })
+  local git = statusline.section_git({ trunc_width = 40 })
   local diagnostics = statusline.section_diagnostics({ trunc_width = 75 })
   local lsp = statusline.section_lsp({ trunc_width = 75 })
   local filename = statusline.section_filename({ trunc_width = 100 })
@@ -168,10 +169,10 @@ local contents = function()
 
   return statusline.combine_groups({
     { hl = mode_hl, strings = { mode } },
-    { hl = "MiniStatuslineDevinfo", strings = { diagnostics, lsp } },
-    "%<", -- Mark general truncate point
+    { hl = "MiniStatuslineDevinfo", strings = { git, diagnostics, lsp } },
+    "%<",
     { hl = "MiniStatuslineFilename", strings = { filename } },
-    "%=", -- End left alignment
+    "%=",
     { hl = "MiniStatuslineFileinfo", strings = { fileinfo() } },
     { hl = mode_hl, strings = { search, location } },
   })
