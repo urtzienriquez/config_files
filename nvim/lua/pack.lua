@@ -268,7 +268,7 @@ end, { desc = "Git log graph (terminal, colored)" })
 vim.keymap.set("n", "<leader>gB", "<cmd>Git blame<cr>", { desc = "Git blame" })
 vim.keymap.set("n", "<leader>gc", "<cmd>Git commit<cr>", { desc = "Git commit" })
 vim.keymap.set("n", "<leader>gP", "<cmd>Git push<cr>", { desc = "Git push" })
-vim.keymap.set("n", "<leader>gd", "<cmd>Gvdiffsplit!<cr>", { desc = "Git diff split" })
+vim.keymap.set("n", "<leader>gd", "<cmd>Gvdiffsplit<cr>", { desc = "Git diff split" })
 vim.keymap.set("n", "<leader>gw", "<cmd>Gwrite<cr>", { desc = "Git write (stage)" })
 vim.keymap.set("n", "<leader>gr", "<cmd>Gread<cr>", { desc = "Git read (checkout)" })
 
