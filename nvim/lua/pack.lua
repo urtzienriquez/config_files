@@ -96,13 +96,6 @@ end
 require("nvim-web-devicons").setup({})
 
 -- mini.clue
-
--- Restore the builtin "Q" (multicursor toggle), hiding mini.clue's macro-replay "Q".
-vim.keymap.set("n", "Q", function()
-  local c = vim.v.count
-  vim.cmd("normal! " .. (c > 0 and c .. "" or "") .. "Q")
-end, { desc = "Multicursor: Q" })
-
 local miniclue = require("mini.clue")
 miniclue.setup({
   triggers = {
