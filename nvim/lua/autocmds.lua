@@ -222,6 +222,15 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType" }, {
   end,
 })
 
+-- Re-balance windows after terminal resizes (Ghostty splits, tmux, etc.)
+vim.api.nvim_create_autocmd("VimResized", {
+  group = vim.api.nvim_create_augroup("resize-balance", { clear = true }),
+  callback = function()
+    vim.cmd("wincmd =")
+  end,
+  desc = "Re-balance split widths after terminal resize",
+})
+
 -- Enable mini.clue triggers in unlisted buffers
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("mini-clue-unlisted", { clear = true }),
