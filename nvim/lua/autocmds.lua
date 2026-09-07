@@ -115,11 +115,16 @@ vim.api.nvim_create_autocmd("LspProgress", {
     end
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
     local name = (client and client.name) or "lsp"
-    vim.api.nvim_echo({ { name .. ": " .. (kind == "begin" and "loading..." or "done") } }, false, {
+    local done = kind == "end"
+
+    vim.api.nvim_echo({
+      { name .. ": ", "MoreMsg" },
+      { done and "done" or "loading...", done and "OkMsg" or "WarningMsg" },
+    }, false, {
       id = "lsp",
       kind = "progress",
       source = "lsp-client",
-      status = kind == "end" and "success" or "running",
+      status = done and "success" or "running",
     })
   end,
   desc = "Show LSP progress in ui2 (loading/done only)",
