@@ -5,14 +5,7 @@ vim.g.maplocalleader = "\\"
 -- misc options
 vim.o.mouse = ""
 vim.o.shell = "/usr/bin/zsh"
-require("vim._core.ui2").enable({
-  msg = {
-    targets = {
-      default = "cmd",
-      lsp = "msg",
-    },
-  },
-})
+require("vim._core.ui2").enable({})
 vim.o.winborder = "rounded"
 vim.g.have_nerd_font = true
 vim.o.number = true
