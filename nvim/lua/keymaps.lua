@@ -1,7 +1,3 @@
--- Arrow keys in normal mode → navigate quickfix
-vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
-
 -- Resize windows
 vim.keymap.set("n", "<M-Left>", ":vertical resize +5<CR>", { silent = true, desc = "Resize vertically +" })
 vim.keymap.set("n", "<M-Right>", ":vertical resize -5<CR>", { silent = true, desc = "Resize vertically -" })
@@ -11,9 +7,6 @@ vim.keymap.set("n", "<M-Down>", ":resize -5<CR>", { silent = true, desc = "Resiz
 -- Half page up/down, keeping cursor centered
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, desc = "Jump half page down" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, desc = "Jump half page up" })
-
--- Clear search highlights
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Better paste: don't overwrite register in visual mode
 vim.keymap.set("x", "p", [["_dP]], { desc = "Paste without overwriting register" })
