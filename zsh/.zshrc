@@ -193,12 +193,12 @@ export FZF_ALT_C_OPTS="--no-preview"
 # -------------------------------
 eval "$(zoxide init --cmd cd zsh)"
 
-# -------------------------------
-# tmux
-# -------------------------------
-# always start in a tmux session
-if [ -z "$TMUX" ]; then
-  tty_id=$(basename "$(tty)")
-  session="term_${tty_id}"
-  tmux new-session -A -s "$session"
-fi
+# # -------------------------------
+# # tmux
+# # -------------------------------
+# # always start in a tmux session
+# if [ -z "$TMUX" ]; then
+#   tty_id=$(basename "$(tty)")
+#   session="term_${tty_id}"
+#   tmux new-session -A -s "$session"
+# fi
