@@ -4,6 +4,16 @@ vim.keymap.set("n", "<M-Right>", ":vertical resize -5<CR>", { silent = true, des
 vim.keymap.set("n", "<M-Up>", ":resize +5<CR>", { silent = true, desc = "Resize horizontally +" })
 vim.keymap.set("n", "<M-Down>", ":resize -5<CR>", { silent = true, desc = "Resize horizontally -" })
 
+-- Split navigation
+vim.keymap.set("n", "<M-h>", "<C-w>h", { desc = "Move to split left" })
+vim.keymap.set("n", "<M-j>", "<C-w>j", { desc = "Move to split down" })
+vim.keymap.set("n", "<M-k>", "<C-w>k", { desc = "Move to split up" })
+vim.keymap.set("n", "<M-l>", "<C-w>l", { desc = "Move to split right" })
+vim.keymap.set("t", "<M-h>", "<C-\\><C-N><C-w>h", { desc = "Move to split left (terminal)" })
+vim.keymap.set("t", "<M-j>", "<C-\\><C-N><C-w>j", { desc = "Move to split down (terminal)" })
+vim.keymap.set("t", "<M-k>", "<C-\\><C-N><C-w>k", { desc = "Move to split up (terminal)" })
+vim.keymap.set("t", "<M-l>", "<C-\\><C-N><C-w>l", { desc = "Move to split right (terminal)" })
+
 -- Half page up/down, keeping cursor centered
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, desc = "Jump half page down" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, desc = "Jump half page up" })
@@ -53,6 +63,11 @@ vim.keymap.set("n", "<leader>~", function()
   vim.api.nvim_set_current_dir(dir)
   print("CWD: " .. dir)
 end, { desc = "CWD to buffer" })
+
+-- Terminals
+vim.keymap.set("n", "<leader>tt", "<Cmd>vert term<CR>", { desc = "Terminal (vertical split)" })
+vim.keymap.set("n", "<leader>ts", "<Cmd>hori term<CR>", { desc = "Terminal (horizontal split)" })
+vim.keymap.set("n", "<leader>tT", "<Cmd>tab term<CR>", { desc = "Terminal (new tab)" })
 
 -- go to help page of the text under the cursor with help!
 vim.keymap.set("n", "vK", ":help!<CR>", { noremap = true, silent = true })
