@@ -40,7 +40,7 @@ keybind = alt+s=new_split:down
 # tmux V: even layout (equalize_splits handles all splits)
 keybind = alt+shift+v=equalize_splits
 # tmux x: kill pane
-keybind = alt+x=close_surface
+keybind = alt+q=close_surface
 
 # switch tabs (tmux ctrl+alt+h/j/k/l)
 keybind = ctrl+alt+h=previous_tab
