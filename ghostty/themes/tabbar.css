@@ -1,0 +1,47 @@
+tabbar .box {
+  background-color: #131a24;
+  color: #aeafb0;
+  box-shadow: none;
+  padding: 0;
+}
+
+tabbar tabbox {
+  min-height: 0;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+tabbar tab {
+  background-color: #131a24;
+  color: #aeafb0;
+  border-radius: 0;
+  min-height: 0;
+  padding: 1px 10px;
+  font-size: 16px;
+}
+
+tabbar tab:hover,
+tabbar tab:active {
+  background-color: #192330;
+}
+
+tabbar tab:selected {
+  background-color: #192330;
+  color: #dbc074;
+  font-weight: bold;
+}
+
+tabbar tab:selected:hover,
+tabbar tab:selected:active {
+  background-color: #192330;
+}
+
+tabbar tabbox.single-tab tab,
+tabbar tabbox.single-tab tab:hover,
+tabbar tabbox.single-tab tab:active {
+  background: #192330;
+}
+
+tabbar tab indicator {
+  background: transparent;
+}

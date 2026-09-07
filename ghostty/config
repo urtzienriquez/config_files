@@ -23,5 +23,75 @@ gtk-titlebar = false
 window-decoration = none
 window-theme = ghostty
 
-# no confirm when closing
-confirm-close-surface = false
+# tabs (tmux-style)
+gtk-toolbar-style = flat
+gtk-tabs-location = top
+# window-show-tab-bar = always
+gtk-wide-tabs = false
+gtk-custom-css = ~/.config/ghostty/themes/tabbar.css
+
+# keybindings (flat, alt-based; prefix dropped)
+# tmux c: new window/tab at cwd
+keybind = alt+c=new_tab
+# tmux v: split -h (side by side)
+keybind = alt+v=new_split:right
+# tmux s: split -v (top/bottom)
+keybind = alt+s=new_split:down
+# tmux V: even layout (equalize_splits handles all splits)
+keybind = alt+shift+v=equalize_splits
+# tmux x: kill pane
+keybind = alt+x=close_surface
+
+# switch tabs (tmux ctrl+alt+h/j/k/l)
+keybind = ctrl+alt+h=previous_tab
+keybind = ctrl+alt+l=next_tab
+
+# navigate panes (nvim first, ghostty outer fallback)
+keybind = performable:alt+h=goto_split:left
+keybind = performable:alt+l=goto_split:right
+keybind = performable:alt+k=goto_split:up
+keybind = performable:alt+j=goto_split:down
+
+# resize panes (tmux alt-shift+h/j/k/l, step 5)
+keybind = shift+alt+h=resize_split:left,20
+keybind = shift+alt+l=resize_split:right,20
+keybind = shift+alt+k=resize_split:up,20
+keybind = shift+alt+j=resize_split:down,20
+
+# move between zoomed panes (tmux ctrl+alt+n/p)
+keybind = ctrl+alt+n=goto_split:left
+keybind = ctrl+alt+p=goto_split:right
+
+# # copy mode: alt+shift+; enters a modal key table
+# # NOTE: Ghostty has no keyboard action to START a text selection, so
+# # region copy only works for text selected with the mouse beforehand.
+# # Enter copy mode
+# keybind = alt+shift+;=activate_key_table:copy_mode
+#
+# # --- copy_mode key table (tmux copy-mode keys) ---
+# # scrollback navigation
+# keybind = copy_mode/k=scroll_page_lines:1
+# keybind = copy_mode/j=scroll_page_lines:-1
+# keybind = copy_mode/ctrl+u=scroll_page_up
+# keybind = copy_mode/ctrl+d=scroll_page_down
+# keybind = copy_mode/ctrl+b=scroll_page_up
+# keybind = copy_mode/ctrl+f=scroll_page_down
+# keybind = copy_mode/g=scroll_to_top
+# keybind = copy_mode/G=scroll_to_bottom
+# keybind = copy_mode/h=scroll_page_lines:1
+# keybind = copy_mode/l=scroll_page_lines:-1
+# # search
+# keybind = copy_mode//=start_search
+# keybind = copy_mode/n=navigate_search:next
+# keybind = copy_mode/N=navigate_search:previous
+# # copy current mouse selection then exit
+# keybind = copy_mode/y=copy_to_clipboard:plain
+# keybind = chain=deactivate_key_table
+# # whole-screen copy (select_all selects AND copies) then exit
+# keybind = copy_mode/v=select_all
+# keybind = chain=deactivate_key_table
+# # exit copy mode
+# keybind = copy_mode/q=deactivate_key_table
+# keybind = copy_mode/escape=deactivate_key_table
+# # paste from clipboard while in copy mode
+# keybind = copy_mode/p=paste_from_clipboard
