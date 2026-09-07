@@ -101,7 +101,8 @@ miniclue.setup({
   triggers = {
     { mode = { "n", "x" }, keys = "<Leader>" },
     { mode = "n", keys = "<LocalLeader>" },
-    { mode = "n", keys = "t" },
+    { mode = { "n", "x" }, keys = "[" },
+    { mode = { "n", "x" }, keys = "]" },
     { mode = "n", keys = "c" },
     { mode = "n", keys = "d" },
     { mode = "i", keys = "<C-x>" },
@@ -125,6 +126,7 @@ miniclue.setup({
     miniclue.gen_clues.marks(),
     miniclue.gen_clues.registers(),
     miniclue.gen_clues.windows(),
+    miniclue.gen_clues.square_brackets(),
     miniclue.gen_clues.z(),
     { mode = { "n", "x" }, keys = "go", desc = "Add range to opencode" },
 
