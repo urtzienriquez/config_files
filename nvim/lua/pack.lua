@@ -35,7 +35,6 @@ vim.pack.add({
   gh("nvim-tree/nvim-web-devicons"),
   gh("nvim-mini/mini.clue"),
   gh("nvim-mini/mini.statusline"),
-  gh("christoomey/vim-tmux-navigator"),
   gh("kylechui/nvim-surround"),
   gh("lewis6991/gitsigns.nvim"),
   gh("ibhagwan/fzf-lua"),
@@ -55,22 +54,6 @@ vim.pack.add({
   gh("R-nvim/R.nvim"),
   -- gh("nickjvandyke/opencode.nvim"),
 })
-
-----------------------------------------
--- vim-tmux-navigator: use Alt instead of Ctrl
-vim.g.tmux_navigator_no_mappings = 1
-
-local navigator_dirs = {
-  { "h", "Left" },
-  { "j", "Down" },
-  { "k", "Up" },
-  { "l", "Right" },
-}
-for _, dir in ipairs(navigator_dirs) do
-  local cmd = "<cmd>TmuxNavigate" .. dir[2] .. "<CR>"
-  vim.keymap.set("n", "<M-" .. dir[1] .. ">", cmd, { desc = "Navigate " .. dir[2] })
-  vim.keymap.set("t", "<M-" .. dir[1] .. ">", "<C-\\><C-N>" .. cmd, { desc = "Navigate " .. dir[2] })
-end
 
 ----------------------------------------
 -- my plugins
@@ -787,9 +770,9 @@ end
 
 local r_opts = {
   R_app = "R",
-  external_term = "tmux split-window -d -h",
   bracketed_paste = false,
   R_args = { "--no-save --silent" },
+  buffer_opts = "winfixwidth winfixheight",
   user_maps_only = true,
   objbr_mappings = {
     c = "class",
@@ -858,7 +841,7 @@ require("citeref").setup({
 
 -- replent
 require("replent").setup({
-  strategy = "tmux",
+  strategy = "neovim",
   repl_commands = { python = "PYTHON_HISTORY=/dev/null python3 -q" },
 })
 
