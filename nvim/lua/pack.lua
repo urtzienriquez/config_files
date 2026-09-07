@@ -151,7 +151,7 @@ local fileinfo = function()
   return string.format("%s%s", icon, filetype)
 end
 
-local contents = function()  
+local contents = function()
   local mode, mode_hl = statusline.section_mode({ trunc_width = 50 })
   local git = statusline.section_git({ trunc_width = 40 })
   local diagnostics = statusline.section_diagnostics({ trunc_width = 75 })
@@ -509,6 +509,7 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
     require("blink.cmp").setup({
       keymap = {
         preset = "default",
+        ["<C-k>"] = false,
       },
       appearance = { use_nvim_cmp_as_default = true, nerd_font_variant = "mono" },
       snippets = {

@@ -2,12 +2,6 @@
 vim.keymap.set("n", "<Up>", "<cmd>cprev<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Down>", "<cmd>cnext<CR>", { noremap = true, silent = true })
 
--- Escape terminal mode
-vim.keymap.set("t", "<C-q><C-q>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
--- Remap C-k to C-d to insert digraphs
-vim.keymap.set("i", "<C-d>", "<C-k>", { noremap = true })
-
 -- Resize windows
 vim.keymap.set("n", "<M-Left>", ":vertical resize +5<CR>", { silent = true, desc = "Resize vertically +" })
 vim.keymap.set("n", "<M-Right>", ":vertical resize -5<CR>", { silent = true, desc = "Resize vertically -" })
