@@ -64,11 +64,6 @@ vim.keymap.set("n", "<leader>~", function()
   print("CWD: " .. dir)
 end, { desc = "CWD to buffer" })
 
--- Terminals
-vim.keymap.set("n", "<leader>tt", "<Cmd>vert term<CR>", { desc = "Terminal (vertical split)" })
-vim.keymap.set("n", "<leader>ts", "<Cmd>hori term<CR>", { desc = "Terminal (horizontal split)" })
-vim.keymap.set("n", "<leader>tT", "<Cmd>tab term<CR>", { desc = "Terminal (new tab)" })
-
 -- go to help page of the text under the cursor with help!
 vim.keymap.set("n", "vK", ":help!<CR>", { noremap = true, silent = true })
 
