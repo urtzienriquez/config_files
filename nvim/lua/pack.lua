@@ -782,6 +782,16 @@ local r_opts = {
     end,
   },
   hook = {
+    after_R_start = function()
+      vim.notify("R was launched")
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.bo[buf].buftype == "terminal" and buf ~= vim.api.nvim_get_current_buf() then
+          pcall(vim.api.nvim_buf_set_name, buf, "R-console")
+          break
+        end
+      end
+    end,
     on_filetype = function()
       if vim.bo.filetype ~= "quarto" and vim.bo.filetype ~= "jnoweb" then
         set_rnvim_keymaps()
