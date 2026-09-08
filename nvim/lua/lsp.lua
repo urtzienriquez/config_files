@@ -1,4 +1,4 @@
--- Enable LSP servers
+-- Enable LSP servers (deferred: load vim.lsp + enable on first real file)
 local servers = {
   "gopls",
   "r_language_server",
@@ -14,4 +14,9 @@ local servers = {
   "texlab",
 }
 
-vim.lsp.enable(servers)
+vim.api.nvim_create_autocmd("FileType", {
+  once = true,
+  callback = function()
+    vim.lsp.enable(servers)
+  end,
+})

@@ -76,9 +76,6 @@ end
 ----------------------------------------
 -- configuration
 
--- nvim-web-devicons
-require("nvim-web-devicons").setup({})
-
 -- mini.clue
 local miniclue = require("mini.clue")
 miniclue.setup({
@@ -161,16 +158,12 @@ statusline.setup({
   content = { active = contents },
 })
 
--- oil
-require("oil").setup({
-  default_file_explorer = true,
-  use_default_keymaps = true,
-  view_options = { show_hidden = true },
-  keymaps = {
-    ["<C-h>"] = { "actions.select", opts = { vertical = true } },
-    ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
-  },
-})
+-- oil (lazy: set up on first use)
+local oil = require("lazy.oil")
+vim.keymap.set("n", "-", function()
+  oil.setup()
+  vim.cmd("Oil")
+end, { desc = "Open file explorer (oil)" })
 
 -- quicker (lazy-loaded on quickfix FileType)
 vim.api.nvim_create_autocmd("FileType", {
@@ -251,20 +244,29 @@ vim.keymap.set("n", "<leader>gd", "<cmd>Gvdiffsplit<cr>", { desc = "Git diff spl
 vim.keymap.set("n", "<leader>gw", "<cmd>Gwrite<cr>", { desc = "Git write (stage)" })
 vim.keymap.set("n", "<leader>gr", "<cmd>Gread<cr>", { desc = "Git read (checkout)" })
 
--- octo.nvim
-require("octo").setup({
-  picker = "fzf-lua",
-  mappings_disable_default = false,
-  enable_builtin = true,
-})
+-- octo.nvim (lazy: setup on first use via :Octo shim)
+local octo = require("lazy.octo")
+local function octo_cmd(...)
+  octo.setup()
+  vim.cmd(...)
+end
+vim.keymap.set("n", "<leader>hh", function()
+  octo_cmd("Octo")
+end, { desc = "List octo actions" })
+vim.keymap.set("n", "<leader>hi", function()
+  octo_cmd("Octo issue list")
+end, { desc = "List issues" })
+vim.keymap.set("n", "<leader>hp", function()
+  octo_cmd("Octo pr list")
+end, { desc = "List PRs" })
+vim.keymap.set("n", "<leader>hs", function()
+  octo_cmd("Octo search")
+end, { desc = "Search GitHub" })
+vim.keymap.set("n", "<leader>hr", function()
+  octo_cmd("Octo repo view")
+end, { desc = "View repo" })
 
-vim.keymap.set("n", "<leader>hh", "<cmd>Octo<CR>", { desc = "List octo actions" })
-vim.keymap.set("n", "<leader>hi", "<cmd>Octo issue list<CR>", { desc = "List issues" })
-vim.keymap.set("n", "<leader>hp", "<cmd>Octo pr list<CR>", { desc = "List PRs" })
-vim.keymap.set("n", "<leader>hs", "<cmd>Octo search<CR>", { desc = "Search GitHub" })
-vim.keymap.set("n", "<leader>hr", "<cmd>Octo repo view<CR>", { desc = "View repo" })
-
--- gitsigns
+-- gitsigns (plugin file auto-setups on rtp load; options set here)
 require("gitsigns").setup({
   current_line_blame = true,
 
@@ -300,79 +302,31 @@ require("gitsigns").setup({
   end,
 })
 
--- fzf-lua
-local actions = require("fzf-lua").actions
+-- fzf-lua (lazy: set up on first use)
+local fzf = require("lazy.fzf")
 
-require("fzf-lua").setup({
-  defaults = { no_header_i = true, actions = { ["ctrl-q"] = actions.file_sel_to_qf } },
-  keymap = {
-    builtin = {
-      false,
-      ["<M-Esc>"] = "hide",
-      ["<F1>"] = "toggle-help",
-      ["<F2>"] = "toggle-fullscreen",
-      ["<F3>"] = "toggle-preview-wrap",
-      ["<F4>"] = "toggle-preview",
-      ["<F5>"] = "toggle-preview-cw",
-      ["<F6>"] = "toggle-preview-behavior",
-      ["<F7>"] = "toggle-preview-ts-ctx",
-      ["<F8>"] = "preview-ts-ctx-dec",
-      ["<F9>"] = "preview-ts-ctx-inc",
-      ["<S-Left>"] = "preview-reset",
-      ["<C-d>"] = "preview-down",
-      ["<C-u>"] = "preview-up",
-      ["ctrl-q"] = false,
-    },
-    fzf = {
-      false,
-      ["ctrl-u"] = false,
-      ["ctrl-z"] = "unix-line-discard+first",
-      ["ctrl-a"] = "toggle-all",
-      ["ctrl-r"] = "first",
-      ["ctrl-e"] = "last",
-      ["ctrl-q"] = false,
-    },
-  },
-  actions = {
-    files = {
-      ["enter"] = actions.file_edit_or_qf,
-      ["ctrl-s"] = actions.file_split,
-      ["ctrl-v"] = actions.file_vsplit,
-      ["ctrl-j"] = actions.toggle_ignore,
-      ["ctrl-h"] = actions.toggle_hidden,
-      ["ctrl-f"] = actions.toggle_follow,
-      ["ctrl-t"] = actions.buf_tabedit,
-    },
-  },
-  grep = { actions = { ["ctrl-f"] = { actions.grep_lgrep }, ["ctrl-g"] = false } },
-  buffers = { actions = { ["ctrl-x"] = { fn = actions.buf_del, reload = true } } },
-  fzf_opts = { ["--multi"] = true, ["--bind"] = "tab:toggle+down,shift-tab:toggle+up" },
-})
-
-vim.keymap.set("n", "<leader>fp", require("fzf-lua").builtin, { desc = "picker" })
-vim.keymap.set("n", "<leader>ff", require("fzf-lua").files, { desc = "files" })
-vim.keymap.set("n", "<leader>fz", require("fzf-lua").zoxide, { desc = "zoxide" })
-vim.keymap.set("n", "<leader>f~", function()
-  require("fzf-lua").files({ cwd = vim.fn.expand("~"), prompt = "Home files❯ ", hidden = true })
-end, { desc = "Find files in ~" })
-vim.keymap.set("n", "<leader>fg", require("fzf-lua").live_grep_native, { desc = "with grep" })
-vim.keymap.set("n", "<leader>fq", require("fzf-lua").grep_quickfix, { desc = "grep quickfix" })
-vim.keymap.set("n", "<leader>fb", require("fzf-lua").buffers, { desc = "buffers" })
-vim.keymap.set("n", "<leader>fh", require("fzf-lua").help_tags, { desc = "help" })
-vim.keymap.set("n", "<leader>fk", require("fzf-lua").keymaps, { desc = "keymaps" })
-vim.keymap.set("n", "<leader>fw", require("fzf-lua").grep_cword, { desc = "word" })
-vim.keymap.set("n", "<leader>fd", require("fzf-lua").diagnostics_document, { desc = "diagnostics (buffer)" })
-vim.keymap.set("n", "<leader>fD", require("fzf-lua").diagnostics_workspace, { desc = "diagnostics (workspace)" })
-vim.keymap.set("n", "<leader>fl", require("fzf-lua").lsp_definitions, { desc = "LSP definitions" })
-vim.keymap.set("n", "<leader>fr", require("fzf-lua").lsp_references, { desc = "LSP references" })
-vim.keymap.set("n", "<leader>fs", require("fzf-lua").lsp_document_symbols, { desc = "LSP symbols" })
-vim.keymap.set("n", "<leader>ft", require("fzf-lua").treesitter, { desc = "Treesitter symbols" })
-vim.keymap.set("n", "<leader>fm", require("fzf-lua").spell_suggest, { desc = "Spell suggestions" })
-vim.keymap.set("n", "<leader>f'", require("fzf-lua").marks, { desc = "marks" })
-vim.keymap.set("n", "<leader>f,", require("fzf-lua").resume, { desc = "Resume picker" })
-vim.keymap.set("n", "<leader>f.", require("fzf-lua").oldfiles, { desc = "recent files" })
-vim.keymap.set("n", "<leader>gb", require("fzf-lua").git_branches, { desc = "Git branches" })
-vim.keymap.set("n", "<leader>gC", require("fzf-lua").git_commits, { desc = "Git commits" })
+vim.keymap.set("n", "<leader>fp", fzf.builtin, { desc = "picker" })
+vim.keymap.set("n", "<leader>ff", fzf.files, { desc = "files" })
+vim.keymap.set("n", "<leader>fz", fzf.zoxide, { desc = "zoxide" })
+vim.keymap.set("n", "<leader>f~", fzf.home_files, { desc = "Find files in ~" })
+vim.keymap.set("n", "<leader>fg", fzf.live_grep_native, { desc = "with grep" })
+vim.keymap.set("n", "<leader>fq", fzf.grep_quickfix, { desc = "grep quickfix" })
+vim.keymap.set("n", "<leader>fb", fzf.buffers, { desc = "buffers" })
+vim.keymap.set("n", "<leader>fh", fzf.help_tags, { desc = "help" })
+vim.keymap.set("n", "<leader>fk", fzf.keymaps, { desc = "keymaps" })
+vim.keymap.set("n", "<leader>fw", fzf.grep_cword, { desc = "word" })
+vim.keymap.set("n", "<leader>fd", fzf.diagnostics_document, { desc = "diagnostics (buffer)" })
+vim.keymap.set("n", "<leader>fD", fzf.diagnostics_workspace, { desc = "diagnostics (workspace)" })
+vim.keymap.set("n", "<leader>fl", fzf.lsp_definitions, { desc = "LSP definitions" })
+vim.keymap.set("n", "<leader>fr", fzf.lsp_references, { desc = "LSP references" })
+vim.keymap.set("n", "<leader>fs", fzf.lsp_document_symbols, { desc = "LSP symbols" })
+vim.keymap.set("n", "<leader>ft", fzf.treesitter, { desc = "Treesitter symbols" })
+vim.keymap.set("n", "<leader>fm", fzf.spell_suggest, { desc = "Spell suggestions" })
+vim.keymap.set("n", "<leader>f'", fzf.marks, { desc = "marks" })
+vim.keymap.set("n", "<leader>f,", fzf.resume, { desc = "Resume picker" })
+vim.keymap.set("n", "<leader>f.", fzf.oldfiles, { desc = "recent files" })
+vim.keymap.set("n", "<leader>gb", fzf.git_branches, { desc = "Git branches" })
+vim.keymap.set("n", "<leader>gC", fzf.git_commits, { desc = "Git commits" })
 
 -- Treesitter
 vim.api.nvim_create_autocmd("FileType", {
@@ -833,8 +787,13 @@ vim.keymap.set({ "n", "x" }, "go", function()
   return require("opencode").operator("@this ")
 end, { desc = "Add range to opencode", expr = true })
 
--- nightfox
-require("nightfox").setup()
+-- nightfox (theme config; defer to UIEnter)
+vim.api.nvim_create_autocmd("UIEnter", {
+  once = true,
+  callback = function()
+    require("nightfox").setup()
+  end,
+})
 
 -- zotero.nvim
 require("zotero").setup({
@@ -860,7 +819,6 @@ require("replent").setup({
 require("sessman").setup({
   backend = "fzf",
 })
-
 
 -- bs
 require("bs").setup({})
