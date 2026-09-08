@@ -35,6 +35,12 @@ _sync_bat_theme() {
 
 add-zsh-hook precmd _sync_bat_theme
 
+# tell neovim where the prompt starts/ends (OSC 133)
+_precmd_osc133() {
+  printf '\033]133;A\007'
+}
+add-zsh-hook precmd _precmd_osc133
+
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
@@ -202,3 +208,6 @@ eval "$(zoxide init --cmd cd zsh)"
 #   session="term_${tty_id}"
 #   tmux new-session -A -s "$session"
 # fi
+
+
+
