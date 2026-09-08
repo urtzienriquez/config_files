@@ -65,6 +65,7 @@ local my_packs = {
   "citeref.nvim",
   "replent.nvim",
   "sessman.nvim",
+  "bs.nvim",
   "opencode.nvim",
   "learnlua.nvim",
 }
@@ -859,3 +860,7 @@ require("replent").setup({
 require("sessman").setup({
   backend = "fzf",
 })
+
+
+-- bs
+require("bs").setup({})
