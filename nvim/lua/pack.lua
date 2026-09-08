@@ -461,7 +461,7 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
           citeref = { name = "citeref", module = "citeref.backends.blink" },
           snippets = {
             name = "snippets",
-            score_offset = 100,
+            -- score_offset = 100,
           },
         },
         per_filetype = {
