@@ -99,4 +99,14 @@ M.home_files = function()
   return get().files({ cwd = vim.fn.expand("~"), prompt = "Home files❯ ", hidden = true })
 end
 
+require("fzf-lua.providers.ui_select").register({
+  winopts = {
+    row = 0.5,
+    col = 0.5,
+    width = 0.5,
+    height = 0.5,
+    border = "rounded",
+  },
+})
+
 return M
