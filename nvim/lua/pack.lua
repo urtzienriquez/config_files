@@ -66,7 +66,6 @@ local my_packs = {
   "replent.nvim",
   "sessman.nvim",
   "bs.nvim",
-  "learnlua.nvim",
 }
 for _, name in ipairs(my_packs) do
   vim.opt.rtp:prepend(dev .. "/" .. name)
