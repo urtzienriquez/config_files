@@ -67,10 +67,10 @@ _close_completion_menu() {
 zle -N _close_completion_menu
 bindkey -M viins '^X' _close_completion_menu
 
-# alt-a to clear-screen
-bindkey -M viins -r '^L'
-bindkey -M vicmd -r '^L'
-bindkey -M viins '^[a' clear-screen
+# # alt-a to clear-screen
+# bindkey -M viins -r '^L'
+# bindkey -M vicmd -r '^L'
+# bindkey -M viins '^[a' clear-screen
 
 # bindings for fzf s<x> widgets
 bindkey '^ff' sf_widget
