@@ -7,7 +7,7 @@ local servers = {
   "ts_ls",
   "julials",
   "fortls",
-  "lua_ls",
+  "emmylua_ls",
   "marksman",
   "yamlls",
   "jsonls",

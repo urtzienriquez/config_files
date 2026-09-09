@@ -105,29 +105,46 @@ vim.api.nvim_create_autocmd("FileType", {
   desc = "K shows man page or bash builtin help in shell files",
 })
 
--- LSP progress in ui2 (single loading + done message per server)
+-- -- LSP progress in ui2 (single loading + done message per server)
+-- vim.api.nvim_create_autocmd("LspProgress", {
+--   group = vim.api.nvim_create_augroup("lsp-progress", { clear = true }),
+--   callback = function(ev)
+--     local kind = vim.tbl_get(ev.data, "params", "value", "kind")
+--     if kind == "report" then
+--       return
+--     end
+--     local client = vim.lsp.get_client_by_id(ev.data.client_id)
+--     local name = (client and client.name) or "lsp"
+--     local done = kind == "end"
+--
+--     vim.api.nvim_echo({
+--       { name .. ": ", "MoreMsg" },
+--       { done and "done" or "loading...", done and "OkMsg" or "WarningMsg" },
+--     }, false, {
+--       id = "lsp",
+--       kind = "progress",
+--       source = "lsp-client",
+--       status = done and "success" or "running",
+--     })
+--   end,
+--   desc = "Show LSP progress in ui2 (loading/done only)",
+-- })
+-- LSP progress in ui2
 vim.api.nvim_create_autocmd("LspProgress", {
   group = vim.api.nvim_create_augroup("lsp-progress", { clear = true }),
   callback = function(ev)
-    local kind = vim.tbl_get(ev.data, "params", "value", "kind")
-    if kind == "report" then
-      return
-    end
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    local name = (client and client.name) or "lsp"
-    local done = kind == "end"
-
-    vim.api.nvim_echo({
-      { name .. ": ", "MoreMsg" },
-      { done and "done" or "loading...", done and "OkMsg" or "WarningMsg" },
-    }, false, {
+    local value = ev.data.params.value or {}
+    local msg = value.message or "done"
+    vim.api.nvim_echo({ { msg } }, false, {
       id = "lsp",
       kind = "progress",
       source = "lsp-client",
-      status = done and "success" or "running",
+      title = value.title,
+      status = value.kind ~= "end" and "running" or "success",
+      percent = value.percentage,
     })
   end,
-  desc = "Show LSP progress in ui2 (loading/done only)",
+  desc = "Show LSP progress in ui2",
 })
 
 -- nicer lsp colors
