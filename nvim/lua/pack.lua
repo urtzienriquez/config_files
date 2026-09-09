@@ -52,7 +52,7 @@ vim.pack.add({
   gh("tpope/vim-fugitive"),
   gh("pwntester/octo.nvim"),
   gh("R-nvim/R.nvim"),
-  -- gh("nickjvandyke/opencode.nvim"),
+  gh("nickjvandyke/opencode.nvim"),
 })
 
 ----------------------------------------
@@ -66,7 +66,6 @@ local my_packs = {
   "replent.nvim",
   "sessman.nvim",
   "bs.nvim",
-  "opencode.nvim",
   "learnlua.nvim",
 }
 for _, name in ipairs(my_packs) do
@@ -766,14 +765,14 @@ require("r").setup(r_opts)
 
 -- opencode.nvim
 
-vim.keymap.set("n", "<leader>io", function()
-  require("opencode").toggle()
-end, { desc = "Toggle opencode" })
+vim.keymap.set({ "n", "x" }, "<leader>io", function()
+  require("opencode").select()
+end, { desc = "OpenCode actions" })
 vim.keymap.set({ "n", "x" }, "<leader>ia", function()
-  require("opencode").ask("@this: ", { submit = true })
+  require("opencode").ask("@this ")
 end, { desc = "Ask opencode @this" })
 vim.keymap.set("n", "<leader>ib", function()
-  require("opencode").ask("@buffer: ", { submit = true })
+  require("opencode").ask("@buffer ")
 end, { desc = "Ask opencode @buffer" })
 vim.keymap.set({ "n", "x" }, "<leader>ix", function()
   require("opencode").select()
