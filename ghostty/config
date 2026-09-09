@@ -40,11 +40,11 @@ keybind = alt+s=new_split:down
 # tmux V: even layout (equalize_splits handles all splits)
 keybind = alt+shift+v=equalize_splits
 # tmux x: kill pane
-keybind = alt+q=close_surface
+keybind = alt+x=close_surface
 
 # switch tabs (tmux ctrl+alt+h/j/k/l)
-keybind = ctrl+alt+h=previous_tab
-keybind = ctrl+alt+l=next_tab
+keybind = alt+p=previous_tab
+keybind = alt+n=next_tab
 
 # navigate panes (nvim first, ghostty outer fallback)
 keybind = performable:alt+h=goto_split:left
@@ -53,10 +53,10 @@ keybind = performable:alt+k=goto_split:up
 keybind = performable:alt+j=goto_split:down
 
 # resize panes (tmux alt-shift+h/j/k/l, step 5)
-keybind = shift+alt+h=resize_split:left,20
-keybind = shift+alt+l=resize_split:right,20
-keybind = shift+alt+k=resize_split:up,20
-keybind = shift+alt+j=resize_split:down,20
+keybind = alt+shift+h=resize_split:left,20
+keybind = alt+shift+l=resize_split:right,20
+keybind = alt+shift+k=resize_split:up,20
+keybind = alt+shift+j=resize_split:down,20
 
 # move between zoomed panes (tmux ctrl+alt+n/p)
 keybind = ctrl+alt+n=goto_split:left
