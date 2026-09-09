@@ -12,6 +12,7 @@ vim.o.number = true
 vim.o.relativenumber = true
 vim.o.backspace = "indent,eol,start"
 vim.o.ignorecase = true
+vim.o.fileignorecase = true
 vim.o.smartcase = true
 vim.o.clipboard = "unnamedplus"
 vim.o.termguicolors = true
