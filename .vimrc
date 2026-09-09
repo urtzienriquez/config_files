@@ -25,6 +25,18 @@ set ttimeout
 set ttimeoutlen=1
 set ttyfast
 
+" Split navigation
+nnoremap <M-h> <C-w>h
+nnoremap <M-j> <C-w>j
+nnoremap <M-k> <C-w>k
+nnoremap <M-l> <C-w>l
+
+" Split navigation from terminal mode
+tnoremap <M-h> <C-\><C-N><C-w>h
+tnoremap <M-j> <C-\><C-N><C-w>j
+tnoremap <M-k> <C-\><C-N><C-w>k
+tnoremap <M-l> <C-\><C-N><C-w>l
+
 colorscheme habamax
 
 " Call the .vimrc.plug file

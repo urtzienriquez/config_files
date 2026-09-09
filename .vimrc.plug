@@ -6,10 +6,6 @@ Plug 'sheerun/vim-polyglot'
 " vim-fugitive (Git integration)
 Plug 'tpope/vim-fugitive'
 
-" vim-tmux-navigator
-Plug 'christoomey/vim-tmux-navigator'
-
-
 call plug#end()
 
 " Fugitive keymaps (matching neovim)
