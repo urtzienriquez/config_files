@@ -763,25 +763,21 @@ end
 require("r").setup(r_opts)
 
 -- opencode.nvim
-
 vim.keymap.set({ "n", "x" }, "<leader>io", function()
   require("opencode").select()
 end, { desc = "OpenCode actions" })
 vim.keymap.set({ "n", "x" }, "<leader>ia", function()
-  require("opencode").ask("@this ")
-end, { desc = "Ask opencode @this" })
-vim.keymap.set("n", "<leader>ib", function()
-  require("opencode").ask("@buffer ")
-end, { desc = "Ask opencode @buffer" })
-vim.keymap.set({ "n", "x" }, "<leader>id", function()
-  require("opencode").ask("@diagnostics ")
-end, { desc = "Ask opencode @diagnostics" })
-vim.keymap.set({ "n", "x" }, "<leader>ix", function()
-  require("opencode").select()
-end, { desc = "Execute opencode action" })
+  require("opencode").ask()
+end, { desc = "Ask opencode ask" })
 vim.keymap.set({ "n", "x" }, "go", function()
   return require("opencode").operator("@this ")
 end, { desc = "Add range to opencode", expr = true })
+vim.keymap.set("n", "<C-M-b>", function()
+  require("opencode").command("session.half.page.up")
+end, { desc = "Scroll OpenCode up" })
+vim.keymap.set("n", "<C-M-f>", function()
+  require("opencode").command("session.half.page.down")
+end, { desc = "Scroll OpenCode down" })
 
 -- nightfox
 require("nightfox").setup()
