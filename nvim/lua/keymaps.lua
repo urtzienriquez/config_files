@@ -25,6 +25,13 @@ vim.keymap.set("x", "p", [["_dP]], { desc = "Paste without overwriting register"
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 
+-- Open PR
+vim.keymap.set("n", "<leader>pr", function()
+  vim.cmd("tabnew")
+  vim.fn.jobstart("gh pr create", { term = true })
+  vim.cmd("startinsert")
+end, { desc = "Open PR" })
+
 -- Execute Lua
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("lua-keymaps", { clear = true }),
