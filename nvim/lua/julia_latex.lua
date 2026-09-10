@@ -8,6 +8,7 @@ local function load_symbols()
     return t
   end
   for line in f:lines() do
+    ---@cast line string
     local k, v = line:match("^(\\%S+)\t(.+)$")
     if k and v then t[k] = v end
   end

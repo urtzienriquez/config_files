@@ -45,6 +45,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Add all case variants of a word to spellfile
 vim.api.nvim_create_user_command("ZgVariants", function()
   local word = vim.fn.expand("<cword>")
+  ---@cast word string
   local variants = {
     word:lower(),
     word:sub(1, 1):upper() .. word:sub(2):lower(),
@@ -60,6 +61,7 @@ vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true, de
 -- cd to current buffers directory
 vim.keymap.set("n", "<leader>~", function()
   local dir = vim.fn.expand("%:p:h")
+  ---@cast dir string
   vim.api.nvim_set_current_dir(dir)
   print("CWD: " .. dir)
 end, { desc = "CWD to buffer" })
@@ -254,6 +256,7 @@ vim.api.nvim_create_autocmd("UIEnter", {
     end, { desc = "Toggle Inlay Hints" })
     vim.keymap.set("n", "<leader>uT", function()
       local buf = vim.api.nvim_get_current_buf()
+      ---@diagnostic disable-next-line: unnecessary-if
       if vim.treesitter.highlighter.active[buf] then
         vim.treesitter.stop(buf)
         vim.notify("Treesitter disabled", vim.log.levels.INFO)

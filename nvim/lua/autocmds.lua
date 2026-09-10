@@ -110,7 +110,8 @@ vim.api.nvim_create_autocmd("LspProgress", {
   group = vim.api.nvim_create_augroup("lsp-progress", { clear = true }),
   callback = function(ev)
     local v = ev.data.params.value or {}
-    local name = vim.lsp.get_client_by_id(ev.data.client_id).name
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    local name = client and client.name or "<disconnecting>"
     vim.api.nvim_echo({ { v.message or "done" } }, false, {
       id = "lsp",
       kind = "progress",

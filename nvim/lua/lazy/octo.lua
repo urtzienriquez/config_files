@@ -3,10 +3,6 @@ local M = {}
 M.loaded = false
 
 M.setup = function()
-  if M.loaded then
-    return
-  end
-
   require("lazy.fzf").setup()
 
   pcall(vim.api.nvim_del_user_command, "Octo")

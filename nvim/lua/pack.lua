@@ -269,7 +269,7 @@ require("gitsigns").setup({
   current_line_blame = true,
 
   on_attach = function(bufnr)
-    local gs = package.loaded.gitsigns
+    local gs = require("gitsigns")
 
     -- Navigation
     vim.keymap.set("n", "]g", function()
@@ -277,7 +277,7 @@ require("gitsigns").setup({
         return "]g"
       end
       vim.schedule(function()
-        gs.next_hunk()
+        gs.nav_hunk("next")
       end)
       return "<Ignore>"
     end, { expr = true, desc = "Next hunk" })
@@ -287,7 +287,7 @@ require("gitsigns").setup({
         return "[g"
       end
       vim.schedule(function()
-        gs.prev_hunk()
+        gs.nav_hunk("prev")
       end)
       return "<Ignore>"
     end, { expr = true, desc = "Prev hunk" })
@@ -380,6 +380,8 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.api.nvim_create_autocmd("BufEnter", {
       pattern = "*.f",
       callback = function(args)
+        -- nvim's runtime typing marks [buf] as always set; guard anyway for safety
+        ---@diagnostic disable-next-line: unnecessary-if
         if vim.treesitter.highlighter.active[args.buf] then
           vim.treesitter.stop(args.buf)
         end
@@ -438,12 +440,18 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
   once = true,
   callback = function()
-    pcall(vim.cmd, "packadd LuaSnip")
+    pcall(function()
+      vim.cmd "packadd LuaSnip"
+    end)
     local loader = require("luasnip.loaders.from_vscode")
     loader.lazy_load({
       paths = { vim.fn.stdpath("config") .. "/snippets" },
     })
     loader.lazy_load()
+    -- blink.cmp's `---@class (exact)` config types mark every field as required, but
+    -- setup() merges with defaults; the "missing fields"/type mismatches on this partial
+    -- config are false positives (same suppression blink.cmp uses in its own init.lua).
+    ---@diagnostic disable: missing-fields, assign-type-mismatch, param-type-mismatch
     require("blink.cmp").setup({
       keymap = {
         preset = "default",
@@ -480,6 +488,7 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
       signature = { enabled = true, window = { show_documentation = true } },
       cmdline = { enabled = false },
     })
+    ---@diagnostic enable: missing-fields, assign-type-mismatch, param-type-mismatch
   end,
 })
 
@@ -487,6 +496,9 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
 vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
   once = true,
   callback = function()
+    -- MasonSettings is inferred from its DEFAULT_SETTINGS literal (all fields required);
+    -- setup() fills defaults, so this partial table is a false positive.
+    ---@diagnostic disable-next-line: param-type-mismatch, missing-fields
     require("mason").setup({
       ui = {
         border = "none",
@@ -591,6 +603,8 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
       },
     })
     vim.keymap.set({ "n", "v" }, "<leader>bf", function()
+      -- conform.FormatOpts is (exact); all-reported fields are optional at runtime
+      ---@diagnostic disable-next-line: param-type-mismatch
       require("conform").format({ lsp_format = "fallback", async = false, timeout_ms = 50000 })
     end, { desc = "Format buffer or range" })
   end,
@@ -650,6 +664,7 @@ local function set_rnvim_keymaps()
         return
       end
       local file = vim.fn.expand("%")
+      ---@cast file string
       local lines = vim.api.nvim_buf_get_lines(0, 0, 10, false)
       for _, line in ipairs(lines) do
         local root = line:match("^%% *!%a+ *root *= *(%S+)")

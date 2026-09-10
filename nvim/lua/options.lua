@@ -41,6 +41,7 @@ vim.o.foldlevelstart = 99
 vim.o.foldenable = true
 function _G.custom_foldtext()
   local start_line = vim.fn.getline(vim.v.foldstart)
+  ---@cast start_line string
   local line_count = vim.v.foldend - vim.v.foldstart + 1
   start_line = start_line:gsub("%s*$", "")
   if #start_line > 80 then

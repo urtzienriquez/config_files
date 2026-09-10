@@ -3,10 +3,6 @@ local M = {}
 M.loaded = false
 
 M.setup = function()
-  if M.loaded then
-    return
-  end
-
   pcall(vim.api.nvim_del_user_command, "Oil")
 
   require("oil").setup({

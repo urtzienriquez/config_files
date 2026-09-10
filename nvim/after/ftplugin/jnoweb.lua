@@ -16,14 +16,21 @@ local function hl_code()
   pcall(vim.api.nvim_buf_clear_namespace, 0, ns, 0, -1)
 
   local ok, parser = pcall(vim.treesitter.get_parser, 0, "jnoweb")
-  if not ok or not parser then return end
+  if not ok or not parser then
+    return
+  end
   parser:parse(true)
-  local tree = parser:parse()[1]
-  if not tree then return end
+  local trees = parser:parse()
+  if not trees then
+    return
+  end
+  local tree = trees[1]
   local root = tree:root()
 
   local query = vim.treesitter.query.parse("jnoweb", "(jchunk) @chunk")
-  if not query then return end
+  if not query then
+    return
+  end
 
   for _, match, _ in query:iter_matches(root, 0, 0, -1) do
     for _, nodes in pairs(match) do

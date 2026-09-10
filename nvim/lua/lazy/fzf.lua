@@ -1,10 +1,14 @@
 local M = {}
 
+---@type fzf-lua?
 local fzf = nil
 
 local function get()
   if not fzf then
     M.setup()
+  end
+  if not fzf then
+    error("fzf-lua failed to initialize")
   end
   return fzf
 end
@@ -67,36 +71,36 @@ M.setup = function()
   fzf = require("fzf-lua")
 end
 
-for _, name in ipairs({
-  "builtin",
-  "files",
-  "zoxide",
-  "live_grep_native",
-  "grep_quickfix",
-  "buffers",
-  "help_tags",
-  "keymaps",
-  "grep_cword",
-  "diagnostics_document",
-  "diagnostics_workspace",
-  "lsp_definitions",
-  "lsp_references",
-  "lsp_document_symbols",
-  "treesitter",
-  "spell_suggest",
-  "marks",
-  "resume",
-  "oldfiles",
-  "git_branches",
-  "git_commits",
-}) do
-  M[name] = function(...)
+local function call(name)
+  return function(...)
     return get()[name](...)
   end
 end
 
+M.builtin = call("builtin")
+M.files = call("files")
+M.zoxide = call("zoxide")
+M.live_grep_native = call("live_grep_native")
+M.grep_quickfix = call("grep_quickfix")
+M.buffers = call("buffers")
+M.help_tags = call("help_tags")
+M.keymaps = call("keymaps")
+M.grep_cword = call("grep_cword")
+M.diagnostics_document = call("diagnostics_document")
+M.diagnostics_workspace = call("diagnostics_workspace")
+M.lsp_definitions = call("lsp_definitions")
+M.lsp_references = call("lsp_references")
+M.lsp_document_symbols = call("lsp_document_symbols")
+M.treesitter = call("treesitter")
+M.spell_suggest = call("spell_suggest")
+M.marks = call("marks")
+M.resume = call("resume")
+M.oldfiles = call("oldfiles")
+M.git_branches = call("git_branches")
+M.git_commits = call("git_commits")
+
 M.home_files = function()
-  return get().files({ cwd = vim.fn.expand("~"), prompt = "Home files❯ ", hidden = true })
+  return (get().files({ cwd = vim.fn.expand("~"), prompt = "Home files❯ ", hidden = true }))
 end
 
 require("fzf-lua.providers.ui_select").register({
