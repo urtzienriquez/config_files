@@ -1,5 +1,6 @@
 -- Enable LSP servers (deferred: load vim.lsp + enable on first real file)
 local servers = {
+  "clangd",
   "gopls",
   "r_language_server",
   "matlab_language_server",
