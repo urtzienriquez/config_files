@@ -50,7 +50,7 @@ vim.pack.add({
   gh("stevearc/oil.nvim"),
   gh("stevearc/quicker.nvim"),
   gh("tpope/vim-fugitive"),
-  gh("pwntester/octo.nvim"),
+  gh("justinmk/guh.nvim"),
   gh("R-nvim/R.nvim"),
   gh("nickjvandyke/opencode.nvim"),
 })
@@ -241,28 +241,6 @@ vim.keymap.set("n", "<leader>gP", "<cmd>Git push<cr>", { desc = "Git push" })
 vim.keymap.set("n", "<leader>gd", "<cmd>Gvdiffsplit<cr>", { desc = "Git diff split" })
 vim.keymap.set("n", "<leader>gw", "<cmd>Gwrite<cr>", { desc = "Git write (stage)" })
 vim.keymap.set("n", "<leader>gr", "<cmd>Gread<cr>", { desc = "Git read (checkout)" })
-
--- octo.nvim (lazy: setup on first use via :Octo shim)
-local octo = require("lazy.octo")
-local function octo_cmd(...)
-  octo.setup()
-  vim.cmd(...)
-end
-vim.keymap.set("n", "<leader>hh", function()
-  octo_cmd("Octo")
-end, { desc = "List octo actions" })
-vim.keymap.set("n", "<leader>hi", function()
-  octo_cmd("Octo issue list")
-end, { desc = "List issues" })
-vim.keymap.set("n", "<leader>hp", function()
-  octo_cmd("Octo pr list")
-end, { desc = "List PRs" })
-vim.keymap.set("n", "<leader>hs", function()
-  octo_cmd("Octo search")
-end, { desc = "Search GitHub" })
-vim.keymap.set("n", "<leader>hr", function()
-  octo_cmd("Octo repo view")
-end, { desc = "View repo" })
 
 -- gitsigns (plugin file auto-setups on rtp load; options set here)
 require("gitsigns").setup({
