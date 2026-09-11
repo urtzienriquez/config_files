@@ -33,7 +33,7 @@ vim.keymap.set("n", "<leader>pr", function()
 end, { desc = "Open PR" })
 
 -- open Guh
-vim.keymap.set("n", "<leader>gu", function() vim.cmd("Guh .") end, { noremap = true, desc = "Open Guh" })
+vim.keymap.set("n", "<leader>gu", function() vim.cmd("Guh") end, { noremap = true, desc = "Open Guh" })
 
 -- Execute Lua
 vim.api.nvim_create_autocmd("FileType", {
