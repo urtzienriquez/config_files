@@ -25,13 +25,6 @@ vim.keymap.set("x", "p", [["_dP]], { desc = "Paste without overwriting register"
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 
--- Open PR
-vim.keymap.set("n", "<leader>pr", function()
-  vim.cmd("tabnew")
-  vim.fn.jobstart("gh pr create", { term = true })
-  vim.cmd("startinsert")
-end, { desc = "Open PR" })
-
 -- open Guh
 vim.keymap.set("n", "<leader>gu", function() vim.cmd("Guh") end, { noremap = true, desc = "Open Guh" })
 
