@@ -47,7 +47,6 @@ vim.pack.add({
   gh("mason-org/mason.nvim"),
   gh("stevearc/conform.nvim"),
   gh("jpalardy/vim-slime"),
-  gh("stevearc/oil.nvim"),
   gh("stevearc/quicker.nvim"),
   gh("tpope/vim-fugitive"),
   gh("justinmk/guh.nvim"),
@@ -155,13 +154,6 @@ end
 statusline.setup({
   content = { active = contents },
 })
-
--- oil (lazy: set up on first use)
-local oil = require("lazy.oil")
-vim.keymap.set("n", "-", function()
-  oil.setup()
-  vim.cmd("Oil")
-end, { desc = "Open file explorer (oil)" })
 
 -- quicker (lazy-loaded on quickfix FileType)
 vim.api.nvim_create_autocmd("FileType", {
