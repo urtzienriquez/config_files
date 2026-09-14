@@ -51,10 +51,6 @@ function _G.custom_foldtext()
 end
 vim.o.foldtext = "v:lua.custom_foldtext()"
 
--- More natural split directions
-vim.o.splitbelow = true
-vim.o.splitright = true
-
 -- spelling
 vim.o.spell = true
 vim.o.spelllang = "en_us"
