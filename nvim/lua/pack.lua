@@ -33,6 +33,7 @@ end
 
 vim.pack.add({
   gh("justinmk/vim-dirvish"),
+  gh("brianhuster/dirvish-do.nvim"),
   gh("nvim-tree/nvim-web-devicons"),
   gh("nvim-mini/mini.clue"),
   gh("nvim-mini/mini.statusline"),
