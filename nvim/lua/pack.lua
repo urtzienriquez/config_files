@@ -41,7 +41,6 @@ vim.pack.add({
   gh("lewis6991/gitsigns.nvim"),
   gh("ibhagwan/fzf-lua"),
   gh("nvim-treesitter/nvim-treesitter"),
-  gh("nvim-treesitter/nvim-treesitter-textobjects"),
   gh("nvim-lua/plenary.nvim"),
   { src = gh("saghen/blink.cmp"), version = "v1" },
   gh("rafamadriz/friendly-snippets"),
@@ -337,15 +336,6 @@ vim.api.nvim_create_autocmd("FileType", {
       "regex",
       "fortran",
     })
-    require("nvim-treesitter-textobjects").setup({
-      select = {
-        enable = true,
-        lookahead = true,
-        disable = function(lang, buf)
-          return lang == "fortran" and vim.api.nvim_buf_get_name(buf):match("%.f$") ~= nil
-        end,
-      },
-    })
 
     vim.api.nvim_create_autocmd("FileType", {
       callback = function(args)
@@ -369,22 +359,6 @@ vim.api.nvim_create_autocmd("FileType", {
         end
       end,
     })
-
-    local ts_select = require("nvim-treesitter-textobjects.select")
-    for _, map in ipairs({
-      { "af", "@function.outer", "Around function" },
-      { "if", "@function.inner", "Inside function" },
-      { "al", "@loop.outer", "Around loop" },
-      { "il", "@loop.inner", "Inside loop" },
-      { "ai", "@conditional.outer", "Around conditional" },
-      { "ii", "@conditional.inner", "Inside conditional" },
-      { "ac", "@class.outer", "Around scope" },
-      { "ic", "@class.inner", "Inside scope" },
-    }) do
-      vim.keymap.set({ "x", "o" }, map[1], function()
-        ts_select.select_textobject(map[2], "textobjects")
-      end, { desc = map[3] })
-    end
 
     local lang = vim.treesitter.language.get_lang(vim.bo.filetype)
     if lang then
