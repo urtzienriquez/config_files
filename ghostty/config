@@ -42,10 +42,6 @@ keybind = alt+shift+v=equalize_splits
 # tmux x: kill pane
 keybind = alt+x=close_surface
 
-# switch tabs (tmux ctrl+alt+h/j/k/l)
-keybind = alt+p=previous_tab
-keybind = alt+n=next_tab
-
 # navigate panes (nvim first, ghostty outer fallback)
 keybind = performable:alt+h=goto_split:left
 keybind = performable:alt+l=goto_split:right
