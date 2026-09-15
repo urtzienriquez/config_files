@@ -56,6 +56,11 @@ export MANROFFOPT="-c"
 # -------------------------------
 bindkey \^U backward-kill-line
 
+# edit command line in $EDITOR
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^[e' edit-command-line
+
 # bindings for fzf s<x> widgets
 bindkey '^ff' sf_widget
 bindkey '^fd' sd_widget
