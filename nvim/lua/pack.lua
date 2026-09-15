@@ -34,7 +34,6 @@ end
 vim.pack.add({
   gh("justinmk/vim-dirvish"),
   gh("brianhuster/dirvish-do.nvim"),
-  gh("nvim-tree/nvim-web-devicons"),
   gh("nvim-mini/mini.clue"),
   gh("nvim-mini/mini.statusline"),
   gh("kylechui/nvim-surround"),
@@ -134,13 +133,6 @@ miniclue.setup({
 -- mini.statusline
 local statusline = require("mini.statusline")
 
-local fileinfo = function()
-  local filetype = vim.bo.filetype
-  local devicons = require("nvim-web-devicons")
-  local icon = devicons.get_icon(vim.fn.expand("%:t"), nil, { default = true }) .. " "
-  return string.format("%s%s", icon, filetype)
-end
-
 local contents = function()
   local mode, mode_hl = statusline.section_mode({ trunc_width = 50 })
   local git = statusline.section_git({ trunc_width = 40 })
@@ -156,7 +148,7 @@ local contents = function()
     "%<",
     { hl = "MiniStatuslineFilename", strings = { filename } },
     "%=",
-    { hl = "MiniStatuslineFileinfo", strings = { fileinfo() } },
+    { hl = "MiniStatuslineFileinfo", strings = { vim.bo.filetype } },
     { hl = mode_hl, strings = { search, location } },
   })
 end
@@ -291,12 +283,10 @@ local function fzf_setup()
     return
   end
 
-  require("nvim-web-devicons").setup({})
-
   local actions = require("fzf-lua").actions
 
   require("fzf-lua").setup({
-    defaults = { no_header_i = true, actions = { ["ctrl-q"] = actions.file_sel_to_qf } },
+    defaults = { no_header_i = true, file_icons = false, actions = { ["ctrl-q"] = actions.file_sel_to_qf } },
     keymap = {
       builtin = {
         false,
