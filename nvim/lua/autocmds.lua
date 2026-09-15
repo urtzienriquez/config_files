@@ -183,7 +183,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- disable spelling in quickfix list and nvim-pack
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "qf", "nvim-pack" },
+  pattern = { "qf", "nvim-pack", "dirvish" },
   callback = function()
     vim.opt_local.spell = false
   end,
@@ -228,7 +228,7 @@ vim.api.nvim_create_autocmd("VimResized", {
 -- Enable mini.clue triggers in unlisted buffers
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("mini-clue-unlisted", { clear = true }),
-  pattern = { "oil", "zotero-collections", "zotero-items", "zotero-detail" },
+  pattern = { "dirvish", "zotero-collections", "zotero-items", "zotero-detail" },
   callback = function(ev)
     vim.schedule(function()
       require("mini.clue").ensure_buf_triggers(ev.buf)

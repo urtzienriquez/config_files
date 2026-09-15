@@ -32,6 +32,7 @@ local gh = function(x)
 end
 
 vim.pack.add({
+  gh("justinmk/vim-dirvish"),
   gh("nvim-tree/nvim-web-devicons"),
   gh("nvim-mini/mini.clue"),
   gh("nvim-mini/mini.statusline"),
@@ -72,6 +73,9 @@ end
 
 ----------------------------------------
 -- configuration
+
+-- vim-dirvish
+vim.g.dirvish_mode = ':sort ,^.*[\\/],'
 
 -- mini.clue
 local miniclue = require("mini.clue")
