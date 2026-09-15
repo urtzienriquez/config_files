@@ -76,7 +76,14 @@ end
 -- configuration
 
 -- vim-dirvish
-vim.g.dirvish_mode = ':sort ,^.*[\\/],'
+vim.g.dirvish_mode = ":sort ,^.*[\\/],"
+
+-- dirvish-do.nvim
+require("dirvish-do").setup({
+  keymaps = {
+    remove = "dd",
+  },
+})
 
 -- mini.clue
 local miniclue = require("mini.clue")
@@ -416,7 +423,7 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
   once = true,
   callback = function()
     pcall(function()
-      vim.cmd "packadd LuaSnip"
+      vim.cmd("packadd LuaSnip")
     end)
     local loader = require("luasnip.loaders.from_vscode")
     loader.lazy_load({
