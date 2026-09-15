@@ -76,7 +76,7 @@ end
 -- configuration
 
 -- vim-dirvish
-vim.g.dirvish_mode = ":sort ,^.*[\\/],"
+vim.g.dirvish_mode = ':sort | sort ,^.*[\\/],'
 
 -- dirvish-do.nvim
 require("dirvish-do").setup({
