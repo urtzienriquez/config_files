@@ -173,7 +173,7 @@ export FZF_DEFAULT_OPTS_FILE="$HOME/.config/zsh/.fzf_config"
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore-vcs -g "!node_modules" -g "!.git" -g "!go"'
 
 export FZF_CTRL_T_OPTS="
-  --preview 'bat -p --color=always {}'
+  --preview 'bat -p --color=always --theme=\$(cat \$HOME/.config/zsh/.bat_theme 2>/dev/null || echo nightfox) {}'
   --preview-window 'border-sharp'
   --bind 'ctrl-v:toggle-preview'"
 

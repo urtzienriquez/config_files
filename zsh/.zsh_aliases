@@ -269,7 +269,7 @@ sf() {
     --exclude node_modules \
     --exclude .git \
     --exclude "$HOME/go" | \
-    fzf --reverse --info=right --preview 'bat -p --color=always {} 2>/dev/null') || return
+    fzf --reverse --info=right --preview 'bat -p --color=always --theme=$(cat $HOME/.config/zsh/.bat_theme 2>/dev/null || echo nightfox) {} 2>/dev/null') || return
 
   local mime
   mime=$(file -b --mime-type "$file")
@@ -322,7 +322,7 @@ sx() {
     --exclude node_modules \
     --exclude .git \
     --exclude "$HOME/go" | \
-    fzf --reverse --info=right --preview 'bat -p --color=always {} 2>/dev/null') || return
+    fzf --reverse --info=right --preview 'bat -p --color=always --theme=$(cat $HOME/.config/zsh/.bat_theme 2>/dev/null || echo nightfox) {} 2>/dev/null') || return
 
   if [[ -d "$selected" ]]; then
     cd "$selected"
@@ -355,7 +355,7 @@ zle -N sr_widget
 sfr() {
   local file
   file=$(locate / | while read -r f; do [[ -f "$f" ]] && echo "$f"; done | \
-    fzf --reverse --info=right --preview 'bat -p --color=always {} 2>/dev/null') || return
+    fzf --reverse --info=right --preview 'bat -p --color=always --theme=$(cat $HOME/.config/zsh/.bat_theme 2>/dev/null || echo nightfox) {} 2>/dev/null') || return
 
   local mime
   mime=$(file -b --mime-type "$file")
@@ -396,7 +396,7 @@ zle -N srd_widget
 # sxr: like sx but searches entire system using locate, and cd accordingly
 sxr() {
   local selected
-  selected=$(locate / | fzf --reverse --info=right --preview 'bat -p --color=always {} 2>/dev/null') || return
+  selected=$(locate / | fzf --reverse --info=right --preview 'bat -p --color=always --theme=$(cat $HOME/.config/zsh/.bat_theme 2>/dev/null || echo nightfox) {} 2>/dev/null') || return
 
   if [[ -d "$selected" ]]; then
     cd "$selected"
