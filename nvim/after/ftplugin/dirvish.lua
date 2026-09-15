@@ -8,3 +8,6 @@ vim.keymap.set(
   [[:silent keeppatterns g@\v/\.[^\/]+/?$@d _<cr>:setl cole=3<cr>]],
   opts
 )
+vim.keymap.set("n", "_", function()
+  vim.cmd("Dirvish " .. vim.fn.getcwd())
+end)
