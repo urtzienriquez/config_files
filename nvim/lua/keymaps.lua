@@ -62,11 +62,11 @@ end, {})
 vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true, desc = "add variants of words to spellfile" })
 
 -- cd to current buffers directory
-vim.keymap.set("n", "<leader>~", function()
+vim.keymap.set("n", "cd", function()
   local dir = vim.fn.expand("%:p:h")
   ---@cast dir string
   vim.api.nvim_set_current_dir(dir)
-  print("CWD: " .. dir)
+  print(dir)
 end, { desc = "CWD to buffer" })
 
 -- go to help page of the text under the cursor with help!
