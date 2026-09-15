@@ -1,41 +1,32 @@
 # -------------------------------
-# Git (minimal via vcs_info)
+# Git (fork-free, direct .git/HEAD read)
 # -------------------------------
-autoload -Uz vcs_info
-precmd() { vcs_info }
+function _fast_git_branch {
+    local dir=${PWD:A}
+    while [[ $dir != / && ! -e $dir/.git ]]; do
+        dir=${dir:h}
+    done
+    [[ -e $dir/.git ]] || { _git_branch=""; return }
 
-# Only enable git
-zstyle ':vcs_info:*' enable git
+    local gitdir=$dir/.git
+    [[ -f $gitdir ]] && gitdir=${${"$(<$gitdir)"}#gitdir: }  # handle worktrees
 
-# Show only branch name
-zstyle ':vcs_info:git:*' formats ' %F{244} %b %f'
+    local head
+    head=$(<$gitdir/HEAD) 2>/dev/null || { _git_branch=""; return }
+
+    if [[ $head == "ref: refs/heads/"* ]]; then
+        _git_branch=" %F{244} ${head#ref: refs/heads/}%f"
+    else
+        _git_branch=" %F{244} ${head[1,7]}%f"   # detached HEAD, short sha
+    fi
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _fast_git_branch
 
 setopt prompt_subst
 
 # -------------------------------
-# Vi mode indicator + cursor shape
-# -------------------------------
-function zle-line-init zle-keymap-select {
-    VI_MODE_SYMBOL="${${KEYMAP/vicmd/}/(main|viins)/}"
-
-    case $KEYMAP in
-        vicmd)      echo -ne '\e[2 q' ;;  # normal -> steady block
-        viins|main) echo -ne '\e[6 q' ;;  # insert  -> steady bar
-    esac
-
-    zle reset-prompt
-}
-zle -N zle-line-init
-zle -N zle-keymap-select
-
-function _cursor_beam_preexec { echo -ne '\e[6 q' }
-autoload -Uz add-zsh-hook
-add-zsh-hook preexec _cursor_beam_preexec
-
-echo -ne '\e[6 q'  # set cursor on shell startup
-
-# -------------------------------
 # Prompt
 # -------------------------------
-PROMPT='%F{cyan}%~%f${vcs_info_msg_0_}
-%F{%(?.green.red)}${VI_MODE_SYMBOL}%f '
+PROMPT='%F{cyan}%~%f${_git_branch}
+ '

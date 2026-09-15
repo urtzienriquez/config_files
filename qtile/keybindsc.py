@@ -109,6 +109,7 @@ def toggle_smartlock(qtile):
 
 
 FZF_CONFIG = Path.home() / ".config/zsh/.fzf_config"
+BAT_THEME_FILE = Path.home() / ".config/zsh/.bat_theme"
 
 
 def update_fzf_config(is_dark: bool):
@@ -126,6 +127,11 @@ def update_fzf_config(is_dark: bool):
         else "--color=light,pointer:#fce094,gutter:#f6f2ee,bg+:#e4dcd4"
     )
     FZF_CONFIG.write_text(f"{color}\n{base}")
+
+
+def update_bat_theme_file(is_dark: bool):
+    BAT_THEME_FILE.parent.mkdir(parents=True, exist_ok=True)
+    BAT_THEME_FILE.write_text("nightfox" if is_dark else "dayfox")
 
 
 def toggle_colorscheme(qtile):
@@ -168,6 +174,12 @@ def toggle_colorscheme(qtile):
         update_fzf_config(is_dark)
     except Exception as e:
         subprocess.run(["notify-send", "FZF Theme Error", str(e)])
+
+    # bat/man theme update (zsh reads this file instead of polling gsettings)
+    try:
+        update_bat_theme_file(is_dark)
+    except Exception as e:
+        subprocess.run(["notify-send", "Bat Theme Error", str(e)])
 
 
 launcher_keys = [

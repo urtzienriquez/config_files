@@ -25,11 +25,18 @@ setopt extended_glob
 # -------------------------------
 autoload -Uz add-zsh-hook
 
+BAT_THEME_FILE="$HOME/.config/zsh/.bat_theme"
 _sync_bat_theme() {
-  if gsettings get org.gnome.desktop.interface color-scheme | grep -q light; then
-    export BAT_THEME="dayfox"
+  if [[ -r $BAT_THEME_FILE ]]; then
+    export BAT_THEME=$(<$BAT_THEME_FILE)
   else
-    export BAT_THEME="nightfox"
+    # bootstrap fallback for before the first qtile theme toggle ever runs
+    if gsettings get org.gnome.desktop.interface color-scheme | grep -q light; then
+      export BAT_THEME="dayfox"
+    else
+      export BAT_THEME="nightfox"
+    fi
+    print -r -- "$BAT_THEME" > "$BAT_THEME_FILE"
   fi
 }
 
@@ -45,33 +52,8 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
 # -------------------------------
-# Vim mode and keybindings
+# keybindings
 # -------------------------------
-bindkey -v
-autoload edit-command-line; zle -N edit-command-line
-bindkey -M viins '^?' backward-delete-char
-bindkey -M viins '^H' backward-delete-char
-autoload -Uz edit-command-line
-edit-command-line-at-end() {
-  zle edit-command-line
-  zle end-of-line
-}
-zle -N edit-command-line-at-end
-bindkey -M vicmd '^E' edit-command-line-at-end
-bindkey -M viins '^E' edit-command-line-at-end
-# Widget to close completion menu
-_close_completion_menu() {
-  zle -M ""
-  zle reset-prompt
-}
-zle -N _close_completion_menu
-bindkey -M viins '^X' _close_completion_menu
-
-# # alt-a to clear-screen
-# bindkey -M viins -r '^L'
-# bindkey -M vicmd -r '^L'
-# bindkey -M viins '^[a' clear-screen
-
 # bindings for fzf s<x> widgets
 bindkey '^ff' sf_widget
 bindkey '^fd' sd_widget
@@ -95,7 +77,11 @@ zstyle ':completion:*' menu select
 ZLS_COLORS="di=34:fi=0:ex=32:ln=36"
 zstyle ':completion:*' list-colors "${(s.:.)ZLS_COLORS}"
 autoload -Uz compinit
-compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 # -------------------------------
 # Aliases
