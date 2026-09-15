@@ -75,7 +75,7 @@ end
 -- configuration
 
 -- vim-dirvish
-vim.g.dirvish_mode = ':sort | sort ,^.*[\\/],'
+vim.g.dirvish_mode = ":sort | sort ,^.*[\\/],"
 
 -- dirvish-do.nvim
 require("dirvish-do").setup({
@@ -123,7 +123,6 @@ miniclue.setup({
     -- buffer-locally in the relevant ftplugin files via vim.b.miniclue_config)
     { mode = "n", keys = "<Leader>f", desc = "(Find commands)" },
     { mode = "n", keys = "<Leader>g", desc = "(Git commands)" },
-    { mode = "n", keys = "<Leader>h", desc = "(GitHub)" },
     { mode = "n", keys = "<Leader>i", desc = "(opencode)" },
     { mode = "n", keys = "<Leader>u", desc = "(UI)" },
     { mode = "n", keys = "<Leader>b", desc = "(Buffer format)" },
@@ -355,6 +354,12 @@ local function fzf_setup()
   })
 end
 
+-- first vim.ui.select call triggers the registration
+vim.ui.select = function(...)
+  fzf_setup()
+  return vim.ui.select(...)
+end
+
 local function fzf_get()
   if not fzf_lua then
     fzf_setup()
@@ -376,7 +381,20 @@ fzf.files = fzf_call("files")
 fzf.zoxide = fzf_call("zoxide")
 fzf.live_grep_native = fzf_call("live_grep_native")
 fzf.grep_quickfix = fzf_call("grep_quickfix")
-fzf.buffers = fzf_call("buffers")
+fzf.buffers = function(opts)
+  opts = opts or {}
+  if opts.filter == nil then
+    -- filter out guh://... buffers: they have their own picker
+    opts.filter = function(b)
+      return not vim.api.nvim_buf_get_name(b):match("^guh://")
+    end
+  end
+  opts.fzf_opts = opts.fzf_opts or {}
+  if opts.fzf_opts["--header-lines"] == nil then
+    opts.fzf_opts["--header-lines"] = false
+  end
+  return fzf_get().buffers(opts)
+end
 fzf.help_tags = fzf_call("help_tags")
 fzf.keymaps = fzf_call("keymaps")
 fzf.grep_cword = fzf_call("grep_cword")
@@ -395,6 +413,62 @@ fzf.git_commits = fzf_call("git_commits")
 
 fzf.home_files = function()
   return (fzf_get().files({ cwd = vim.fn.expand("~"), prompt = "Home files❯ ", hidden = true }))
+end
+
+-- guh.nvim (GitHub PR/issue) buffers picker
+local function guh_buffers()
+  local label_to_buf = {}
+  local entries = {}
+  for _, b in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(b) then
+      local name = vim.api.nvim_buf_get_name(b)
+      if name:match("^guh://") then
+        local g = vim.b[b].guh
+        local label
+        if g and g.feat then
+          label = string.format(
+            "%-11s %s%s%s",
+            g.feat,
+            g.repo and (g.repo .. "#" .. tostring(g.id)) or tostring(g.id or ""),
+            g.title and g.title ~= "" and "  " or "",
+            g.title or ""
+          )
+        else
+          label = name
+        end
+        entries[#entries + 1] = label
+        label_to_buf[label] = b
+      end
+    end
+  end
+
+  if #entries == 0 then
+    vim.notify("No guh.nvim buffers open", vim.log.levels.INFO)
+    return
+  end
+
+  fzf_get().fzf_exec(entries, {
+    prompt = "GitHub buffers❯ ",
+    actions = {
+      ["default"] = function(selected)
+        local buf = label_to_buf[selected[1]]
+        ---@diagnostic disable-next-line: unnecessary-if
+        if buf and vim.api.nvim_buf_is_valid(buf) then
+          vim.api.nvim_set_current_buf(buf)
+        end
+      end,
+      ["ctrl-x"] = {
+        fn = function(selected)
+          local buf = label_to_buf[selected[1]]
+          ---@diagnostic disable-next-line: unnecessary-if
+          if buf and vim.api.nvim_buf_is_valid(buf) then
+            vim.api.nvim_buf_delete(buf, { force = true })
+          end
+        end,
+        reload = true,
+      },
+    },
+  })
 end
 
 vim.keymap.set("n", "<leader>fp", fzf.builtin, { desc = "picker" })
@@ -419,6 +493,7 @@ vim.keymap.set("n", "<leader>f,", fzf.resume, { desc = "Resume picker" })
 vim.keymap.set("n", "<leader>f.", fzf.oldfiles, { desc = "recent files" })
 vim.keymap.set("n", "<leader>gb", fzf.git_branches, { desc = "Git branches" })
 vim.keymap.set("n", "<leader>gC", fzf.git_commits, { desc = "Git commits" })
+vim.keymap.set("n", "<leader>fu", guh_buffers, { desc = "GitHub buffers" })
 
 -- Treesitter
 vim.api.nvim_create_autocmd("FileType", {
