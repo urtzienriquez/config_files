@@ -31,15 +31,17 @@ gtk-wide-tabs = false
 gtk-custom-css = ~/.config/ghostty/themes/tabbar.css
 
 # keybindings (flat, alt-based; prefix dropped)
-# tmux c: new window/tab at cwd
+# rename tab
+keybind = alt+t=prompt_tab_title
+# new window/tab at cwd
 keybind = alt+c=new_tab
-# tmux v: split -h (side by side)
+# split -h (side by side)
 keybind = alt+v=new_split:right
-# tmux s: split -v (top/bottom)
+# split -v (top/bottom)
 keybind = alt+s=new_split:down
-# tmux V: even layout (equalize_splits handles all splits)
+# even layout (equalize_splits handles all splits)
 keybind = alt+shift+v=equalize_splits
-# tmux x: kill pane
+# kill pane
 keybind = alt+x=close_surface
 
 # navigate panes (nvim first, ghostty outer fallback)
