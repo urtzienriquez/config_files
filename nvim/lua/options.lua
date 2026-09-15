@@ -14,6 +14,18 @@ vim.o.backspace = "indent,eol,start"
 vim.o.ignorecase = true
 vim.o.fileignorecase = true
 vim.o.smartcase = true
+vim.g.clipboard = {
+  name = "xclip",
+  copy = {
+    ["+"] = { "xclip", "-quiet", "-i", "-selection", "clipboard" },
+    ["*"] = { "xclip", "-quiet", "-i", "-selection", "primary" },
+  },
+  paste = {
+    ["+"] = { "xclip", "-o", "-selection", "clipboard" },
+    ["*"] = { "xclip", "-o", "-selection", "primary" },
+  },
+  cache_enabled = true,
+}
 vim.o.clipboard = "unnamedplus"
 vim.o.termguicolors = true
 vim.o.signcolumn = "yes"
@@ -51,10 +63,13 @@ function _G.custom_foldtext()
 end
 vim.o.foldtext = "v:lua.custom_foldtext()"
 
--- spelling
-vim.o.spell = true
-vim.o.spelllang = "en_us"
-vim.o.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+-- spelling (deferred: loading/compiling the spellfile is synchronous and slow)
+vim.async.run(function()
+  vim.async.sleep(0)
+  vim.o.spell = true
+  vim.o.spelllang = "en_us"
+  vim.o.spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+end)
 
 vim.api.nvim_create_user_command("SpellEN", function()
   vim.o.spelllang = "en_us"
