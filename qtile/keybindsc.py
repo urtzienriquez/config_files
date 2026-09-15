@@ -159,6 +159,10 @@ def toggle_colorscheme(qtile):
     # Notify success
     subprocess.run(["notify-send", "Theme Toggled", f"Switched to {notification}"])
 
+    # Push the change to any running Neovim instances (nightfox listens for
+    # SIGWINCH) instead of relying on them to poll for it.
+    subprocess.run(["pkill", "-WINCH", "-x", "nvim"])
+
     # fzf update
     try:
         update_fzf_config(is_dark)
