@@ -54,6 +54,8 @@ export MANROFFOPT="-c"
 # -------------------------------
 # keybindings
 # -------------------------------
+bindkey \^U backward-kill-line
+
 # bindings for fzf s<x> widgets
 bindkey '^ff' sf_widget
 bindkey '^fd' sd_widget
