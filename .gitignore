@@ -17,3 +17,4 @@ local.config
 local_settings.json
 **/eza/theme.yml
 .fzf_config
+.bat_theme
