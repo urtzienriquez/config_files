@@ -32,6 +32,11 @@ config.set(
     "Mozilla/5.0 ({os_info}; rv:136.0) Gecko/20100101 Firefox/139.0",
     "https://accounts.google.com/*",
 )
+config.set(
+    "content.headers.user_agent",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+    "https://codeberg.org/*",
+)
 
 # Load images automatically in web pages.
 config.set("content.images", True, "chrome-devtools://*")
