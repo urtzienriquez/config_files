@@ -54,7 +54,19 @@ export MANROFFOPT="-c"
 # -------------------------------
 # keybindings
 # -------------------------------
+
+# backward delete like in bash
 bindkey \^U backward-kill-line
+
+# open scrollback in editor
+run_vi_with_filepath() {
+  xdotool type --clearmodifiers "vim + "
+  xdotool key --clearmodifiers ctrl+shift+j
+  xdotool key --clearmodifiers Return
+}
+
+zle -N run_vi_with_filepath
+bindkey '^[;' run_vi_with_filepath
 
 # edit command line in $EDITOR
 autoload -Uz edit-command-line
