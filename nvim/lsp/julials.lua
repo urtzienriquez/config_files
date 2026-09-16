@@ -40,8 +40,7 @@ return {
             ))
         end
         @info "Running language server" VERSION pwd() project_path depot_path
-        server = LanguageServer.LanguageServerInstance(stdin, stdout, project_path, depot_path)
-        server.runlinter = true
+        server = LanguageServer.LanguageServerInstance(stdin, stdout, project_path)
         run(server)
         ]],
   },
