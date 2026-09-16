@@ -47,13 +47,13 @@ fzf_select_wifi() {
 	NMCLI
 
     local header=`printf '%s\n' "<C-a>: View all networks" \
-        "<C-n>: View known networks"`
+        "<C-g>: View known networks"`
     local prompt_known="Available networks (known)> "
     local prompt_all="Available networks (all)> "
     local bind_ctrla=`printf 'ctrl-a:change-prompt(%s)+reload(%s)' \
         "${prompt_all}" \
         "${get_nmcli_table}"`
-    local bind_ctrln=`printf 'ctrl-n:change-prompt(%s)+reload(%s)' \
+    local bind_ctrlg=`printf 'ctrl-g:change-prompt(%s)+reload(%s)' \
         "${prompt_known}" \
         "${get_nmcli_table} | sed -n -e '1p' -e \"/${KNOWN_SSIDS_REGEX}/p\""`
 
@@ -67,7 +67,7 @@ fzf_select_wifi() {
             --info="right" \
             --bind="enter:accept" \
             --bind="${bind_ctrla}" \
-            --bind="${bind_ctrln}"
+            --bind="${bind_ctrlg}"
     return $?
 }
 
