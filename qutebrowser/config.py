@@ -181,7 +181,7 @@ config.set(
         "g": "https://www.google.com/search?q={}",
         "b": "https://search.brave.com/search?q={}",
         "gh": "https://github.com/search?q={}",
-        "s": "https://stackoverflow.com/search?q={}",
+        "s": "https://scholar.google.com/scholar?q={}",
     },
 )
 
