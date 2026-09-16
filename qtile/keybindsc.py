@@ -186,7 +186,7 @@ launcher_keys = [
     Key(
         [],
         "f",
-        lazy.spawn("ghostty --x11-instance-name='fzf-nova' \
+        lazy.spawn("ghostty +new-window --title='fzf-nova' \
                     -e bash -c 'source ~/.bashrc &>/dev/null \
                     && $HOME/config_files/fzf-nova/fzf-nova'"),
         desc="Launch fzf-nova",
@@ -348,7 +348,7 @@ keys = [
     Key(
         [mod, "control", "shift"],
         "x",
-        lazy.spawn("ghostty --x11-instance-name='fzf-nova' \
+        lazy.spawn("ghostty +new-window --title='fzf-nova' \
                     -e bash -c 'source ~/.bashrc &>/dev/null \
                     && $HOME/config_files/fzf-nova/_session,--.manage.session'"),
         desc="Manage Qtile session",
