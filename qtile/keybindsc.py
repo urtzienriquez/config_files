@@ -218,9 +218,7 @@ launcher_keys = [
     Key(
         [],
         "c",
-        lazy.spawn(
-            "ghostty --x11-instance-name='calendar' --window-height=30 --window-width=120 -e calcurse"
-        ),
+        lazy.spawn("ghostty +new-window --title='calendar' -e calcurse"),
         desc="Launch calendar",
     ),
     Key(
@@ -232,9 +230,7 @@ launcher_keys = [
     Key(
         [],
         "y",
-        lazy.spawn(
-            "ghostty --x11-instance-name='yazi' --window-height=30 --window-width=120 -e yazi"
-        ),
+        lazy.spawn("ghostty +new-window --title='yazi' -e yazi"),
         desc="Launch yazi file manager",
     ),
     Key(

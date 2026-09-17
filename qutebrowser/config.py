@@ -80,31 +80,29 @@ config.set(
     "fileselect.single_file.command",
     [
         "ghostty",
-        "--x11-instance-name=yazi",
-        "--window-width=120",
-        "--window-height=30",
+        "+new-window",
+        "--title=yazi",
         "-e",
-        "zsh",
-        "-lc",
-        "yazi --chooser-file {}",
+        "yazi",
+        "--chooser-file",
+        "{}",
     ],
 )
 config.set(
     "fileselect.multiple_files.command",
     [
         "ghostty",
-        "--x11-instance-name=yazi",
-        "--window-width=120",
-        "--window-height=30",
+        "+new-window",
+        "--title=yazi",
         "-e",
-        "zsh",
-        "-lc",
-        "yazi --chooser-file {}",
+        "yazi",
+        "--chooser-file",
+        "{}",
     ],
 )
 
 # open neovim from qutebrowser
-c.editor.command = ["ghostty", "-e", "nvim", "-f", "{}"]
+c.editor.command = ["ghostty", "--title=qeditor", "-e", "nvim", "-f", "{}"]
 
 # remap J to K and K to J
 config.bind("J", "tab-prev")
