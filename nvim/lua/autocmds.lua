@@ -112,6 +112,9 @@ vim.api.nvim_create_autocmd("LspProgress", {
     local v = ev.data.params.value or {}
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
     local name = client and client.name or "<disconnecting>"
+    if name == "pyright" and v.kind ~= "end" then
+      return
+    end
     vim.api.nvim_echo({ { v.message or "done" } }, false, {
       id = "lsp",
       kind = "progress",
