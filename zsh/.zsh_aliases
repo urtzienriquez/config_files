@@ -422,17 +422,19 @@ tm() {
 # sv myenv: activates ./myenv
 # sv /full/path/to/env: activates that env
 function sv() {
-    local venv_path="${1:-.venv}"
+      local venv_path="${1:-.venv}"
 
-    if [ -f "$venv_path/bin/activate" ]; then
-        source "$venv_path/bin/activate"
-        tmux set-environment VIRTUAL_ENV $VIRTUAL_ENV &&
-        alias deactivate='\deactivate && tmux set-environment -u VIRTUAL_ENV && unalias deactivate'
-    else
-        echo "No virtualenv found at: $venv_path"
-        return 1
-    fi
-}
+      if [ -f "$venv_path/bin/activate" ]; then
+          source "$venv_path/bin/activate"
+          if [ -n "$TMUX" ]; then
+              tmux set-environment VIRTUAL_ENV $VIRTUAL_ENV
+              alias deactivate='\deactivate && tmux set-environment -u VIRTUAL_ENV && unalias deactivate'
+          fi
+      else
+          echo "No virtualenv found at: $venv_path"
+          return 1
+      fi
+  }
 
 # start screenkey with transparent background
 function kon() {
