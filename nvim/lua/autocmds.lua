@@ -105,28 +105,6 @@ vim.api.nvim_create_autocmd("FileType", {
   desc = "K shows man page or bash builtin help in shell files",
 })
 
--- LSP progress in ui2
-vim.api.nvim_create_autocmd("LspProgress", {
-  group = vim.api.nvim_create_augroup("lsp-progress", { clear = true }),
-  callback = function(ev)
-    local v = ev.data.params.value or {}
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    local name = client and client.name or "<disconnecting>"
-    if name == "pyright" and v.kind ~= "end" then
-      return
-    end
-    vim.api.nvim_echo({ { v.message or "done" } }, false, {
-      id = "lsp",
-      kind = "progress",
-      source = "lsp-client",
-      title = v.title and v.title ~= "" and ("[" .. name .. "] " .. v.title) or ("[" .. name .. "]"),
-      status = v.kind ~= "end" and "running" or "success",
-      percent = v.percentage,
-    })
-  end,
-  desc = "Show LSP progress in ui2",
-})
-
 -- nicer lsp colors
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-colors", { clear = true }),
