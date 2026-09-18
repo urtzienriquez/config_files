@@ -29,6 +29,7 @@ vim.g.clipboard = {
 vim.o.clipboard = "unnamedplus"
 vim.o.termguicolors = true
 vim.o.signcolumn = "yes"
+vim.o.statuscolumn = "%s%=%{v:virtnum > 0 ? '' : (&nu ? (&rnu && v:relnum ? v:relnum : v:lnum) : '')} "
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
 vim.o.guicursor = "n-v-c-sm-t:block,i-ci-ve:ver25,r-cr-o:hor20"
