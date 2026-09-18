@@ -55,6 +55,9 @@ export MANROFFOPT="-c"
 # keybindings
 # -------------------------------
 
+# unbind alt+digit
+for k in {0..9}; do bindkey -r "^[$k"; done
+
 # backward delete like in bash
 bindkey \^U backward-kill-line
 
