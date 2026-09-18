@@ -28,7 +28,6 @@ vim.cmd("packadd nvim.undotree")
 for _, name in ipairs({
   "dirvish",
   "mini-clue",
-  "mini-statusline",
   "nvim-surround",
   "gitsigns",
   "fzf-lua",
