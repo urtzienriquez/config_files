@@ -60,7 +60,7 @@ bindkey \^U backward-kill-line
 
 # open scrollback in editor
 run_vi_with_filepath() {
-  xdotool type --clearmodifiers "vim + "
+  xdotool type --clearmodifiers "vim "
   xdotool key --clearmodifiers ctrl+shift+j
   xdotool key --clearmodifiers Return
 }
