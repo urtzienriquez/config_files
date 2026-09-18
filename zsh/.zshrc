@@ -58,6 +58,9 @@ export MANROFFOPT="-c"
 # unbind alt+digit
 for k in {0..9}; do bindkey -r "^[$k"; done
 
+# accept autosuggestions with ^y
+bindkey '^y' autosuggest-accept
+
 # backward delete like in bash
 bindkey \^U backward-kill-line
 
