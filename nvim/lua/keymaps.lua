@@ -4,6 +4,11 @@ vim.keymap.set("n", "<M-Right>", ":vertical resize -5<CR>", { silent = true, des
 vim.keymap.set("n", "<M-Up>", ":resize +5<CR>", { silent = true, desc = "Resize horizontally +" })
 vim.keymap.set("n", "<M-Down>", ":resize -5<CR>", { silent = true, desc = "Resize horizontally -" })
 
+-- Swallow Alt+digit (ghostty tab-switch leaks raw ESC+digit through when goto_tab doesn't change tabs)
+for i = 1, 9 do
+  vim.keymap.set({ "n", "i", "v", "t" }, "<M-" .. i .. ">", "<Nop>")
+end
+
 -- Split navigation
 vim.keymap.set("n", "<M-h>", "<C-w>h", { desc = "Move to split left" })
 vim.keymap.set("n", "<M-j>", "<C-w>j", { desc = "Move to split down" })
