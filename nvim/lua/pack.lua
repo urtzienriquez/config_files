@@ -39,6 +39,7 @@ for _, name in ipairs({
   "vim-slime",
   "quicker",
   "fugitive",
+  "diffs",
   "guh",
   "r-nvim",
   "opencode",
