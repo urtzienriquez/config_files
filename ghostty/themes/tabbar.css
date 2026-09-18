@@ -1,6 +1,5 @@
 tabbar .box {
   background-color: #131a24;
-  color: #aeafb0;
   box-shadow: none;
   padding: 0;
 }
@@ -20,15 +19,23 @@ tabbar tab {
   font-size: 16px;
 }
 
-tabbar tab:hover,
-tabbar tab:active {
-  background-color: #192330;
+tabbar tab label,
+tabbar tab:not(:selected) label {
+  color: #71839b;
+}
+
+tabbar tab:selected label {
+  color: #aeafb0;
+  font-weight: bold;
 }
 
 tabbar tab:selected {
   background-color: #192330;
-  color: #dbc074;
-  font-weight: bold;
+}
+
+tabbar tab:hover,
+tabbar tab:active {
+  background-color: #192330;
 }
 
 tabbar tab:selected:hover,
