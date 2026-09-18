@@ -108,7 +108,9 @@ fzf.buffers = function(opts)
   end
   opts.fzf_opts = opts.fzf_opts or {}
   if opts.fzf_opts["--header-lines"] == nil then
-    opts.fzf_opts["--header-lines"] = false
+    if not opts.filter(vim.api.nvim_get_current_buf()) then
+      opts.fzf_opts["--header-lines"] = false
+    end
   end
   return fzf_get().buffers(opts)
 end
