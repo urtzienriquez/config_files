@@ -10,4 +10,4 @@ vim.keymap.set(
 )
 vim.keymap.set("n", "_", function()
   vim.cmd("Dirvish " .. vim.fn.getcwd())
-end)
+end, opts)
