@@ -7,6 +7,9 @@ config-file = ~/.config/ghostty/local.config
 # default shell
 command = /usr/bin/zsh
 
+# disable per-surface systemd transient scopes
+linux-cgroup = never
+
 # cursor
 cursor-style = block
 cursor-style-blink = false
