@@ -154,9 +154,19 @@ vim.api.nvim_create_autocmd("FileType", {
       return vim.v.count == 0 and "gk" or "k"
     end
     local opts = { buffer = true, expr = true }
-    vim.keymap.set("n", "j", down_motion, vim.tbl_extend("force", opts, { desc = "Visual line down; logical with count" }))
+    vim.keymap.set(
+      "n",
+      "j",
+      down_motion,
+      vim.tbl_extend("force", opts, { desc = "Visual line down; logical with count" })
+    )
     vim.keymap.set("n", "k", up_motion, vim.tbl_extend("force", opts, { desc = "Visual line up; logical with count" }))
-    vim.keymap.set("v", "j", down_motion, vim.tbl_extend("force", opts, { desc = "Visual line down; logical with count" }))
+    vim.keymap.set(
+      "v",
+      "j",
+      down_motion,
+      vim.tbl_extend("force", opts, { desc = "Visual line down; logical with count" })
+    )
     vim.keymap.set("v", "k", up_motion, vim.tbl_extend("force", opts, { desc = "Visual line up; logical with count" }))
   end,
   desc = "Use visual-line navigation in prose files",
@@ -216,4 +226,15 @@ vim.api.nvim_create_autocmd("FileType", {
     end)
   end,
   desc = "Enable mini.clue triggers in unlisted buffers",
+})
+
+-- When opening an ghostty scrollback (screen.txt) move the cursor 
+-- to the bottom of the buffer
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup("scrollback", { clear = true }),
+  pattern = { "/tmp/*/screen.txt" },
+  callback = function()
+    vim.cmd("norm! G")
+  end,
+  desc = "Scroll to the bottom ghostty scrollback",
 })
