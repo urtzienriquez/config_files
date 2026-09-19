@@ -15,6 +15,9 @@ vim.keymap.set("n", "<leader>gl", function()
   vim.cmd("hori terminal git log --color --graph --decorate --oneline --all")
   vim.cmd("lcd " .. vim.fn.fnameescape(prev))
   local buf = vim.api.nvim_get_current_buf()
+  if not pcall(vim.api.nvim_buf_set_name, buf, "Git log") then
+    pcall(vim.api.nvim_buf_set_name, buf, "Git log " .. buf)
+  end
   vim.keymap.set("t", "gq", function()
     vim.api.nvim_buf_delete(buf, { force = true })
   end, { buffer = buf, desc = "Close git log terminal" })
