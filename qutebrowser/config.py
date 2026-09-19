@@ -80,7 +80,6 @@ config.set(
     "fileselect.single_file.command",
     [
         "ghostty",
-        "+new-window",
         "--title=yazi",
         "-e",
         "yazi",
@@ -92,7 +91,6 @@ config.set(
     "fileselect.multiple_files.command",
     [
         "ghostty",
-        "+new-window",
         "--title=yazi",
         "-e",
         "yazi",
