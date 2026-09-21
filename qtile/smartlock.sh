@@ -43,12 +43,14 @@ is_webcam_active() {
     fi
 }
 
-#   5 minutes idle  -> lock + blank the screen
-#   15 minutes idle -> suspend
-LOCK_THRESHOLD=300000
-SUSPEND_THRESHOLD=900000
-
-locked_this_idle=no
+# Real systemctl suspend always ramps the fans on this hardware (confirmed to be an
+# MSI EC firmware limitation, not fixable from software - see investigation notes).
+# So the automatic idle action is lock+blank only, never auto-suspend. Real suspend
+# still happens via lid-close or by running `systemctl suspend` yourself deliberately.
+IDLE_THRESHOLD=300000
+KBD_LED="/sys/class/leds/msiacpi::kbd_backlight/brightness"
+dimmed=no
+saved_kbd_brightness=3
 
 while true; do
     # Get current X11 idle time using your original fallback logic
@@ -61,42 +63,30 @@ while true; do
     # Write status to log file every 10 seconds for easy troubleshooting
     echo "Current Idle: ${idle_time:-0} ms" >> "$LOG_FILE"
 
-    if [ -n "$idle_time" ] && [ "$idle_time" -lt "$LOCK_THRESHOLD" ]; then
-        locked_this_idle=no
+    if [ -n "$idle_time" ] && [ "$idle_time" -lt "$IDLE_THRESHOLD" ] && [ "$dimmed" = "yes" ]; then
+        # Woke up - restore keyboard backlight
+        echo "$saved_kbd_brightness" > "$KBD_LED" 2>/dev/null
+        dimmed=no
     fi
 
-    if [ -n "$idle_time" ] && [ "$idle_time" -gt "$SUSPEND_THRESHOLD" ]; then
+    if [ -n "$idle_time" ] && [ "$idle_time" -gt "$IDLE_THRESHOLD" ]; then
         audio_active=$(is_audio_playing)
         webcam_active=$(is_webcam_active)
 
-        echo "Suspend threshold reached! Audio: $audio_active | Webcam: $webcam_active" >> "$LOG_FILE"
+        echo "Threshold reached! Audio: $audio_active | Webcam: $webcam_active" >> "$LOG_FILE"
 
         if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
             # Media is playing, reset X11 idle timer to keep it awake
             xset s reset
-            locked_this_idle=no
-        else
-            # Genuinely idle and silent for 15 minutes -> Suspend!
-            echo "Conditions met. Suspending system now." >> "$LOG_FILE"
-            systemctl suspend
-            locked_this_idle=no
-            sleep 10
-        fi
-    elif [ -n "$idle_time" ] && [ "$idle_time" -gt "$LOCK_THRESHOLD" ] && [ "$locked_this_idle" = "no" ]; then
-        audio_active=$(is_audio_playing)
-        webcam_active=$(is_webcam_active)
-
-        echo "Lock threshold reached! Audio: $audio_active | Webcam: $webcam_active" >> "$LOG_FILE"
-
-        if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
-            # Media is playing, reset X11 idle timer to keep it awake
-            xset s reset
-        else
-            # Genuinely idle and silent for 5 minutes -> Lock and blank the screen
+        elif [ "$dimmed" = "no" ]; then
+            # Genuinely idle and silent -> Lock, blank the screen, and turn off the keyboard backlight
             echo "Conditions met. Locking and blanking screen now." >> "$LOG_FILE"
             loginctl lock-session
             xset dpms force off
-            locked_this_idle=yes
+            saved_kbd_brightness=$(cat "$KBD_LED" 2>/dev/null)
+            [ -z "$saved_kbd_brightness" ] && saved_kbd_brightness=3
+            echo 0 > "$KBD_LED" 2>/dev/null
+            dimmed=yes
         fi
     fi
 
