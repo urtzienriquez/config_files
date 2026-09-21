@@ -1,0 +1,13 @@
+[Unit]
+Description=Zotero headless (local API only)
+
+[Service]
+Environment=MOZ_ALLOW_DOWNGRADE=1
+Environment=MOZ_LEGACY_PROFILES=1
+Environment=MOZ_ENABLE_WAYLAND=1
+ExecStart=/usr/lib/zotero/zotero-bin -app /usr/lib/zotero/app/application.ini --headless
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
