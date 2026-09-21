@@ -199,6 +199,22 @@ vim.api.nvim_create_autocmd("TermOpen", {
   end,
 })
 
+-- follow the shell's cwd in :terminal buffers (OSC 7)
+vim.api.nvim_create_autocmd("TermRequest", {
+  desc = "Handles OSC 7 dir change requests",
+  callback = function(ev)
+    local val, n = string.gsub(ev.data.sequence, "\027]7;file://[^/]*", "")
+    if n > 0 then
+      local dir = val
+      if vim.fn.isdirectory(dir) == 0 then
+        vim.notify("invalid dir: " .. dir)
+        return
+      end
+      vim.cmd.bcd(dir)
+    end
+  end,
+})
+
 -- no conceal for R-help files
 vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType" }, {
   callback = function(ev)

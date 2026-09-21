@@ -48,6 +48,12 @@ _precmd_osc133() {
 }
 add-zsh-hook precmd _precmd_osc133
 
+# tell neovim the shell's cwd (OSC 7)
+_precmd_osc7() {
+  printf '\033]7;file://%s%s\033\\' "$HOSTNAME" "$PWD"
+}
+add-zsh-hook precmd _precmd_osc7
+
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
 
