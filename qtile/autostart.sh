@@ -1,6 +1,7 @@
 #!/bin/sh
 xset s off
-xset -dpms
+xset +dpms
+xset dpms 0 0 0
 xset s noblank
 unclutter --timeout 10 &
 pkill -x picom

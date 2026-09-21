@@ -43,8 +43,12 @@ is_webcam_active() {
     fi
 }
 
-# 5 minutes = 300000 ms
-IDLE_THRESHOLD=300000
+#   5 minutes idle  -> lock + blank the screen
+#   15 minutes idle -> suspend
+LOCK_THRESHOLD=300000
+SUSPEND_THRESHOLD=900000
+
+locked_this_idle=no
 
 while true; do
     # Get current X11 idle time using your original fallback logic
@@ -57,22 +61,44 @@ while true; do
     # Write status to log file every 10 seconds for easy troubleshooting
     echo "Current Idle: ${idle_time:-0} ms" >> "$LOG_FILE"
 
-    if [ -n "$idle_time" ] && [ "$idle_time" -gt "$IDLE_THRESHOLD" ]; then
+    if [ -n "$idle_time" ] && [ "$idle_time" -lt "$LOCK_THRESHOLD" ]; then
+        locked_this_idle=no
+    fi
+
+    if [ -n "$idle_time" ] && [ "$idle_time" -gt "$SUSPEND_THRESHOLD" ]; then
         audio_active=$(is_audio_playing)
         webcam_active=$(is_webcam_active)
 
-        echo "Threshold reached! Audio: $audio_active | Webcam: $webcam_active" >> "$LOG_FILE"
+        echo "Suspend threshold reached! Audio: $audio_active | Webcam: $webcam_active" >> "$LOG_FILE"
+
+        if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
+            # Media is playing, reset X11 idle timer to keep it awake
+            xset s reset
+            locked_this_idle=no
+        else
+            # Genuinely idle and silent for 15 minutes -> Suspend!
+            echo "Conditions met. Suspending system now." >> "$LOG_FILE"
+            systemctl suspend
+            locked_this_idle=no
+            sleep 10
+        fi
+    elif [ -n "$idle_time" ] && [ "$idle_time" -gt "$LOCK_THRESHOLD" ] && [ "$locked_this_idle" = "no" ]; then
+        audio_active=$(is_audio_playing)
+        webcam_active=$(is_webcam_active)
+
+        echo "Lock threshold reached! Audio: $audio_active | Webcam: $webcam_active" >> "$LOG_FILE"
 
         if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
             # Media is playing, reset X11 idle timer to keep it awake
             xset s reset
         else
-            # System is genuinely idle and silent -> Suspend!
-            echo "Conditions met. Suspending system now." >> "$LOG_FILE"
-            systemctl suspend
-            sleep 10 
+            # Genuinely idle and silent for 5 minutes -> Lock and blank the screen
+            echo "Conditions met. Locking and blanking screen now." >> "$LOG_FILE"
+            loginctl lock-session
+            xset dpms force off
+            locked_this_idle=yes
         fi
     fi
-    
+
     sleep 10
 done
