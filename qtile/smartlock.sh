@@ -43,10 +43,8 @@ is_webcam_active() {
     fi
 }
 
-# Real systemctl suspend always ramps the fans on this hardware (confirmed to be an
-# MSI EC firmware limitation, not fixable from software - see investigation notes).
-# So the automatic idle action is lock+blank only, never auto-suspend. Real suspend
-# still happens via lid-close or by running `systemctl suspend` yourself deliberately.
+# idle action: lock+blank only, never auto-suspend. 
+# Real suspend via lid-close or by running `systemctl suspend`
 IDLE_THRESHOLD=300000
 KBD_LED="/sys/class/leds/msiacpi::kbd_backlight/brightness"
 dimmed=no
@@ -64,9 +62,11 @@ while true; do
     echo "Current Idle: ${idle_time:-0} ms" >> "$LOG_FILE"
 
     if [ -n "$idle_time" ] && [ "$idle_time" -lt "$IDLE_THRESHOLD" ] && [ "$dimmed" = "yes" ]; then
-        # Woke up - restore keyboard backlight
-        echo "$saved_kbd_brightness" > "$KBD_LED" 2>/dev/null
-        dimmed=no
+        if echo "$saved_kbd_brightness" > "$KBD_LED" 2>>"$LOG_FILE"; then
+            dimmed=no
+        else
+            echo "Keyboard backlight restore failed, will retry next poll" >> "$LOG_FILE"
+        fi
     fi
 
     if [ -n "$idle_time" ] && [ "$idle_time" -gt "$IDLE_THRESHOLD" ]; then
