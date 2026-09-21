@@ -182,15 +182,20 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- make terminal buffers listed always
 vim.api.nvim_create_autocmd("TermOpen", {
+  group = vim.api.nvim_create_augroup("term_buflisted", { clear = true }),
   callback = function(ev)
-    local ft = vim.bo[ev.buf].filetype
-
-    -- Keep real user terminals listed, but leave fzf-lua picker terminals alone.
-    if ft ~= "fzf" then
-      vim.bo[ev.buf].buflisted = true
-    end
-
     vim.opt_local.spell = false
+    vim.schedule(function()
+      if not vim.api.nvim_buf_is_valid(ev.buf) then
+        return
+      end
+      local ft = vim.bo[ev.buf].filetype
+      local name = vim.api.nvim_buf_get_name(ev.buf)
+      local is_fzf_internal = ft == "fzf" or name:find("/" .. ev.buf .. "/", 1, true) ~= nil
+      if not is_fzf_internal then
+        vim.bo[ev.buf].buflisted = true
+      end
+    end)
   end,
 })
 
@@ -228,7 +233,7 @@ vim.api.nvim_create_autocmd("FileType", {
   desc = "Enable mini.clue triggers in unlisted buffers",
 })
 
--- When opening an ghostty scrollback (screen.txt) move the cursor 
+-- When opening an ghostty scrollback (screen.txt) move the cursor
 -- to the bottom of the buffer
 vim.api.nvim_create_autocmd("BufEnter", {
   group = vim.api.nvim_create_augroup("scrollback", { clear = true }),
