@@ -2,14 +2,14 @@ vim.pack.add({
   { src = "https://github.com/saghen/blink.cmp", version = "v1" },
   "https://github.com/rafamadriz/friendly-snippets",
   "https://github.com/L3MON4D3/LuaSnip",
-})
+}, { load = function() end })
 
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
   once = true,
   callback = function()
-    pcall(function()
-      vim.cmd("packadd LuaSnip")
-    end)
+    for _, name in ipairs({ "friendly-snippets", "LuaSnip", "blink.cmp" }) do
+      pcall(vim.cmd.packadd, name)
+    end
     local loader = require("luasnip.loaders.from_vscode")
     loader.lazy_load({
       paths = { vim.fn.stdpath("config") .. "/snippets" },
