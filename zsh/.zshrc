@@ -61,6 +61,11 @@ export MANROFFOPT="-c"
 # keybindings
 # -------------------------------
 
+# force emacs keymap — zsh auto-selects vi-mode when $EDITOR/$VISUAL
+# contains "vi" (nvim does), which breaks nested shells (e.g. :terminal)
+# that inherit EDITOR=nvim from an already-running parent shell
+bindkey -e
+
 # unbind alt+digit
 for k in {0..9}; do bindkey -r "^[$k"; done
 
