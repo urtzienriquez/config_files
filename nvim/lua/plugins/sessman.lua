@@ -3,3 +3,5 @@ vim.opt.rtp:prepend(vim.fn.expand("~/Documents/GitHub/sessman.nvim") --[[@as str
 require("sessman").setup({
   backend = "fzf",
 })
+
+vim.keymap.set("n", "<leader>ms", "<Cmd>SessionLoad<CR>")
