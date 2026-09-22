@@ -13,6 +13,7 @@ local servers = {
   "yamlls",
   "jsonls",
   "texlab",
+  "zls",
 }
 
 vim.api.nvim_create_autocmd("FileType", {
