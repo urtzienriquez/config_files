@@ -4,4 +4,4 @@ require("sessman").setup({
   backend = "fzf",
 })
 
-vim.keymap.set("n", "<leader>ms", "<Cmd>SessionLoad<CR>")
+vim.keymap.set("n", "<leader>ms", "<Cmd>SessionLoad<CR>", {desc = "session manager"})
