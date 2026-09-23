@@ -35,9 +35,8 @@ vimup() {
     echo "Updating neovim from $nvim_dir..."
     cd "$nvim_dir" || return 1
     git pull && \
-    make distclean && \
-    make CMAKE_BUILD_TYPE=RelWithDebInfo && \
-    sudo make install && \
+    command rm -rf .zig-cache zig-out && \
+    zig build install -p "$HOME/.local" -Doptimize=ReleaseFast && \
     echo "✓ Neovim updated successfully!"
     cd - > /dev/null
 }
