@@ -10,8 +10,8 @@ local function refresh()
   vim.cmd.Dirvish()
 end
 
-function M.mkfile()
-  local name = vim.trim(vim.fn.input("New file: "))
+function M.mkfile(name)
+  name = vim.trim(name)
   if name == "" then
     return
   end
@@ -20,8 +20,8 @@ function M.mkfile()
   refresh()
 end
 
-function M.mkdir()
-  local name = vim.trim(vim.fn.input("New directory: "))
+function M.mkdir(name)
+  name = vim.trim(name)
   if name == "" then
     return
   end
@@ -29,9 +29,14 @@ function M.mkdir()
   refresh()
 end
 
-function M.rename()
+-- basename of the entry under the cursor, without the trailing "/" of directories
+function M.current_name()
+  return vim.fs.basename((vim.trim(vim.fn.getline(".")):gsub("/$", "")))
+end
+
+function M.rename(new)
   local old = vim.trim(vim.fn.getline("."))
-  local new = vim.trim(vim.fn.input("Rename to: ", vim.fs.basename((old:gsub("/$", "")))))
+  new = vim.trim(new)
   if new == "" then
     return
   end
