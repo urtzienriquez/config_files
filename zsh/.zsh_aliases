@@ -37,6 +37,7 @@ vimup() {
     git pull && \
     command rm -rf .zig-cache zig-out && \
     zig build install -p "$HOME/.local" -Doptimize=ReleaseFast && \
+    command rm -rf "$HOME/.local/runtime" && \
     echo "✓ Neovim updated successfully!"
     cd - > /dev/null
 }
