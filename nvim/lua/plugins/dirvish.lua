@@ -8,6 +8,7 @@ local M = {}
 
 local function refresh()
   vim.cmd.Dirvish()
+  vim.cmd.echo('""')
 end
 
 function M.mkfile(name)
