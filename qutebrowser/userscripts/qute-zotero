@@ -1,0 +1,429 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# Copyright: 2017 parchd <parchd@archlinux.info>
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+'''Userscript to connect qutebrowser to zotero
+
+Zotero (7+) no longer runs web translators server side (/connector/savePage was
+removed), so this script does what the browser connector does: it builds the
+item itself, sends it to /connector/saveItems and then attaches the PDF.
+
+  1. Metadata comes from doi.org (CSL-JSON) when a DOI is found, otherwise from
+     Highwire citation_* meta tags.
+  2. The PDF is the page itself (when viewing a PDF), or citation_pdf_url, or
+     Zotero's open access resolvers (Unpaywall etc.) as a last resort.
+  3. PDFs without any metadata are saved standalone and Zotero recognizes them.
+  4. Anything else is saved as a webpage item.
+'''
+
+import json
+import re
+import uuid
+from html.parser import HTMLParser
+from os import environ as e
+from urllib.parse import unquote, urlparse, parse_qs, urljoin
+from requests import post, get, ReadTimeout, ConnectionError, RequestException
+
+MAX_WAIT = 20
+ITEM_ID = "qute-zotero-item"
+
+zoteroapi = "http://127.0.0.1:23119/connector/"
+fifo = open(e["QUTE_FIFO"], "w")
+
+DOI_RE = re.compile(r'10\.\d{4,9}/[^\s"\'<>&?#]+')
+
+
+class WrongResponseError(Exception):
+    '''Raise when we don't get the desired response'''
+
+
+def postExpectedOrFail(endpoint, expect, params=None, timeout=MAX_WAIT, **kwargs):
+    r = post(zoteroapi + endpoint, params=params, timeout=timeout, **kwargs)
+
+    if r.status_code != expect:
+        try:
+            detail = r.json()
+        except ValueError:
+            detail = r.text.strip()
+        raise WrongResponseError("{} {}".format(r.status_code, detail or ""))
+
+    return r
+
+
+def session():
+    return uuid.uuid4().hex
+
+
+# Fetching
+
+def browser_headers(referer=None):
+    headers = {}
+    if "QUTE_USER_AGENT" in e:
+        headers["User-Agent"] = e["QUTE_USER_AGENT"]
+    if referer:
+        headers["Referer"] = referer
+    return headers
+
+
+def is_pdf(r):
+    return r.headers.get("Content-Type", "").split(";")[0].strip().endswith("pdf")
+
+
+def fetch_pdf(url, referer=None):
+    '''Return the PDF bytes at url, or None if it isn't a PDF (paywall, captcha, ...)'''
+    try:
+        r = get(url, headers=browser_headers(referer), timeout=MAX_WAIT)
+    except RequestException:
+        return None
+    if r.status_code == 200 and (is_pdf(r) or r.content[:5] == b"%PDF-"):
+        return r.content
+    return None
+
+
+# Page parsing
+
+class MetaParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.meta = {}
+        self.title = ""
+        self._in_title = False
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "meta":
+            name = (attrs.get("name") or attrs.get("property") or "").lower()
+            content = attrs.get("content")
+            if name and content:
+                self.meta.setdefault(name, []).append(content.strip())
+        elif tag == "title":
+            self._in_title = True
+
+    def handle_endtag(self, tag):
+        if tag == "title":
+            self._in_title = False
+
+    def handle_data(self, data):
+        if self._in_title:
+            self.title += data
+
+
+def parse(html):
+    p = MetaParser()
+    p.feed(html)
+    return p.meta, p.title.strip()
+
+
+def first(meta, *names):
+    for name in names:
+        if meta.get(name):
+            return meta[name][0]
+    return None
+
+
+def find_doi(meta, url):
+    candidates = []
+    for name in ("citation_doi", "prism.doi", "dc.identifier", "doi", "bepress_citation_doi"):
+        candidates += meta.get(name, [])
+    candidates.append(unquote(url))
+    for c in candidates:
+        m = DOI_RE.search(c)
+        if m:
+            return m.group(0).rstrip(".,;)")
+    return None
+
+
+def clean(text):
+    return " ".join(re.sub(r"<[^>]+>", " ", text).split())
+
+
+# Building Zotero items (translator JSON format, as sent by the browser connector)
+
+CSL_TYPES = {
+    "journal-article": ("journalArticle", "publicationTitle"),
+    "article-journal": ("journalArticle", "publicationTitle"),
+    "book": ("book", None),
+    "monograph": ("book", None),
+    "edited-book": ("book", None),
+    "book-chapter": ("bookSection", "bookTitle"),
+    "chapter": ("bookSection", "bookTitle"),
+    "proceedings-article": ("conferencePaper", "proceedingsTitle"),
+    "paper-conference": ("conferencePaper", "proceedingsTitle"),
+    "report": ("report", None),
+    "dissertation": ("thesis", None),
+    "thesis": ("thesis", None),
+    "posted-content": ("preprint", None),
+    "dataset": ("dataset", None),
+}
+
+
+def item_from_csl(csl, url):
+    item_type, container_field = CSL_TYPES.get(csl.get("type"), ("journalArticle", "publicationTitle"))
+
+    def text(key):
+        value = csl.get(key)
+        if isinstance(value, list):
+            value = value[0] if value else None
+        return clean(str(value)) if value else None
+
+    creators = []
+    for role, creator_type in (("author", "author"), ("editor", "editor")):
+        for c in csl.get(role, []):
+            if "family" in c:
+                creators.append({"firstName": c.get("given", ""), "lastName": c["family"],
+                                 "creatorType": creator_type})
+            elif "literal" in c:
+                creators.append({"lastName": c["literal"], "fieldMode": 1,
+                                 "creatorType": creator_type})
+
+    date = None
+    for key in ("issued", "published-print", "published-online"):
+        parts = csl.get(key, {}).get("date-parts")
+        if parts and parts[0] and parts[0][0]:
+            date = "-".join("{:02d}".format(int(p)) for p in parts[0])
+            break
+
+    item = {
+        "itemType": item_type,
+        "title": text("title"),
+        "creators": creators,
+        "date": date,
+        "DOI": csl.get("DOI"),
+        "volume": text("volume"),
+        "issue": text("issue"),
+        "pages": text("page"),
+        "publisher": text("publisher"),
+        "abstractNote": text("abstract"),
+        "language": text("language"),
+        "url": url,
+        "accessDate": "CURRENT_TIMESTAMP",
+    }
+    if container_field:
+        item[container_field] = text("container-title")
+    if item_type == "journalArticle":
+        item["journalAbbreviation"] = text("container-title-short")
+        item["ISSN"] = text("ISSN")
+    if item_type in ("book", "bookSection"):
+        item["ISBN"] = text("ISBN")
+    return {k: v for k, v in item.items() if v}
+
+
+def item_from_meta(meta, url, doi):
+    title = first(meta, "citation_title")
+    if not title:
+        return None
+
+    journal = first(meta, "citation_journal_title")
+    if journal:
+        item_type = "journalArticle"
+    elif first(meta, "citation_conference_title"):
+        item_type = "conferencePaper"
+    elif first(meta, "citation_isbn"):
+        item_type = "book"
+    elif first(meta, "citation_technical_report_institution"):
+        item_type = "report"
+    else:
+        item_type = "journalArticle"
+
+    creators = []
+    for a in meta.get("citation_author", []):
+        if "," in a:
+            last, given = a.split(",", 1)
+        else:
+            given, _, last = a.rpartition(" ")
+        creators.append({"firstName": given.strip(), "lastName": last.strip(),
+                         "creatorType": "author"})
+
+    pages = first(meta, "citation_firstpage")
+    if pages and first(meta, "citation_lastpage"):
+        pages += "-" + first(meta, "citation_lastpage")
+
+    item = {
+        "itemType": item_type,
+        "title": title,
+        "creators": creators,
+        "date": first(meta, "citation_publication_date", "citation_date", "citation_online_date"),
+        "DOI": doi,
+        "volume": first(meta, "citation_volume"),
+        "issue": first(meta, "citation_issue"),
+        "pages": pages,
+        "publisher": first(meta, "citation_publisher", "dc.publisher",
+                           "citation_technical_report_institution"),
+        "abstractNote": clean(first(meta, "citation_abstract", "dc.description",
+                                    "description") or ""),
+        "language": first(meta, "citation_language"),
+        "url": url,
+        "accessDate": "CURRENT_TIMESTAMP",
+        "tags": [{"tag": k} for k in meta.get("citation_keywords", [])],
+    }
+    if item_type == "journalArticle":
+        item["publicationTitle"] = journal
+        item["journalAbbreviation"] = first(meta, "citation_journal_abbrev")
+        item["ISSN"] = first(meta, "citation_issn")
+    elif item_type == "conferencePaper":
+        item["proceedingsTitle"] = first(meta, "citation_conference_title")
+    elif item_type == "book":
+        item["ISBN"] = first(meta, "citation_isbn")
+    return {k: v for k, v in item.items() if v}
+
+
+def csl_from_doi(doi):
+    try:
+        r = get("https://doi.org/" + doi,
+                headers={"Accept": "application/vnd.citationstyles.csl+json"},
+                timeout=MAX_WAIT)
+        r.encoding = "utf-8"
+        return r.json() if r.status_code == 200 else None
+    except (RequestException, ValueError):
+        return None
+
+
+# Zotero actions
+
+def saveItem(item, url):
+    sid = session()
+    item = dict(item, id=ITEM_ID)
+    postExpectedOrFail("saveItems", 201, json={"sessionID": sid, "uri": url, "items": [item]})
+    return sid
+
+
+def attachPdf(sid, url, content):
+    postExpectedOrFail(
+        "saveAttachment", 201,
+        params={"sessionID": sid},
+        data=content,
+        headers={
+            "Content-Type": "application/pdf",
+            "X-Metadata": json.dumps({"sessionID": sid, "parentItemID": ITEM_ID,
+                                      "title": "Full Text PDF", "url": url}),
+        },
+    )
+
+
+def attachFromResolver(sid):
+    '''Let Zotero look for an open access PDF (needs a DOI)'''
+    r = postExpectedOrFail("hasAttachmentResolvers", 200,
+                           json={"sessionID": sid, "itemID": ITEM_ID})
+    if not r.json():
+        return False
+    try:
+        postExpectedOrFail("saveAttachmentFromResolver", 201,
+                           json={"sessionID": sid, "itemID": ITEM_ID}, timeout=60)
+    except WrongResponseError:
+        return False
+    return True
+
+
+def savePdf(url, content, title):
+    sid = session()
+    postExpectedOrFail(
+        "saveStandaloneAttachment", 201,
+        params={"sessionID": sid},
+        data=content,
+        headers={
+            "Content-Type": "application/pdf",
+            "X-Metadata": json.dumps({"sessionID": sid, "url": url, "title": title}),
+        },
+    )
+
+
+def saveSnapshot(url, title):
+    postExpectedOrFail("saveSnapshot", 201,
+                       json={"sessionID": session(), "url": url, "title": title or url})
+
+
+# Qute stuff
+
+def notify(message):
+    print('message-info "{}"'.format(message.replace('"', "'")), file=fifo)
+
+
+def notify_error(message):
+    print('message-error "{}"'.format(message.replace('"', "'")), file=fifo)
+
+
+def load_page(url):
+    '''Return (url, html, pdf bytes or None) for the current page or hinted link'''
+    # qutebrowser's pdf.js viewer: the original url is in the "source" parameter
+    if url.startswith("qute://pdfjs"):
+        source = parse_qs(urlparse(url).query).get("source")
+        if source:
+            url = source[0]
+        return url, "", fetch_pdf(url)
+
+    if e["QUTE_MODE"] == "hints":
+        r = get(url, headers=browser_headers(), timeout=MAX_WAIT)
+        return url, "" if is_pdf(r) else r.text, r.content if is_pdf(r) else None
+
+    with open(e["QUTE_HTML"], errors="replace") as fd:
+        html = fd.read()
+    # The chromium pdf viewer page has no metadata; check whether the url is a pdf
+    if "citation_title" not in html and ("application/pdf" in html or
+                                         url.lower().split("?")[0].endswith(".pdf")):
+        return url, "", fetch_pdf(url)
+    return url, html, None
+
+
+def main():
+    try:
+        url, html, pdf = load_page(e["QUTE_URL"])
+        meta, page_title = parse(html)
+        doi = find_doi(meta, url)
+
+        item = None
+        if doi:
+            csl = csl_from_doi(doi)
+            if csl:
+                item = item_from_csl(csl, url)
+        if not item:
+            item = item_from_meta(meta, url, doi)
+
+        if not item:
+            if pdf:
+                title = unquote(url.rstrip("/").split("/")[-1].split("?")[0]) or url
+                savePdf(url, pdf, title)
+                notify("Saved PDF to Zotero (recognizing metadata)")
+            else:
+                saveSnapshot(url, page_title)
+                notify("Saved webpage item to Zotero")
+            return
+
+        sid = saveItem(item, url)
+
+        pdf_url = url
+        if not pdf and first(meta, "citation_pdf_url"):
+            pdf_url = urljoin(url, first(meta, "citation_pdf_url"))
+            pdf = fetch_pdf(pdf_url, referer=url)
+        if pdf:
+            attachPdf(sid, pdf_url, pdf)
+            status = "with PDF"
+        elif doi and attachFromResolver(sid):
+            status = "with open access PDF"
+        else:
+            status = "without PDF"
+        notify("Saved {} to Zotero ({})".format(item["title"], status))
+
+    except ConnectionError:
+        notify_error("Connection failed (is Zotero running?)")
+    except WrongResponseError as err:
+        notify_error("Zotero didn't give the expected response: {}".format(err))
+    except ReadTimeout:
+        notify_error("Zotero took too long to respond")
+
+
+if __name__ == "__main__":
+    main()

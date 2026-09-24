@@ -142,6 +142,12 @@ config.bind("zl", "spawn --userscript qute-pass --dmenu-invocation dmenu")
 config.bind("tv", "spawn --userscript view_in_mpv")
 config.bind("gv", "hint links spawn mpv {hint-url}")
 
+# qute-zotero
+c.aliases["zotero"] = (
+    "spawn --userscript qute-zotero"
+)
+config.bind("zt", "zotero")
+
 # Proxy to use
 c.aliases["toggle-proxy"] = (
     "config-cycle content.proxy system http://proxy.ivb.cz:3128/"
