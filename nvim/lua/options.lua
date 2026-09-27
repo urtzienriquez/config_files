@@ -4,8 +4,17 @@ vim.loader.enable()
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- ui2
+local function ui2()
+  require("vim._core.ui2").enable({})
+end
+if #vim.api.nvim_list_uis() > 0 then
+  ui2()
+else -- headless start (e.g. a sessman session): wait for the first UI
+  vim.api.nvim_create_autocmd("UIEnter", { once = true, callback = ui2 })
+end
+
 -- misc options
-require("vim._core.ui2").enable({})
 vim.o.mouse = ""
 vim.o.shell = "/usr/bin/zsh"
 vim.o.winborder = "rounded"

@@ -1,3 +1,6 @@
+-- detach neovim
+vim.keymap.set("n", "ZD", ":detach<CR>", { silent = true, desc = "detach" })
+
 -- Resize windows
 vim.keymap.set("n", "<M-Left>", ":vertical resize +5<CR>", { silent = true, desc = "Resize vertically +" })
 vim.keymap.set("n", "<M-Right>", ":vertical resize -5<CR>", { silent = true, desc = "Resize vertically -" })

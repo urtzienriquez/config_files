@@ -1,8 +1,5 @@
 vim.opt.rtp:prepend(vim.fn.expand("~/Documents/GitHub/sessman.nvim") --[[@as string]])
 
-require("sessman").setup({
-  backend = "fzf",
-})
-
-vim.keymap.set("n", "<leader>ms", "<Cmd>SessionLoad<CR>", {desc = "session manager"})
-vim.keymap.set("n", "<leader>mw", "<Cmd>SessionSaveCurrent<CR>", {desc = "save session"})
+vim.keymap.set("n", "<leader>ss", "<Cmd>Session<CR>", {desc = "session manager"})
+vim.keymap.set("n", "<leader>sl", function() require("sessman").pick() end, {desc = "load session"})
+vim.keymap.set("n", "<leader>sw", "<Cmd>Session save<CR>", {desc = "save session"})
