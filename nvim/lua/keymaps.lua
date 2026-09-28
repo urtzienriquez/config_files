@@ -1,6 +1,12 @@
 -- detach neovim
 vim.keymap.set("n", "ZD", ":detach<CR>", { silent = true, desc = "detach" })
 
+-- highlight word
+vim.keymap.set("n", "<leader>h", function()
+  vim.fn.setreg("/", [[\<]] .. vim.fn.expand("<cword>") .. [[\>]])
+  vim.o.hlsearch = true
+end)
+
 -- Resize windows
 vim.keymap.set("n", "<M-Left>", ":vertical resize +5<CR>", { silent = true, desc = "Resize vertically +" })
 vim.keymap.set("n", "<M-Right>", ":vertical resize -5<CR>", { silent = true, desc = "Resize vertically -" })
@@ -34,7 +40,9 @@ vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 
 -- open Guh
-vim.keymap.set("n", "<leader>gu", function() vim.cmd("Guh") end, { noremap = true, desc = "Open Guh" })
+vim.keymap.set("n", "<leader>gu", function()
+  vim.cmd("Guh")
+end, { noremap = true, desc = "Open Guh" })
 
 -- Execute Lua
 vim.api.nvim_create_autocmd("FileType", {
@@ -67,7 +75,12 @@ vim.api.nvim_create_user_command("ZgVariants", function()
   end
   vim.notify("Added variants of '" .. word .. "' to spellfile", vim.log.levels.INFO)
 end, {})
-vim.keymap.set("n", "zg", ":ZgVariants<CR>", { noremap = true, silent = true, desc = "add variants of words to spellfile" })
+vim.keymap.set(
+  "n",
+  "zg",
+  ":ZgVariants<CR>",
+  { noremap = true, silent = true, desc = "add variants of words to spellfile" }
+)
 
 -- cd to current buffers directory
 vim.keymap.set("n", "cd", function()
@@ -152,7 +165,9 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "<leader>rr", function()
       local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
       vim.api.nvim_echo({ { "" } }, false, {})
-      if filename == "__CANCEL__" then return end
+      if filename == "__CANCEL__" then
+        return
+      end
       local file = vim.fn.expand("%")
       vim.cmd("write")
       local cmd
@@ -168,8 +183,21 @@ vim.api.nvim_create_autocmd("FileType", {
       local file_dir = vim.fn.expand("%:p:h")
       local file_name = vim.fn.expand("%:t:r")
       local extensions = {
-        "aux", "bcf", "run.xml", "log", "listing", "out", "toc",
-        "nav", "snm", "vrb", "fls", "fdb_latexmk", "blg", "bbl", "synctex.gz",
+        "aux",
+        "bcf",
+        "run.xml",
+        "log",
+        "listing",
+        "out",
+        "toc",
+        "nav",
+        "snm",
+        "vrb",
+        "fls",
+        "fdb_latexmk",
+        "blg",
+        "bbl",
+        "synctex.gz",
       }
       local extra_files = { file_name .. "-tikzDictionary" }
       local count = 0
