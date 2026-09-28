@@ -37,6 +37,5 @@ miniclue.setup({
     { mode = "n", keys = "<Leader>u", desc = "(UI)" },
     { mode = "n", keys = "<Leader>b", desc = "(Buffer format)" },
     { mode = "n", keys = "<Leader>s", desc = "(Session)" },
-    { mode = "n", keys = "<Leader>z", desc = "(Zotero)" },
   },
 })

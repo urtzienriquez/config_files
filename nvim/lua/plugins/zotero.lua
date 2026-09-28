@@ -2,4 +2,5 @@ vim.opt.rtp:prepend(vim.fn.expand("~/Documents/GitHub/zotero.nvim") --[[@as stri
 
 require("zotero").setup({
   max_items = 3000,
+  keymaps = { open_library = "<leader>z" },
 })
