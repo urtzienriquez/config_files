@@ -4,6 +4,9 @@ alias zr='source ~/.config/zsh/.zshrc'
 # neovim alternative config aliases
 alias vim-neoffice='NVIM_APPNAME=nvim_neoffice nvim'
 
+# edit files in neovim from inside neovim's terminal with "e"
+alias e='nvim --server "$NVIM" --remote'
+
 # nv switcher
 function vims() {
   local items=("default" "normal" "neoffice")
