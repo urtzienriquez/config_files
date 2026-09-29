@@ -1,4 +1,15 @@
+import os
+import subprocess
+
 from libqtile.dgroups import simple_key_binder
+
+# Render Ghostty (and other EGL apps) on the Intel iGPU instead of the NVIDIA dGPU.
+# Also exported to D-Bus so a D-Bus-activated Ghostty picks it up.
+os.environ["__EGL_VENDOR_LIBRARY_FILENAMES"] = "/usr/share/glvnd/egl_vendor.d/50_mesa.json"
+subprocess.run(
+    ["dbus-update-activation-environment", "__EGL_VENDOR_LIBRARY_FILENAMES"],
+    check=False,
+)
 
 from keybindsc import keys, mod
 from groupsc import groups
