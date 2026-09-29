@@ -242,24 +242,18 @@ launcher_keys = [
     Key(
         [],
         "b",
-        lazy.to_screen(0),
-        lazy.group["4"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
         lazy.spawn("librewolf"),
         desc="Launch librewolf",
     ),
     Key(
         [],
         "j",
-        lazy.to_screen(0),
-        lazy.group["4"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
         lazy.spawn("qutebrowser --qt-arg class web --qt-arg name web"),
         desc="Launch qutebrowser",
     ),
     Key(
         [],
         "t",
-        lazy.to_screen(0),
-        lazy.group["5"].toscreen(0),  # Show web workspace on laptop screen (screen 0)
         lazy.spawn(
             "qutebrowser --basedir /home/urtzi/.config/quteyoutube \
                     --qt-arg class youtube --qt-arg name youtube",
@@ -269,7 +263,6 @@ launcher_keys = [
     Key(
         [],
         "z",
-        lazy.to_screen(0),
         lazy.spawn("zotero"),
         desc="Launch zotero",
     ),
