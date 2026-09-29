@@ -44,3 +44,9 @@ def auto_show_screen(window):
 def shorten_pdf_names(window):
     if window.name and ".pdf" in window.name.lower():
         window.name = os.path.basename(window.name)
+
+
+@hook.subscribe.client_focus
+def ghostty_no_center(win):
+    if any("ghostty" in (c or "").lower() for c in (win.get_wm_class() or [])):
+        win.window.warp_pointer(100, 100)  # relative to the window's top-left
