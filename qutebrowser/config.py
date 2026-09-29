@@ -122,8 +122,11 @@ config.bind('<Alt-f>', 'fake-key <Ctrl-Right>', "insert")
 config.bind('<Alt-b>', 'fake-key <Ctrl-Left>', "insert")
 config.bind('<Ctrl-d>', 'fake-key <Delete>', "insert")
 config.bind('<Alt-d>', 'fake-key <Ctrl-Delete>', "insert")
-config.bind('<Alt-Backspace>', 'fake-key <Ctrl-Backspace>', "insert")
+config.bind('<Ctrl-w>', 'fake-key <Ctrl-Backspace>', "insert")
 config.bind('<Ctrl-y>', 'insert-text {primary}', "insert")
+config.bind("<Ctrl-u>", "fake-key <Shift-Home><Delete>", "insert")
+config.bind("<Ctrl-k>", "fake-key <Shift-End><Delete>", "insert")
+config.bind("<Alt-a>", "fake-key <End><Shift-Home>", "insert")
 config.bind('<Alt-e>', 'edit-text', "insert")
 
 # navigate completion widget with ctrl-n / ctrl-p
