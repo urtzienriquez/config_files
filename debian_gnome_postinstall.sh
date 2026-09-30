@@ -335,7 +335,7 @@ do
 done
 
 # make links in $HOME
-for i in .gitconfig .zshenv .lintr .Rprofile .Renviron .vimrc .vimrc.plug
+for i in .gitconfig .zshenv .xprofile .lintr .Rprofile .Renviron .vimrc .vimrc.plug
 do
 	rm -rf "$home/$i"
 	ln -s "$home/config_files/$i" "$home/$i"
@@ -357,5 +357,15 @@ Section "InputClass"
     Driver "libinput"
     Option "Tapping" "on"
     Option "NaturalScrolling" "on"
+EndSection
+EOF
+
+# keyboard: us layout, Menu as Compose key (used by the corne ACCENT key for á, ñ, ã...)
+sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf > /dev/null <<EOF
+Section "InputClass"
+    Identifier "keyboard"
+    MatchIsKeyboard "on"
+    Option "XkbLayout" "us"
+    Option "XkbOptions" "lv3:ralt_switch,compose:menu"
 EndSection
 EOF

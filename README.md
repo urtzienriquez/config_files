@@ -15,6 +15,8 @@ Setup for Debian with:
 - qutebrowser (built from source) as internet browser
 - fzf: both inside ghostty and as a flotting window for several utilities (e.g., connect to wifi)
 - zotero, run headless as a systemd --user service (`zotero start`/`stop`/`status`/`restart`, see zsh/.zsh_aliases)
+- corne keyboard (QMK firmware in my qmk_firmware fork, branch `my_corne`, `keyboards/crkbd/keymaps/c_v2`)
+  - its ACCENT key types á, ñ, ã... through X11 Compose sequences, so the host needs Menu as the Compose key (`compose:menu`, set in `/etc/X11/xorg.conf.d/00-keyboard.conf` by the postinstall scripts and in `.xprofile`) and `QT_IM_MODULE=compose` (in `.xprofile`) for Qt apps like qutebrowser
 
 ## how to use
 

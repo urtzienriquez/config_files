@@ -11,6 +11,9 @@ command -v cut >/dev/null || { echo "❌ cut not found in PATH"; exit 1; }
 CUT_CMD=$(command -v cut)
 GSETTINGS_CMD=$(command -v gsettings)
 
+# Menu as Compose key (used by the corne ACCENT key); GNOME ignores setxkbmap/xorg xkb options
+$GSETTINGS_CMD set org.gnome.desktop.input-sources xkb-options "['lv3:ralt_switch', 'compose:menu']"
+
 # ===== Define your shortcuts here =====
 # Format: 'Name|Command|Keybinding'
 declare -a SHORTCUTS=(
