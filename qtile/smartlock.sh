@@ -46,9 +46,7 @@ is_webcam_active() {
 # idle action: lock+blank only, never auto-suspend. 
 # Real suspend via lid-close or by running `systemctl suspend`
 IDLE_THRESHOLD=300000
-KBD_LED="/sys/class/leds/msiacpi::kbd_backlight/brightness"
 dimmed=no
-saved_kbd_brightness=3
 
 while true; do
     # Get current X11 idle time using your original fallback logic
@@ -61,12 +59,8 @@ while true; do
     # Write status to log file every 10 seconds for easy troubleshooting
     echo "Current Idle: ${idle_time:-0} ms" >> "$LOG_FILE"
 
-    if [ -n "$idle_time" ] && [ "$idle_time" -lt "$IDLE_THRESHOLD" ] && [ "$dimmed" = "yes" ]; then
-        if echo "$saved_kbd_brightness" > "$KBD_LED" 2>>"$LOG_FILE"; then
-            dimmed=no
-        else
-            echo "Keyboard backlight restore failed, will retry next poll" >> "$LOG_FILE"
-        fi
+    if [ -n "$idle_time" ] && [ "$idle_time" -lt "$IDLE_THRESHOLD" ]; then
+        dimmed=no
     fi
 
     if [ -n "$idle_time" ] && [ "$idle_time" -gt "$IDLE_THRESHOLD" ]; then
@@ -79,13 +73,11 @@ while true; do
             # Media is playing, reset X11 idle timer to keep it awake
             xset s reset
         elif [ "$dimmed" = "no" ]; then
-            # Genuinely idle and silent -> Lock, blank the screen, and turn off the keyboard backlight
+            # Genuinely idle and silent -> Lock and blank the screen
+            # (lock.sh handles the keyboard backlight)
             echo "Conditions met. Locking and blanking screen now." >> "$LOG_FILE"
             loginctl lock-session
             xset dpms force off
-            saved_kbd_brightness=$(cat "$KBD_LED" 2>/dev/null)
-            [ -z "$saved_kbd_brightness" ] && saved_kbd_brightness=3
-            echo 0 > "$KBD_LED" 2>/dev/null
             dimmed=yes
         fi
     fi

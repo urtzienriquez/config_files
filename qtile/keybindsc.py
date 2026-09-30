@@ -99,13 +99,13 @@ def toggle_smartlock(qtile):
 
     if result.returncode == 0:
         subprocess.run(["pkill", "-f", "smartlock.sh"])
-        subprocess.run(["notify-send", "Smartlock", "Suspend disabled"])
+        subprocess.run(["notify-send", "Smartlock", "Screen lock disabled"])
     else:
         subprocess.Popen(
             [os.path.expanduser("~/.config/qtile/smartlock.sh")],
             start_new_session=True,
         )
-        subprocess.run(["notify-send", "Smartlock", "Suspend enabled"])
+        subprocess.run(["notify-send", "Smartlock", "Screen lock enabled"])
 
 
 FZF_CONFIG = Path.home() / ".config/zsh/.fzf_config"
