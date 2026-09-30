@@ -192,8 +192,9 @@ alias kdon="sudo systemctl enable --now keyd "
 alias kdoff="sudo systemctl disable --now keyd "
 
 # change keyboard layout
-alias kles="setxkbmap es"
-alias klus="setxkbmap us"
+# compose:menu makes Menu (sent by the corne ACCENT key) the Compose key
+alias kles="setxkbmap es -option -option lv3:ralt_switch,compose:menu"
+alias klus="setxkbmap us -option -option lv3:ralt_switch,compose:menu"
 alias klq="setxkbmap -query"
 
 # dir aliases
