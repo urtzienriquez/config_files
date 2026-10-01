@@ -46,19 +46,30 @@ def auto_show_screen(window):
         window.group.toscreen()
 
 
-# Floating terminal popups opened at a fraction of the screen.
+# Floating popups opened at a fraction of the screen (width, height).
+# Terminal popups match by title, apps by wm_class.
 POPUP_TITLES = {"fzf-nova", "calendar", "yazi", "qeditor"}
-POPUP_SIZE = (0.5, 0.5)  # fraction of screen width, height
+POPUP_SIZE = (0.5, 0.5)
+# GNOME Settings otherwise restores its own saved (wide/maximized) size
+POPUP_CLASSES = {
+    "org.gnome.Settings": (0.45, 0.75),  # Wayland
+    "gnome-control-center": (0.45, 0.75),  # X11
+}
 
 
 @hook.subscribe.client_managed
 def size_popups(window):
-    if window.name not in POPUP_TITLES or not window.floating:
+    if not window.floating:
         return
+    if window.name in POPUP_TITLES:
+        size = POPUP_SIZE
+    else:
+        wm_class = window.get_wm_class() or []
+        size = next((POPUP_CLASSES[c] for c in wm_class if c in POPUP_CLASSES), None)
+        if size is None:
+            return
     screen = window.group.screen or qtile.current_screen
-    window.set_size_floating(
-        int(screen.width * POPUP_SIZE[0]), int(screen.height * POPUP_SIZE[1])
-    )
+    window.set_size_floating(int(screen.width * size[0]), int(screen.height * size[1]))
     window.center()
 
 
