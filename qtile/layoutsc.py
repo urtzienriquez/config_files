@@ -1,3 +1,5 @@
+import re
+
 from libqtile.config import Match
 from libqtile import layout
 
@@ -35,6 +37,7 @@ floating_layout = layout.Floating(
         Match(wm_class="maketag"),  # gitk
         Match(wm_class="ssh-askpass"),  # ssh-askpass
         Match(wm_class="gnome-control-center"),  # gnome-control-center
+        Match(wm_class="org.gnome.Settings"),  # gnome-control-center (Wayland)
         Match(title="calendar"),  # calendar
         Match(title="fzf-nova"),  # fzf-nova
         Match(title="yazi"),  # yazi
@@ -44,6 +47,8 @@ floating_layout = layout.Floating(
         Match(title="pinentry"),  # GPG key password entry
         # Zotero LibreOffice citation popup - match by window role "Toplevel"
         Match(wm_class="Zotero", role="Toplevel"),
+        # same popup on Wayland (no roles there): match by its title
+        Match(wm_class="Zotero", title=re.compile(r"Citation|Quick Format")),
         Match(wm_class="love-11.5"),
         Match(wm_class="gksqt"),
         Match(wm_class="r_x11"),

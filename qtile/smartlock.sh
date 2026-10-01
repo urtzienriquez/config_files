@@ -2,7 +2,7 @@
 
 # Debug log file path
 LOG_FILE="/tmp/smartlock.log"
-echo "Smartlock script initialized at $(date)" > "$LOG_FILE"
+[ "$1" = "--idle" ] || echo "Smartlock script initialized at $(date)" > "$LOG_FILE"
 
 is_audio_playing() {
     # 1. Check via playerctl: Modern browsers (Firefox/Chrome) natively broadcast 
@@ -43,7 +43,32 @@ is_webcam_active() {
     fi
 }
 
-# idle action: lock+blank only, never auto-suspend. 
+# Wayland: no idle-time polling, so swayidle fires after 5 min idle and runs
+# this script with --idle; that waiter holds off while media/webcam is active,
+# then locks. Any input (resume) kills the waiter.
+if [ "$1" = "--idle" ]; then
+    while [ "$(is_audio_playing)" = "yes" ] || [ "$(is_webcam_active)" = "yes" ]; do
+        sleep 10
+    done
+    echo "Conditions met. Locking and blanking screen now." >> "$LOG_FILE"
+    loginctl lock-session
+    sleep 1
+    wlopm --off '*'  # = xset dpms force off
+    exit 0
+fi
+
+if [ -n "$WAYLAND_DISPLAY" ]; then
+    swayidle -w \
+        timeout 300 "$0 --idle &" \
+        resume "pkill -f 'smartlock.sh --idle'; wlopm --on '*'" &
+    swayidle_pid=$!
+    # toggle_smartlock kills this script by name; take swayidle down with it
+    trap 'kill $swayidle_pid 2>/dev/null; exit 0' TERM INT
+    wait $swayidle_pid
+    exit 0
+fi
+
+# idle action: lock+blank only, never auto-suspend.
 # Real suspend via lid-close or by running `systemctl suspend`
 IDLE_THRESHOLD=300000
 dimmed=no

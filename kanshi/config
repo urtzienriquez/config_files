@@ -1,0 +1,12 @@
+# kanshi: Wayland equivalent of the autorandr profiles in ~/.config/autorandr
+# (qtile Wayland session only; started from qtile/autostart.sh)
+
+# external monitor on the left of the laptop
+profile dual {
+	output HDMI-A-1 mode 2560x1440@144Hz position 0,0
+	output eDP-1 mode 1920x1080@144Hz position 2560,0
+}
+
+profile laptop {
+	output eDP-1 mode 1920x1080@144Hz position 0,0
+}

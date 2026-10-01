@@ -55,7 +55,7 @@ def scale_floating_window(scale_factor):
             delta_height = new_height - current_height
 
             # Resize
-            window.cmd_resize_floating(delta_width, delta_height)
+            window.resize_floating(delta_width, delta_height)
 
     return _inner
 
@@ -71,26 +71,33 @@ if os.path.exists(local_settings_path):
         HEADPHONES_MAC = data.get("headphones_mac", HEADPHONES_MAC)
 
 
+# These functions run inside qtile. On Wayland qtile is the display server, so
+# anything slow (notify-send waiting for dunst, bluetoothctl connect) must not
+# block, or the whole screen freezes until it returns.
+def notify(title, body):
+    subprocess.Popen(["notify-send", title, body])
+
+
 def toggle_headphones(qtile):
     mac = HEADPHONES_MAC
     if mac == "00:00:00:00:00:00":
-        subprocess.run(
-            "notify-send 'Error' 'Headphones MAC not configured'", shell=True
-        )
+        notify("Error", "Headphones MAC not configured")
         return
 
     check_cmd = f"bluetoothctl info {mac} | grep 'Connected: yes'"
     connected = subprocess.run(check_cmd, shell=True, capture_output=True)
 
     if connected.returncode == 0:
-        subprocess.run(f"bluetoothctl disconnect {mac}", shell=True)
-        subprocess.run(
-            f"notify-send 'Bluetooth' 'Monitor III Disconnected'", shell=True
+        subprocess.Popen(
+            f"bluetoothctl disconnect {mac}; "
+            "notify-send 'Bluetooth' 'Monitor III Disconnected'",
+            shell=True,
         )
     else:
-        subprocess.run(f"bluetoothctl connect {mac}", shell=True)
-        subprocess.run(
-            f"notify-send 'Bluetooth' 'Connecting to Monitor III...'", shell=True
+        subprocess.Popen(
+            f"bluetoothctl connect {mac}; "
+            "notify-send 'Bluetooth' 'Connecting to Monitor III...'",
+            shell=True,
         )
 
 
@@ -99,13 +106,41 @@ def toggle_smartlock(qtile):
 
     if result.returncode == 0:
         subprocess.run(["pkill", "-f", "smartlock.sh"])
-        subprocess.run(["notify-send", "Smartlock", "Screen lock disabled"])
+        notify("Smartlock", "Screen lock disabled")
     else:
         subprocess.Popen(
             [os.path.expanduser("~/.config/qtile/smartlock.sh")],
             start_new_session=True,
         )
-        subprocess.run(["notify-send", "Smartlock", "Screen lock enabled"])
+        notify("Smartlock", "Screen lock enabled")
+
+
+# xkb options (also used by wl_input_rules in config.py; X11 gets them from .xprofile)
+KB_OPTIONS = "lv3:ralt_switch,compose:menu"
+_wl_kb_layout = "us"
+
+
+def toggle_kbd(qtile):
+    global _wl_kb_layout
+    if qtile.core.name != "wayland":
+        qtile.spawn("togglekbd")
+        return
+    _wl_kb_layout = "es" if _wl_kb_layout == "us" else "us"
+    qtile.core.set_keymap(_wl_kb_layout, KB_OPTIONS, None)
+
+
+WL_SCREENSHOT = (
+    "sh -c 'd=$HOME/Pictures/Screenshots; mkdir -p \"$d\"; "
+    "f=\"$d/$(date +%F_%H-%M-%S).png\"; "
+    "grim -g \"$(slurp)\" \"$f\" && wl-copy < \"$f\" && notify-send Screenshot \"$f\"'"
+)
+
+
+def screenshot(qtile):
+    if qtile.core.name == "wayland":
+        qtile.spawn(WL_SCREENSHOT)
+    else:
+        qtile.spawn("gnome-screenshot -i")
 
 
 FZF_CONFIG = Path.home() / ".config/zsh/.fzf_config"
@@ -163,7 +198,7 @@ def toggle_colorscheme(qtile):
     )
 
     # Notify success
-    subprocess.run(["notify-send", "Theme Toggled", f"Switched to {notification}"])
+    notify("Theme Toggled", f"Switched to {notification}")
 
     # Push the change to any running Neovim instances (nightfox listens for
     # SIGWINCH) instead of relying on them to poll for it.
@@ -173,13 +208,13 @@ def toggle_colorscheme(qtile):
     try:
         update_fzf_config(is_dark)
     except Exception as e:
-        subprocess.run(["notify-send", "FZF Theme Error", str(e)])
+        notify("FZF Theme Error", str(e))
 
     # bat/man theme update (zsh reads this file instead of polling gsettings)
     try:
         update_bat_theme_file(is_dark)
     except Exception as e:
-        subprocess.run(["notify-send", "Bat Theme Error", str(e)])
+        notify("Bat Theme Error", str(e))
 
 
 launcher_keys = [
@@ -248,7 +283,10 @@ launcher_keys = [
     Key(
         [],
         "j",
-        lazy.spawn("qutebrowser --qt-arg class web --qt-arg name web"),
+        # --qt-arg class/name: X11 WM_CLASS; --desktop-file-name: Wayland app_id
+        lazy.spawn(
+            "qutebrowser --qt-arg class web --qt-arg name web --desktop-file-name web"
+        ),
         desc="Launch qutebrowser",
     ),
     Key(
@@ -256,7 +294,8 @@ launcher_keys = [
         "t",
         lazy.spawn(
             "qutebrowser --basedir /home/urtzi/.config/quteyoutube \
-                    --qt-arg class youtube --qt-arg name youtube",
+                    --qt-arg class youtube --qt-arg name youtube \
+                    --desktop-file-name youtube",
         ),
         desc="Launch qutebrowser for youtube",
     ),
@@ -287,7 +326,7 @@ launcher_keys = [
     Key(
         [],
         "p",
-        lazy.spawn("gnome-screenshot -i"),
+        lazy.function(screenshot),
         desc="Launch screenshot with keyboard",
     ),
 ]
@@ -330,7 +369,7 @@ keys = [
     Key(
         [mod],
         "i",
-        lazy.spawn("togglekbd"),
+        lazy.function(toggle_kbd),
         desc="Toggle keyboard input",
     ),
     # session management
@@ -518,7 +557,7 @@ keys = [
     Key(
         [],
         "Print",
-        lazy.spawn("gnome-screenshot -i"),
+        lazy.function(screenshot),
         desc="Launch screenshot with Print key",
     ),
     # volume
@@ -602,16 +641,16 @@ keys = [
     ),
 ]
 
-# # Add key bindings to switch VTs in Wayland.
-# for vt in range(1, 8):
-#     keys.append(
-#         Key(
-#             ["control", "mod1"],
-#             f"f{vt}",
-#             lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland"),
-#             desc=f"Switch to VT{vt}",
-#         )
-#     )
+# Add key bindings to switch VTs in Wayland.
+for vt in range(1, 8):
+    keys.append(
+        Key(
+            ["control", "mod1"],
+            f"f{vt}",
+            lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland"),
+            desc=f"Switch to VT{vt}",
+        )
+    )
 
 # key bindings to switch and move between groups
 for i in groups:

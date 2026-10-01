@@ -26,7 +26,13 @@ def dbus_register():
 @hook.subscribe.startup
 def autostart():
     home = os.path.expanduser("~")
-    subprocess.call([home + "/.config/qtile/autostart.sh"])
+    cmd = [home + "/.config/qtile/autostart.sh", qtile.core.name]
+    if qtile.core.name == "wayland":
+        # Don't block: qtile is the compositor, so while this hook runs no
+        # client (XWayland, portals...) can connect -> autostart would deadlock
+        subprocess.Popen(cmd)
+    else:
+        subprocess.call(cmd)
 
 
 @hook.subscribe.client_managed
@@ -37,7 +43,7 @@ def auto_show_screen(window):
         group_name for group_name, group in qtile.groups_map.items() if group.screen
     ]
     if window.group.name not in visible_groups:
-        window.group.cmd_toscreen()
+        window.group.toscreen()
 
 
 @hook.subscribe.client_name_updated
@@ -46,7 +52,15 @@ def shorten_pdf_names(window):
         window.name = os.path.basename(window.name)
 
 
+WARP_INSET = 30  # px from the window's top and right edges
+
+
 @hook.subscribe.client_focus
-def ghostty_no_center(win):
-    if any("ghostty" in (c or "").lower() for c in (win.get_wm_class() or [])):
-        win.window.warp_pointer(100, 100)  # relative to the window's top-left
+def warp_to_top_right(win):
+    # put the pointer near the top-right corner instead of cursor_warp's center
+    x = win.width - WARP_INSET
+    y = WARP_INSET
+    if qtile.core.name == "wayland":
+        qtile.core.warp_pointer(win.x + x, win.y + y)  # absolute coords
+    else:
+        win.window.warp_pointer(x, y)  # relative to the window

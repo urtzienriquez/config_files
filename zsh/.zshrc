@@ -77,9 +77,16 @@ bindkey \^U backward-kill-line
 
 # open scrollback in editor
 run_vi_with_filepath() {
-  xdotool type --clearmodifiers "vim "
-  xdotool key --clearmodifiers ctrl+shift+j
-  xdotool key --clearmodifiers Return
+  if [[ -n $WAYLAND_DISPLAY ]]; then
+    # xdotool only reaches XWayland windows; ghostty is native Wayland
+    wtype "vim "
+    wtype -M ctrl -M shift j -m shift -m ctrl
+    wtype -k Return
+  else
+    xdotool type --clearmodifiers "vim "
+    xdotool key --clearmodifiers ctrl+shift+j
+    xdotool key --clearmodifiers Return
+  fi
 }
 
 zle -N run_vi_with_filepath
