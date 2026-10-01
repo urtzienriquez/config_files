@@ -1,102 +1,538 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# fzf-nova wifi picker (NetworkManager / nmcli)
+#
+#   enter   connect               ctrl-r  rescan
+#   ctrl-a  all networks          ctrl-g  saved networks only
+#   ctrl-d  disconnect            ctrl-x  forget saved network
+#   ctrl-e  re-enter password     ctrl-h  hidden network
+#   ctrl-w  toggle wifi radio     ctrl-v  toggle preview
+#
+# Internal entry points (used by fzf reload/preview):
+#   --list [--rescan] [--saved]   print the network table
+#   --preview <ssid>              print details for one SSID
+
 FZF_CONFIG="${FZF_CONFIG:-$HOME/.config/zsh/.fzf_config}"
 : "${FZF_THEME_OPTS:=$(grep -m1 '^--color' "$FZF_CONFIG" 2>/dev/null)}"
 export FZF_THEME_OPTS
 
-export FZF_DEFAULT_OPTS="
-    $FZF_THEME_OPTS
-		--no-height 
-		--reverse
-        --bind 'ctrl-t:first,ctrl-b:last'"
+export FZF_DEFAULT_OPTS="$FZF_THEME_OPTS -i --reverse --info=right --scroll-off=5 --bind 'home:first,end:last' --bind 'ctrl-t:first,ctrl-b:last'"
 
-# Time delay between nmcli rescans (milliseconds)
-declare -i RESCAN_DELAY="${RESCAN_DELAY:-2000}"
+SELF="$(realpath "$0")"
+LOGFILE="${XDG_STATE_HOME:-$HOME/.local/state}/fzf-nova/wifi.log"
+mkdir -p "${LOGFILE%/*}" 2>/dev/null || LOGFILE=/dev/null
 
-LOGFILE="/tmp/nmcli.log"
+# Nerd Font glyphs
+ICON_WIFI=$'\U000f05a9'
+ICON_WIFI_OFF=$'\U000f05aa'
+ICON_LOCK=$''
+ICON_OPEN=$''
+ICON_SAVED=$''
+ICON_OK=$''
+ICON_ERR=$''
 
-KNOWN_SSIDS_REGEX="`printf '\(%s\)' "$(nmcli -t -f "name" con |
-    awk 'BEGIN {ORS="\\\|";} {print $0;}' |
-    sed 's:\\\|$::')" 2>/dev/null`"
-echo "${KNOWN_SSIDS_REGEX}" >>"${LOGFILE:-/dev/null}"
+# Colors
+C_RESET=$'\e[0m' C_BOLD=$'\e[1m' C_DIM=$'\e[2m'
+C_RED=$'\e[31m' C_GREEN=$'\e[32m' C_YELLOW=$'\e[33m' C_BLUE=$'\e[34m' C_CYAN=$'\e[36m'
 
-process_selection() {
-    local ssid="$(sed 's/^\(.*\)	.*$/\1/' <<< "$*")"
-    local known_ssid="$(expr "$*" : "${KNOWN_SSIDS_REGEX}")"
-    if [[ -n "$known_ssid" ]]; then
-        echo; printf '%s\n' \
-            "SSID '${known_ssid}' recognized!" \
-            "Attempting to connect using saved credentials..."
-        nmcli con up "${ssid}" |& tee -a ${LOGFILE:-/dev/null} && return 0
-    fi
-    echo; printf '%s\n' \
-        "No valid saved credentials found for SSID '${ssid}'." \
-        "Attempting to connect to SSID '${ssid}'..."
-    nmcli -a dev wifi con "${ssid}" |&
-        tee -a ${LOGFILE:-/dev/null}
-    return $?
+log() { printf '%s %s\n' "$(date '+%F %T')" "$*" >>"$LOGFILE"; }
+
+# ---------------------------------------------------------------- data layer
+
+wifi_dev() {
+    nmcli -t -f DEVICE,TYPE dev 2>/dev/null | awk -F: '$2 == "wifi" { print $1; exit }'
 }
 
-fzf_select_wifi() {
-    local nmcli_fields="SSID,SIGNAL,BARS,FREQ,IN-USE"
-    local get_nmcli_table=
-    read -r -d '' get_nmcli_table <<-NMCLI
-	nmcli -t -c yes -f "${nmcli_fields}" dev wifi list 2>/dev/null |
-	    sed "1i${nmcli_fields//,/:}" |
-	    sed 's/^\([^:]*\):/\1\t:/1' |
-	    column -t -s:
-	NMCLI
+radio_on() { [[ "$(nmcli radio wifi 2>/dev/null)" == enabled ]]; }
 
-    local header=`printf '%s\n' "<C-a>: View all networks" \
-        "<C-g>: View known networks"`
-    local prompt_known="Available networks (known)> "
-    local prompt_all="Available networks (all)> "
-    local bind_ctrla=`printf 'ctrl-a:change-prompt(%s)+reload(%s)' \
-        "${prompt_all}" \
-        "${get_nmcli_table}"`
-    local bind_ctrlg=`printf 'ctrl-g:change-prompt(%s)+reload(%s)' \
-        "${prompt_known}" \
-        "${get_nmcli_table} | sed -n -e '1p' -e \"/${KNOWN_SSIDS_REGEX}/p\""`
+# Unescape nmcli terse output (\: and \\)
+nm_unescape() { sed -e 's/\\:/:/g' -e 's/\\\\/\\/g'; }
 
-    eval "${get_nmcli_table}" |
-        fzf --ansi \
-            --header-lines=1 \
-            --header="${header}" \
-            --prompt="${prompt_all}" \
-            --query="$*" \
-            --cycle \
-            --info="right" \
-            --bind="enter:accept" \
-            --bind="${bind_ctrla}" \
-            --bind="${bind_ctrlg}"
-    return $?
+# Print "ssid<TAB>uuid" for every saved wifi profile
+saved_profiles() {
+    local uuid type ssid
+    while IFS=: read -r uuid type; do
+        [[ "$type" == 802-11-wireless ]] || continue
+        ssid="$(nmcli -g 802-11-wireless.ssid con show uuid "$uuid" 2>/dev/null | nm_unescape)"
+        [[ -n "$ssid" ]] && printf '%s\t%s\n' "$ssid" "$uuid"
+    done < <(nmcli -t -f UUID,TYPE con show 2>/dev/null)
+}
+
+# UUIDs of saved profiles for one SSID
+uuids_for_ssid() {
+    saved_profiles | WANT="$1" awk -F'\t' '$1 == ENVIRON["WANT"] { print $2 }'
+}
+
+# All wifi profile UUIDs (to detect profiles created by a failed attempt)
+wifi_uuids() {
+    nmcli -t -f UUID,TYPE con show 2>/dev/null | awk -F: '$2 == "802-11-wireless" { print $1 }' | sort
+}
+
+active_ssid() {
+    nmcli -t -f IN-USE,SSID dev wifi list --rescan no 2>/dev/null |
+        awk '/^\*:/ { sub(/^\*:/, ""); print; exit }' | nm_unescape
+}
+
+# Raw scan results, terse format. Falls back to the cache when nmcli refuses
+# to rescan (it rate-limits scans).
+scan_raw() {
+    local fields="IN-USE,SSID,SECURITY,SIGNAL,FREQ,BSSID,CHAN,RATE" out
+    if [[ "$1" == rescan ]]; then
+        out="$(nmcli -t -f "$fields" dev wifi list --rescan yes 2>>"$LOGFILE")" ||
+            out="$(nmcli -t -f "$fields" dev wifi list --rescan no 2>>"$LOGFILE")"
+    else
+        out="$(nmcli -t -f "$fields" dev wifi list --rescan no 2>>"$LOGFILE")"
+    fi
+    [[ -n "$out" ]] && printf '%s\n' "$out"
+}
+
+# Table rows: ssid <TAB> security <TAB> display
+list_networks() {
+    local rescan="" saved_only=0
+    for arg; do
+        case "$arg" in
+            --rescan) rescan=rescan ;;
+            --saved) saved_only=1 ;;
+        esac
+    done
+    radio_on || return 0
+
+    local saved; saved="$(saved_profiles | cut -f1)"
+    scan_raw "$rescan" | SAVED="$saved" awk \
+        -v saved_only="$saved_only" \
+        -v i_lock="$ICON_LOCK" -v i_open="$ICON_OPEN" -v i_saved="$ICON_SAVED" \
+        -v red="$C_RED" -v green="$C_GREEN" -v yellow="$C_YELLOW" \
+        -v dim="$C_DIM" -v bold="$C_BOLD" -v cyan="$C_CYAN" -v reset="$C_RESET" '
+        BEGIN {
+            n = split(ENVIRON["SAVED"], s, "\n")
+            for (i = 1; i <= n; i++) if (s[i] != "") saved[s[i]] = 1
+        }
+        {
+            # split on unescaped ":"
+            line = $0
+            gsub(/\\\\/, "\001", line); gsub(/\\:/, "\002", line)
+            nf = split(line, f, ":")
+            for (i = 1; i <= nf; i++) { gsub(/\001/, "\\", f[i]); gsub(/\002/, ":", f[i]) }
+            inuse = (f[1] == "*"); ssid = f[2]; sec = f[3]; sig = f[4] + 0; freq = f[5] + 0
+            if (ssid == "") next
+            if (sec == "" || sec == "--") sec = "open"
+            band = freq < 3000 ? "2.4" : (freq < 5925 ? "5" : "6")
+
+            if (!(ssid in best)) { order[++cnt] = ssid; best[ssid] = -1 }
+            if (sig > best[ssid]) { best[ssid] = sig; secof[ssid] = sec }
+            if (inuse) used[ssid] = 1
+            if (index(" " bands[ssid] " ", " " band " ") == 0)
+                bands[ssid] = bands[ssid] (bands[ssid] == "" ? "" : " ") band
+        }
+        function bars(sig,   lit, i, out, b) {
+            split("▂ ▄ ▆ █", b, " ")
+            lit = sig >= 75 ? 4 : sig >= 50 ? 3 : sig >= 25 ? 2 : 1
+            out = sig >= 67 ? green : sig >= 34 ? yellow : red
+            for (i = 1; i <= 4; i++) out = out (i == lit + 1 ? dim : "") b[i]
+            return out reset
+        }
+        END {
+            for (i = 1; i <= cnt; i++) {
+                ssid = order[i]; sig = best[ssid]; sec = secof[ssid]
+                is_saved = (ssid in saved); is_used = (ssid in used)
+                if (saved_only && !is_saved) continue
+
+                if (is_used) mark = green "●" reset
+                else if (is_saved) mark = yellow i_saved reset
+                else mark = " "
+
+                name = length(ssid) > 30 ? substr(ssid, 1, 29) "…" : ssid
+                name = sprintf("%-30s", name)
+                if (is_used) name = bold green name reset
+
+                secicon = sec == "open" ? red i_open reset : dim i_lock reset
+
+                rank = is_used * 1000 + is_saved * 200 + sig
+                printf "%d\t%s\t%s\t%s  %s  %s %3d%%  %s %-12s %s%s GHz%s\n", \
+                    rank, ssid, sec, mark, name, bars(sig), sig, secicon, sec, \
+                    cyan, bands[ssid], reset
+            }
+        }' | sort -t$'\t' -k1,1nr | cut -f2-
+}
+
+preview() {
+    local ssid="${1%$'\t'}" dev uuid line
+    dev="$(wifi_dev)"
+    printf '%s%s %s%s\n\n' "$C_BOLD" "$ICON_WIFI" "$ssid" "$C_RESET"
+
+    printf '%sAccess points%s\n' "$C_BLUE" "$C_RESET"
+    scan_raw | WANT="$ssid" awk '
+        BEGIN { want = ENVIRON["WANT"] }
+        {
+            line = $0
+            gsub(/\\\\/, "\001", line); gsub(/\\:/, "\002", line)
+            nf = split(line, f, ":")
+            for (i = 1; i <= nf; i++) { gsub(/\001/, "\\", f[i]); gsub(/\002/, ":", f[i]) }
+            if (f[2] != want) next
+            if (!sec) { sec = (f[3] == "" || f[3] == "--") ? "open" : f[3] }
+            printf "  %s %s  ch %-3s %-9s %3s%%  %s\n", (f[1] == "*" ? "●" : " "), f[6], f[7], f[5], f[4], f[8]
+        }
+        END { if (sec) printf "\n\033[34mSecurity\033[0m\n  %s\n", sec }'
+
+    printf '\n%sSaved profile%s\n' "$C_BLUE" "$C_RESET"
+    uuid="$(uuids_for_ssid "$ssid" | head -n1)"
+    if [[ -n "$uuid" ]]; then
+        local name auto ts
+        { read -r name; read -r auto; read -r ts; } < <(
+            nmcli -g connection.id,connection.autoconnect,connection.timestamp con show uuid "$uuid" 2>/dev/null)
+        printf '  name        %s\n  autoconnect %s\n' "$name" "$auto"
+        if [[ "$ts" =~ ^[0-9]+$ ]] && (( ts > 0 )); then
+            printf '  last used   %s\n' "$(date -d "@$ts" '+%F %R')"
+        fi
+    else
+        printf '  %snot saved%s\n' "$C_DIM" "$C_RESET"
+    fi
+
+    if [[ -n "$dev" && "$(active_ssid)" == "$ssid" ]]; then
+        printf '\n%sConnection (%s)%s\n' "$C_BLUE" "$dev" "$C_RESET"
+        while IFS= read -r line; do
+            printf '  %s\n' "$line"
+        done < <(nmcli -t -f IP4.ADDRESS,IP4.GATEWAY,IP4.DNS dev show "$dev" 2>/dev/null |
+                 sed -E 's/^IP4\.([A-Z]+)(\[[0-9]+\])?:/\L\1\E\t/' | column -t -s$'\t')
+    fi
+}
+
+# ---------------------------------------------------------------- ui helpers
+
+say()  { printf '%s\n' "$*"; }
+ok()   { printf '%s%s %s%s\n' "$C_GREEN" "$ICON_OK" "$*" "$C_RESET"; }
+err()  { printf '%s%s %s%s\n' "$C_RED" "$ICON_ERR" "$*" "$C_RESET"; }
+info() { printf '%s%s%s\n' "$C_CYAN" "$*" "$C_RESET"; }
+
+# Small inline menu. Usage: menu "header text" option...
+menu() {
+    local header="$1"; shift
+    printf '%s\n' "$@" |
+        fzf --height="~$(( $# + 6 ))" --no-input --header="$header" --header-first \
+            --layout=reverse --border=rounded --no-multi --pointer='▶' --no-info
+}
+
+confirm() {
+    [[ "$(menu "$1" "Yes" "No")" == Yes ]]
+}
+
+# Run a command with a spinner; its combined output ends up in $RUN_OUTPUT.
+RUN_OUTPUT=""
+run_spin() {
+    local msg="$1"; shift
+    local tmp; tmp="$(mktemp)"
+    "$@" >"$tmp" 2>&1 &
+    local pid=$! i=0 frames='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+    tput civis 2>/dev/null
+    while kill -0 "$pid" 2>/dev/null; do
+        printf '\r%s%s%s %s' "$C_CYAN" "${frames:i++%${#frames}:1}" "$C_RESET" "$msg"
+        sleep 0.1
+    done
+    wait "$pid"; local rc=$?
+    printf '\r\e[K'
+    tput cnorm 2>/dev/null
+    RUN_OUTPUT="$(<"$tmp")"; rm -f "$tmp"
+    local arg cmd="" mask=0
+    for arg; do
+        (( mask )) && arg='***'
+        [[ "$arg" == password ]] && mask=1 || mask=0
+        cmd+="$arg "
+    done
+    log "[$rc] $cmd: $RUN_OUTPUT"
+    return "$rc"
+}
+
+# Masked password prompt with Tab to toggle visibility. Result in $PASSWORD.
+# Returns 1 when cancelled (Esc or empty input).
+PASSWORD=""
+read_password() {
+    local prompt="$1" pw="" ch rest show=0
+    printf '  %s(Tab: show/hide · Esc: cancel)%s\n' "$C_DIM" "$C_RESET"
+    while :; do
+        if (( show )); then
+            printf '\r\e[K%s %s' "$prompt" "$pw"
+        else
+            printf '\r\e[K%s %s' "$prompt" "$(printf '%*s' "${#pw}" '' | sed 's/ /•/g')"
+        fi
+        IFS= read -rsn1 ch || return 1
+        case "$ch" in
+            "") break ;;                                  # enter
+            $'\t') show=$(( !show )) ;;
+            $'\x7f'|$'\b') pw="${pw%?}" ;;
+            $'\x15') pw="" ;;                             # ctrl-u
+            $'\e')
+                IFS= read -rsn5 -t 0.02 rest || true      # swallow arrow keys etc.
+                [[ -z "$rest" ]] && { printf '\n'; return 1; } ;;
+            *) pw+="$ch" ;;
+        esac
+    done
+    printf '\n'
+    [[ -n "$pw" ]] || return 1
+    PASSWORD="$pw"
+}
+
+# Keep asking until the password is a valid WPA-PSK (8-63 chars or 64 hex).
+ask_psk() {
+    while :; do
+        read_password "  Password for ${C_BOLD}$1${C_RESET}:" || return 1
+        local n=${#PASSWORD}
+        if (( n >= 8 && n <= 63 )) || [[ "$PASSWORD" =~ ^[0-9A-Fa-f]{64}$ ]]; then
+            return 0
+        fi
+        err "WPA passwords must be 8-63 characters (got $n)."
+    done
+}
+
+# Last "Error:" line from nmcli output, plus a hint for the usual suspects.
+explain_failure() {
+    local msg
+    msg="$(grep -m1 -i 'error' <<<"$RUN_OUTPUT")"
+    [[ -n "$msg" ]] || msg="$(tail -n1 <<<"$RUN_OUTPUT")"
+    printf '%s' "${msg:-Unknown error}"
+    if grep -qiE 'secrets were required|802-11-wireless-security|psk|\(7\)' <<<"$RUN_OUTPUT"; then
+        printf '\n(The password is probably wrong.)'
+    elif grep -qi 'no network with ssid' <<<"$RUN_OUTPUT"; then
+        printf '\n(Network out of range. Try rescanning.)'
+    fi
+}
+
+connected_msg() {
+    local ip
+    ip="$(nmcli -g IP4.ADDRESS dev show "$DEV" 2>/dev/null | head -n1)"
+    ok "Connected to $1${ip:+  ($ip)}"
+    sleep 1.5
+}
+
+# ---------------------------------------------------------------- actions
+# Each action returns 0 when we're done (exit the script), 1 to go back to the list.
+
+# Try a fresh "nmcli dev wifi connect"; delete any profile it left behind on failure.
+fresh_connect() {
+    local ssid="$1"; shift
+    local before after new
+    before="$(wifi_uuids)"
+    # Note: the password is briefly visible in the process list (nmcli limitation).
+    if run_spin "Connecting to $ssid…" nmcli -w 45 dev wifi connect "$ssid" ifname "$DEV" "$@"; then
+        return 0
+    fi
+    after="$(wifi_uuids)"
+    new="$(comm -13 <(printf '%s\n' "$before") <(printf '%s\n' "$after"))"
+    for uuid in $new; do
+        nmcli con delete uuid "$uuid" >>"$LOGFILE" 2>&1
+    done
+    return 1
+}
+
+connect_new() {
+    local ssid="$1" sec="$2"
+    if [[ "$sec" == open ]]; then
+        if fresh_connect "$ssid"; then connected_msg "$ssid"; return 0; fi
+        case "$(menu "$(explain_failure)" "Retry" "Back to list" "Quit")" in
+            Retry) connect_new "$@"; return ;;
+            Quit) exit 1 ;;
+            *) return 1 ;;
+        esac
+    fi
+
+    while :; do
+        info "${ICON_LOCK}  $ssid  ($sec)"
+        ask_psk "$ssid" || return 1
+        if fresh_connect "$ssid" password "$PASSWORD"; then
+            connected_msg "$ssid"; return 0
+        fi
+        case "$(menu "$(explain_failure)" "Retry password" "Back to list" "Quit")" in
+            "Retry password") continue ;;
+            Quit) exit 1 ;;
+            *) return 1 ;;
+        esac
+    done
+}
+
+# Set a new password on a saved profile and bring it up.
+reenter_password() {
+    local ssid="$1" uuid="$2"
+    while :; do
+        info "${ICON_LOCK}  $ssid  (new password)"
+        ask_psk "$ssid" || return 1
+        if ! nmcli con modify uuid "$uuid" wifi-sec.psk-flags 0 wifi-sec.psk "$PASSWORD" >>"$LOGFILE" 2>&1; then
+            err "Could not update the saved password."; sleep 1.5; return 1
+        fi
+        if run_spin "Connecting to $ssid…" nmcli -w 45 con up uuid "$uuid" ifname "$DEV"; then
+            connected_msg "$ssid"; return 0
+        fi
+        case "$(menu "$(explain_failure)" "Retry password" "Forget network" "Back to list" "Quit")" in
+            "Retry password") continue ;;
+            "Forget network") nmcli con delete uuid "$uuid" >>"$LOGFILE" 2>&1; return 1 ;;
+            Quit) exit 1 ;;
+            *) return 1 ;;
+        esac
+    done
+}
+
+connect() {
+    local ssid="$1" sec="$2" uuid
+    clear
+
+    if [[ "$sec" == *802.1X* ]]; then
+        info "$ssid uses WPA-Enterprise (802.1X). Opening nmtui…"
+        sleep 1
+        nmtui-connect "$ssid"
+        return 1
+    fi
+
+    uuid="$(uuids_for_ssid "$ssid" | head -n1)"
+    if [[ -z "$uuid" ]]; then
+        connect_new "$ssid" "$sec"; return
+    fi
+
+    if run_spin "Connecting to $ssid (saved)…" nmcli -w 45 con up uuid "$uuid" ifname "$DEV"; then
+        connected_msg "$ssid"; return 0
+    fi
+    local opts=("Retry")
+    [[ "$sec" != open ]] && opts+=("Re-enter password")
+    opts+=("Forget network & reconnect" "Back to list" "Quit")
+    case "$(menu "$(explain_failure)" "${opts[@]}")" in
+        Retry) connect "$@"; return ;;
+        "Re-enter password") reenter_password "$ssid" "$uuid"; return ;;
+        "Forget network & reconnect")
+            nmcli con delete uuid "$uuid" >>"$LOGFILE" 2>&1
+            connect_new "$ssid" "$sec"; return ;;
+        Quit) exit 1 ;;
+        *) return 1 ;;
+    esac
+}
+
+connect_hidden() {
+    clear
+    local ssid
+    read -rep "  Hidden network SSID: " ssid
+    [[ -n "$ssid" ]] || return 1
+    while :; do
+        if read_password "  Password (empty for open network):"; then
+            fresh_connect "$ssid" password "$PASSWORD" hidden yes
+        else
+            fresh_connect "$ssid" hidden yes
+        fi && { connected_msg "$ssid"; return 0; }
+        case "$(menu "$(explain_failure)" "Retry" "Back to list" "Quit")" in
+            Retry) continue ;;
+            Quit) exit 1 ;;
+            *) return 1 ;;
+        esac
+    done
+}
+
+forget() {
+    local ssid="$1" uuids
+    uuids="$(uuids_for_ssid "$ssid")"
+    if [[ -z "$uuids" ]]; then
+        clear; err "'$ssid' is not saved."; sleep 1.2; return 1
+    fi
+    confirm "Forget '$ssid'? The saved password will be deleted." || return 1
+    for uuid in $uuids; do
+        nmcli con delete uuid "$uuid" >>"$LOGFILE" 2>&1
+    done
+    return 1
+}
+
+disconnect() {
+    clear
+    if run_spin "Disconnecting $DEV…" nmcli dev disconnect "$DEV"; then
+        ok "Disconnected."
+    else
+        err "$(explain_failure)"
+    fi
+    sleep 1
+    return 1
+}
+
+toggle_radio() {
+    clear
+    if radio_on; then
+        run_spin "Turning wifi off…" nmcli radio wifi off
+    else
+        run_spin "Turning wifi on…" nmcli radio wifi on && sleep 2
+    fi
+    return 1
+}
+
+# ---------------------------------------------------------------- main
+
+header() {
+    local status keys
+    if ! radio_on; then
+        status="${C_RED}${ICON_WIFI_OFF}  $DEV: wifi is off  (ctrl-w to turn on)${C_RESET}"
+    else
+        local cur; cur="$(active_ssid)"
+        if [[ -n "$cur" ]]; then
+            status="${C_GREEN}${ICON_WIFI}  $DEV: connected to ${C_BOLD}$cur${C_RESET}"
+        else
+            status="${C_YELLOW}${ICON_WIFI}  $DEV: not connected${C_RESET}"
+        fi
+    fi
+    keys="${C_DIM}enter connect · ^r rescan · ^a all · ^g saved · ^d disconnect · ^x forget
+^e re-enter password · ^h hidden network · ^w wifi on/off · ^v preview${C_RESET}"
+    printf '%s\n%s' "$status" "$keys"
+}
+
+pick() {
+    local self prompt_all prompt_saved
+    self="$(printf '%q' "$SELF")"
+    prompt_all="${ICON_WIFI}  all> "
+    prompt_saved="${ICON_SAVED}  saved> "
+
+    list_networks | fzf \
+        --ansi --height=100% --layout=reverse --border=none \
+        --with-shell='bash -c' \
+        --delimiter=$'\t' --with-nth=3 \
+        --header="$(header)" --header-first \
+        --prompt="$prompt_all" --pointer='▶' \
+        --no-multi --cycle --info=right \
+        --expect=ctrl-d,ctrl-x,ctrl-e,ctrl-h,ctrl-w \
+        --preview="$self --preview {1}" \
+        --preview-window='right,42%,border-left,wrap,<50(hidden)' \
+        --bind="load:unbind(load)+reload-sync($self --list --rescan)" \
+        --bind="ctrl-r:change-prompt($prompt_all)+reload-sync($self --list --rescan)" \
+        --bind="ctrl-a:change-prompt($prompt_all)+reload($self --list)" \
+        --bind="ctrl-g:change-prompt($prompt_saved)+reload($self --list --saved)" \
+        --bind='ctrl-v:toggle-preview' \
+        --bind='ctrl-n:down,ctrl-p:up' \
+        --bind='shift-up:preview-half-page-up,shift-down:preview-half-page-down'
 }
 
 main() {
-    if (( RESCAN_DELAY < 1000 )); then
-	echo "Rescan delay must be at least 1000 ms" >&2
-	exit 23
+    DEV="$(wifi_dev)"
+    if [[ -z "$DEV" ]]; then
+        err "No wifi device found."; sleep 2; exit 1
     fi
-    while :; do
-        nmcli dev wifi rescan >>"${LOGFILE:-/dev/null}" 2>&1
-	sleep "$(bc <<<"scale=3; ${RESCAN_DELAY} / 1000")"
-    done &
-    local loop_pid=$!
-    trap "kill ${loop_pid} 2>>'${LOGFILE:-/dev/null}'" \
-        EXIT SIGINT SIGTERM
 
-    local selected="$(fzf_select_wifi "$*")"
-    if (( $? )) || [[ -z "${selected}" ]]; then
-        printf '%s\n\n' "No SSID selected.  Exiting" >&2
-        exit 1
-    fi
-    process_selection "${selected}"
-    if (( $? )); then
-        echo "Connection failed."
-    else
-        echo "Connection succeeded!"
-    fi
-    echo
-    exit $?
+    local out rc key row ssid sec
+    while :; do
+        out="$(pick)"; rc=$?
+        (( rc == 130 )) && exit 0
+        { IFS= read -r key; IFS= read -r row; } <<<"$out"
+        IFS=$'\t' read -r ssid sec _ <<<"$row"
+
+        case "$key" in
+            ctrl-h) connect_hidden && exit 0 ;;
+            ctrl-w) toggle_radio ;;
+            ctrl-d) disconnect ;;
+            ctrl-x) [[ -n "$ssid" ]] && forget "$ssid" ;;
+            ctrl-e)
+                [[ -n "$ssid" ]] || continue
+                local uuid; uuid="$(uuids_for_ssid "$ssid" | head -n1)"
+                if [[ -n "$uuid" ]]; then
+                    clear; reenter_password "$ssid" "$uuid" && exit 0
+                else
+                    connect "$ssid" "$sec" && exit 0
+                fi ;;
+            *)
+                [[ -n "$ssid" ]] || continue
+                connect "$ssid" "$sec" && exit 0 ;;
+        esac
+    done
 }
 
-main "$*"
+case "$1" in
+    --list) shift; list_networks "$@" ;;
+    --preview) preview "$2" ;;
+    *) main ;;
+esac
