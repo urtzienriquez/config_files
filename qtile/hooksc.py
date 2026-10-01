@@ -46,6 +46,22 @@ def auto_show_screen(window):
         window.group.toscreen()
 
 
+# Floating terminal popups opened at a fraction of the screen.
+POPUP_TITLES = {"fzf-nova", "calendar", "yazi", "qeditor"}
+POPUP_SIZE = (0.5, 0.5)  # fraction of screen width, height
+
+
+@hook.subscribe.client_managed
+def size_popups(window):
+    if window.name not in POPUP_TITLES or not window.floating:
+        return
+    screen = window.group.screen or qtile.current_screen
+    window.set_size_floating(
+        int(screen.width * POPUP_SIZE[0]), int(screen.height * POPUP_SIZE[1])
+    )
+    window.center()
+
+
 @hook.subscribe.client_name_updated
 def shorten_pdf_names(window):
     if window.name and ".pdf" in window.name.lower():
@@ -56,10 +72,7 @@ WARP_INSET = 30  # px from the top and right edges
 
 
 # The pointer only moves when focus goes to the other monitor or when the
-# current monitor switches group (workspace): to the top-right of the focused
-# window there, or of the screen itself if it has none. Focus changes and
-# re-layouts (fullscreen, theater mode...) within a group never move it
-# (cursor_warp = False in config.py).
+# current monitor switches group (workspace)
 def _warp_to_focus():
     def warp():
         # deferred: runs after qtile has focused the window, and after qtile's

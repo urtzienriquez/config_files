@@ -10,7 +10,13 @@
 # Build deps (apt): meson ninja-build bison libinput-dev libseat-dev
 #   libdisplay-info-dev libliftoff-dev hwdata libgbm-dev libegl-dev libgles-dev
 #   libvulkan-dev glslang-tools liblcms2-dev libxcb-*-dev xwayland libcairo2-dev
+#
+# --libs-only: only (re)build the wlroots prefix, keep the qtile venv. Safe to
+# run from a live Wayland session (see build()); the next login uses it.
 set -euo pipefail
+
+LIBS_ONLY=0
+[ "${1:-}" = "--libs-only" ] && LIBS_ONLY=1
 
 QTILE_VERSION=0.37.1
 WLROOTS=0.20.2
@@ -35,7 +41,18 @@ fetch() { [ -f "$2" ] || curl -fsSL -o "$2" "$1"; tar xf "$2"; }
 build() { # dir, meson args...
     local dir=$1; shift
     rm -rf "$dir/build"
-    meson setup "$dir/build" "$dir" --prefix="$P" --libdir=lib/x86_64-linux-gnu "$@"
+    # release: meson's default is an unoptimized debug build (-O0)
+    meson setup "$dir/build" "$dir" --prefix="$P" --libdir=lib/x86_64-linux-gnu \
+        --buildtype=release "$@"
+    ninja -C "$dir/build"
+    # Unlink the installed shared libraries first: installing copies over the
+    # existing file, which would corrupt it under a running compositor that
+    # has it mapped. Unlinked, the running one keeps its copy.
+    meson introspect --installed "$dir/build" | python3 -c '
+import json, os, sys
+for path in json.load(sys.stdin).values():
+    if ".so" in os.path.basename(path) and os.path.isfile(path) and not os.path.islink(path):
+        os.unlink(path)'
     ninja -C "$dir/build" install
 }
 
@@ -65,6 +82,8 @@ echo "### wlroots $WLROOTS"
 fetch "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/$WLROOTS/wlroots-$WLROOTS.tar.gz" wlroots.tar.gz
 build "wlroots-$WLROOTS" --wrap-mode=nofallback -Dexamples=false -Dxwayland=enabled \
     -Dbackends=drm,libinput,x11 -Drenderers=gles2,vulkan
+
+[ "$LIBS_ONLY" = 1 ] && { echo "### OK: libraries in $P"; exit 0; }
 
 echo "### qtile $QTILE_VERSION -> $V"
 python3 -m venv --system-site-packages "$V"
