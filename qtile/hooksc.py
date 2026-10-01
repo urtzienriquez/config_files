@@ -52,15 +52,42 @@ def shorten_pdf_names(window):
         window.name = os.path.basename(window.name)
 
 
-WARP_INSET = 30  # px from the window's top and right edges
+WARP_INSET = 30  # px from the top and right edges
 
 
-@hook.subscribe.client_focus
-def warp_to_top_right(win):
-    # put the pointer near the top-right corner instead of cursor_warp's center
-    x = win.width - WARP_INSET
-    y = WARP_INSET
-    if qtile.core.name == "wayland":
-        qtile.core.warp_pointer(win.x + x, win.y + y)  # absolute coords
-    else:
-        win.window.warp_pointer(x, y)  # relative to the window
+# The pointer only moves when focus goes to the other monitor or when the
+# current monitor switches group (workspace): to the top-right of the focused
+# window there, or of the screen itself if it has none. Focus changes and
+# re-layouts (fullscreen, theater mode...) within a group never move it
+# (cursor_warp = False in config.py).
+def _warp_to_focus():
+    def warp():
+        # deferred: runs after qtile has focused the window, and after qtile's
+        # own warp to an empty screen's center (focus_screen -> warp_to_screen)
+        screen = qtile.current_screen
+        target = screen.group.current_window if screen.group else None
+        if target is None:
+            target = screen
+        qtile.core.warp_pointer(
+            target.x + target.width - WARP_INSET, target.y + WARP_INSET
+        )
+
+    qtile.call_soon(warp)
+
+
+@hook.subscribe.current_screen_change
+def follow_screen():
+    # not when the pointer is already there (e.g. clicking into that monitor)
+    screen = qtile.current_screen
+    px, py = qtile.core.get_mouse_position()
+    if (
+        screen.x <= px < screen.x + screen.width
+        and screen.y <= py < screen.y + screen.height
+    ):
+        return
+    _warp_to_focus()
+
+
+@hook.subscribe.setgroup
+def follow_group():
+    _warp_to_focus()

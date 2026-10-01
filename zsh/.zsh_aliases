@@ -82,8 +82,10 @@ qbup() {
     local qb_dir="/opt/qutebrowser"
     echo "Updating qutebrowser from $qb_dir..."
     cd "$qb_dir" || return 1
+    # no sudo: /opt/qutebrowser is ours, and sudo drops WAYLAND_DISPLAY, which
+    # makes mkvenv's Qt smoke test fail on Wayland
     git pull && \
-    sudo /opt/qutebrowser/scripts/mkvenv.py --update --pyqt-type link && \
+    /opt/qutebrowser/scripts/mkvenv.py --update --pyqt-type link && \
     echo "✓ qutebrowser updated successfully!"
     cd - > /dev/null
 }

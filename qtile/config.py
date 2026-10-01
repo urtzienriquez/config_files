@@ -28,7 +28,9 @@ dgroups_app_rules = []  # type: list
 follow_mouse_focus = False
 bring_front_click = False
 floats_kept_above = True
-cursor_warp = True
+# no warping to the center of focused windows (ghostty's command palette is
+# there); hooksc.follow_screen only moves the pointer across monitors
+cursor_warp = False
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True
