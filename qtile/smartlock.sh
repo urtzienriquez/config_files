@@ -2,7 +2,7 @@
 
 # Debug log file path
 LOG_FILE="/tmp/smartlock.log"
-[ "$1" = "--idle" ] || echo "Smartlock script initialized at $(date)" > "$LOG_FILE"
+[ -z "$1" ] && echo "Smartlock script initialized at $(date)" > "$LOG_FILE"
 
 is_audio_playing() {
     # 1. Check via playerctl: Modern browsers (Firefox/Chrome) natively broadcast 
@@ -43,7 +43,8 @@ is_webcam_active() {
     fi
 }
 
-# Wayland: no idle-time polling, so swayidle fires after 5 min idle and runs
+# Idle action: lock + blank only, never auto-suspend (real suspend via
+# lid-close or `systemctl suspend`). swayidle fires after 5 min idle and runs
 # this script with --idle; that waiter holds off while media/webcam is active,
 # then locks. Any input (resume) kills the waiter.
 if [ "$1" = "--idle" ]; then
@@ -51,61 +52,26 @@ if [ "$1" = "--idle" ]; then
         sleep 10
     done
     echo "Conditions met. Locking and blanking screen now." >> "$LOG_FILE"
-    loginctl lock-session
+    loginctl lock-session  # lock.sh handles the keyboard backlight
     sleep 1
-    wlopm --off '*'  # = xset dpms force off
+    wlopm --off '*'
     exit 0
 fi
 
-if [ -n "$WAYLAND_DISPLAY" ]; then
-    swayidle -w \
-        timeout 300 "$0 --idle &" \
-        resume "pkill -f 'smartlock.sh --idle'; wlopm --on '*'" &
-    swayidle_pid=$!
-    # toggle_smartlock kills this script by name; take swayidle down with it
-    trap 'kill $swayidle_pid 2>/dev/null; exit 0' TERM INT
-    wait $swayidle_pid
+# Any input after the timeout: stop a pending waiter and turn the outputs back
+# on. Done here rather than inline in swayidle's resume: swayidle runs that
+# through `sh -c "..."`, whose own command line would contain
+# "smartlock.sh --idle", so the pkill would kill that shell before wlopm ran.
+if [ "$1" = "--resume" ]; then
+    pkill -f "smartlock.sh --idle"
+    wlopm --on '*'
     exit 0
 fi
 
-# idle action: lock+blank only, never auto-suspend.
-# Real suspend via lid-close or by running `systemctl suspend`
-IDLE_THRESHOLD=300000
-dimmed=no
-
-while true; do
-    # Get current X11 idle time using your original fallback logic
-    if command -v xprintidle >/dev/null 2>&1; then
-        idle_time=$(xprintidle)
-    else
-        idle_time=$(xscreen -info 2>/dev/null | awk '/idle/ {print $3}')
-    fi
-
-    # Write status to log file every 10 seconds for easy troubleshooting
-    echo "Current Idle: ${idle_time:-0} ms" >> "$LOG_FILE"
-
-    if [ -n "$idle_time" ] && [ "$idle_time" -lt "$IDLE_THRESHOLD" ]; then
-        dimmed=no
-    fi
-
-    if [ -n "$idle_time" ] && [ "$idle_time" -gt "$IDLE_THRESHOLD" ]; then
-        audio_active=$(is_audio_playing)
-        webcam_active=$(is_webcam_active)
-
-        echo "Threshold reached! Audio: $audio_active | Webcam: $webcam_active" >> "$LOG_FILE"
-
-        if [ "$audio_active" = "yes" ] || [ "$webcam_active" = "yes" ]; then
-            # Media is playing, reset X11 idle timer to keep it awake
-            xset s reset
-        elif [ "$dimmed" = "no" ]; then
-            # Genuinely idle and silent -> Lock and blank the screen
-            # (lock.sh handles the keyboard backlight)
-            echo "Conditions met. Locking and blanking screen now." >> "$LOG_FILE"
-            loginctl lock-session
-            xset dpms force off
-            dimmed=yes
-        fi
-    fi
-
-    sleep 10
-done
+swayidle -w \
+    timeout 300 "$0 --idle &" \
+    resume "$0 --resume" &
+swayidle_pid=$!
+# toggle_smartlock kills this script by name; take swayidle down with it
+trap 'kill $swayidle_pid 2>/dev/null; exit 0' TERM INT
+wait $swayidle_pid

@@ -193,42 +193,29 @@ rm() {
 alias kdon="sudo systemctl enable --now keyd "
 alias kdoff="sudo systemctl disable --now keyd "
 
-# change keyboard layout
+# change keyboard layout (qtile sets the keymap)
 # compose:menu makes Menu (sent by the corne ACCENT key) the Compose key
-# (Wayland: setxkbmap only affects XWayland, so ask qtile to change the keymap)
 kl() {
-  if [[ -n $WAYLAND_DISPLAY ]]; then
-    ~/.local/share/qtile-wl-0.37/bin/qtile cmd-obj -o core -f set_keymap \
-      -a "$1" lv3:ralt_switch,compose:menu
-  else
-    setxkbmap "$1" -option -option lv3:ralt_switch,compose:menu
-  fi
+  qtile cmd-obj -o core -f set_keymap -a "$1" lv3:ralt_switch,compose:menu
 }
 alias kles="kl es"
 alias klus="kl us"
-alias klq="setxkbmap -query"
 
-# qtile "xprop" (xprop only sees XWayland windows on Wayland):
+# qtile "xprop" (xprop only sees XWayland windows):
 #   qprop [secs]  focus the target window within secs (default 3), print it
 #   qprop -a      list all windows
-# wm_class is what Match(wm_class=...) checks (the app_id on Wayland)
+# wm_class is what Match(wm_class=...) checks (the app_id)
 qprop() {
-  local q=qtile
-  [[ -n $WAYLAND_DISPLAY ]] && q=~/.local/share/qtile-wl-0.37/bin/qtile
   local out
   if [[ $1 == -a ]]; then
-    out=$($q cmd-obj -o root -f windows) || return
+    out=$(qtile cmd-obj -o root -f windows) || return
   else
     sleep "${1:-3}"
-    out=$($q cmd-obj -o window -f info) || return
+    out=$(qtile cmd-obj -o window -f info) || return
   fi
   python3 -c '
-import ast, json, sys
-raw = sys.stdin.read()
-try:
-    data = json.loads(raw)
-except ValueError:
-    data = ast.literal_eval(raw)
+import json, sys
+data = json.load(sys.stdin)
 for w in data if isinstance(data, list) else [data]:
     for key in ("wm_class", "name", "group", "shell", "floating", "id"):
         print(f"{key:>9}: {w.get(key)!r}")
@@ -285,7 +272,7 @@ alias qs='ssh -o RemoteCommand=none meta qstat -u urtzien'
 alias qs2='ssh -o RemoteCommand=none perian qstat -u urtzien'
 
 # image viewer
-alias iv='imv-x11'
+alias iv='imv-wayland'
 
 # alias for yazi
 function y() {

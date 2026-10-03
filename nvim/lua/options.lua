@@ -25,8 +25,8 @@ vim.o.backspace = "indent,eol,start"
 vim.o.ignorecase = true
 vim.o.fileignorecase = true
 vim.o.smartcase = true
+-- (without a Wayland display, e.g. on a TTY or over SSH, nvim's default)
 if vim.env.WAYLAND_DISPLAY then
-  -- xclip would only see the XWayland clipboard, not native Wayland apps
   vim.g.clipboard = {
     name = "wl-clipboard",
     copy = {
@@ -36,19 +36,6 @@ if vim.env.WAYLAND_DISPLAY then
     paste = {
       ["+"] = { "wl-paste", "--no-newline" },
       ["*"] = { "wl-paste", "--no-newline", "--primary" },
-    },
-    cache_enabled = true,
-  }
-else
-  vim.g.clipboard = {
-    name = "xclip",
-    copy = {
-      ["+"] = { "xclip", "-quiet", "-i", "-selection", "clipboard" },
-      ["*"] = { "xclip", "-quiet", "-i", "-selection", "primary" },
-    },
-    paste = {
-      ["+"] = { "xclip", "-o", "-selection", "clipboard" },
-      ["*"] = { "xclip", "-o", "-selection", "primary" },
     },
     cache_enabled = true,
   }

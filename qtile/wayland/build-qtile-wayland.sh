@@ -1,6 +1,5 @@
 #!/bin/bash
-# Build the qtile Wayland session stack without root and without touching the
-# system (X11) qtile:
+# Build the qtile Wayland session stack without root:
 #   - wlroots 0.20 + the newer deps it needs (Debian trixie's are too old)
 #     into ~/.local/opt/wlroots-0.20
 #   - qtile with its C Wayland backend into the venv ~/.local/share/qtile-wl-$QTILE_VERSION

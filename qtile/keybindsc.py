@@ -115,32 +115,23 @@ def toggle_smartlock(qtile):
         notify("Smartlock", "Screen lock enabled")
 
 
-# xkb options (also used by wl_input_rules in config.py; X11 gets them from .xprofile)
+# xkb options (also used by wl_input_rules in config.py)
 KB_OPTIONS = "lv3:ralt_switch,compose:menu"
-_wl_kb_layout = "us"
+_kb_layout = "us"
 
 
 def toggle_kbd(qtile):
-    global _wl_kb_layout
-    if qtile.core.name != "wayland":
-        qtile.spawn("togglekbd")
-        return
-    _wl_kb_layout = "es" if _wl_kb_layout == "us" else "us"
-    qtile.core.set_keymap(_wl_kb_layout, KB_OPTIONS, None)
+    global _kb_layout
+    _kb_layout = "es" if _kb_layout == "us" else "us"
+    qtile.core.set_keymap(_kb_layout, KB_OPTIONS, None)
 
 
-WL_SCREENSHOT = (
+# select an area; save it to ~/Pictures/Screenshots and copy it
+SCREENSHOT = (
     "sh -c 'd=$HOME/Pictures/Screenshots; mkdir -p \"$d\"; "
     "f=\"$d/$(date +%F_%H-%M-%S).png\"; "
     "grim -g \"$(slurp)\" \"$f\" && wl-copy < \"$f\" && notify-send Screenshot \"$f\"'"
 )
-
-
-def screenshot(qtile):
-    if qtile.core.name == "wayland":
-        qtile.spawn(WL_SCREENSHOT)
-    else:
-        qtile.spawn("gnome-screenshot -i")
 
 
 FZF_CONFIG = Path.home() / ".config/zsh/.fzf_config"
@@ -283,10 +274,8 @@ launcher_keys = [
     Key(
         [],
         "j",
-        # --qt-arg class/name: X11 WM_CLASS; --desktop-file-name: Wayland app_id
-        lazy.spawn(
-            "qutebrowser --qt-arg class web --qt-arg name web --desktop-file-name web"
-        ),
+        # --desktop-file-name sets the app_id that groupsc.py matches
+        lazy.spawn("qutebrowser --desktop-file-name web"),
         desc="Launch qutebrowser",
     ),
     Key(
@@ -294,7 +283,6 @@ launcher_keys = [
         "t",
         lazy.spawn(
             "qutebrowser --basedir /home/urtzi/.config/quteyoutube \
-                    --qt-arg class youtube --qt-arg name youtube \
                     --desktop-file-name youtube",
         ),
         desc="Launch qutebrowser for youtube",
@@ -326,7 +314,7 @@ launcher_keys = [
     Key(
         [],
         "p",
-        lazy.function(screenshot),
+        lazy.spawn(SCREENSHOT),
         desc="Launch screenshot with keyboard",
     ),
 ]
@@ -557,7 +545,7 @@ keys = [
     Key(
         [],
         "Print",
-        lazy.function(screenshot),
+        lazy.spawn(SCREENSHOT),
         desc="Launch screenshot with Print key",
     ),
     # volume
@@ -641,13 +629,13 @@ keys = [
     ),
 ]
 
-# Add key bindings to switch VTs in Wayland.
+# Add key bindings to switch VTs.
 for vt in range(1, 8):
     keys.append(
         Key(
             ["control", "mod1"],
             f"f{vt}",
-            lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland"),
+            lazy.core.change_vt(vt),
             desc=f"Switch to VT{vt}",
         )
     )

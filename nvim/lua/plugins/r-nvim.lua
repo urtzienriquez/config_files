@@ -34,22 +34,34 @@ local function set_rnvim_keymaps()
       end
     end, opts("Render R Markdown"))
   elseif vim.bo.filetype == "rnoweb" then
-    vim.keymap.set("n", "<leader>rr", function()
+    -- Ask for an output name; nil if cancelled, "" for the default
+    local function ask_filename()
       local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
       vim.api.nvim_echo({ { "" } }, false, {})
       if filename == "__CANCEL__" then
-        return
+        return nil
       end
+      return filename
+    end
+    -- The current file, or the root given by a "% !TeX root = ..." line
+    local function root_file()
       local file = vim.fn.expand("%")
       ---@cast file string
       local lines = vim.api.nvim_buf_get_lines(0, 0, 10, false)
       for _, line in ipairs(lines) do
         local root = line:match("^%% *!%a+ *root *= *(%S+)")
         if root then
-          file = root
-          break
+          return root
         end
       end
+      return file
+    end
+    vim.keymap.set("n", "<leader>rr", function()
+      local filename = ask_filename()
+      if not filename then
+        return
+      end
+      local file = root_file()
       local tex_file, r_cmd
       if filename ~= "" then
         tex_file = filename .. ".tex"
@@ -62,49 +74,25 @@ local function set_rnvim_keymaps()
       vim.api.nvim_echo({ { "Compiling with latexmk using root: " .. file, "Normal" } }, false, {})
     end, opts("Render Rnoweb with latexmk"))
     vim.keymap.set("n", "<leader>rc", function()
-      local file_dir = vim.fn.expand("%:p:h")
-      local file_name = vim.fn.expand("%:t:r")
-      local extensions = {
-        "aux",
-        "bcf",
-        "run.xml",
-        "log",
-        "listing",
-        "out",
-        "toc",
-        "nav",
-        "snm",
-        "vrb",
-        "fls",
-        "fdb_latexmk",
-        "blg",
-        "bbl",
-        "synctex.gz",
-      }
-      local extra_files = {
-        file_name .. "-tikzDictionary",
-      }
-      local count = 0
-      for _, ext in ipairs(extensions) do
-        local target = file_dir .. "/" .. file_name .. "." .. ext
-        if vim.fn.filereadable(target) == 1 then
-          os.remove(target)
-          count = count + 1
-        end
+      local filename = ask_filename()
+      if not filename then
+        return
       end
-      for _, extra in ipairs(extra_files) do
-        local target = file_dir .. "/" .. extra
-        if vim.fn.filereadable(target) == 1 then
-          os.remove(target)
-          count = count + 1
-        end
-      end
-      if count > 0 then
-        print("Cleaned " .. count .. " auxiliary files.")
+      local base
+      if filename ~= "" then
+        base = filename
       else
-        print("No auxiliary files found to clean.")
+        base = (root_file():gsub("%.Rnw$", ""))
       end
-    end, { desc = "Clean LaTeX/Rnoweb auxiliary files" })
+      -- clean_aux() only removes what latexmk recorded as generated for <base>
+      local r_cmd = string.format(
+        'knitrmini::clean_aux("%s.tex"); invisible(file.remove(Filter(file.exists, "%s-tikzDictionary")))',
+        base,
+        base
+      )
+      vim.cmd("RSend " .. r_cmd)
+      vim.api.nvim_echo({ { "Cleaning auxiliary files of: " .. base, "Normal" } }, false, {})
+    end, opts("Clean LaTeX/Rnoweb auxiliary files"))
   end
 end
 

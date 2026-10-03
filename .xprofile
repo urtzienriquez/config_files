@@ -1,5 +1,0 @@
-export GTK_IM_MODULE=simple
-export QT_IM_MODULE=compose
-export XMODIFIERS=@im=none
-# Menu as Compose key: the corne ACCENT key sends Compose sequences (á, ñ, ã...)
-setxkbmap us -option -option lv3:ralt_switch,compose:menu

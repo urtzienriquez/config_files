@@ -26,13 +26,9 @@ def dbus_register():
 @hook.subscribe.startup
 def autostart():
     home = os.path.expanduser("~")
-    cmd = [home + "/.config/qtile/autostart.sh", qtile.core.name]
-    if qtile.core.name == "wayland":
-        # Don't block: qtile is the compositor, so while this hook runs no
-        # client (XWayland, portals...) can connect -> autostart would deadlock
-        subprocess.Popen(cmd)
-    else:
-        subprocess.call(cmd)
+    # Don't block: qtile is the compositor, so while this hook runs no
+    # client (XWayland, portals...) can connect -> autostart would deadlock
+    subprocess.Popen([home + "/.config/qtile/autostart.sh"])
 
 
 @hook.subscribe.client_managed
@@ -52,8 +48,7 @@ POPUP_TITLES = {"fzf-nova", "calendar", "yazi", "qeditor"}
 POPUP_SIZE = (0.5, 0.5)
 # GNOME Settings otherwise restores its own saved (wide/maximized) size
 POPUP_CLASSES = {
-    "org.gnome.Settings": (0.45, 0.75),  # Wayland
-    "gnome-control-center": (0.45, 0.75),  # X11
+    "org.gnome.Settings": (0.45, 0.75),
 }
 
 

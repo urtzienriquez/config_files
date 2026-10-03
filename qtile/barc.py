@@ -16,14 +16,6 @@ colors = {
 FONT = "JetBrainsMonoNerdFont"
 
 
-def layout_icon(scale):
-    # qtile >= 0.34 (Wayland venv) merged CurrentLayoutIcon into CurrentLayout
-    try:
-        return widget.CurrentLayoutIcon(scale=scale)
-    except AttributeError:
-        return widget.CurrentLayout(mode="icon", scale=scale)
-
-
 def make_group_box(fontsize, margey):
     """Create a new GroupBox widget instance"""
     return widget.GroupBox(
@@ -71,7 +63,7 @@ def top_bar(fontsize=18, barheight=26, margey=3):
                 background=colors["bg"],
             ),
             # Layout indicator (TextBox to add an space)
-            layout_icon(scale=0.6),
+            widget.CurrentLayout(mode="icon", scale=0.6),
             widget.TextBox(
                 text=" ",
                 fontsize=fontsize,

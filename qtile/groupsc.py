@@ -28,20 +28,10 @@ group_matches = [
     [],
     [Match(wm_class="web"), Match(wm_class="librewolf")],
     [Match(wm_class="youtube")],
-    # X11: match only the main Zotero window by its window role "browser".
-    # Wayland has no roles: match the app_id, which is exactly ["Zotero"]
-    # there (X11's WM_CLASS has two entries, so this doesn't touch X11)
-    [
-        Match(wm_class="Zotero", role="browser"),
-        Match(func=lambda c: c.get_wm_class() == ["Zotero"]),
-    ],
-    # X11 classes, then Wayland app_ids
-    [
-        Match(wm_class="Inkscape"),
-        Match(wm_class="Gimp"),
-        Match(wm_class="org.inkscape.Inkscape"),
-        Match(wm_class="gimp"),
-    ],
+    # Wayland has no window roles, so this also catches Zotero's popups
+    # (they float, see layoutsc.py)
+    [Match(wm_class="Zotero")],
+    [Match(wm_class="org.inkscape.Inkscape"), Match(wm_class="gimp")],
     [Match(wm_class="zoom")],
 ]
 group_exclusive = [False, False, False, False, False, False, False, True]

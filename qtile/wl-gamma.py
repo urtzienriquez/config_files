@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Per-output gamma for the qtile Wayland session.
 
-Wayland equivalent of the `gamma` lines in the autorandr profiles: applies
-the same ramp `xrandr --gamma R:G:B` would, via wlr-gamma-control. It must
+Applies the same ramp `xrandr --gamma R:G:B` would (the external monitor's
+colour correction from the old X11 setup), via wlr-gamma-control. It must
 keep running (the compositor resets gamma when the client disconnects) and it
 re-applies the ramp when a monitor is plugged in again.
 """
@@ -12,7 +12,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-# output name -> xrandr --gamma values (from ~/.config/autorandr/dual/config)
+# output name -> xrandr-style --gamma values
 GAMMA = {
     "HDMI-A-1": (0.769, 0.909, 0.909),
 }

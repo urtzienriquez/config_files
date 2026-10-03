@@ -26,14 +26,16 @@
 
 home="/home/urtzi"
 
-sudo apt install -y xorg xserver-xorg qtile picom dunst gpg curl wget git \
-	build-essential unclutter r-base \
+sudo apt install -y dunst gpg curl wget git \
+	xwayland swayidle swaylock grim slurp kanshi wtype wlopm wl-clipboard \
+	xdg-desktop-portal-wlr xdg-desktop-portal-gtk python3-pywayland python3-dbus-fast \
+	build-essential r-base \
 	libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev \
 	libxml2-dev libtiff-dev libtool libgdal-dev libudunits2-dev \
 	libabsl-dev brightnessctl network-manager lua5.4 luarocks \
 	golang ripgrep xclip xsel pipewire-audio pipewire-pulse wireplumber alsa-utils bc rfkill \
-	autorandr feh udisks2 poppler-utils locate jq xdotool fd-find libglib2.0-bin \
-	file openssh-client x11-xkb-utils \
+	feh udisks2 poppler-utils locate jq fd-find libglib2.0-bin \
+	file openssh-client \
 	unzip zsh fzf zathura mpv inkscape gimp imv libreoffice \
 	bat lazygit calcurse fastfetch screenkey
 
@@ -74,25 +76,6 @@ sudo systemctl disable getty@tty2.service
 
 
 ####################
-# i3lock-color
-#
-
-sudo apt install -y autoconf gcc make pkg-config libpam0g-dev \
-	libcairo2-dev libfontconfig1-dev libxcb-composite0-dev \
-	libev-dev libx11-xcb-dev libxcb-xkb-dev libxcb-xinerama0-dev \
-	libxcb-randr0-dev libxcb-image0-dev libxcb-util-dev \
-	libxcb-xrm-dev libxkbcommon-dev libxkbcommon-x11-dev \
-	libjpeg-dev libgif-dev
-
-git clone https://github.com/Raymo111/i3lock-color.git
-cd i3lock-color
-./build.sh
-./install-i3lock-color.sh
-cd ..
-rm -rf i3lock-color
-
-
-####################
 # neovim (built from source, kept under Documents/GitHub)
 #
 
@@ -129,6 +112,28 @@ cd "ghostty-${ghostty_version}"
 zig build -p "$home/.local" -Doptimize=ReleaseFast
 cd "$home"
 rm -rf "ghostty-${ghostty_version}" "ghostty-${ghostty_version}.tar.gz"
+
+
+####################
+# qtile (Wayland compositor): qtile 0.37 + its own wlroots 0.20 stack, built
+# without root by qtile/wayland/build-qtile-wayland.sh (Debian's packaged
+# wlroots/qtile are too old)
+#
+
+sudo apt install -y meson ninja-build bison python3-dev python3-venv \
+	libinput-dev libseat-dev libudev-dev libdisplay-info-dev libliftoff-dev hwdata \
+	libgbm-dev libegl-dev libgles-dev libvulkan-dev glslang-tools liblcms2-dev \
+	libcairo2-dev libpango1.0-dev libffi-dev libexpat1-dev libxml2-dev \
+	xwayland libxcb1-dev libxcb-composite0-dev libxcb-dri3-dev libxcb-errors-dev \
+	libxcb-ewmh-dev libxcb-icccm4-dev libxcb-present-dev libxcb-render0-dev \
+	libxcb-render-util0-dev libxcb-res0-dev libxcb-shm0-dev libxcb-xfixes0-dev \
+	libxcb-xinput-dev
+
+"$home/config_files/qtile/wayland/build-qtile-wayland.sh"
+# `qtile` command (qtile cmd-obj..., used e.g. by fzf-nova's session manager)
+ln -sf "$home/.local/share/qtile-wl-0.37/bin/qtile" "$home/.local/bin/qtile"
+# "Qtile Wayland" session for ly
+sudo ln -sf "$home/config_files/qtile/qtile-wayland.desktop" /usr/share/wayland-sessions/
 
 
 ####################
@@ -320,14 +325,14 @@ curl -fsSL https://install.julialang.org | sh
 #
 
 # make links of config files to .config
-for i in nvim qutebrowser zsh lazygit picom ghostty qtile dunst tmux
+for i in nvim qutebrowser zsh lazygit ghostty qtile dunst tmux kanshi xdg-desktop-portal
 do
 	rm -rf "$home/.config/$i"
 	ln -s "$home/config_files/$i" "$home/.config/$i"
 done
 
 # make links in $HOME
-for i in .gitconfig .zshenv .xprofile .lintr .Rprofile .Renviron .vimrc .vimrc.plug
+for i in .gitconfig .zshenv .lintr .Rprofile .Renviron .vimrc .vimrc.plug
 do
 	rm -rf "$home/$i"
 	ln -s "$home/config_files/$i" "$home/$i"
@@ -340,27 +345,8 @@ git clone https://github.com/zsh-users/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting
 cd "$home"
 
-# set natural scrolling and click on tap
-sudo mkdir -p /etc/X11/xorg.conf.d
-sudo tee /etc/X11/xorg.conf.d/40-libinput.conf > /dev/null <<EOF
-Section "InputClass"
-    Identifier "touchpad defaults"
-    MatchIsTouchpad "on"
-    Driver "libinput"
-    Option "Tapping" "on"
-    Option "NaturalScrolling" "on"
-EndSection
-EOF
-
-# keyboard: us layout, Menu as Compose key (used by the corne ACCENT key for á, ñ, ã...)
-sudo tee /etc/X11/xorg.conf.d/00-keyboard.conf > /dev/null <<EOF
-Section "InputClass"
-    Identifier "keyboard"
-    MatchIsKeyboard "on"
-    Option "XkbLayout" "us"
-    Option "XkbOptions" "lv3:ralt_switch,compose:menu"
-EndSection
-EOF
+# touchpad (tap, natural scrolling) and keyboard (us, Menu as Compose for
+# the corne ACCENT key) are set in qtile's wl_input_rules (qtile/config.py)
 
 
 ####################

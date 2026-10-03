@@ -35,8 +35,8 @@ auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True
 auto_minimize = True
-# Wayland equivalents of the setxkbmap line in .xprofile and of
-# /etc/X11/xorg.conf.d/40-libinput.conf (touchpads only, not the trackball)
+# keyboard: us layout, AltGr as level 3, Menu as Compose (corne ACCENT key);
+# touchpads (not the trackball): tap to click and natural scrolling
 wl_input_rules = {
     "type:keyboard": InputConfig(kb_layout="us", kb_options=KB_OPTIONS),
     "type:touchpad": InputConfig(tap=True, natural_scroll=True),

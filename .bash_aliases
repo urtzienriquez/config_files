@@ -34,7 +34,7 @@ alias jl='julia'
 alias qs='ssh meta qstat -u urtzien'
 
 # image viewer
-alias iv='imv-x11'
+alias iv='imv-wayland'
 
 # alias for ranger 
 alias rn='ranger'

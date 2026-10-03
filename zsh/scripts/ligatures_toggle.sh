@@ -27,7 +27,7 @@ else
     echo "Ligatures enabled"
 fi
 
-# Reload ghostty config (via its D-Bus action: works on X11 and Wayland)
+# Reload ghostty config (via its D-Bus action)
 gdbus call --session --dest com.mitchellh.ghostty \
     --object-path /com/mitchellh/ghostty \
     --method org.gtk.Actions.Activate reload-config [] {} >/dev/null

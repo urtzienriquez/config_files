@@ -1,5 +1,4 @@
-# kanshi: Wayland equivalent of the autorandr profiles in ~/.config/autorandr
-# (qtile Wayland session only; started from qtile/autostart.sh)
+# kanshi: monitor layout profiles (started from qtile/autostart.sh)
 
 # external monitor on the left of the laptop
 profile dual {
