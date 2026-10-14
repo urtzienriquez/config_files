@@ -44,31 +44,33 @@ vim.api.nvim_create_autocmd("BufEnter", {
 
     -- keymaps
     vim.keymap.set("n", "<leader>ds", dap.continue, {
-      desc = "Debug: start / continue",
+      desc = "start / continue",
     })
     vim.keymap.set("n", "<leader>dp", dap.toggle_breakpoint, {
-      desc = "Debug: toggle breakpoint",
+      desc = "toggle breakpoint",
     })
     vim.keymap.set("n", "<leader>dc", dap.step_over, {
-      desc = "Debug: step over",
+      desc = "step over",
     })
     vim.keymap.set("n", "<leader>di", dap.step_into, {
-      desc = "Debug: step into",
+      desc = "step into",
     })
     vim.keymap.set("n", "<leader>do", dap.step_out, {
-      desc = "Debug: step out",
+      desc = "step out",
     })
     vim.keymap.set("n", "<leader>du", dapui.toggle, {
-      desc = "Debug: toggle UI",
+      desc = "toggle UI",
     })
-    vim.keymap.set({ "n", "v" }, "<leader>de", dapui.eval, {
-      desc = "Debug: evaluate expression",
+    vim.keymap.set({ "n", "v" }, "<leader>de", function()
+      dapui.eval(nil, { enter = true })
+    end, {
+      desc = "evaluate expression",
     })
     vim.keymap.set("n", "<leader>dq", dap.terminate, {
-      desc = "Debug: terminate",
+      desc = "terminate",
     })
     vim.keymap.set("n", "<leader>dr", dap.restart, {
-      desc = "Debug: restart",
+      desc = "restart",
     })
 
     -- Inspect raw memory.
@@ -79,7 +81,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
         end
       end)
     end, {
-      desc = "Debug: inspect raw memory",
+      desc = "inspect raw memory",
     })
   end,
 })

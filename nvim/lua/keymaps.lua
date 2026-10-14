@@ -5,7 +5,7 @@ vim.keymap.set("n", "ZD", ":detach<CR>", { silent = true, desc = "detach" })
 vim.keymap.set("n", "<leader>h", function()
   vim.fn.setreg("/", [[\<]] .. vim.fn.expand("<cword>") .. [[\>]])
   vim.o.hlsearch = true
-end)
+end, {desc = "highlight"})
 
 -- Resize windows
 vim.keymap.set("n", "<M-Left>", ":vertical resize +5<CR>", { silent = true, desc = "Resize vertically +" })
