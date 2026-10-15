@@ -13,7 +13,12 @@ vim.api.nvim_create_autocmd("BufEnter", {
     local dapui = require("dapui")
 
     dapui.setup()
-    require("dap-memview").setup()
+    -- require("dap-memview").setup()
+    require("dap-memview").setup({
+      window = {
+        position = "tab",
+      },
+    })
 
     -- Assembly / disassembly plugin.
     require("dap-disasm").setup({
@@ -219,15 +224,8 @@ vim.api.nvim_create_autocmd("BufEnter", {
       desc = "Float a DAP UI element",
     })
 
-    -- Inspect raw memory.
     vim.keymap.set("n", "<leader>dm", function()
-      vim.ui.input({ prompt = "Memory expression: " }, function(expr)
-        if expr and expr ~= "" then
-          require("dap-memview").open(expr)
-        end
-      end)
-    end, {
-      desc = "Inspect raw memory",
-    })
+      require("dap-memview").open(vim.fn.expand("<cexpr>"))
+    end, { desc = "Debug: Memory view (expression under cursor)" })
   end,
 })
