@@ -301,6 +301,12 @@ launcher_keys = [
     ),
     Key(
         [],
+        "v",
+        lazy.spawn("vectorcraft"),
+        desc="Launch inkscape",
+    ),
+    Key(
+        [],
         "g",
         lazy.spawn("gimp"),
         desc="Launch gimp",
