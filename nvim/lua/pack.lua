@@ -36,7 +36,6 @@ for _, name in ipairs({
   "blink-cmp",
   "mason",
   "conform",
-  "debug",
   "vim-slime",
   "quicker",
   "fugitive",
