@@ -231,15 +231,15 @@ launcher_keys = [
     ),
     Key(
         [],
-        "q",
-        lazy.spawn("gnome-terminal"),
-        desc="Launch gnome terminal",
+        "d",
+        lazy.spawn("raddbg"),
+        desc="Launch rad debugger",
     ),
     Key(
         [],
-        "e",
-        lazy.spawn("emacs"),
-        desc="Launch terminal",
+        "q",
+        lazy.spawn("gnome-terminal"),
+        desc="Launch gnome terminal",
     ),
     Key(
         [],

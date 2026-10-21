@@ -73,7 +73,20 @@ ghosttyup() {
     command rm -rf .zig-cache zig-out && \
     zig build -p "$HOME/.local" -Doptimize=ReleaseFast && \
     echo "✓ Ghostty updated successfully!"
-    
+
+    cd - > /dev/null
+}
+
+# update RAD debugger
+raddbgup() {
+    local rad_dir="/home/urtzi/Documents/GitHub/raddebugger"
+    echo "Updating RAD Debugger from $rad_dir..."
+    cd "$rad_dir" || return 1
+    git pull && \
+    command rm -rf build && \
+    ./build.sh raddbg release && \
+    install -Dm755 build/raddbg "$HOME/.local/bin/raddbg" && \
+    echo "✓ RAD Debugger updated successfully!"
     cd - > /dev/null
 }
 
