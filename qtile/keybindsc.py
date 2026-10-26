@@ -261,9 +261,15 @@ launcher_keys = [
     ),
     Key(
         [],
-        "w",
+        "l",
         lazy.spawn("libreoffice --writer"),
         desc="Launch libreoffice writer",
+    ),
+    Key(
+        [],
+        "w",
+        lazy.spawn("wordcraft"),
+        desc="Launch wordcraft",
     ),
     Key(
         [],
@@ -303,7 +309,13 @@ launcher_keys = [
         [],
         "v",
         lazy.spawn("vectorcraft"),
-        desc="Launch inkscape",
+        desc="Launch vectorcraft",
+    ),
+    Key(
+        [],
+        "p",
+        lazy.spawn("photocraft"),
+        desc="Launch photocraft",
     ),
     Key(
         [],
@@ -317,12 +329,12 @@ launcher_keys = [
         lazy.spawn("zoom"),
         desc="Launch zoom",
     ),
-    Key(
-        [],
-        "p",
-        lazy.spawn(SCREENSHOT),
-        desc="Launch screenshot with keyboard",
-    ),
+    # Key(
+    #     [],
+    #     "p",
+    #     lazy.spawn(SCREENSHOT),
+    #     desc="Launch screenshot with keyboard",
+    # ),
 ]
 
 keys = [

@@ -66,10 +66,15 @@ ghosttyup() {
     
     # 1. Pull latest code
     # 2. Update submodules (crucial for Ghostty)
-    # 3. Clean previous build artifacts
-    # 4. Build and install to ~/.local
+    # 3. Update blueprint-compiler to its latest tag (Debian's is too old)
+    # 4. Clean previous build artifacts
+    # 5. Build and install to ~/.local
     git pull && \
     git submodule update --init --recursive && \
+    (cd /home/urtzi/Documents/GitHub/blueprint-compiler && \
+        command git fetch -q --tags && \
+        command git -c advice.detachedHead=false checkout -q "$(command git tag --sort=-v:refname | head -1)" && \
+        meson install -C _build > /dev/null) && \
     command rm -rf .zig-cache zig-out && \
     zig build -p "$HOME/.local" -Doptimize=ReleaseFast && \
     echo "✓ Ghostty updated successfully!"
@@ -103,25 +108,29 @@ qbup() {
     cd - > /dev/null
 }
 
-# update vectorcraft (installed from the GitHub release .deb)
-vcup() {
-    local repo="storytold/vectorcraft"
+# update a storytold app installed from its GitHub release .deb
+# usage: _storytold_up <package> <display name>
+_storytold_up() {
+    local pkg=$1 name=$2
+    local repo="storytold/$pkg"
     local installed latest arch deb tmp
-    installed=$(dpkg-query -W -f='${Version}' vectorcraft 2>/dev/null) || {
-        echo "vectorcraft is not installed"; return 1
-    }
+    installed=$(dpkg-query -W -f='${Version}' "$pkg" 2>/dev/null)
     installed=${installed%-*}
-    echo "Checking VectorCraft releases on github.com/$repo..."
+    echo "Checking $name releases on github.com/$repo..."
     latest=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" | jq -r .tag_name)
     if [[ -z $latest || $latest == null ]]; then
         echo "Could not fetch the latest release"; return 1
     fi
     latest=${latest#v}
-    if ! dpkg --compare-versions "$latest" gt "$installed"; then
-        echo "✓ VectorCraft is up to date ($installed)"; return 0
+    if [[ -z $installed ]]; then
+        echo "$name is not installed"
+        read -q "?Install $name $latest? [y/N] " || { echo; return 0; }
+    elif ! dpkg --compare-versions "$latest" gt "$installed"; then
+        echo "✓ $name is up to date ($installed)"; return 0
+    else
+        echo "New $name version: $installed → $latest"
+        read -q "?Update $name? [y/N] " || { echo; return 0; }
     fi
-    echo "New VectorCraft version: $installed → $latest"
-    read -q "?Update VectorCraft? [y/N] " || { echo; return 0; }
     echo
     case $(dpkg --print-architecture) in
         amd64)   arch=x86_64 ;;
@@ -129,16 +138,25 @@ vcup() {
         riscv64) arch=riscv64 ;;
         *) echo "Unsupported architecture"; return 1 ;;
     esac
-    deb="vectorcraft-${latest}-linux-${arch}.deb"
+    deb="${pkg}-${latest}-linux-${arch}.deb"
     tmp=$(mktemp -d) || return 1
     local url="https://github.com/$repo/releases/download/v$latest"
     curl -fL --progress-bar -o "$tmp/$deb" "$url/$deb" && \
     curl -fsSL -o "$tmp/SHA256SUMS.txt" "$url/SHA256SUMS.txt" && \
     (cd "$tmp" && sha256sum --check --ignore-missing --quiet SHA256SUMS.txt) && \
     sudo apt install -y "$tmp/$deb" && \
-    echo "✓ VectorCraft updated to $latest!"
+    echo "✓ $name $latest installed successfully!"
     command rm -rf "$tmp"
 }
+
+# update vectorcraft
+vcup() { _storytold_up vectorcraft VectorCraft }
+
+# update photocraft
+pcup() { _storytold_up photocraft PhotoCraft }
+
+# update wordcraft
+wcup() { _storytold_up wordcraft WordCraft }
 
 # dot aliases
 alias ..='cd ..'
