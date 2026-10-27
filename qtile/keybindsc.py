@@ -219,7 +219,7 @@ launcher_keys = [
     ),
     Key(
         [],
-        "s",
+        "g",
         lazy.spawn("env XDG_CURRENT_DESKTOP=GNOME gnome-control-center"),
         desc="Launch gnome control center",
     ),
@@ -301,12 +301,6 @@ launcher_keys = [
     ),
     Key(
         [],
-        "i",
-        lazy.spawn("inkscape"),
-        desc="Launch inkscape",
-    ),
-    Key(
-        [],
         "v",
         lazy.spawn("vectorcraft"),
         desc="Launch vectorcraft",
@@ -316,12 +310,6 @@ launcher_keys = [
         "p",
         lazy.spawn("photocraft"),
         desc="Launch photocraft",
-    ),
-    Key(
-        [],
-        "g",
-        lazy.spawn("gimp"),
-        desc="Launch gimp",
     ),
     Key(
         [],
