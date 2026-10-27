@@ -2,6 +2,21 @@ import re
 
 from libqtile.config import Match
 from libqtile import layout, qtile
+from libqtile.layout.tree import TreeTab
+
+
+# qtile 0.37: TreeTab.finalize kills its tab panel but keeps the reference, and
+# a config reload then re-lays out the old group and place()s the freed panel
+# (use-after-free in the Wayland backend -> the session segfaults)
+if not hasattr(TreeTab, "_orig_finalize"):
+    TreeTab._orig_finalize = TreeTab.finalize
+
+    def _finalize(self):
+        self._orig_finalize()
+        self._panel = None
+        self._drawer = None
+
+    TreeTab.finalize = _finalize
 
 
 def _other_zotero(win):
@@ -64,5 +79,6 @@ floating_layout = layout.Floating(
         Match(wm_class="love-11.5"),
         Match(wm_class="gksqt"),
         Match(wm_class="r_x11"),
+        Match(wm_class=re.compile(r".*Game$")),  # my own games (X11 class ends in "Game")
     ],
 )
