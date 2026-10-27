@@ -23,6 +23,7 @@ vim.keymap.set("n", "<leader>cr", function()
     cmd = vim.fn.shellescape(vim.fn.expand("%:p:r"))
   end
   vim.cmd("botright split | terminal " .. cmd)
+  vim.cmd("startinsert")
 end, { buffer = true, desc = "Run C++ program" })
 
 -- debug (cd changes directory... cv for "view"... horrible, but it is what it is)
