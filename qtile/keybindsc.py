@@ -317,12 +317,12 @@ launcher_keys = [
         lazy.spawn("zoom"),
         desc="Launch zoom",
     ),
-    # Key(
-    #     [],
-    #     "p",
-    #     lazy.spawn(SCREENSHOT),
-    #     desc="Launch screenshot with keyboard",
-    # ),
+    Key(
+        [],
+        "s",
+        lazy.spawn(SCREENSHOT),
+        desc="Launch screenshot with keyboard",
+    ),
 ]
 
 keys = [
