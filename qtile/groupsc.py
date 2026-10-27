@@ -31,7 +31,7 @@ group_matches = [
     # Wayland has no window roles, so this also catches Zotero's popups
     # (they float, see layoutsc.py)
     [Match(wm_class="Zotero")],
-    [Match(wm_class="org.inkscape.Inkscape"), Match(wm_class="gimp")],
+    [Match(wm_class="org.inkscape.Inkscape"), Match(wm_class="gimp"), Match(wm_class="ai.storyteller.photocraft"), Match(wm_class="ai.storyteller.vectorcraft")],
     [Match(wm_class="zoom")],
 ]
 group_exclusive = [False, False, False, False, False, False, False, True]

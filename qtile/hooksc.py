@@ -68,6 +68,45 @@ def size_popups(window):
     window.center()
 
 
+# Apps that ask to be maximized (also after mapping); qtile always honors
+# that on Wayland, which takes them out of the tiling layout. There is no
+# hook for the request, so wrap the backend's handler
+TILE_CLASSES = {
+    "ai.storyteller.photocraft",
+    "ai.storyteller.wordcraft",
+    "ai.storyteller.vectorcraft",
+}
+
+
+def _wants_tiling(window):
+    return any(c in TILE_CLASSES for c in window.get_wm_class() or [])
+
+
+try:
+    from libqtile.backend.wayland.window import Window as WlWindow
+except ImportError:  # X11 session
+    WlWindow = None
+
+if WlWindow is not None:
+    # keep the real handler across config reloads
+    if not hasattr(WlWindow, "_orig_request_maximize"):
+        WlWindow._orig_request_maximize = WlWindow.handle_request_maximize
+
+    def _handle_request_maximize(self, maximize):
+        if _wants_tiling(self):
+            return False
+        return self._orig_request_maximize(maximize)
+
+    WlWindow.handle_request_maximize = _handle_request_maximize
+
+
+# in case the request came before the app_id was known
+@hook.subscribe.client_managed
+def tile_maximized_apps(window):
+    if _wants_tiling(window) and window.maximized:
+        window.disable_floating()
+
+
 @hook.subscribe.client_name_updated
 def shorten_pdf_names(window):
     if window.name and ".pdf" in window.name.lower():
