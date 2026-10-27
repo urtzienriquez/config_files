@@ -25,8 +25,8 @@ vim.keymap.set("n", "<leader>cr", function()
   vim.cmd("botright split | terminal " .. cmd)
 end, { buffer = true, desc = "Run C++ program" })
 
--- debug
-vim.keymap.set("n", "<leader>cd", function()
+-- debug (cd changes directory... cv for "view"... horrible, but it is what it is)
+vim.keymap.set("n", "<leader>cv", function()
   local dir, has_makefile, ok = build()
   if not ok then
     return -- build failed: errors are in the quickfix list
