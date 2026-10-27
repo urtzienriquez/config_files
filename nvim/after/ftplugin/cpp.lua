@@ -11,6 +11,8 @@ local function build()
   return dir, has_makefile, vim.v.shell_error == 0
 end
 
+vim.keymap.set("n", "<leader>cc", build, { buffer = true, desc = "Compile C++ file" })
+
 -- run
 vim.keymap.set("n", "<leader>cr", function()
   local dir = vim.fn.expand("%:p:h")
