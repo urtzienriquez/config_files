@@ -1,4 +1,2 @@
-BasedOnStyle: LLVM
-IndentWidth: 4
-UseTab: Never
-IndentCaseLabels: true
+BasedOnStyle: Microsoft
+BreakBeforeBraces: Allman
