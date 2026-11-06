@@ -13,14 +13,17 @@ end
 return {
   cmd = {
     "julia",
-    "--project=@lang_serv", -- environment where LanguageServer is installed
     "--startup-file=no",
     "--history-file=no",
     "-e",
     [[
-            using Pkg
-            Pkg.instantiate()
+            # LanguageServer is in the environment @lang_serv, which is put on the load path only
+            # to load it: with --project=@lang_serv, the server would index that environment
+            # instead of the one the code uses (the default @v#.#, or the project of the file)
+            ls_env = joinpath(get(DEPOT_PATH, 1, joinpath(homedir(), ".julia")), "environments", "lang_serv")
+            pushfirst!(LOAD_PATH, ls_env)
             using LanguageServer
+            popfirst!(LOAD_PATH)
             depot_path = get(ENV, "JULIA_DEPOT_PATH", joinpath(homedir(), ".julia"))
             project_path = let
             dirname(something(
@@ -46,4 +49,30 @@ return {
   },
   filetypes = { "julia" },
   root_dir = julia_root_dir(vim.api.nvim_buf_get_name(0)),
+  -- LanguageServer 6 shows packages added with `] dev` only when their source is part of the
+  -- workspace: every dev'd package of the project's Manifest.toml (its `path = "..."` entries)
+  -- becomes a workspace folder too
+  before_init = function(params, config)
+    local root = config.root_dir
+    if not root then
+      return
+    end
+    local manifest = io.open(root .. "/Manifest.toml", "r")
+    if not manifest then
+      return
+    end
+    for line in manifest:lines() do
+      local path = line:match('^path%s*=%s*"(.-)"')
+      if path then
+        if path:sub(1, 1) ~= "/" then
+          path = vim.fs.normalize(root .. "/" .. path)
+        end
+        if vim.fn.isdirectory(path) == 1 then
+          params.workspaceFolders = params.workspaceFolders or {}
+          table.insert(params.workspaceFolders, { uri = vim.uri_from_fname(path), name = vim.fs.basename(path) })
+        end
+      end
+    end
+    manifest:close()
+  end,
 }
