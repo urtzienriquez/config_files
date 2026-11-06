@@ -1,3 +1,19 @@
+-- sources and executable for the no-Makefile case:
+-- one .cpp in the dir -> build just it (exe named after the file)
+-- several .cpp        -> build them all together into <dir>/main
+local function target(dir)
+  local sources = vim.fn.glob(dir .. "/*.cpp", false, true)
+  if #sources <= 1 then
+    return { vim.fn.expand("%:p") }, vim.fn.expand("%:p:r")
+  end
+  return sources, dir .. "/main"
+end
+
+-- shell-escape a path, then escape % and # so :make doesn't expand them
+local function arg(path)
+  return (vim.fn.shellescape(path):gsub("[%%#]", "\\%0"))
+end
+
 -- compile
 local function build()
   local dir = vim.fn.expand("%:p:h")
@@ -5,7 +21,9 @@ local function build()
   if has_makefile then
     vim.opt_local.makeprg = "make -C " .. vim.fn.shellescape(dir)
   else
-    vim.opt_local.makeprg = "clang++ -std=c++20 -Wall -Wextra -g -O0 -fstandalone-debug -o %:r %"
+    local sources, exe = target(dir)
+    vim.opt_local.makeprg = "clang++ -std=c++20 -Wall -Wextra -g -O0 -fstandalone-debug -o "
+      .. arg(exe) .. " " .. table.concat(vim.tbl_map(arg, sources), " ")
   end
   vim.cmd("make")
   return dir, has_makefile, vim.v.shell_error == 0
@@ -20,9 +38,10 @@ vim.keymap.set("n", "<leader>cr", function()
   if vim.fn.filereadable(dir .. "/Makefile") == 1 then
     cmd = "make -C " .. vim.fn.shellescape(dir) .. " run"
   else
-    cmd = vim.fn.shellescape(vim.fn.expand("%:p:r"))
+    local _, exe = target(dir)
+    cmd = vim.fn.shellescape(exe)
   end
-  vim.cmd("botright split | terminal " .. cmd)
+  vim.cmd("topleft split | terminal " .. cmd)
   vim.cmd("startinsert")
 end, { buffer = true, desc = "Run C++ program" })
 
@@ -35,6 +54,7 @@ vim.keymap.set("n", "<leader>cv", function()
   if has_makefile then
     vim.fn.jobstart({ "make", "-C", dir, "debug" }, { detach = true })
   else
-    vim.fn.jobstart({ "raddbg", vim.fn.expand("%:p:r") }, { detach = true, cwd = dir })
+    local _, exe = target(dir)
+    vim.fn.jobstart({ "raddbg", exe }, { detach = true, cwd = dir })
   end
 end, { buffer = true, desc = "Debug C++ program in RAD" })
