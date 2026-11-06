@@ -86,12 +86,27 @@ ghosttyup() {
 raddbgup() {
     local rad_dir="/home/urtzi/Documents/GitHub/raddebugger"
     echo "Updating RAD Debugger from $rad_dir..."
+    # local fixes, applied only for the build, then reverted:
+    #   raddbg-fp-raster.patch: crash on missing source file
+    #   raddbg-alt-text.patch:  alt+letter hotkeys leaking text into views
+    local patches=("$HOME"/.config/zsh/patches/raddbg-*.patch)
+    local applied=() patch
     cd "$rad_dir" || return 1
-    git pull && \
+    git pull || { cd - > /dev/null; return 1; }
+    for patch in "${patches[@]}"; do
+        if ! git apply "$patch"; then
+            echo "✗ Patch no longer applies (fixed upstream?). Check $patch"
+            for patch in "${applied[@]}"; do git apply -R "$patch"; done
+            cd - > /dev/null
+            return 1
+        fi
+        applied+=("$patch")
+    done
     command rm -rf build && \
     ./build.sh raddbg release && \
     install -Dm755 build/raddbg "$HOME/.local/bin/raddbg" && \
     echo "✓ RAD Debugger updated successfully!"
+    for patch in "${applied[@]}"; do git apply -R "$patch"; done
     cd - > /dev/null
 }
 
