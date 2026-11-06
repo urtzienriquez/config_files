@@ -1,0 +1,15 @@
+--- a/src/linux/window_manager/linux_window_manager.c
++++ b/src/linux/window_manager/linux_window_manager.c
+@@ -1282,8 +1282,10 @@
+             lnx_wm_state->key_down_state[key/64] &= ~(1ull<<(key%64));
+           }
+           
+-          // rjf: push text event
+-          if(evt.type == KeyPress && text_size != 0)
++          // rjf: push text event (not while Alt is held, matching win32, where
++          // alt+key is WM_SYSCHAR, so alt+letter hotkeys don't leak text into
++          // the newly focused view, e.g. writing bytes in the memory view)
++          if(evt.type == KeyPress && text_size != 0 && !(modifiers & WM_Modifier_Alt))
+           {
+             for(U64 off = 0; off < text_size;)
+             {
