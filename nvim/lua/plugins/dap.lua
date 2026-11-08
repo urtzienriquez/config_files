@@ -1,42 +1,16 @@
-vim.pack.add({
-  "https://github.com/mfussenegger/nvim-dap",
-  "https://github.com/igorlfs/nvim-dap-view",
-})
+vim.pack.add({ "https://github.com/mfussenegger/nvim-dap" })
+vim.opt.rtp:prepend(vim.fn.expand("~/Documents/GitHub/nvim-dapper") --[[@as string]])
 
 local dap = require("dap")
-local panel = require("dap_panel") -- the window under dap-view's: call stack, scopes, I/O, ...
+local dapper = require("dapper")
+
+dapper.setup({ size = 0.5 })
 
 ----------------------------------------
--- adapters
+-- adapters and configurations
 
--- gdb >= 14 speaks DAP; the program reads and writes the panel's "Program I/O" terminal
-dap.adapters.gdb = function(callback, config)
-  local args = { "--interpreter=dap", "--eval-command", "set print pretty on" }
-  if config.request == "launch" then
-    vim.list_extend(args, { "--eval-command", "set inferior-tty " .. panel.program_terminal() })
-  end
-  callback({ type = "executable", command = "gdb", args = args })
-end
-
+dap.adapters.gdb = dapper.gdb() -- (its program reads and writes dapper's "Program I/O")
 dap.adapters.python = { type = "executable", command = "python3", args = { "-m", "debugpy.adapter" } }
-
--- gdb answers the breakpoints set before the program is loaded ("pending") without their line,
--- and nvim-dap, which finds a breakpoint's sign by its line, then gives every breakpoint of the
--- file the state of the last one: all but one stay marked rejected (✗), although they work.
--- The answer lists the breakpoints in the order they were asked for, so their lines are known.
-dap.listeners.before.setBreakpoints["fill-lines"] = function(_, err, response, request)
-  if err or not response or not request or not request.breakpoints then
-    return
-  end
-  for i, bp in ipairs(response.breakpoints or {}) do
-    if bp.line == nil and request.breakpoints[i] then
-      bp.line = request.breakpoints[i].line
-    end
-  end
-end
-
-----------------------------------------
--- configurations
 
 local gdb_configs = {
   require("build.dap").configuration(), -- "Build & debug": builds the debug target first
@@ -78,32 +52,6 @@ dap.configurations.python = {
 }
 
 ----------------------------------------
--- UI
-
-require("dap-view").setup({
-  auto_toggle = true,
-  windows = {
-    position = "right",
-    size = 0.5,
-    terminal = { position = "below", size = 0.4 }, -- of programs that ask for one (Python)
-  },
-})
-
--- where the code is shown when the program stops: a window already showing that file (in any
--- tab), else the previous window (never the debug windows: they have 'winfixbuf')
-dap.defaults.fallback.switchbuf = "usetab,uselast"
-
-for name, sign in pairs({
-  DapBreakpoint = { text = "●", texthl = "DiagnosticError" },
-  DapBreakpointCondition = { text = "◆", texthl = "DiagnosticWarn" },
-  DapLogPoint = { text = "◉", texthl = "DiagnosticInfo" },
-  DapStopped = { text = "→", texthl = "DiagnosticOk", linehl = "Visual" },
-  DapBreakpointRejected = { text = "✗", texthl = "DiagnosticHint" },
-}) do
-  vim.fn.sign_define(name, sign)
-end
-
-----------------------------------------
 -- keymaps
 
 local function map(lhs, rhs, desc, mode)
@@ -125,9 +73,6 @@ map("<leader>dC", dap.run_to_cursor, "Run to cursor")
 map("<leader>dr", dap.restart, "Restart")
 map("<leader>dt", dap.terminate, "Terminate")
 map("<leader>dL", dap.run_last, "Run last")
-map("<leader>dv", panel.toggle, "Toggle debug windows")
-map("<leader>dp", panel.toggle_lower, "Toggle the lower debug window")
-map("<leader>dw", "<cmd>DapViewWatch<cr>", "Watch expression", { "n", "x" })
-map("<leader>dk", function()
-  require("dap.ui.widgets").hover()
-end, "Hover evaluate", { "n", "x" })
+map("<leader>dv", "<Cmd>Dapper<CR>", "Toggle debug panes")
+map("<leader>dw", "<Cmd>Dapper watch<CR>", "Watch expression", { "n", "x" })
+map("<leader>dk", "<Cmd>Dapper hover<CR>", "Hover evaluate", { "n", "x" })
