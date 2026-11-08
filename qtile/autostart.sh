@@ -7,9 +7,11 @@ QTILE_DIR=/home/urtzi/.config/qtile
 
 # D-Bus/systemd-activated services (dunst, ghostty, portals) must know they
 # live on Wayland, otherwise e.g. dunst tries X11 and aborts.
+# PATH: the ghostty unit runs `ghostty` from ~/.local/bin, and its windows
+# launch tools (yazi, ...) that live there too; systemd's default PATH lacks it.
 dbus-update-activation-environment --systemd \
     WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE \
-    XCURSOR_THEME XCURSOR_SIZE
+    XCURSOR_THEME XCURSOR_SIZE PATH
 systemctl --user reset-failed dunst.service 2>/dev/null
 
 # monitor layout (~/.config/kanshi/config) and external-monitor gamma
