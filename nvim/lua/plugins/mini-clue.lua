@@ -36,7 +36,8 @@ miniclue.setup({
     { mode = "n", keys = "<Leader>g", desc = "(Git commands)" },
     { mode = "n", keys = "<Leader>u", desc = "(UI)" },
     { mode = "n", keys = "<Leader>b", desc = "(Buffer format)" },
-    { mode = "n", keys = "<Leader>d", desc = "(Debug)" },
+    { mode = "n", keys = "<Leader>c", desc = "(Compile/run)" },
+    { mode = { "n", "x" }, keys = "<Leader>d", desc = "(Debug)" },
     { mode = "n", keys = "<Leader>s", desc = "(Session)" },
   },
 })
