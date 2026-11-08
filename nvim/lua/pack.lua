@@ -35,6 +35,7 @@ for _, name in ipairs({
   "plenary",
   "blink-cmp",
   "mason",
+  "build",
   "dap",
   "conform",
   "vim-slime",

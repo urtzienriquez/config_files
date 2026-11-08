@@ -4,28 +4,12 @@ vim.pack.add({
 })
 
 local dap = require("dap")
-
-require("dap-view").setup({
-  auto_toggle = true,
-  windows = {
-    position = "right",
-    size = 0.5,
-    -- the terminal of programs that ask for one (Python): stacked under the panel
-    terminal = { position = "below", size = 0.4 },
-  },
-})
-
--- the window under dap-view's panel: call stack, scopes, threads, REPL or program I/O
-local panel = require("dap_panel")
-
--- where the code is shown when the program stops: a window already showing that file (in any
--- tab), else the previous window (never the debug windows: they have 'winfixbuf')
-dap.defaults.fallback.switchbuf = "usetab,uselast"
+local panel = require("dap_panel") -- the window under dap-view's: call stack, scopes, I/O, ...
 
 ----------------------------------------
 -- adapters
 
--- gdb >= 14 speaks DAP natively; the program reads and writes the panel's "Program I/O" terminal
+-- gdb >= 14 speaks DAP; the program reads and writes the panel's "Program I/O" terminal
 dap.adapters.gdb = function(callback, config)
   local args = { "--interpreter=dap", "--eval-command", "set print pretty on" }
   if config.request == "launch" then
@@ -33,6 +17,8 @@ dap.adapters.gdb = function(callback, config)
   end
   callback({ type = "executable", command = "gdb", args = args })
 end
+
+dap.adapters.python = { type = "executable", command = "python3", args = { "-m", "debugpy.adapter" } }
 
 -- gdb answers the breakpoints set before the program is loaded ("pending") without their line,
 -- and nvim-dap, which finds a breakpoint's sign by its line, then gives every breakpoint of the
@@ -49,18 +35,11 @@ dap.listeners.before.setBreakpoints["fill-lines"] = function(_, err, response, r
   end
 end
 
-dap.adapters.python = {
-  type = "executable",
-  command = "python3",
-  args = { "-m", "debugpy.adapter" },
-}
-
 ----------------------------------------
 -- configurations
 
 local gdb_configs = {
-  -- builds the project's debug target first (lua/build.lua), then debugs it
-  require("build").dap_configuration(),
+  require("build.dap").configuration(), -- "Build & debug": builds the debug target first
   {
     name = "Launch",
     type = "gdb",
@@ -69,7 +48,6 @@ local gdb_configs = {
       return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
     end,
     cwd = "${workspaceFolder}",
-    env = require("build").debug_env,
     stopAtBeginningOfMainSubprogram = false,
   },
   {
@@ -86,13 +64,7 @@ for _, ft in ipairs({ "c", "cpp", "fortran", "zig" }) do
 end
 
 dap.configurations.python = {
-  {
-    name = "Launch file",
-    type = "python",
-    request = "launch",
-    program = "${file}",
-    console = "integratedTerminal",
-  },
+  { name = "Launch file", type = "python", request = "launch", program = "${file}", console = "integratedTerminal" },
   {
     name = "Launch file with args",
     type = "python",
@@ -106,7 +78,20 @@ dap.configurations.python = {
 }
 
 ----------------------------------------
--- signs
+-- UI
+
+require("dap-view").setup({
+  auto_toggle = true,
+  windows = {
+    position = "right",
+    size = 0.5,
+    terminal = { position = "below", size = 0.4 }, -- of programs that ask for one (Python)
+  },
+})
+
+-- where the code is shown when the program stops: a window already showing that file (in any
+-- tab), else the previous window (never the debug windows: they have 'winfixbuf')
+dap.defaults.fallback.switchbuf = "usetab,uselast"
 
 for name, sign in pairs({
   DapBreakpoint = { text = "●", texthl = "DiagnosticError" },
@@ -121,7 +106,7 @@ end
 ----------------------------------------
 -- keymaps
 
-local map = function(lhs, rhs, desc, mode)
+local function map(lhs, rhs, desc, mode)
   vim.keymap.set(mode or "n", lhs, rhs, { desc = desc })
 end
 
