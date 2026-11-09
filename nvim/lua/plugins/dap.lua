@@ -59,6 +59,7 @@ end
 
 map("<leader>dc", dap.continue, "Continue / start")
 map("<leader>db", dap.toggle_breakpoint, "Toggle breakpoint")
+map("<leader>dD", dapper.clear_breakpoints, "Delete all breakpoints")
 map("<leader>dB", dapper.conditional_breakpoint, "Conditional breakpoint")
 map("<leader>dl", dapper.log_point, "Log point")
 map("<leader>di", dap.step_into, "Step into")
