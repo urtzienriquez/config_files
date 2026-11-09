@@ -60,11 +60,15 @@ local function fzf_setup()
 
   fzf_lua = require("fzf-lua")
 
-  -- tall enough for all the items (and fzf-lua's prompt, separator and borders), up to 80% of the screen
-  require("fzf-lua.providers.ui_select").register(function(_, items)
-    local height = math.min((#items + 6) / vim.o.lines, 0.8)
-    return { winopts = { row = 0.5, col = 0.5, width = 0.5, height = height, border = "rounded" } }
-  end)
+  require("fzf-lua.providers.ui_select").register({
+    winopts = {
+      row = 0.5,
+      col = 0.5,
+      width = 0.5,
+      height = 0.5,
+      border = "rounded",
+    },
+  })
 end
 
 -- first vim.ui.select call triggers the registration
