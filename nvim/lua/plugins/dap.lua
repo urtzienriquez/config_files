@@ -6,9 +6,13 @@ local dapper = require("dapper")
 
 dapper.setup({ size = 0.5 })
 
--- adapters and configurations: none here. dapper.setup() adds the gdb adapter and "Launch" /
+-- adapters and configurations: only R's here. dapper.setup() adds the gdb adapter and "Launch" /
 -- "Attach to process" to <leader>dc's list, and build.nvim adds "Build & debug" (first) in the
 -- buffers :Build works in
+
+-- R: rdap (~/Documents/GitHub/rdap; make install), a debug adapter that runs R itself
+vim.opt.rtp:prepend(vim.fn.expand("~/Documents/GitHub/rdap") --[[@as string]])
+require("rdap").setup()
 
 ----------------------------------------
 -- keymaps
