@@ -15,6 +15,8 @@ vim.api.nvim_create_autocmd("User", {
       vim.keymap.set("n", lhs, "<Cmd>Build " .. cmd .. "<CR>", { buffer = ev.data.buf, desc = desc })
     end
     map("<leader>cc", "", "Build")
+    map("<leader>ca", "args", "Args to build")
+    map("<leader>cA", "args!", "clear Args to build")
     map("<leader>ct", "target", "Choose build target")
     map("<leader>cr", "run", "Run program")
     map("<leader>cv", "debug-external", "Debug (RAD)")
