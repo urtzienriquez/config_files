@@ -48,3 +48,16 @@ tabbar tabbox.single-tab tab:active {
 tabbar tab indicator {
   background: transparent;
 }
+
+/* hide the key-table popup ("nvim") that shows while neovim has the
+   `nvim` key table active (see config "navigate panes"); no config option
+   exists for it, so make the GTK widget invisible and as small as possible */
+.key-state-overlay {
+  opacity: 0;
+  padding: 0;
+  margin: 0;
+  outline-width: 0;
+  border-radius: 0;
+  min-width: 0;
+  min-height: 0;
+}
