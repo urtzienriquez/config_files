@@ -18,15 +18,49 @@ for i = 1, 9 do
   vim.keymap.set({ "n", "i", "v", "t" }, "<M-" .. i .. ">", "<Nop>")
 end
 
--- Split navigation
-vim.keymap.set("n", "<M-h>", "<C-w>h", { desc = "Move to split left" })
-vim.keymap.set("n", "<M-j>", "<C-w>j", { desc = "Move to split down" })
-vim.keymap.set("n", "<M-k>", "<C-w>k", { desc = "Move to split up" })
-vim.keymap.set("n", "<M-l>", "<C-w>l", { desc = "Move to split right" })
-vim.keymap.set("t", "<M-h>", "<C-\\><C-N><C-w>h", { desc = "Move to split left (terminal)" })
-vim.keymap.set("t", "<M-j>", "<C-\\><C-N><C-w>j", { desc = "Move to split down (terminal)" })
-vim.keymap.set("t", "<M-k>", "<C-\\><C-N><C-w>k", { desc = "Move to split up (terminal)" })
-vim.keymap.set("t", "<M-l>", "<C-\\><C-N><C-w>l", { desc = "Move to split right (terminal)" })
+-- Split navigation (seamless with ghostty panes, see ghostty/config "navigate panes")
+local ghostty_nav = vim.env.TERM_PROGRAM == "ghostty" and vim.env.WAYLAND_DISPLAY ~= nil
+  and vim.fn.executable("wtype") == 1
+
+-- press ctrl+alt+shift+<key> through the compositor so ghostty sees it
+local function ghostty_chord(key)
+  vim.system({ "wtype", "-M", "ctrl", "-M", "alt", "-M", "shift", "-k", key,
+    "-m", "shift", "-m", "alt", "-m", "ctrl" })
+end
+
+local function nav(dir)
+  local win = vim.fn.winnr()
+  vim.cmd("wincmd " .. dir)
+  if ghostty_nav and vim.fn.winnr() == win then
+    ghostty_chord(dir) -- at an nvim edge: hand off to ghostty
+  end
+end
+
+for dir, name in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
+  vim.keymap.set("n", "<M-" .. dir .. ">", function() nav(dir) end, { desc = "Move to split " .. name })
+  vim.keymap.set("t", "<M-" .. dir .. ">", function()
+    vim.cmd("stopinsert")
+    nav(dir)
+  end, { desc = "Move to split " .. name .. " (terminal)" })
+end
+
+if ghostty_nav then
+  local group = vim.api.nvim_create_augroup("GhosttyNav", { clear = true })
+  vim.api.nvim_create_autocmd({ "VimEnter", "VimResume" }, {
+    group = group,
+    callback = function()
+      if #vim.api.nvim_list_uis() > 0 then ghostty_chord("F11") end -- activate_key_table:nvim
+    end,
+  })
+  vim.api.nvim_create_autocmd({ "VimLeavePre", "VimSuspend" }, {
+    group = group,
+    callback = function()
+      if #vim.api.nvim_list_uis() == 0 then return end
+      vim.system({ "wtype", "-M", "ctrl", "-M", "alt", "-M", "shift", "-k", "F12",
+        "-m", "shift", "-m", "alt", "-m", "ctrl" }):wait() -- deactivate before exit
+    end,
+  })
+end
 
 -- Half page up/down, keeping cursor centered
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, desc = "Jump half page down" })

@@ -48,10 +48,25 @@ keybind = alt+shift+v=equalize_splits
 keybind = alt+x=close_surface
 
 # navigate panes (nvim first, ghostty outer fallback)
-keybind = performable:alt+h=goto_split:left
-keybind = performable:alt+l=goto_split:right
-keybind = performable:alt+k=goto_split:up
-keybind = performable:alt+j=goto_split:down
+# `performable:` can't work on Linux: GTK goto_split wraps at edges, so it is
+# always performable and nvim never sees the key. Instead nvim (lua/keymaps.lua)
+# activates the `nvim` key table while running, which forwards alt+hjkl to it;
+# at an nvim edge it synthesises ctrl+alt+shift+hjkl via wtype to move panes.
+keybind = alt+h=goto_split:left
+keybind = alt+l=goto_split:right
+keybind = alt+k=goto_split:up
+keybind = alt+j=goto_split:down
+keybind = ctrl+alt+shift+h=goto_split:left
+keybind = ctrl+alt+shift+l=goto_split:right
+keybind = ctrl+alt+shift+k=goto_split:up
+keybind = ctrl+alt+shift+j=goto_split:down
+keybind = nvim/alt+h=esc:h
+keybind = nvim/alt+l=esc:l
+keybind = nvim/alt+k=esc:k
+keybind = nvim/alt+j=esc:j
+# sent by nvim on start/resume and exit/suspend (also a manual recovery key)
+keybind = ctrl+alt+shift+f11=activate_key_table:nvim
+keybind = ctrl+alt+shift+f12=deactivate_all_key_tables
 
 # resize panes (tmux alt-shift+h/j/k/l, step 5)
 keybind = alt+shift+h=resize_split:left,20
