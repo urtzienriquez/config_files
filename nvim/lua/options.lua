@@ -4,6 +4,9 @@ vim.loader.enable()
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- .h files as C++
+vim.g.filetype_h = "cpp"
+
 -- ui2
 local function ui2()
   require("vim._core.ui2").enable({})
