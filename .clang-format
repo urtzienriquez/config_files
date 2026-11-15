@@ -2,3 +2,4 @@ BasedOnStyle: Microsoft
 BreakBeforeBraces: Allman
 SortIncludes: Never
 IndentCaseLabels: true
+InsertBraces: true
