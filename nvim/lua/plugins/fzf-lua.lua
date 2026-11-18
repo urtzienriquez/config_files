@@ -154,7 +154,7 @@ vim.keymap.set("n", "<leader>fm", fzf.spell_suggest, { desc = "Spell suggestions
 vim.keymap.set("n", "<leader>f'", fzf.marks, { desc = "marks" })
 vim.keymap.set("n", "<leader>f,", fzf.resume, { desc = "Resume picker" })
 vim.keymap.set("n", "<leader>f.", fzf.oldfiles, { desc = "recent files" })
-vim.keymap.set("n", "<leader>gb", fzf.git_branches, { desc = "Git branches" })
+vim.keymap.set("n", "<leader>gB", fzf.git_branches, { desc = "Git branches" })
 vim.keymap.set("n", "<leader>gC", fzf.git_commits, { desc = "Git commits" })
 
 return { fzf = fzf, get = fzf_get }
