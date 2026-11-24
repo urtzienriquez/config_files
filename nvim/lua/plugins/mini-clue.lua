@@ -39,5 +39,6 @@ miniclue.setup({
     { mode = "n", keys = "<Leader>c", desc = "(Compile/run)" },
     { mode = { "n", "x" }, keys = "<Leader>d", desc = "(Debug)" },
     { mode = "n", keys = "<Leader>s", desc = "(Session)" },
+    { mode = { "n", "x" }, keys = "<Leader>w", desc = "(Word documents)" },
   },
 })

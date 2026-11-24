@@ -49,6 +49,7 @@ for _, name in ipairs({
   "replent",
   "sessman",
   "bs",
+  "neoffice",
 }) do
   require("plugins." .. name)
 end

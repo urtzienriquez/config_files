@@ -20,6 +20,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "textile",
     "mail",
     "gitcommit",
+    "neoffice",
   },
   callback = function()
     vim.opt_local.wrap = true
@@ -145,6 +146,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "textile",
     "mail",
     "gitcommit",
+    "neoffice",
   },
   callback = function()
     local function down_motion()
