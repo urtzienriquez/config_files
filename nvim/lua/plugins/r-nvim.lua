@@ -15,26 +15,15 @@ local function set_rnvim_keymaps()
   vim.keymap.set("n", "<leader>ro", "<Plug>ROBToggle", opts("Toggle object browser"))
   vim.keymap.set("n", "]]", "<Plug>RNextRChunk", opts("Next R chunk"))
   vim.keymap.set("n", "[[", "<Plug>RPreviousRChunk", opts("Previous R chunk"))
-  vim.keymap.set("i", "<C-a>c", "`r<Space>`<Esc>i", opts("Add inline R code"))
-  vim.keymap.set("n", "<leader>cc", "i`r<Space>`<Esc>i", opts("Add inline R code"))
-
-  if vim.bo.filetype == "rmd" then
-    vim.keymap.set("n", "<leader>rr", function()
-      local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
-      vim.api.nvim_echo({ { "" } }, false, {})
-      if filename == "__CANCEL__" then
-        return
-      end
-      vim.cmd('RSend if(exists("params")) rm(params)')
-      local file = vim.fn.expand("%")
-      if filename ~= "" then
-        vim.cmd('RSend rmarkdown::render("' .. file .. '", output_file = "' .. filename .. '")')
-      else
-        vim.cmd('RSend rmarkdown::render("' .. file .. '")')
-      end
-    end, opts("Render R Markdown"))
-    -- (Rnoweb: built with manuscript.nvim, see plugins/manuscript.lua)
+  if vim.bo.filetype == "rnoweb" then -- (inline code in the file's syntax)
+    vim.keymap.set("i", "<C-a>c", "\\Sexpr{}<Left>", opts("Add inline R code"))
+    vim.keymap.set("n", "<leader>cc", "i\\Sexpr{}<Left>", opts("Add inline R code"))
+  else
+    vim.keymap.set("i", "<C-a>c", "`r<Space>`<Esc>i", opts("Add inline R code"))
+    vim.keymap.set("n", "<leader>cc", "i`r<Space>`<Esc>i", opts("Add inline R code"))
   end
+
+  -- (rendering R Markdown and Rnoweb: manuscript.nvim, see plugins/manuscript.lua)
 end
 
 local r_opts = {
@@ -43,6 +32,9 @@ local r_opts = {
   R_args = { "--no-save --silent" },
   buffer_opts = "winfixwidth winfixheight",
   user_maps_only = true,
+  -- (language servers: R.nvim's own for completion, hover, definition...; languageserver only for
+  -- document symbols and lintr's diagnostics, see languageserver.server_capabilities in ~/.Rprofile)
+  chunk_hl = { highlight = false }, -- (chunks are painted by nightfox, in every Noweb/Markdown file)
   objbr_mappings = {
     c = "class",
     ["<leader>gp"] = "head({object}, n = 15)",
@@ -61,7 +53,7 @@ local r_opts = {
       end
     end,
     on_filetype = function()
-      if vim.bo.filetype ~= "quarto" and vim.bo.filetype ~= "jnoweb" then
+      if vim.bo.filetype ~= "quarto" then
         set_rnvim_keymaps()
         return
       end

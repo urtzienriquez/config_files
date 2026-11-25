@@ -40,6 +40,8 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
           quarto = { inherit_defaults = true, "citeref" },
           tex = { inherit_defaults = true, "citeref" },
           rnoweb = { inherit_defaults = true, "citeref" },
+          jnoweb = { inherit_defaults = true, "citeref" },
+          plaintex = { inherit_defaults = true, "citeref" },
         },
       },
       completion = {
