@@ -29,5 +29,7 @@ vim.api.nvim_create_autocmd("FileType", {
     map("<leader>wl", "<Cmd>Neoffice changes <CR>", "List changes")
     -- structure
     map("<leader>wh", "<Cmd>Neoffice numbers <CR>", "Heading numbers on/off")
+    -- back into the LaTeX/Rnoweb sources (manuscript.nvim)
+    map("<leader>wm", "<Cmd>Manuscript merge<CR>", "Merge into the sources")
   end,
 })

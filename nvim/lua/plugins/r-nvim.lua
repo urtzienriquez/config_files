@@ -33,66 +33,7 @@ local function set_rnvim_keymaps()
         vim.cmd('RSend rmarkdown::render("' .. file .. '")')
       end
     end, opts("Render R Markdown"))
-  elseif vim.bo.filetype == "rnoweb" then
-    -- Ask for an output name; nil if cancelled, "" for the default
-    local function ask_filename()
-      local filename = vim.fn.input({ prompt = "Output filename (without extension): ", cancelreturn = "__CANCEL__" })
-      vim.api.nvim_echo({ { "" } }, false, {})
-      if filename == "__CANCEL__" then
-        return nil
-      end
-      return filename
-    end
-    -- The current file, or the root given by a "% !TeX root = ..." line
-    local function root_file()
-      local file = vim.fn.expand("%")
-      ---@cast file string
-      local lines = vim.api.nvim_buf_get_lines(0, 0, 10, false)
-      for _, line in ipairs(lines) do
-        local root = line:match("^%% *!%a+ *root *= *(%S+)")
-        if root then
-          return root
-        end
-      end
-      return file
-    end
-    vim.keymap.set("n", "<leader>rr", function()
-      local filename = ask_filename()
-      if not filename then
-        return
-      end
-      local file = root_file()
-      local tex_file, r_cmd
-      if filename ~= "" then
-        tex_file = filename .. ".tex"
-        r_cmd = string.format('knitrmini::knit("%s", output = "%s", engine = "lualatex")', file, tex_file, tex_file)
-      else
-        tex_file = file:gsub(".Rnw$", ".tex")
-        r_cmd = string.format('knitrmini::knit("%s", engine = "lualatex")', file, tex_file)
-      end
-      vim.cmd("RSend " .. r_cmd)
-      vim.api.nvim_echo({ { "Compiling with latexmk using root: " .. file, "Normal" } }, false, {})
-    end, opts("Render Rnoweb with latexmk"))
-    vim.keymap.set("n", "<leader>rc", function()
-      local filename = ask_filename()
-      if not filename then
-        return
-      end
-      local base
-      if filename ~= "" then
-        base = filename
-      else
-        base = (root_file():gsub("%.Rnw$", ""))
-      end
-      -- clean_aux() only removes what latexmk recorded as generated for <base>
-      local r_cmd = string.format(
-        'knitrmini::clean_aux("%s.tex"); invisible(file.remove(Filter(file.exists, "%s-tikzDictionary")))',
-        base,
-        base
-      )
-      vim.cmd("RSend " .. r_cmd)
-      vim.api.nvim_echo({ { "Cleaning auxiliary files of: " .. base, "Normal" } }, false, {})
-    end, opts("Clean LaTeX/Rnoweb auxiliary files"))
+    -- (Rnoweb: built with manuscript.nvim, see plugins/manuscript.lua)
   end
 end
 
