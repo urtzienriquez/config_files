@@ -112,6 +112,8 @@ zstyle :compinstall filename '/home/urtzi/.config/zsh/.zshrc'
 zstyle ':completion:*' menu select
 ZLS_COLORS="di=34:fi=0:ex=32:ln=36"
 zstyle ':completion:*' list-colors "${(s.:.)ZLS_COLORS}"
+# keep completion's trailing space before ; & | (only drop it when typing another blank)
+ZLE_REMOVE_SUFFIX_CHARS=$' \t\n'
 autoload -Uz compinit
 if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
   compinit
