@@ -21,6 +21,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "mail",
     "gitcommit",
     "neoffice",
+    "neoffice-comments",
   },
   callback = function()
     vim.opt_local.wrap = true
@@ -147,6 +148,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "mail",
     "gitcommit",
     "neoffice",
+    "neoffice-comments",
   },
   callback = function()
     local function down_motion()
