@@ -276,10 +276,11 @@ rm() {
 alias kdon="sudo systemctl enable --now keyd "
 alias kdoff="sudo systemctl disable --now keyd "
 
-# change keyboard layout (qtile sets the keymap)
-# compose:menu makes Menu (sent by the corne ACCENT key) the Compose key
+# change keyboard layout (qtile sets the keymap, see set_kbd in
+# qtile/keybindsc.py: also keeps it for keyboards created later, e.g. by wtype)
 kl() {
-  qtile cmd-obj -o core -f set_keymap -a "$1" lv3:ralt_switch,compose:menu
+  [[ -n $1 ]] || { echo "usage: kl <layout>  (e.g. kl es, kl us)" >&2; return 1; }
+  qtile cmd-obj -o root -f eval -a "from keybindsc import set_kbd; set_kbd(self, '$1')"
 }
 alias kles="kl es"
 alias klus="kl us"

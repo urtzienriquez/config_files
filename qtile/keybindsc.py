@@ -120,10 +120,26 @@ KB_OPTIONS = "lv3:ralt_switch,compose:menu"
 _kb_layout = "us"
 
 
-def toggle_kbd(qtile):
+def set_kbd(qtile, layout):
+    """Set the layout on all keyboards, and keep it when devices are added.
+
+    Every time an input device appears (e.g. the virtual keyboard each wtype
+    call creates, like nvim's ghostty-nav autocmds), qtile re-applies
+    wl_input_rules to *all* keyboards, so the rule has to follow the layout.
+    Used by the toggle key and the kl shell function (.zsh_aliases).
+    """
     global _kb_layout
-    _kb_layout = "es" if _kb_layout == "us" else "us"
-    qtile.core.set_keymap(_kb_layout, KB_OPTIONS, None)
+    if not layout:
+        return
+    _kb_layout = layout
+    rule = qtile.config.wl_input_rules.get("type:keyboard")
+    if rule is not None:
+        rule.kb_layout = layout
+    qtile.core.set_keymap(layout, KB_OPTIONS, None)
+
+
+def toggle_kbd(qtile):
+    set_kbd(qtile, "es" if _kb_layout == "us" else "us")
 
 
 # select an area; save it to ~/Pictures/Screenshots and copy it
