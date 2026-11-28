@@ -12,6 +12,7 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.keymap.set(mode or "n", lhs, cmd, { buffer = ev.buf, desc = desc })
     end
     map("<leader>ww", "<Cmd>Neoffice <CR>", "Pick an action")
+    map("<leader>wp", "<Cmd>Neoffice pdf auto on<CR>", "Pick an action")
     -- comments
     map("<leader>wc", "<Cmd>Neoffice comments <CR>", "Comments panel")
     map("<leader>wa", "<Cmd>Neoffice comment <CR>", "Add comment", { "n", "x" })
